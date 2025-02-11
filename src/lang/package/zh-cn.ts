@@ -9,7 +9,7 @@ export default {
     logOut: "退出登录",
     welcomeToUse: "欢迎使用",
     loginSuccessful: "登录成功",
-    signinSuccessful: "登录成功",
+    signinSuccessful: "注册成功",
     message: {
       name:{
         nameMsg: "昵称不能为空",
