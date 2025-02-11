@@ -41,6 +41,7 @@
     .username-from {
       margin-top: 24px;
       margin-bottom: unset !important;
+
       .el-input__inner {
         font-size: 16px !important;
         color: #000000;
@@ -59,11 +60,25 @@
 
     .login-btn {
       height: 48px;
-      margin-top: 124px;
+      margin-top: 100px;
       font-size: 16px;
       font-weight: 500;
       background-color: rgb(0 119 255);
       border-radius: 2px;
+
+      span {
+        font-size: 16px;
+      }
+    }
+
+    .sigin-btn {
+      height: 48px;
+      margin-top: 20px;
+      margin-left: 0px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 2px;
+
       span {
         font-size: 16px;
       }
