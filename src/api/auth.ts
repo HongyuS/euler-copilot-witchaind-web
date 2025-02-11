@@ -1,6 +1,15 @@
 import request from "@/utils/request";
 
 class AuthAPI {
+  /** 注册 接口*/
+  static signin(data: LoginData) {
+    return request({
+      url: `/user/add`,
+      method: "post",
+      params: data,
+    });
+  }
+  
   /** 登录 接口*/
   static login(data: LoginData) {
     return request({
@@ -35,6 +44,8 @@ export interface LoginData {
   account: string;
   /** 密码 */
   password: string;
+  /** 昵称 */
+  name: string;
 }
 
 export interface userUpade {

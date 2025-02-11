@@ -24,6 +24,22 @@ export const useUserStore = defineStore("user", () => {
           reject(error);
         });
     });
+  }  
+
+  /**
+   * 注册
+   *
+   * @param {LoginData}
+   * @returns
+   */
+  function signin(signinData: LoginData) {
+    return new Promise<void>((resolve, reject) => {
+      AuthAPI.signin(signinData)
+        .then((data: any) => resolve(data))
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 
   // user logout
@@ -51,6 +67,7 @@ export const useUserStore = defineStore("user", () => {
     login,
     logout,
     resetToken,
+    signin,
   };
 });
 
