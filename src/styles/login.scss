@@ -1,0 +1,96 @@
+.login-container {
+  width: 100%;
+  min-width: 550px;
+  height: calc(100vh - 42px);
+
+  .login-card {
+    position: absolute;
+    top: 19%;
+    right: 7.7%;
+    width: 456px;
+    min-height: 544px;
+    padding: 48px;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 4px 16px 8px rgb(0 0 0 / 10%) !important;
+
+    .el-card__body {
+      padding: 0;
+      height: 412px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .captcha-image {
+      height: 48px;
+      cursor: pointer;
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+
+    .platform-login-text {
+      font-size: 12px;
+      color: var(--el-text-color-secondary);
+    }
+
+    .password-from,
+    .username-from {
+      margin-top: 24px;
+      margin-bottom: unset !important;
+      .el-input__inner {
+        font-size: 16px !important;
+        color: #000000;
+      }
+    }
+
+    .login-title {
+      margin-top: 8px;
+      margin-bottom: 48px;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 48px;
+      text-align: left;
+      letter-spacing: 0.83px !important;
+    }
+
+    .login-btn {
+      height: 48px;
+      margin-top: 124px;
+      font-size: 16px;
+      font-weight: 500;
+      background-color: rgb(0 119 255);
+      border-radius: 2px;
+      span {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .icp-info {
+    position: absolute;
+    bottom: 32px;
+    width: 100%;
+    font-size: 14px;
+    color: var(--el-text-color-secondary);
+    text-align: center;
+  }
+
+  .el-input-wrapper {
+    background: var(--el-input-bg-color) !important;
+    border: 1px solid var(--el-border-color);
+    border-radius: 5px;
+  }
+
+  .el-input__wrapper {
+    height: 48px !important;
+  }
+
+  .el-form-item {
+    background: var(--el-input-bg-color);
+    border-radius: 5px;
+  }
+}

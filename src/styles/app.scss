@@ -1,0 +1,34 @@
+html,
+body,
+#app {
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.euler-copilot-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 600px;
+  overflow-y: auto;
+  background: url("/src/assets/images/login-background-light.png") center/100%
+    100%;
+}
+
+.main-container {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1;
+  align-items: start;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 750px;
+}
+
+html.dark .euler-copilot-container {
+  background: url("@/assets/images/login-background-dark.jpg") no-repeat center
+    right;
+}

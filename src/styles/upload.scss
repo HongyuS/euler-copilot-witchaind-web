@@ -1,0 +1,223 @@
+.upload-dialog {
+  .el-dialog__body {
+    max-height: unset !important;
+  }
+
+  .upload-to-list {
+    .list-action {
+      display: flex;
+
+      .file-ops {
+        height: 24px;
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+
+      .delFileBtn {
+        height: 24px;
+        padding: 4px 20px;
+        font-size: 12px;
+
+        span {
+          min-width: unset !important;
+        }
+      }
+    }
+
+    .list-tip {
+      margin: 8px 0;
+      font-size: var(--o-font-size-info);
+      line-height: var(--o-line-height-info);
+    }
+
+    &.has-files {
+      .upload-block {
+        height: 184px;
+      }
+
+      .el-table__header .cell {
+        color: rgb(78 88 101);
+      }
+
+      .el-table__body .cell {
+        color: rgb(0 0 0);
+      }
+
+      .el-alert--info {
+        align-items: start;
+        max-height: 48px;
+        margin-bottom: 16px;
+        background-color: rgb(184 217 255) !important;
+
+        .el-alert__content {
+          padding-right: 0 !important;
+        }
+
+        .el-alert__title {
+          font-size: 12px;
+          line-height: 16px;
+        }
+      }
+
+      .el-upload-dragger {
+        border: unset !important;
+      }
+
+      .el-table__cell {
+        padding: 0 !important;
+      }
+
+      .el-table-column--selection .cell {
+        padding-right: 0 !important;
+        padding-left: 18px;
+      }
+
+      .upload-file-name .cell {
+        padding-left: 0 !important;
+      }
+
+      .upload-file-selection::after {
+        content: unset !important;
+      }
+
+      .upload-ops-btn {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 32px;
+
+        .el-button {
+          height: 24px;
+        }
+
+        .el-button span {
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .upload-block {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 264px;
+    overflow: hidden;
+    cursor: pointer;
+
+    .upload-drag-mask {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+
+      .upload-tip {
+        color: var(--o-text-color-secondary);
+      }
+
+      &::before {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        content: "";
+        background-color: rgb(235 239 246);
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .upload-add {
+    .upload-btn-icon {
+      font-size: 64px !important;
+    }
+  }
+
+  .is-dragover {
+    opacity: 1;
+
+    .upload-drag-mask {
+      opacity: 1;
+    }
+  }
+
+  .upload-btn-icon {
+    font-size: var(--o-font-size-large);
+    color: var(--o-text-color-tertiary);
+  }
+
+  .upload-tip {
+    width: 100%;
+    font-size: var(--o-font-size-info);
+    line-height: var(--o-line-height-info);
+    color: var(--o-text-color-tertiary);
+
+    .el-button--primary {
+      height: 24px;
+    }
+
+    + .upload-tip {
+      margin-top: 24px;
+    }
+  }
+
+  .upload-preview {
+    width: 100%;
+    height: 184px;
+    cursor: default;
+    background-color: var(--o-bg-color-base);
+    .cell {
+      font-size: 12px !important;
+    }
+    .el-table {
+      ::-webkit-scrollbar {
+        width: 4px !important;
+      }
+      .el-scrollbar__bar.is-vertical {
+        width: 4px !important;
+      }
+    }
+  }
+
+  .upload-btns {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--o-bg-color-mask);
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    .btn {
+      margin: 8px;
+      font-size: var(--o-font-size-subtitle);
+      color: var(--o-text-color-fourth);
+
+      &:hover {
+        color: var(--o-color-primary);
+      }
+    }
+  }
+
+  .el-upload-dragger {
+    box-sizing: border-box;
+    padding: 0 !important;
+    border: 1px dashed rgb(195 206 223);
+    border-radius: 2px;
+  }
+
+  .el-checkbox__inner::before {
+    top: 4.5px !important;
+    width: 13px !important;
+  }
+
+  .el-progress__text {
+    font-weight: 600 !important;
+  }
+}

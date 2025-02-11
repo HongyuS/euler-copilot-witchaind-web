@@ -1,0 +1,68 @@
+.el-affix {
+  height: 42px;
+}
+
+.platform-header {
+  display: flex;
+  justify-content: space-between;
+  height: 48px !important;
+  padding: 0 24px !important;
+  background-color: transparent;
+
+  .platform-title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    .project-name {
+      font-size: 16px;
+      letter-spacing: 0px;
+      font-weight: 700;
+    }
+  }
+
+  .el-popper.is-pure.is-light.el-dropdown__popper {
+    top: 42px !important;
+  }
+
+  .el-dropdown-link:hover {
+    color: var(--el-text-color-regular) !important;
+  }
+
+  .el-dropdown-link {
+    color: var(--el-text-color-regular) !important;
+    outline: 0 !important;
+  }
+}
+
+.top-bar {
+  position: relative;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 48px;
+}
+
+.user-platform-header {
+  width: 100%;
+  height: 300px;
+  background: url("/src/assets/images/userHeader.jpeg") center/101% 100%;
+}
+
+.page-platform-header {
+  background-color: rgb(253 254 255);
+  box-shadow: inset 0 -2px 0 0 rgb(244 246 250);
+}
+
+.user-platform-header,
+.page-platform-header {
+  min-width: 1240px;
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 48px;
+  }
+}
