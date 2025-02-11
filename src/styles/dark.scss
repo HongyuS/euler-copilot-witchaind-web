@@ -1,0 +1,21 @@
+html.dark {
+  .platform-login-text {
+    font-size: 12px;
+  }
+
+  .el-input-wrapper {
+    background: var(--el-input-bg-color) !important;
+  }
+
+  .el-form-item {
+    background: var(--el-input-bg-color);
+  }
+
+  .el-input__wrapper {
+    background: var(--el-input-bg-color) !important;
+  }
+
+  .el-input__inner {
+    color: white !important;
+  }
+}

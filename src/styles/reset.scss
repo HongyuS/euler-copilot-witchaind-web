@@ -1,0 +1,870 @@
+@font-face {
+  font-family: "HarmonyOS Sans SC Thin";
+  src:
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Thin.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Thin.woff) format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Light";
+  src:
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Light.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Light.woff) format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Regular";
+  src:
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Medium";
+  src:
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Medium.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Medium.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Bold";
+  src:
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Bold.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Bold.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans SC Black";
+  src:
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Black.woff2) format("woff2"),
+    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Black.woff) format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
+
+/*  鸿蒙西文字体 */
+@font-face {
+  font-family: "HarmonyOS Sans En Thin";
+  src:
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Thin.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Thin.woff) format("woff");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans En Light";
+  src:
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Light.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Light.woff) format("woff");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans En Regular";
+  src:
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Regular.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Regular.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans En Medium";
+  src:
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Medium.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Medium.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans En Bold";
+  src:
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Bold.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Bold.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "HarmonyOS Sans En Black";
+  src:
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Black.woff2) format("woff2"),
+    url(./HarmonyOS_Sans/HarmonyOS_Sans_Black.woff) format("woff");
+  font-weight: 900;
+  font-style: normal;
+}
+
+::before,
+::after {
+  box-sizing: border-box;
+  border-color: currentcolor;
+  border-style: solid;
+  border-width: 0;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 600px;
+  height: 100%;
+  line-height: 1.5;
+  tab-size: 4;
+  text-size-adjust: 100%;
+}
+
+:root {
+  --el-font-family: "HarmonyOS Sans SC Medium", -apple-system,
+    blinkmacsystemfont, "Segoe UI", roboto, "Helvetica Neue", arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji" !important;
+}
+
+html,
+body,
+input,
+button,
+.is-selected {
+  margin: 0;
+  font-family:
+    "HarmonyOS Sans SC Medium",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji" !important;
+  line-height: inherit;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizelegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+img,
+svg {
+  display: inline-block;
+}
+
+svg {
+  // 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果
+  vertical-align: -0.15em;
+}
+
+ul,
+li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0;
+  margin: 0;
+}
+
+.el-button {
+  border-radius: 2px !important;
+}
+
+.el-button span {
+  justify-content: center;
+  font-size: 12px;
+}
+
+.el-button--primary {
+  background: rgb(0 119 255) !important;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+a,
+a:focus,
+a:hover {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:focus,
+a:active,
+div:focus {
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c3cedf;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bfc7d7 !important;
+  background-color: #bfc7d7 !important;
+  border: 0;
+  opacity: 1;
+}
+
+.el-scrollbar .el-scrollbar__bar .el-scrollbar__thumb {
+  background: #c3cedf !important;
+  opacity: 1;
+}
+
+.resetBtn {
+  width: 64px;
+
+  span {
+    font-size: 12px;
+  }
+}
+
+.el-dialog__header {
+  .el-dialog__title {
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(0 0 0);
+  }
+}
+
+.dropdown-container {
+  margin-top: -10px;
+
+  .el-dropdown-menu__item:not(.is-disabled):hover {
+    color: rgb(255 255 255);
+    background: rgb(82 163 255);
+  }
+}
+
+.el-button:focus-visible {
+  outline: unset !important;
+}
+
+.el-textarea__inner,
+.el-input__wrapper,
+.el-select__wrapper {
+  padding: 8px 16px !important;
+}
+
+.el-input__wrapper,
+.el-select__wrapper {
+  height: 32px !important;
+}
+
+.el-table__column-filter-trigger {
+  line-height: 16px;
+}
+
+.filterPopper {
+  display: flex;
+  flex-direction: column;
+  width: 168px !important;
+  padding: 8px 16px 16px !important;
+  background: rgb(253 254 255) !important;
+  transform: translateY(-10px);
+
+  .el-checkbox-group {
+    .el-checkbox {
+      margin-right: 0;
+    }
+  }
+
+  .el-checkbox__inner::before {
+    top: 4.5px !important;
+    width: 13px !important;
+  }
+
+  .el-checkbox__label {
+    width: 120px;
+    font-size: 12px;
+  }
+
+  .el-checkbox__input.is-checked + .el-checkbox__label {
+    color: rgb(78 88 101);
+  }
+
+  .el-checkbox__inner {
+    box-sizing: border-box;
+    border-color: rgb(141 152 170) !important;
+    border-radius: 1px;
+  }
+
+  .el-checkbox:hover:not(.is-disabled) .el-checkbox__inner {
+    box-sizing: border-box;
+    border-color: rgb(208 212 220) !important;
+    border-radius: 1px;
+  }
+
+  .is-checked {
+    border: unset !important;
+  }
+}
+.form-right-tip {
+  color: rgb(141, 152, 170);
+  font-size: 12px;
+}
+.kbLibraryPage {
+  .el-select-dropdown__item.is-hovering {
+    color: white;
+    background-color: var(--o-select-dropdown-bg-color_hover) !important;
+  }
+}
+
+.o-message--error {
+  width: 544px;
+  background-color: var(--o-message-bg-color_error) !important;
+  border-color: var(--o-message-border-color_error) !important;
+  .el-message__content {
+    flex: 1;
+  }
+  .el-icon {
+    position: relative !important;
+    top: unset !important;
+  }
+}
+
+.el-message--info {
+  height: 48px !important;
+}
+
+.el-message__icon {
+  font-size: 16px !important;
+  margin-right: unset !important;
+}
+
+.el-message__content {
+  font-size: 12px !important;
+}
+
+.o-message--success {
+  width: 544px;
+  background-color: #c2e7c7 !important;
+  border-color: #24ab36 !important;
+  .el-message__content {
+    flex: 1;
+  }
+  .el-icon {
+    position: relative !important;
+    top: unset !important;
+  }
+}
+
+.el-dialog__headerbtn {
+  height: 57px !important;
+  .el-dialog__close {
+    font-size: 20px !important;
+  }
+}
+
+.el-table__empty-block {
+  margin-top: unset !important;
+  box-shadow: inset 0px -1px 0px 0px rgb(223, 229, 239);
+}
+
+.el-select-dropdown__item {
+  font-family: "HarmonyOS Sans SC Medium" !important;
+  font-size: 12px;
+  font-weight: unset !important;
+}
+
+.model-dialog,
+.create-dialog,
+.edit-dialog {
+  .el-form-item__content {
+    button.is-disabled {
+      background: #b8d9ff !important;
+      border: unset;
+      span {
+        color: #fff !important;
+      }
+    }
+  }
+}
+
+.upload-ops-btn {
+  button.is-disabled {
+    background: #b8d9ff !important;
+    border: unset;
+  }
+}
+
+.caret-wrapper {
+  margin-left: 0 !important;
+  transform: translateX(-3px);
+}
+
+.removeIsTrans {
+  color: #a8abb2 !important;
+}
+
+.el-pagination {
+  .el-pagination__total {
+    margin-right: unset;
+  }
+  .el-pagination__sizes {
+    margin-left: 7px;
+    margin-right: unset;
+  }
+  .btn-prev {
+    margin-left: 8px !important;
+  }
+  .btn-next {
+    margin-right: 8px !important;
+  }
+  .el-pagination__jump {
+    margin-left: unset;
+  }
+  .el-pagination__goto {
+    margin-right: unset;
+  }
+  .el-pagination__classifier {
+    margin-left: unset;
+  }
+}
+
+.el-icon--caretup {
+  color: #0077ff !important;
+}
+
+.downBtn {
+  border: 1px solid var(--el-button-border-color) !important;
+  color: #606266 !important;
+}
+
+.el-pagination {
+  .el-select {
+    width: 100px !important;
+  }
+  .el-input {
+    width: 40px !important;
+  }
+
+  button:disabled .el-icon {
+    color: #8d98aa !important;
+  }
+}
+
+.cancelBtn {
+  margin-left: 8px !important;
+}
+
+.el-message__closeBtn {
+  color: #8d98aa !important;
+}
+
+.el-select__suffix {
+  .el-icon {
+    font-size: 16px;
+  }
+}
+
+.el-dialog__headerbtn {
+  width: unset !important;
+  margin-right: 24px;
+  .el-dialog__close {
+    color: #8d98aa !important;
+  }
+}
+
+.custom-header,
+.asset-custom-header {
+  .el-date-editor--datetimerange {
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    margin-top: 10px;
+    opacity: 0;
+  }
+}
+
+.asset-custom-header {
+  .el-date-editor--datetimerange {
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    overflow: hidden;
+    margin-top: 10px;
+    opacity: 0;
+  }
+}
+
+.assetTimeFilterPo {
+  width: unset !important;
+  min-width: unset !important;
+  padding: unset !important;
+  opacity: 0;
+}
+
+.el-pagination button {
+  padding: 0 !important;
+  width: 28px !important;
+  min-width: unset !important;
+}
+
+.el-pagination .btn-next .el-icon,
+.el-pagination .btn-prev .el-icon {
+  font-size: 14px !important;
+}
+
+.el-pager .number {
+  color: rgb(78, 88, 101);
+  font-size: 12px;
+}
+
+:is([role="option"]) {
+  font-size: 12px !important;
+}
+.datetimerangeClass {
+  width: 586px !important;
+  height: 380px;
+  margin-right: -12px;
+
+  .el-picker-panel__sidebar {
+    width: 104px !important;
+    padding-top: 4px !important;
+  }
+
+  .el-picker-panel {
+    width: 100% !important;
+  }
+
+  .el-picker-panel__body-wrapper {
+    height: 345px !important;
+  }
+
+  .el-picker-panel__body {
+    min-width: unset !important;
+    height: 345px;
+    margin-left: 104px !important;
+
+    .el-picker-panel__content {
+      height: 300px !important;
+      padding: 8px !important;
+
+      tbody tr {
+        height: 32px;
+        border: unset !important;
+      }
+
+      th {
+        height: 32px !important;
+        padding: 0 !important;
+        color: rgb(191 199 215);
+        border: unset !important;
+      }
+
+      th::after {
+        content: unset !important;
+      }
+
+      tbody {
+        tr:first-child {
+          margin-bottom: 8px;
+        }
+      }
+
+      tbody:has(.el-date-table__row) {
+        .el-date-table__row {
+          margin-bottom: 4px;
+          td {
+            width: 32px !important;
+            height: 32px !important;
+            padding: 0 !important;
+
+            .el-date-table-cell {
+              width: 32px !important;
+              height: 32px !important;
+              padding: 0 !important;
+
+              .el-date-table-cell__text {
+                width: 32px !important;
+                height: 32px !important;
+                line-height: 32px !important;
+                border-radius: 2px !important;
+              }
+            }
+          }
+
+          .start-date,
+          .end-date {
+            .el-date-table-cell__text {
+              background: rgb(0 119 255);
+            }
+          }
+
+          .in-range {
+            .el-date-table-cell__text {
+              color: rgb(255 255 255) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .el-date-range-picker__header {
+    height: 32px;
+    padding: 8px !important;
+    margin-bottom: 8px;
+
+    button {
+      margin-top: 0 !important;
+    }
+  }
+
+  .el-date-range-picker__time-header {
+    .el-icon {
+      margin: 0 12px !important;
+      font-size: 8px !important;
+      svg {
+        display: none;
+      }
+    }
+
+    .el-icon::after {
+      display: block;
+      width: 8px;
+      height: 1px;
+      content: "";
+      background-color: rgb(223 229 239);
+    }
+
+    .el-input--small .el-input__inner {
+      font-size: 12px !important;
+    }
+  }
+
+  .el-picker-panel__footer {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 16px;
+    justify-content: end;
+    padding-right: 24px !important;
+  }
+
+  .el-time-panel {
+    left: -70px;
+  }
+
+  .is-plain {
+    color: #07f;
+  }
+
+  .el-picker-panel__footer:has(.is-disabled) {
+    .is-plain {
+      color: #a8abb2 !important;
+    }
+  }
+}
+.datetimerangeClass {
+  .el-picker-panel__sidebar {
+    height: 378px;
+  }
+  .el-picker-panel__shortcut {
+    font-size: 12px;
+    line-height: 32px !important;
+    padding-left: 16px !important;
+  }
+  .el-picker-panel__body {
+    .el-input {
+      width: 100px !important;
+      .el-input__wrapper {
+        height: 24px !important;
+      }
+    }
+  }
+
+  .el-picker-panel__body-wrapper {
+    height: 345px !important;
+  }
+
+  .el-date-range-picker__time-header {
+    display: flex;
+    padding: 2px 16px 8px !important;
+    .el-input--small .el-input__inner {
+      font-size: 12px !important;
+    }
+  }
+
+  .el-date-range-picker__header {
+    width: 224px !important;
+    line-height: 16px !important;
+    button {
+      display: flex;
+      height: 16px;
+      align-items: center;
+    }
+    div {
+      width: 120px !important;
+      margin-left: 45px !important;
+    }
+  }
+
+  .el-picker-panel__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .el-date-range-picker__editors-wrap {
+    display: flex;
+    gap: 8px;
+  }
+  .el-date-range-picker__time-picker-wrap {
+    padding: 0 0px !important;
+  }
+}
+
+.timeFilterPo {
+  max-width: unset !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  opacity: 0;
+  .el-radio.is-checked .el-radio__inner {
+    background-color: var(--o-radio-bg-color_checked_hover);
+    border-color: var(--o-radio-border-color_checked_hover);
+  }
+  .el-picker-panel__body-wrapper {
+    overflow: unset !important;
+  }
+  .el-picker-panel__footer {
+    padding-right: 24px;
+    width: 400px;
+    padding-top: 3px !important;
+    border: unset !important;
+    margin-left: 197px;
+  }
+
+  .el-picker-panel__shortcut {
+    font-size: 12px;
+  }
+
+  .el-picker-panel__body {
+    border-bottom: 1px solid #e4e7ed;
+  }
+
+  .el-picker-panel__sidebar {
+    height: 378px;
+    border: 1px solid #e4e7ed !important;
+  }
+
+  .customTimeBtn {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+    color: rgb(78 88 101);
+  }
+
+  .el-radio__inner::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    content: "";
+    background-color: var(--el-color-white);
+    border-radius: var(--el-radio-input-border-radius);
+    transition: transform 0.15s ease-in;
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  .config-size {
+    width: 104px !important;
+  }
+
+  .el-input-number__increase,
+  .el-input-number__decrease {
+    background: transparent;
+    .el-icon {
+      color: #8d98aa;
+    }
+  }
+
+  .filter-btn {
+    display: flex;
+    justify-content: center;
+  }
+
+  .is-checked .el-radio__label {
+    color: rgb(78 88 101) !important;
+  }
+}
+
+.el-select__popper {
+  .el-select-dropdown__list {
+    padding: 4px 0 !important;
+    li {
+      height: 32px !important;
+      line-height: 30px !important;
+    }
+  }
+
+  .el-select-dropdown__item {
+    padding: 0 16px;
+  }
+}
+
+.el-select-dropdown__item.is-selected {
+  color: #0077ff;
+  span {
+    color: #0077ff;
+  }
+}
+.el-select-dropdown__item.is-hovering {
+  span {
+    color: #fff !important;
+  }
+}

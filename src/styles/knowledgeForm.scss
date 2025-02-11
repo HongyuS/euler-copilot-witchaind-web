@@ -1,0 +1,382 @@
+.domain-config {
+  label {
+    opacity: 0;
+  }
+
+  .el-form-item__content {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 8px;
+    align-items: center;
+    width: 320px;
+
+    .deleteConfig {
+      position: absolute;
+      right: -22px;
+      cursor: pointer;
+    }
+
+    .deleteConfig:hover {
+      color: #0077ff;
+    }
+  }
+}
+
+.kl-ruleForm {
+  padding-bottom: 0;
+
+  .el-select__popper {
+    top: 44px !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    background: #fefefe !important;
+    border: 1px solid #07f !important;
+
+    .el-select-dropdown {
+      width: 100% !important;
+      max-width: unset !important;
+    }
+  }
+
+  .el-form-item {
+    gap: 24px;
+    margin-bottom: 24px;
+
+    .el-form-item__label-wrap {
+      display: unset !important;
+    }
+
+    .is-focused,
+    .el-select__selected-item {
+      span {
+        color: #000000 !important;
+      }
+    }
+
+    .is-disabled {
+      span {
+        color: rgb(191, 199, 215) !important;
+      }
+    }
+
+    .el-input__inner {
+      color: #000000 !important;
+    }
+
+    .is-transparent {
+      span {
+        color: #a8abb2 !important;
+      }
+    }
+
+    .is-focused {
+      span {
+        color: #000000 !important;
+      }
+    }
+
+    .removeIsTrans {
+      span {
+        color: #a8abb2 !important;
+      }
+    }
+
+    .el-textarea__inner {
+      color: #000000 !important;
+    }
+  }
+
+  .config-size {
+    width: 111px;
+
+    .el-input-number__increase,
+    .el-input-number__decrease {
+      background: transparent;
+      .el-icon {
+        color: #8d98aa;
+      }
+    }
+    .el-input__wrapper {
+      width: 50px !important;
+      overflow: hidden !important;
+      padding-left: 30px !important;
+      padding-right: 30px !important;
+    }
+    .el-input__inner {
+      width: 50px !important;
+      overflow: hidden !important;
+      padding-left: 5px !important;
+      padding-right: 5px !important;
+    }
+  }
+
+  .el-select-dropdown__item.is-hovering {
+    color: #fff !important;
+    background: #07f;
+  }
+
+  .el-form-item__content {
+    flex: unset !important;
+    width: 320px !important;
+
+    .el-input,
+    .el-select__wrapper,
+    .el-textarea__inner {
+      width: 320px !important;
+      font-size: 12px;
+      color: var(--o-color-black);
+    }
+
+    .el-input__inner {
+      font-size: 12px;
+      color: var(--o-color-black);
+    }
+
+    .el-textarea__inner {
+      height: 88px;
+    }
+  }
+
+  .domain-config {
+    margin-bottom: 8px !important;
+  }
+
+  .config-form,
+  .config-size-desc {
+    .el-form-item__label::before {
+      display: block;
+      margin-right: 4px;
+      content: "*";
+      opacity: 0;
+    }
+  }
+
+  .el-form-item__label {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 !important;
+    font-size: 12px !important;
+
+    .el-icon {
+      margin-top: 2px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .el-icon:hover {
+      color: rgb(82 163 255);
+    }
+  }
+
+  .el-form-item__label::before {
+    margin-right: 0 !important;
+  }
+
+  .config-form {
+    margin-bottom: 8px !important;
+    height: 24px !important;
+    .el-form-item__content {
+      display: flex;
+      line-height: 24px;
+      height: 24px !important;
+      max-width: unset !important;
+      min-height: unset !important;
+    }
+
+    .el-form-item__label {
+      height: 24px !important;
+      line-height: 24px !important;
+      max-width: unset !important;
+      min-height: unset !important;
+    }
+
+    .resetBtn {
+      width: unset !important;
+      height: 24px !important;
+    }
+
+    .addDocuType {
+      box-sizing: border-box;
+      padding: 4px 27px !important;
+
+      span {
+        min-width: unset !important;
+      }
+    }
+
+    .delAllCocuType {
+      box-sizing: border-box;
+      padding: 4px 15px !important;
+      margin-left: 8px !important;
+    }
+  }
+
+  .supAddCategoris {
+    width: 170px;
+    height: 24px;
+    margin-left: 8px;
+    font-size: 12px;
+    line-height: 22px;
+    color: rgb(141 152 170);
+  }
+}
+
+.analyticMethodSelect {
+  box-sizing: border-box;
+  background: #fefefe !important;
+  border-color: #07f !important;
+  .el-select-dropdown {
+    width: 100% !important;
+    max-width: unset !important;
+  }
+
+  .el-select-dropdown__item.is-hovering {
+    color: #fff;
+    background: #07f !important;
+  }
+}
+
+.create-dialog {
+  width: 560px;
+  height: 600px;
+  position: relative;
+  padding: 0 !important;
+  overflow: hidden;
+
+  .el-dialog__body {
+    height: 470px !important;
+    max-height: unset !important;
+    min-height: unset !important;
+    padding-left: 16px !important;
+    margin-right: 0 !important;
+    padding-bottom: 0;
+  }
+
+  .analyticMethod {
+    .el-popper {
+      inset: auto auto auto 0px !important;
+    }
+  }
+  ::-webkit-scrollbar {
+    width: 4px !important;
+    height: 8px;
+    background: transparent;
+  }
+
+  .config-size {
+    width: 111px;
+  }
+
+  .el-input-number__increase,
+  .el-input-number__decrease {
+    background: transparent;
+    .el-icon {
+      color: #8d98aa;
+    }
+  }
+
+  .el-select-dropdown__item.is-hovering {
+    color: #fff !important;
+    background: #07f;
+    width: 319px;
+  }
+
+  .kl-ops-btn {
+    height: 24px !important;
+    margin-top: 32px;
+    margin-bottom: 0;
+
+    .el-form-item__content {
+      display: flex;
+      justify-content: center;
+      width: 100% !important;
+      height: 24px !important;
+      min-height: unset !important;
+      margin-left: 0 !important;
+      line-height: 24px !important;
+    }
+
+    .resetBtn {
+      height: 24px !important;
+    }
+  }
+
+  .config-form {
+    .addDocuType {
+      padding: 4px 19px !important;
+    }
+    .delAllCocuType {
+      padding: 4px 7px !important;
+    }
+  }
+}
+
+.tip-dialog {
+  padding: 0 !important;
+
+  .el-dialog__body {
+    padding: 24px !important;
+    margin-right: 0;
+    font-size: 12px;
+  }
+
+  .tip-ops-btn {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 32px;
+
+    .resetBtn {
+      width: 64px;
+      height: 24px;
+    }
+  }
+}
+
+.kl-ops-btn {
+  margin-bottom: 0;
+}
+
+.kl-create-ops-btn {
+  position: absolute;
+  bottom: 24px;
+  left: 190px;
+}
+
+.assetIdClass {
+  label::before {
+    opacity: 0;
+  }
+}
+#asset-box-id {
+  .el-form-item__content {
+    width: 470px !important;
+    display: flex;
+    gap: 10px;
+  }
+  .copydocument {
+    cursor: pointer;
+    transform: rotateZ(180deg);
+  }
+  .copydocument:hover {
+    color: #0077ff;
+  }
+}
+
+.select-container {
+  .is-disabled {
+    .el-select__selected-item {
+      color: #bfc7d7 !important;
+    }
+  }
+}
+
+.analyticTipBox,
+.fileChunkSizeTip {
+  width: 376px !important;
+  max-width: unset !important;
+  min-width: unset !important;
+  padding: 8px !important;
+}
