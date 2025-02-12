@@ -211,7 +211,6 @@ const loginFormRef = ref<FormInstance>();
 const signinFormRef = ref<FormInstance>();
 
 const loginData = ref<LoginData>({
-  name: "",
   account: "",
   password: "",
 });

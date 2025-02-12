@@ -15,10 +15,12 @@ class AuthAPI {
   
   /** 登录 接口*/
   static login(data: LoginData) {
+    const hashPwd = CryptoJS.SHA256(data.password).toString();
+    const newData = { ...data, password: hashPwd };
     return request({
       url: `/user/login`,
       method: "get",
-      params: data,
+      params: newData,
     });
   }
 
@@ -47,8 +49,6 @@ export interface LoginData {
   account: string;
   /** 密码 */
   password: string;
-  /** 昵称 */
-  name: string;
 }
 export interface SigninData {
   /** 用户名 */
