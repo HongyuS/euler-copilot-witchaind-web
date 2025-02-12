@@ -11,26 +11,14 @@
             <div class="login-title">{{ defaultSettings.title }}</div>
           </div>
 
-          <!-- 登录 -->
+          <!-- 登录页面 -->
           <el-form
+            v-if="!isSigIn"
             ref="loginFormRef"
             :model="loginData"
             :rules="loginRules"
             class="login-form"
           >
-            <!-- 昵称 -->
-            <el-form-item v-if="isSigIn" prop="name" class="username-from">
-              <div class="input-wrapper">
-                <el-input
-                  ref="name"
-                  v-model="loginData.name"
-                  :placeholder="$t('login.message.name.required')"
-                  name="name"
-                  size="large"
-                  class="h-[48px]"
-                />
-              </div>
-            </el-form-item>
             <!-- 用户名 -->
             <el-form-item prop="account" class="username-from">
               <div class="input-wrapper">
@@ -41,7 +29,8 @@
                   name="account"
                   size="large"
                   class="h-[48px]"
-                />
+                >
+                </el-input>
               </div>
             </el-form-item>
 
@@ -73,7 +62,6 @@
             </el-form-item>
             <!-- 登录按钮 -->
             <el-button
-              v-if="!isSigIn"
               :loading="loading"
               type="primary"
               size="large"
@@ -82,16 +70,92 @@
             >
               {{ $t("login.login") }}
             </el-button>
+            <!-- 去注册按钮 -->
             <el-button
-              v-if="!isSigIn"
               size="large"
               class="w-full sigin-btn"
               @click="handleSigIn"
             >
               {{ $t("login.signin") }}
             </el-button>
+          </el-form>
+
+          <!-- 注册页面 -->
+          <el-form
+            v-else
+            ref="signinFormRef"
+            :model="signinData"
+            :rules="signinRules"
+            class="login-form"
+          >
+            <!-- 昵称 -->
+            <el-form-item prop="name" class="username-from">
+              <div class="input-wrapper">
+                <el-input
+                  ref="name"
+                  v-model="signinData.name"
+                  :placeholder="$t('login.message.name.required')"
+                  name="name"
+                  size="large"
+                  class="h-[48px]"
+                />
+              </div>
+            </el-form-item>
+            <!-- 用户名 -->
+            <el-form-item prop="account" class="username-from">
+              <div class="input-wrapper">
+                <el-input
+                  ref="account"
+                  v-model="signinData.account"
+                  :placeholder="$t('login.message.username.required')"
+                  name="account"
+                  size="large"
+                  class="h-[48px]"
+                />
+              </div>
+            </el-form-item>
+            <!-- 邮箱 -->
+            <el-form-item prop="email" class="username-from">
+              <div class="input-wrapper">
+                <el-input
+                  ref="email"
+                  v-model="signinData.email"
+                  :placeholder="$t('login.message.email.required')"
+                  name="email"
+                  size="large"
+                  class="h-[48px]"
+                />
+              </div>
+            </el-form-item>
+
+            <!-- 密码 -->
+            <el-form-item prop="passwd" class="password-from">
+              <div class="input-wrapper">
+                <el-input
+                  v-model="signinData.passwd"
+                  :placeholder="$t('login.message.passwd.required')"
+                  name="passwd"
+                  :type="passwordType"
+                  @keyup.enter="handleLoginSubmit"
+                  size="large"
+                  class="h-[48px]"
+                  autocomplete="off"
+                  ref="inputRef"
+                >
+                  <template #suffix>
+                    <el-icon
+                      class="el-input__icon el-input__password"
+                      @click="handleShowPassword"
+                    >
+                      <IconInvisible v-if="passwordType === 'password'" />
+                      <IconVisible v-else />
+                    </el-icon>
+                  </template>
+                </el-input>
+              </div>
+            </el-form-item>
+            <!-- 注册按钮 -->
             <el-button
-              v-if="isSigIn"
               :loading="signinLoding"
               type="primary"
               size="large"
@@ -100,17 +164,14 @@
             >
               {{ $t("login.signin") }}
             </el-button>
-            <el-button
-              v-if="isSigIn"
-              type=""
-              size="large"
-              link
-              class="w-full sigin-btn"
-              :disabled="signinLoding"
+            <!-- 返回按钮 -->
+            <div
+              class="backToLogin"
+              :class="signinLoding ? 'not-click' : ''"
               @click.prevent="handleBackLogin"
             >
               {{ $t("login.backToLogin") }}
-            </el-button>
+            </div>
           </el-form>
         </el-card>
         <div class="icp-info">
@@ -126,7 +187,7 @@ import "@/styles/login.scss";
 import type { FormInstance } from "element-plus";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/store";
-import { type LoginData } from "@/api/auth";
+import { SigninData, type LoginData } from "@/api/auth";
 import defaultSettings from "@/settings";
 import HeaderBar from "@/components/HeaderBar/index.vue";
 import {
@@ -147,11 +208,18 @@ const loading = ref(false);
 const signinLoding = ref(false);
 // 登录表单ref
 const loginFormRef = ref<FormInstance>();
+const signinFormRef = ref<FormInstance>();
 
 const loginData = ref<LoginData>({
   name: "",
   account: "",
   password: "",
+});
+const signinData = ref<SigninData>({
+  name: "",
+  account: "",
+  passwd: "",
+  email: "",
 });
 
 // 是否是注册页面
@@ -159,18 +227,6 @@ const isSigIn = ref(false);
 
 const loginRules = computed(() => {
   return {
-    name: [
-      {
-        required: true,
-        trigger: ["blur", "change"],
-        message: t("login.message.name.nameMsg"),
-      },
-      {
-        max: 10,
-        message: t("login.message.name.notMinThan"),
-        trigger: "change",
-      },
-    ],
     account: [
       {
         required: true,
@@ -212,6 +268,88 @@ const loginRules = computed(() => {
     ],
   };
 });
+const signinRules = computed(() => {
+  return {
+    name: [
+      {
+        required: true,
+        trigger: ["blur", "change"],
+        message: t("login.message.name.nameMsg"),
+      },
+      {
+        max: 10,
+        message: t("login.message.name.notMinThan"),
+        trigger: "change",
+      },
+    ],
+    account: [
+      {
+        required: true,
+        trigger: ["blur", "change"],
+        message: t("login.message.username.usernameMsg"),
+      },
+      {
+        min: 5,
+        message: t("login.message.username.notMinThan"),
+        trigger: "blur",
+      },
+      {
+        max: 20,
+        message: t("login.message.username.notMaxThan"),
+        trigger: "change",
+      },
+      {
+        pattern: /^[a-z0-9]+$/,
+        message: t("login.message.username.regxMsg"),
+        trigger: ["blur", "change"],
+      },
+    ],
+    passwd: [
+      {
+        required: true,
+        trigger: ["blur", "change"],
+        message: t("login.message.password.passwordMsg"),
+      },
+      {
+        min: 6,
+        message: t("login.message.password.notMinThan"),
+        trigger: "blur",
+      },
+      {
+        max: 20,
+        message: t("login.message.password.notMaxThan"),
+        trigger: "change",
+      },
+      {
+        pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+        message: t("login.message.password.regxMsg"),
+        trigger: "blur",
+      },
+    ],
+    email: [
+      {
+        required: true,
+        trigger: ["blur", "change"],
+        message: t("login.message.email.emailMsg"),
+      },
+      {
+        min: 5,
+        message: t("login.message.email.notMinThan"),
+        trigger: "blur",
+      },
+      {
+        max: 20,
+        message: t("login.message.email.notMaxThan"),
+        trigger: "change",
+      },
+      {
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        message: t("login.message.email.regxMsg"),
+        trigger: "blur",
+      },
+    ],
+  };
+});
 
 const handleShowPassword = () => {
   passwordType.value = passwordType.value === "password" ? "text" : "password";
@@ -246,7 +384,9 @@ const handleLoginSubmit = () => {
   });
 };
 
-// 跳转到注册
+/** 
+ * 跳转到注册 
+ */ 
 const handleSigIn = () => {
   isSigIn.value = true;
   loginFormRef.value?.resetFields();
@@ -256,18 +396,23 @@ const handleSigIn = () => {
  * 返回登录
  */
 const handleBackLogin = () => {
-  loginFormRef.value?.resetFields();
+  if(signinLoding.value){
+    return;
+  }
+  signinFormRef.value?.resetFields();
   isSigIn.value = false;
 };
 
-// 注册请求
+/**
+ * 注册请求
+ */
 const handleSigInSubmit = () => {
-  loginFormRef.value?.validate((valid) => {
+  signinFormRef.value?.validate((valid) => {
     if (valid) {
       signinLoding.value = true;
       userStore
-        .signin(loginData.value)
-        .then((res) => {
+        .signin(signinData.value)
+        .then(() => {
           ElMessage({
             showClose: true,
             message: t("login.signinSuccessful"),
@@ -275,6 +420,7 @@ const handleSigInSubmit = () => {
             customClass: "o-message--success",
             duration: 3000,
           });
+          handleBackLogin();
         })
         .finally(() => {
           signinLoding.value = false;
