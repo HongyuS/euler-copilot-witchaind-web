@@ -1,4 +1,4 @@
-import AuthAPI, { type LoginData } from "@/api/auth";
+import AuthAPI, { SigninData, type LoginData } from "@/api/auth";
 import { type UserInfo } from "@/api/user";
 import { resetRouter } from "@/router";
 import { store } from "@/store";
@@ -29,10 +29,10 @@ export const useUserStore = defineStore("user", () => {
   /**
    * 注册
    *
-   * @param {LoginData}
+   * @param {signinData}
    * @returns
    */
-  function signin(signinData: LoginData) {
+  function signin(signinData: SigninData) {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.signin(signinData)
         .then((data: any) => resolve(data))
