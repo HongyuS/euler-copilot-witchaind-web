@@ -15,6 +15,7 @@ export default {
         nameMsg: "昵称不能为空",
         required: "请输入昵称",
         notMinThan: "昵称长度不能大于10个字符",
+        popoverMsg:'长度为1-10个字符'
       },
       username: {
         usernameMsg: "用户名不能为空",
@@ -22,6 +23,7 @@ export default {
         notMinThan: "用户名长度不能少于5个字符",
         notMaxThan: "用户名长度不能大于20个字符",
         regxMsg: "用户名只能为小写字母、数字",
+        popoverMsg:'长度为5-20个字符,只能包含小写字母、数字'
       },
       password: {
         passwordMsg: "密码不能为空",
@@ -29,20 +31,23 @@ export default {
         notMinThan: "密码长度不能少于6个字符",
         notMaxThan: "密码长度不能大于20个字符",
         regxMsg: "密码必须包含大写字母、小写字母、数字",
+        popoverMsg:'长度为6-20个字符,必须包含大写字母、小写字母、数字'
       },
       passwd: {
         passwordMsg: "密码不能为空",
         required: "请输入密码",
-        notMinThan: "密码长度不能少于5个字符",
+        notMinThan: "密码长度不能少于6个字符",
         notMaxThan: "密码长度不能大于20个字符",
         regxMsg: "密码必须包含大写字母、小写字母、数字",
+        popoverMsg:'长度为6-20个字符,必须包含大写字母、小写字母、数字'
       },
       email: {
         emailMsg: "邮箱不能为空",
         required: "请输入邮箱",
-        notMinThan: "邮箱长度不能少于6个字符",
+        notMinThan: "邮箱长度不能少于5个字符",
         notMaxThan: "邮箱长度不能大于20个字符",
         regxMsg: "邮箱格式不正确",
+        popoverMsg:'长度为5-20个字符,格式必须为XXX@XXX.XXX'
       },
       loginTip: "用户名或密码错误",
       loginToken: "您的会话已过期，请重新登录",
