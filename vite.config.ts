@@ -58,11 +58,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       },
       open: true,
       proxy: {
-        "/api": {
+        "/witchaind/api": {
           target: "http://116.63.144.61:9988",
           changeOrigin: true,
           ws: false,
-          rewrite: (path) => path.replace(new RegExp("^" + "/api"), ""),
+          rewrite: (path) => path.replace(new RegExp("^" + "/witchaind/api"), ""),
         },
       },
     },
