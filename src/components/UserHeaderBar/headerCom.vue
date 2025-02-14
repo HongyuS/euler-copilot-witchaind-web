@@ -2,11 +2,12 @@
   <el-header class="platform-header">
     <div class="header-container">
       <span class="platform-title">
-        <img src="/src/assets/svg/euler_copilot_logo.svg" />
-        <span class="project-name">witChainD</span>
+    <!-- 因嵌入copilot页面暂时注释 -->
+        <!-- <img src="/src/assets/svg/euler_copilot_logo.svg" /> -->
+        <!-- <span class="project-name">witChainD</span> -->
       </span>
       <div class="top-bar">
-        <lang-select class="ml-2 cursor-pointer" />
+        <!-- <lang-select class="ml-2 cursor-pointer" /> -->
         <el-dropdown
           popper-class="dropdown-container userDro"
           class="userDroContainer"

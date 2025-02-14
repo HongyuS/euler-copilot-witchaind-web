@@ -91,8 +91,8 @@
       cursor: pointer;
       color: var(--o-color-info);
       &:hover {
-        color: var(--text-color-info-secondary);
-        transition: 500ms;
+        color: #5d7dffc0;
+        transition: 200ms;
       }
     }
     .not-click{
@@ -123,4 +123,15 @@
     background: var(--el-input-bg-color);
     border-radius: 5px;
   }
+}
+/* 调整箭头位置的关键 CSS */
+.el-popover.custom-popover .el-popper__arrow {
+  /* 通过调整 left 属性来水平移动箭头 */
+  left: 90% !important;
+  /* 可以根据需要调整偏移量 */
+  transform: translateX(90%) !important;
+}
+.el-popover.custom-popover .el-popper__arrow::before {
+  /* 调整箭头伪元素的样式 */
+  border-top-color: #fff;
 }

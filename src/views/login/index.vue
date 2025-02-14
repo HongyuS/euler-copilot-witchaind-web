@@ -91,67 +91,107 @@
             <!-- 昵称 -->
             <el-form-item prop="name" class="username-from">
               <div class="input-wrapper">
-                <el-input
-                  ref="name"
-                  v-model="signinData.name"
-                  :placeholder="$t('login.message.name.required')"
-                  name="name"
-                  size="large"
-                  class="h-[48px]"
-                />
+                <el-popover
+                  placement="top-end"
+                  :width="500"
+                  trigger="hover"
+                  :content="t('login.message.name.popoverMsg')"
+                  popper-class="custom-popover"
+                >
+                  <template #reference>
+                    <el-input
+                      ref="name"
+                      v-model="signinData.name"
+                      :placeholder="$t('login.message.name.required')"
+                      name="name"
+                      size="large"
+                      class="h-[48px]"
+                    />
+                  </template>
+                </el-popover>
               </div>
             </el-form-item>
             <!-- 用户名 -->
             <el-form-item prop="account" class="username-from">
               <div class="input-wrapper">
-                <el-input
-                  ref="account"
-                  v-model="signinData.account"
-                  :placeholder="$t('login.message.username.required')"
-                  name="account"
-                  size="large"
-                  class="h-[48px]"
-                />
+                <el-popover
+                  placement="top-end"
+                  :width="500"
+                  trigger="hover"
+                  :content="t('login.message.username.popoverMsg')"
+                  popper-class="custom-popover"
+                >
+                  <template #reference>
+                    <el-input
+                      ref="account"
+                      v-model="signinData.account"
+                      :placeholder="$t('login.message.username.required')"
+                      name="account"
+                      size="large"
+                      class="h-[48px]"
+                    />
+                  </template>
+                </el-popover>
               </div>
             </el-form-item>
             <!-- 邮箱 -->
             <el-form-item prop="email" class="username-from">
               <div class="input-wrapper">
-                <el-input
-                  ref="email"
-                  v-model="signinData.email"
-                  :placeholder="$t('login.message.email.required')"
-                  name="email"
-                  size="large"
-                  class="h-[48px]"
-                />
+                <el-popover
+                  placement="top-end"
+                  :width="500"
+                  trigger="hover"
+                  :content="t('login.message.email.popoverMsg')"
+                  popper-class="custom-popover"
+                >
+                  <template #reference>
+                    <el-input
+                      ref="email"
+                      v-model="signinData.email"
+                      :placeholder="$t('login.message.email.required')"
+                      name="email"
+                      size="large"
+                      class="h-[48px]"
+                    />
+                  </template>
+                </el-popover>
               </div>
             </el-form-item>
 
             <!-- 密码 -->
             <el-form-item prop="passwd" class="password-from">
               <div class="input-wrapper">
-                <el-input
-                  v-model="signinData.passwd"
-                  :placeholder="$t('login.message.passwd.required')"
-                  name="passwd"
-                  :type="passwordType"
-                  @keyup.enter="handleLoginSubmit"
-                  size="large"
-                  class="h-[48px]"
-                  autocomplete="off"
-                  ref="inputRef"
+                <el-popover
+                  placement="top-end"
+                  :width="500"
+                  trigger="hover"
+                  :content="t('login.message.passwd.popoverMsg')"
+                  popper-class="custom-popover"
                 >
-                  <template #suffix>
-                    <el-icon
-                      class="el-input__icon el-input__password"
-                      @click="handleShowPassword"
+                  <template #reference>
+                    <el-input
+                      v-model="signinData.passwd"
+                      :placeholder="$t('login.message.passwd.required')"
+                      name="passwd"
+                      :type="passwordType"
+                      @keyup.enter="handleLoginSubmit"
+                      size="large"
+                      class="h-[48px]"
+                      autocomplete="off"
+                      ref="inputRef"
                     >
-                      <IconInvisible v-if="passwordType === 'password'" />
-                      <IconVisible v-else />
-                    </el-icon>
+                      <template #suffix>
+                        <el-icon
+                          class="el-input__icon el-input__password"
+                          @click="handleShowPassword"
+                        >
+                          <IconInvisible v-if="passwordType === 'password'" />
+                          <IconVisible v-else />
+                        </el-icon>
+                      </template>
+                    </el-input>
                   </template>
-                </el-input>
+                </el-popover>
               </div>
             </el-form-item>
             <!-- 注册按钮 -->
@@ -383,9 +423,9 @@ const handleLoginSubmit = () => {
   });
 };
 
-/** 
- * 跳转到注册 
- */ 
+/**
+ * 跳转到注册
+ */
 const handleSigIn = () => {
   isSigIn.value = true;
   loginFormRef.value?.resetFields();
@@ -395,7 +435,7 @@ const handleSigIn = () => {
  * 返回登录
  */
 const handleBackLogin = () => {
-  if(signinLoding.value){
+  if (signinLoding.value) {
     return;
   }
   signinFormRef.value?.resetFields();
@@ -419,7 +459,8 @@ const handleSigInSubmit = () => {
             customClass: "o-message--success",
             duration: 3000,
           });
-          handleBackLogin();
+          signinFormRef.value?.resetFields();
+          isSigIn.value = false;
         })
         .finally(() => {
           signinLoding.value = false;

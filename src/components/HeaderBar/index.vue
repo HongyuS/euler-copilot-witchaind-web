@@ -1,6 +1,7 @@
 <template>
   <el-affix target=".main-container" :offset="0">
-    <el-header class="platform-header">
+    <!-- 因嵌入copilot页面暂时注释 -->
+    <!-- <el-header class="platform-header">
       <span class="platform-title">
         <img src="/src/assets/svg/euler_copilot_logo.svg" />
         <h4>witChainD</h4>
@@ -11,7 +12,7 @@
           <IconHelpCircle />
         </el-icon>
       </div>
-    </el-header>
+    </el-header> -->
   </el-affix>
 </template>
 
@@ -24,7 +25,6 @@ import { IconHelpCircle } from "@computing/opendesign-icons";
 import { TOKEN_KEY } from "@/enums/CacheEnum";
 const settingsStore = useSettingsStore();
 const { t } = useI18n();
- 
 </script>
 
 <style lang="scss">
