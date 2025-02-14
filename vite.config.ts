@@ -30,6 +30,7 @@ const pathSrc = resolve(__dirname, "src");
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
   return {
+    base: "/witchaind/", // 设置打包路径
     resolve: {
       alias: {
         "@": pathSrc,
