@@ -49,8 +49,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     server: {
       // 允许IP访问
-      host: "127.0.0.1",
+      host: "localhost",
       port: 3002,
+      origin: 'http://localhost:3002',
       // 运行是否自动打开浏览器
       headers: {
         "Access-control-allow-origin": "*",

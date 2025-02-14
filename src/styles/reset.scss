@@ -205,9 +205,29 @@ h6 {
   font-size: 12px;
 }
 
-.el-button--primary {
-  background: rgb(0 119 255) !important;
+$newbg: linear-gradient(to top left, rgba(165, 221, 249, 0.637), rgba(118, 182, 251, 0.698) 50.232%, rgba(106, 147, 243, 0.632) 83.699%); 
+// $newbg:linear-gradient(270deg, rgba(109, 117, 250, 0.2), rgba(90, 179, 255, 0.2));
+$newHoverBg: linear-gradient(to top left, rgb(182, 216, 253), rgb(149, 203, 250) 33.232%, rgb(139, 152, 249) 85.699%);
+/**
+ * 重置按钮背景及边框颜色样式
+ */
+ .el-button{
+  &:hover {
+    color: #5d7dffc0 !important;
+    border-color: #5d7dffc0 !important;
+  }
 }
+.el-button--primary,
+.bgThumb {
+  background:  $newbg !important;  
+  border-color: #c7d2fbc0 !important;
+  &:hover {
+    color: white !important;
+    background: $newHoverBg !important;
+    border-color: #c7d2fbc0 !important;
+  }
+}
+
 
 *,
 *::before,

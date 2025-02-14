@@ -111,20 +111,6 @@
                 </el-popover>
               </div>
             </el-form-item>
-            <!-- <el-form-item prop="name" class="username-from">
-              <el-tooltip placement="top" effect="dark">
-                <template #content> multiple lines<br />second line </template>
-
-                <el-input
-                  ref="name"
-                  v-model="signinData.name"
-                  :placeholder="$t('login.message.name.required')"
-                  name="name"
-                  size="large"
-                  class="h-[48px]"
-                />
-              </el-tooltip>
-            </el-form-item> -->
             <!-- 用户名 -->
             <el-form-item prop="account" class="username-from">
               <div class="input-wrapper">
