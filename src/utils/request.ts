@@ -8,7 +8,7 @@ import { IconError } from "@computing/opendesign-icons";
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: "/api",
+  baseURL: "/witchaind/api",
   timeout: 90000,
   withCredentials: true,
   headers: {

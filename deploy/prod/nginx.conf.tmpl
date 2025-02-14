@@ -87,7 +87,7 @@ http {
             expires 30d;
 	    }
 
-        location / {
+        location /witchaind {
             proxy_set_header X-Real-IP $remote_addr;
             root /usr/share/nginx/html;
             try_files $uri $uri/ /index.html;
@@ -96,12 +96,12 @@ http {
             }
         }
 
-        location /api/health_check {
+        location /witchaind/api/health_check {
             deny all;
             return 404;
         }
 
-        location /api/ {
+        location /witchaind/api/ {
             proxy_set_header X-Real-IP $remote_addr;
             add_header X-XSS-Protection "1; mode=block";
             add_header X-Frame-Options DENY;
@@ -126,11 +126,11 @@ http {
         error_page 404 /404.html;
         error_page 500 501 502 503 504 505 /error.html;
 
-        location = /404.html {
+        location = /witchaind/404.html {
             root /usr/share/nginx/html;
         }
 
-        location = /error.html {
+        location = /witchaind/error.html {
             root /usr/share/nginx/html;
         }
     }
