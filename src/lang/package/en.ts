@@ -127,6 +127,8 @@ export default {
     modelConfig: "Configure Model",
     modelType: "Model",
     maxToken: "Maximum Token Limit",
+    localModel:'Local Model',
+    onlineModel:'Online Model',
   },
   btnText: {
     confirm: "Ok",

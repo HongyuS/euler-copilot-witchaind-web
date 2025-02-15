@@ -132,6 +132,8 @@ export default {
     modelType: "模型类型",
     modelConfig: "模型配置",
     maxToken: "最大Token数",
+    localModel:'本地模型',
+    onlineModel:'在线模型',
   },
   btnText: {
     confirm: "确定",
