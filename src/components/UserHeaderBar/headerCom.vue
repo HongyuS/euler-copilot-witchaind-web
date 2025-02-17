@@ -250,9 +250,12 @@ type TypesImg = {
 };
 
 // 使用类型别名定义 typesImg 对象的类型
-const typesImg: TypesImg = {
+const typesImg: TypesImg =  window.location.origin.indexOf('localhost') ? {
   qwen: "/witchaind/src/assets/images/Qwen.png",
   deepseek: "/witchaind/src/assets/images/deepseek.png",
+}: {
+  qwen: "/src/assets/images/Qwen.png",
+  deepseek: "/src/assets/images/deepseek.png",
 };
 const ruleForm = ref<ModelForm>({
   openai_api_key: "",
