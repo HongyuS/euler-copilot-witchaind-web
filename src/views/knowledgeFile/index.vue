@@ -1001,7 +1001,7 @@ const handleSearchPayload = () => {
 };
 
 const handleJumpHome = () => {
-  window.open(`${window.origin}/#/knowledge/library`, "_self");
+  window.open(`${window.origin}/witchaind/#/knowledge/library`, "_self");
 };
 
 const handleHeaderClick = (e: any) => {};
@@ -1127,7 +1127,7 @@ const hanldeSearhNameFilter = (filterName: string) => {
 
 const handleJumpFileSection = (row: any) => {
   window.open(
-    `${window.origin}/#/knowledge/fileSection?kb_id=${route.query.kb_id}&file_id=${row.id}`,
+    `${window.origin}/witchaind/#/knowledge/fileSection?kb_id=${route.query.kb_id}&file_id=${row.id}`,
     "_self"
   );
 };
@@ -1485,7 +1485,7 @@ const handleUploadMyFile = (options: any) => {
 
 const handleDownloadFile = (downloadData: any) => {
   downloadData.forEach((item: { id: any }) => {
-    window.open(`${window.origin}/api/doc/download?id=${item.id}`);
+    window.open(`${window.origin}/witchaind/api/doc/download?id=${item.id}`);
   });
 };
 </script>

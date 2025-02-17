@@ -1074,13 +1074,13 @@ const handleCancelVisible = () => {
 };
 
 const handleJumpAssets = (kbItem: any) => {
-  window.open(`${window.origin}/#/knowledge/file?kb_id=${kbItem.id}`, "_self");
+  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kbItem.id}`, "_self");
 };
 
 const handleAddFile = () => {
   const assetLibraryObj = fileTableList.data[0];
   window.open(
-    `${window.origin}/#/knowledge/file?kb_id=${assetLibraryObj.id}`,
+    `${window.origin}/witchaind/#/knowledge/file?kb_id=${assetLibraryObj.id}`,
     "_self"
   );
 };
@@ -1119,7 +1119,7 @@ const handleDeleteKl = (row: any) => {
 };
 
 const handleOpenDownload = (fileId: any) => {
-  window.open(`${window.origin}/api/kb/download?task_id=${fileId}`);
+  window.open(`${window.origin}/witchaind/api/kb/download?task_id=${fileId}`);
 };
 
 const handleInputSearch = debounce((e) => {
