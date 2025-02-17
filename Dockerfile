@@ -8,7 +8,7 @@ RUN npm install pnpm -g --registry=https://registry.npmmirror.com && \
     pnpm run build
 
 
-FROM openeuler/openeuler:22.03-lts-sp1
+FROM hub.oepkgs.net/openeuler/openeuler:22.03-lts-sp4
 
 ENV TZ Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
@@ -22,10 +22,11 @@ RUN sed -i 's|repo.openeuler.org|mirrors.nju.edu.cn/openeuler|g' /etc/yum.repos.
     yum clean all && \
     groupadd -g 1001 eulercopilot && \
     useradd -m -u 1001 -g eulercopilot -s /sbin/nologin eulercopilot && \
-    passwd -l eulercopilot
+    passwd -l eulercopilot && \
+    mkdir -p /usr/share/nginx/html/witchaind
 
-COPY --from=0 /opt/data_chain_web/dist /usr/share/nginx/html
-COPY --from=0 /opt/data_chain_web/public /usr/share/nginx/html
+COPY --from=0 /opt/data_chain_web/dist /usr/share/nginx/html/witchaind/
+COPY --from=0 /opt/data_chain_web/public /usr/share/nginx/html/witchaind/
 COPY --from=0 /opt/data_chain_web/deploy/prod/nginx.conf.tmpl /home/eulercopilot/nginx.conf.tmpl
 COPY --from=0 /opt/data_chain_web/deploy/prod/start.sh /home/eulercopilot/start.sh
 
