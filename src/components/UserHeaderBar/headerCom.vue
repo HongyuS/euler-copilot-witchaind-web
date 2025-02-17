@@ -7,7 +7,7 @@
         <!-- <span class="project-name">witChainD</span> -->
       </span>
       <div class="top-bar">
-        <lang-select class="ml-2 cursor-pointer" />
+        <!-- <lang-select class="ml-2 cursor-pointer" /> -->
         <el-dropdown
           popper-class="dropdown-container userDro"
           class="userDroContainer"
