@@ -60,4 +60,9 @@ export function resetRouter() {
   window.open(`${window.origin}/witchaind/#/login`, "_self");
 }
 
+router.beforeEach((to, from, next) => {
+  sessionStorage.setItem('routerName', to.fullPath) //存储当前路由
+  next()
+})
+
 export default router;
