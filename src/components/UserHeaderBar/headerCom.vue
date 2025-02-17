@@ -95,7 +95,7 @@
             >
                <img v-if="item.model_type==='deepseek'" src="/src/assets/images/deepseek.png" width="25"
                height="25" />
-               <img v-if="item.model_type==='qwen'" src="/src/assets/images/qwen.png" width="25"
+               <img v-if="item.model_type==='qwen'" src="/src/assets/images/Qwen.png" width="25"
                height="25"/>
               {{ item.model_name }}
             </el-option>
