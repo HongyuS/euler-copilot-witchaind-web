@@ -58,7 +58,7 @@ export interface SigninData {
   /** 昵称 */
   name: string;
   /** 邮箱 */
-  email:string;
+  email:string | null;
 }
 
 export interface userUpade {

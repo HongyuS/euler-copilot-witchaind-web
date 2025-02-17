@@ -260,7 +260,7 @@ const signinData = ref<SigninData>({
   name: "",
   account: "",
   passwd: "",
-  email: "",
+  email: null,
 });
 
 // 是否是注册页面
