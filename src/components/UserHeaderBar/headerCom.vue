@@ -93,12 +93,10 @@
               :label="item.model_name"
               :value="item.id"
             >
-              <img
-                :src="typesImg[item.model_type]"
-                alt=""
-                width="25"
-                height="25"
-              />
+               <img v-if="item.model_type==='deepseek'" src="/src/assets/images/deepseek.png" width="25"
+               height="25" />
+               <img v-if="item.model_type==='qwen'" src="/src/assets/images/Qwen.png" width="25"
+               height="25"/>
               {{ item.model_name }}
             </el-option>
           </el-select>
@@ -244,16 +242,6 @@ let modelTypes: Ref<ModelType[]> = ref([
   // },
 ]);
 
-// 定义一个类型别名来描述 typesImg 对象的结构
-type TypesImg = {
-  [key: string]: string; // 键是字符串，值也是字符串
-};
-
-// 使用类型别名定义 typesImg 对象的类型
-const typesImg: TypesImg = {
-  qwen: "/witchaind/src/assets/images/Qwen.png",
-  deepseek: "/witchaind/src/assets/images/deepseek.png",
-};
 const ruleForm = ref<ModelForm>({
   openai_api_key: "",
   openai_api_base: "",
