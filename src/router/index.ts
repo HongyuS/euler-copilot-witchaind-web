@@ -57,7 +57,7 @@ export function setupRouter(app: App<Element>) {
  * 重置路由
  */
 export function resetRouter() {
-  window.open(`${window.origin}/#/login`, "_self");
+  window.open(`${window.origin}/witchaind/#/login`, "_self");
 }
 
 export default router;

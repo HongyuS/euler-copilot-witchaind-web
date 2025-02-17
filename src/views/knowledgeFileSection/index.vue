@@ -564,11 +564,11 @@ const handleInputSearch = debounce((e) => {
 }, 200);
 
 const handleJumpHome = () => {
-  window.open(`${window.origin}/#/knowledge/library`, "_self");
+  window.open(`${window.origin}/witchaind/#/knowledge/library`, "_self");
 };
 
 const handleJumpFile = () => {
   const kb_Id = route.query.kb_id as string;
-  window.open(`${window.origin}/#/knowledge/file?kb_id=${kb_Id}`, "_self");
+  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kb_Id}`, "_self");
 };
 </script>

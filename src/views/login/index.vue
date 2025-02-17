@@ -416,7 +416,7 @@ const handleLoginSubmit = () => {
             duration: 3000,
           });
           localStorage.setItem("userInfo", JSON.stringify(res));
-          window.open(`${window.origin}/#/knowledge/library`, "_self");
+          window.open(`${window.origin}/witchaind/#/knowledge/library`, "_self");
         })
         .finally(() => {
           loading.value = false;
