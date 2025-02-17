@@ -83,7 +83,7 @@ export default {
     supAddCategoris: "A maximum of 10 document categories can be added.",
     fileNum: "Document Count",
     uploadTime: "Create Time",
-    importTaskList: "Import Task List",
+    importTaskList: "File upload list",
     exportTaskList: "Export Task List",
     uploadIng: "Uploading",
     uploadFailedNet: "Upload failed.Check the netwok.",

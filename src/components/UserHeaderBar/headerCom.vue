@@ -80,10 +80,7 @@
     >
       <!-- 本地模型 -->
       <div class="form-container">
-        <el-form-item
-          :label="$t('model.modelType')"
-          class="docName"
-        >
+        <el-form-item :label="$t('model.modelType')" class="docName">
           <el-select
             v-model="ruleFormLocal.model_name"
             placeholder="选择模型类型"
@@ -233,7 +230,7 @@ interface ModelType {
   id: string;
 }
 
-const initModelTYpe=ref('')
+const initModelTYpe = ref("");
 
 // 使用接口定义 modelTypes 数组的类型
 let modelTypes: Ref<ModelType[]> = ref([
@@ -405,16 +402,18 @@ const handleFormValidate = (prop: any, isValid: boolean, message: string) => {
 let submitLoading = ref(false);
 const handleConfirmCreateModel = async (formData: FormInstance | undefined) => {
   if (!formData) return;
-  if(openai_api_type.value === "local"){
-    
-    if(initModelTYpe.value===ruleFormLocal.value.id && initModelTYpe.value===ruleFormLocal.value.model_name){
+  if (openai_api_type.value === "local") {
+    if (
+      ruleFormLocal.value.model_name.length < 36 ||
+      initModelTYpe.value === ruleFormLocal.value.model_name
+    ) {
       ElMessage({
-      showClose: true,
-      message:"请勿重复配置",
-      icon: IconError,
-      customClass: "o-message--error",
-      duration: 3000,
-    });
+        showClose: true,
+        message: "请勿重复配置",
+        icon: IconError,
+        customClass: "o-message--error",
+        duration: 3000,
+      });
       return;
     }
   }
@@ -471,12 +470,12 @@ const handleModelDialog = () => {
 
 const handleModelVisible = (visible: boolean) => {
   KbAppAPI.getdUserModel().then((res) => {
-    if(res.is_online){
+    if (res.is_online) {
       ruleForm.value = {
         ...res,
         max_tokens: res?.max_tokens || 1024,
       };
-    }else{
+    } else {
       initModelTYpe.value = res.id;
       ruleFormLocal.value = res;
     }

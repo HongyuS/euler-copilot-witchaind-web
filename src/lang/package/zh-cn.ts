@@ -88,7 +88,7 @@ export default {
     supAddCategoris: "最多支持添加10个文档信息类别",
     fileNum: "文档数量",
     uploadTime: "创建时间",
-    importTaskList: "导入任务列表",
+    importTaskList: "文件上传列表",
     exportTaskList: "导出任务列表",
     uploadIng: "上传中",
     uploadFailedNet: "上传失败，请检查网络",
