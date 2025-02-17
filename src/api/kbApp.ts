@@ -143,6 +143,13 @@ class KbAppAPI {
       method: "get",
     });
   }
+
+  static localModelList() {
+    return request({
+      url: `/model/list`,
+      method: "get",
+    });
+  }
 }
 
 export default KbAppAPI;

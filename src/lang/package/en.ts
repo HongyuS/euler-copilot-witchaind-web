@@ -83,7 +83,7 @@ export default {
     supAddCategoris: "A maximum of 10 document categories can be added.",
     fileNum: "Document Count",
     uploadTime: "Create Time",
-    importTaskList: "Import Task List",
+    importTaskList: "File upload list",
     exportTaskList: "Export Task List",
     uploadIng: "Uploading",
     uploadFailedNet: "Upload failed.Check the netwok.",
@@ -127,6 +127,8 @@ export default {
     modelConfig: "Configure Model",
     modelType: "Model",
     maxToken: "Maximum Token Limit",
+    localModel:'Local Model',
+    onlineModel:'Online Model',
   },
   btnText: {
     confirm: "Ok",

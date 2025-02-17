@@ -88,6 +88,7 @@
             :rules="signinRules"
             class="login-form"
           >
+          <div style="min-height:220px">
             <!-- 昵称 -->
             <el-form-item prop="name" class="username-from">
               <div class="input-wrapper">
@@ -194,6 +195,7 @@
                 </el-popover>
               </div>
             </el-form-item>
+          </div>
             <!-- 注册按钮 -->
             <el-button
               :loading="signinLoding"
@@ -367,7 +369,7 @@ const signinRules = computed(() => {
     ],
     email: [
       {
-        required: true,
+        required: false,
         trigger: ["blur", "change"],
         message: t("login.message.email.emailMsg"),
       },
@@ -446,6 +448,7 @@ const handleBackLogin = () => {
  * 注册请求
  */
 const handleSigInSubmit = () => {
+  console.log(signinData.value,signinFormRef);
   signinFormRef.value?.validate((valid) => {
     if (valid) {
       signinLoding.value = true;
