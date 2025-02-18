@@ -60,7 +60,11 @@
     @close="handleModelDialog"
     :title="$t('model.modelConfig')"
   >
-    <el-radio-group v-model="openai_api_type" class="model-radio">
+    <el-radio-group
+      v-model="openai_api_type"
+      class="model-radio"
+      @change="handleRadioChange"
+    >
       <el-radio value="local" size="large">{{
         t("model.localModel")
       }}</el-radio>
@@ -80,7 +84,11 @@
     >
       <!-- 本地模型 -->
       <div class="form-container">
-        <el-form-item :label="$t('model.modelType')" class="docName">
+        <el-form-item
+          :label="$t('model.modelType')"
+          prop="model_name"
+          class="docName"
+        >
           <el-select
             v-model="ruleFormLocal.model_name"
             placeholder="选择模型类型"
@@ -93,10 +101,18 @@
               :label="item.model_name"
               :value="item.id"
             >
-               <img v-if="item.model_type==='deepseek'" src="/src/assets/images/deepseek.png" width="25"
-               height="25" />
-               <img v-if="item.model_type==='qwen'" src="/src/assets/images/Qwen.png" width="25"
-               height="25"/>
+              <img
+                v-if="item.model_type === 'deepseek'"
+                src="/src/assets/images/deepseek.png"
+                width="25"
+                height="25"
+              />
+              <img
+                v-if="item.model_type === 'qwen'"
+                src="/src/assets/images/Qwen.png"
+                width="25"
+                height="25"
+              />
               {{ item.model_name }}
             </el-option>
           </el-select>
@@ -371,6 +387,16 @@ watch(
   }
 );
 
+const handleRadioChange = () => {
+  if (openai_api_type.value === "local") {
+    ruleFormLocal.value = {};
+    ruleFormRefLocal.value.resetFields();
+  } else {
+    ruleForm.value = { max_tokens: 1024 };
+    ruleFormRef.value.resetFields();
+  }
+};
+
 const handleBatchDownBth = (e) => {
   batchDownBth.value = e;
 };
@@ -390,24 +416,24 @@ const handleFormValidate = (prop: any, isValid: boolean, message: string) => {
 let submitLoading = ref(false);
 const handleConfirmCreateModel = async (formData: FormInstance | undefined) => {
   if (!formData) return;
-  if (openai_api_type.value === "local") {
-    if (
-      ruleFormLocal.value.model_name.length < 36 ||
-      initModelTYpe.value === ruleFormLocal.value.model_name
-    ) {
-      ElMessage({
-        showClose: true,
-        message: "请勿重复配置",
-        icon: IconError,
-        customClass: "o-message--error",
-        duration: 3000,
-      });
-      return;
-    }
-  }
 
   await formData.validate((valid, fields) => {
     if (valid) {
+      if (openai_api_type.value === "local") {
+        if (
+          ruleFormLocal.value.model_name?.length < 36 ||
+          initModelTYpe.value === ruleFormLocal.value.model_name
+        ) {
+          ElMessage({
+            showClose: true,
+            message: "请勿重复配置",
+            icon: IconError,
+            customClass: "o-message--error",
+            duration: 3000,
+          });
+          return;
+        }
+      }
       submitLoading.value = true;
       let param = {};
       if (openai_api_type.value === "online") {
@@ -463,9 +489,11 @@ const handleModelVisible = (visible: boolean) => {
         ...res,
         max_tokens: res?.max_tokens || 1024,
       };
+      openai_api_type.value = "online";
     } else {
       initModelTYpe.value = res.id;
       ruleFormLocal.value = res;
+      openai_api_type.value = "local";
     }
   });
   modelVisible.value = visible;
