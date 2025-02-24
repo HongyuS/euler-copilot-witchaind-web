@@ -185,7 +185,7 @@ export default {
   },
   formTipText: {
     analyticTip:
-      "Vectorization model for transforming document chunks into vectors. Currently,two options are available:bge-large-en-v1.5 for English text and bge-mixed-model for Chinese text.",
+      "Vectorization model for transforming document chunks into vectors. Currently,two options are available:bge-large-en for English text bge-large-zh for Chinese text.",
     fileChunkSizeTip:
       "Chunk size for dividing files after the configuration file is uploaded. The value ranges from 512 to 1024 tokens per chunk. By default, a chunk size of 1024 tokens is used.",
   },
