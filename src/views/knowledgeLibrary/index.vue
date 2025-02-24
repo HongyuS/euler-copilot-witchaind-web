@@ -1188,7 +1188,7 @@ const handleConfirmDelKb = (row: any) => {
           message: t("opsMessage.delSuccess"),
           icon: IconSuccess,
           customClass: "o-message--success",
-          duration: 30000000,
+          duration: 3000,
         });
         if (switchIcon.value === "thumb") {
           klCardBox.value.scrollTop = 0;
