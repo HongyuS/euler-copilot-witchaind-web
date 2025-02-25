@@ -189,7 +189,7 @@ export default {
   },
   formTipText: {
     analyticTip:
-      "文档分块后，将分块转换为向量的向量化模型类型，先暂支持两种向量化模型bg-large-en-v1.5（面向英文向量化场景）和bge-mixed-model（面向中文向量化场景），默认情况下选择bge-mixed-model模型。",
+      "文档分块后，将分块转换为向量的向量化模型类型，先暂支持两种向量化模型bge-large-en（面向英文向量化场景）和bge-large-zh（面向中文向量化场景），默认情况下选择bge-large-zh模型。",
     fileChunkSizeTip:
       "配置文档上传后，将文件处理成片段分块的大小，分块大小范围为512-1024Token/块，默认使用1024Toke/块对文件进行分块。",
   },
