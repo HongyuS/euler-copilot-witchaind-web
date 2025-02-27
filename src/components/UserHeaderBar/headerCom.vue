@@ -39,7 +39,7 @@
           class="box-item"
           effect="light"
           :content="
-            `${$t('model.modelName')}：${ruleForm?.model_name}` ||
+            modelNameStr?`${$t('model.modelName')}：${modelNameStr}` :
             `${$t('model.modelName')}`
           "
           placement="left"
@@ -57,7 +57,7 @@
     v-model="modelVisible"
     class="model-dialog"
     width="560"
-    @close="handleModelDialog"
+    @close="handleClose"
     :title="$t('model.modelConfig')"
   >
     <el-radio-group
@@ -309,12 +309,14 @@ const formValidateStatus = ref<any>({
 
 const userInfo = ref<any>({});
 
+const modelNameStr=ref<string>("");   // 保持当前用户配置的模型名称
+
+const persisitModel = ref<string>("");  // 保持当前用户配置的模型类型，避免刚打开对话框时的单选框切换效果
+
 const handleClose = () => {
   modelVisible.value = false;
-  ruleFormRef.value?.resetFields();
-  ruleFormRefLocal.value?.resetFields();
-  ruleForm.value = { max_tokens: 1024 };
-  ruleFormLocal.value = {};
+  
+  openai_api_type.value = persisitModel.value;
 
   formValidateStatus.value = {
     openai_api_key: true,
@@ -332,7 +334,13 @@ onMounted(() => {
       modelTypes.value = res;
     });
   }
+  getModelInfo();
+});
+
+const getModelInfo=()=>{
   KbAppAPI.getdUserModel().then((res) => {
+    persisitModel.value= res.is_online?"online":"local";
+    modelNameStr.value = res.model_name;
     if (res.is_online) {
       openai_api_type.value = "online";
       ruleForm.value = res;
@@ -344,7 +352,7 @@ onMounted(() => {
       ruleForm.value = { max_tokens: 1024 };
     }
   });
-});
+}
 
 watch(openai_api_type, (val) => {
   if (ruleFormRef.value) {
@@ -461,6 +469,7 @@ const handleConfirmCreateModel = async (formData: FormInstance | undefined) => {
             duration: 3000,
           });
           handleModelDialog();
+          getModelInfo();
         })
         .finally(() => {
           submitLoading.value = false;
@@ -484,6 +493,8 @@ const handleModelDialog = () => {
 
 const handleModelVisible = (visible: boolean) => {
   KbAppAPI.getdUserModel().then((res) => {
+    modelNameStr.value = res.model_name;
+    persisitModel.value= res.is_online?"online":"local";
     if (res.is_online) {
       ruleForm.value = {
         ...res,
