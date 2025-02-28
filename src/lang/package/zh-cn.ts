@@ -63,7 +63,7 @@ export default {
     assetId: "资产ID",
     welcomeUsePro: "欢迎使用知识库!",
     profile:
-      "知识库专注于文档的高效管理和智能解析，支持包括XML、MD、XLSX、DOCX、DOC以及TXT在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Copilot System RAG的强大检索功能，旨在为您提供卓越的智能问答服务体验。",
+      "知识库专注于文档的高效管理和智能解析，支持包括XML、MD、XLSX、DOCX、DOC、PDF以及TXT在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Copilot System RAG的强大检索功能，旨在为您提供卓越的智能问答服务体验。",
     message: {
       name: "请输入资产库名称",
       libraryNameLen: "资产库名称长度1-15个字符",
