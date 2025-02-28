@@ -29,6 +29,7 @@
             :data="fileTableList.data"
             max-height="184"
             @selection-change="handleSelectionChange"
+            ref="fileTableRef"
           >
             <el-table-column
               type="selection"
@@ -194,6 +195,8 @@ const multipleSelection = ref<TableRow[]>([]);
 const uploadingList = ref<Array<any>>([]);
 const showTaskList = ref(true);
 
+// 表格实例引用
+const fileTableRef = ref();
 const handleSelectionChange = (val: TableRow[]) => {
   multipleSelection.value = val;
   let allFileSizes = 0;
@@ -223,6 +226,19 @@ const handleChange = (file: UploadFile) => {
     file: file,
   };
   fileTableList.data.push(item);
+  selectedFiles.push({
+    id: item.id,
+    name: item.name,
+    file: item.file,
+    percent: 0,
+  });
+  // 异步更新选中状态
+  nextTick(() => {
+    const row = fileTableList.data.find((val) => item.id === val.id);
+    if (row) {
+      fileTableRef.value.toggleRowSelection(row, true);
+    }
+  });
 };
 
 const handleProgress = (e: UploadProgressEvent) => {

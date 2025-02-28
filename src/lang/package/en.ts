@@ -58,7 +58,7 @@ export default {
     assetId: "Asset ID",
     welcomeUsePro: "Welcome to witChainD!",
     profile:
-      "witChainD offers efficient document management and intelligent analysis,supporting a variety of file formats including XML,MD,XLSX,DOCX,DOC,and TXT.Equipped with an advanced document processing technology and powerful retrieval capabilities of the openEulerCopilot System RAG,WitchainD aims to provide you with an exceptional intelligent Q&A service.",
+      "witChainD offers efficient document management and intelligent analysis,supporting a variety of file formats including XML,MD,XLSX,DOCX,DOC,PDF,and TXT.Equipped with an advanced document processing technology and powerful retrieval capabilities of the openEulerCopilot System RAG,WitchainD aims to provide you with an exceptional intelligent Q&A service.",
     message: {
       name: "Enter an asset libraray name.",
       libraryNameLen: "The asset library name can contain 1 to 15 characters.",
