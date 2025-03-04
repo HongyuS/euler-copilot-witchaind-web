@@ -8,7 +8,7 @@
         <el-card class="login-card">
           <div class="platform-login-text">{{ $t("login.welcomeToUse") }}</div>
           <div class="relative">
-            <div class="login-title">{{ defaultSettings.title }}</div>
+            <div class="login-title">{{ $t("login.appName") }}</div>
           </div>
 
           <!-- 登录页面 -->
@@ -230,7 +230,6 @@ import type { FormInstance } from "element-plus";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/store";
 import { SigninData, type LoginData } from "@/api/auth";
-import defaultSettings from "@/settings";
 import HeaderBar from "@/components/HeaderBar/index.vue";
 import {
   IconInvisible,
@@ -238,10 +237,11 @@ import {
   IconVisible,
 } from "@computing/opendesign-icons";
 import CustomLoading from "@/components/CustomLoading/index.vue";
+import { useAppStore } from "@/store";
 
 const userStore = useUserStore();
-const route = useRoute();
-const { t } = useI18n();
+const appStore = useAppStore();
+const { t,locale } = useI18n();
 const passwordType = ref("password");
 const inputRef = ref();
 // 按钮 loading 状态
@@ -471,6 +471,29 @@ const handleSigInSubmit = () => {
     }
   });
 };
+
+
+/**
+ * 处理接postmessage收到的数据，根据消息中的语言设置应用语言。
+ * 该函数会根据接收到的语言代码更新应用的语言设置，并将其存储在本地存储中。
+ */
+ const handleMessage = (e: Event)=> {
+
+const langObj={
+  'CN': 'zh',
+  'EN': 'en'
+};
+let lang = langObj[e.data.lang];
+locale.value = lang;
+appStore.changeLanguage(lang);
+localStorage.setItem("language", lang);
+
+};
+
+onMounted(() => {
+window.addEventListener('message', handleMessage)
+});
+onUnmounted(() => window.removeEventListener('message', handleMessage));
 </script>
 
 <style lang="scss" scoped></style>

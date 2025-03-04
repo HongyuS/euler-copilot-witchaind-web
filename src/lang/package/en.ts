@@ -8,6 +8,7 @@ export default {
     backToLogin:'Back to Log In',
     logOut: "Log Out",
     welcomeToUse: "Welcome",
+    appName: "witChainD",
     loginSuccessful: "Login Successful",
     signinSuccessful: "Signin Successful",
     message: {

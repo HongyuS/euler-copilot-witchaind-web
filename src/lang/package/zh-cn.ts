@@ -8,6 +8,7 @@ export default {
     backToLogin:'返回登录',
     logOut: "退出登录",
     welcomeToUse: "欢迎使用",
+    appName: "知识库",
     loginSuccessful: "登录成功",
     signinSuccessful: "注册成功",
     message: {
