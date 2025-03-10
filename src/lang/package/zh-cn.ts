@@ -64,7 +64,7 @@ export default {
     assetId: "资产ID",
     welcomeUsePro: "欢迎使用知识库!",
     profile:
-      "知识库专注于文档的高效管理和智能解析，支持包括md,xlsx,pdf,doc,docx,pptx,xml以及txt在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Copilot System RAG的强大检索功能，旨在为您提供卓越的智能问答服务体验。",
+      "知识库专注于文档的高效管理和智能解析，支持包括md,xlsx,pdf,doc,docx,pptx,html以及txt在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Copilot System RAG的强大检索功能，旨在为您提供卓越的智能问答服务体验。",
     message: {
       name: "请输入资产库名称",
       libraryNameLen: "资产库名称长度1-15个字符",
@@ -180,7 +180,7 @@ export default {
     fileZipFormat:
       "文件支持.zip格式，最多支持上传5个资产库，资产库总大小不超过5GB",
     fileAllFormat:
-      "文件支持.md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.xml格式，最多支持上传128个文件，文件总大小不超过500MB",
+      "文件支持.md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html格式，最多支持上传128个文件，文件总大小不超过500MB",
     continueAdd: "您仍可以通过拖拽文件到下方列表区域进行文件添加",
     dragDropAdd: "将文件拖到此处即可继续添加",
     dragFile: "将文件拖到此处",
