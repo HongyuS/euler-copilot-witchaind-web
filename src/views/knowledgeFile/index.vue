@@ -556,7 +556,7 @@
       :singleFileLimit="true"
       :singleFileSize="0.05"
       :tipText="$t('dialogTipText.fileAllFormat')"
-      accept=".md,.xlsx,.pdf,.docx,.txt"
+      accept=".md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html"
       :maxFileNum="128"
       :maxSize="0.5"
       :handleUploadMyFile="handleUploadMyFile"
