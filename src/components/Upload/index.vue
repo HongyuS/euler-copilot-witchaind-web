@@ -3,22 +3,29 @@
     <div v-if="hasFiles">
       <el-alert :title="tipText" type="info" show-icon :closable="false" />
       <div class="list-action">
-        <el-button
-          type="primary"
-          @click.stop="selectFiles"
-          class="file-ops"
-          :disabled="fileTableList.data.length >= props.maxFileNum"
-        >
-          {{ $t("btnText.chooseFile") }}
-        </el-button>
-        <el-button @click="batchDelete()" class="delFileBtn cancelBtn">
-          {{ $t("btnText.batchDelete") }}
-        </el-button>
+        <div>
+          <el-button
+            type="primary"
+            @click.stop="selectFiles"
+            class="file-ops"
+            :disabled="fileTableList.data.length >= props.maxFileNum"
+          >
+            {{ $t("btnText.chooseFile") }}
+          </el-button>
+          <el-button @click="batchDelete()" class="delFileBtn cancelBtn">
+            {{ $t("btnText.batchDelete") }}
+          </el-button>
+        </div>
+        <div class="list-action-tip">
+          <div>
+            文件数：{{ fileTableList.data.length }}/{{ props.maxFileNum }}
+          </div>
+          <div>
+            文件大小：{{ allFileSizesInfo }}/{{ props.maxSize }}MB
+          </div>
+        </div>
       </div>
-      <div class="list-tip">
-        <div>{{ $t("dialogTipText.continueAdd") }}</div>
-        <div>{{ fileTableList.data.length }} / {{ props.maxFileNum }}</div>
-      </div>
+      <div class="list-tip">{{ $t("dialogTipText.continueAdd") }}</div>
     </div>
     <el-upload
       action=""
@@ -204,6 +211,16 @@ let selectedFiles: any[] = [];
 const multipleSelection = ref<TableRow[]>([]);
 const uploadingList = ref<Array<any>>([]);
 const showTaskList = ref(true);
+let allFileSizes = ref(0); // 所有文件大小
+
+let allFileSizesInfo=computed(()=>{
+  // 字节转MB：1 MB = 1024 * 1024 bytes
+  if (allFileSizes.value <= 0) return 0;
+  const mbValue = allFileSizes.value / (1024 * 1024);
+  
+  // 保留2位小数并转为数字类型
+  return Number(mbValue.toFixed(2));
+})
 
 // 表格实例引用
 const fileTableRef = ref();
@@ -221,7 +238,15 @@ const handleSelectionChange = (val: TableRow[]) => {
 
 const hasFiles = computed(() => fileTableList.data.length > 0);
 
-let allFileSizes = 0; // 所有文件大小
+const changeAllSizes=(file:any,type?:string)=>{
+  if(type==='add'){
+    allFileSizes.value += file.size as number;
+  }else{
+    allFileSizes.value -= file.size as number;
+  }
+  btnDisabled.value = isMaxMemoryOut(allFileSizes.value, props.maxSize);
+}
+
 const handleChange = (file: UploadFile) => {
   const item: TableRow = {
     id: file.uid,
@@ -229,8 +254,7 @@ const handleChange = (file: UploadFile) => {
     size: bytesToSize(file.size as number),
     file: file,
   };
-  allFileSizes += file.size as number;
-  btnDisabled.value = isMaxMemoryOut(allFileSizes, props.maxSize);
+  changeAllSizes(file,'add');
   fileTableList.data.push(item);
 };
 
@@ -298,6 +322,7 @@ const deleteFile = (row?: any) => {
   if (row) {
     const idx = fileTableList.data.findIndex((item: any) => item.id === row.id);
     fileTableList.data.splice(idx, 1);
+    changeAllSizes(row.file,'del');
   }
 };
 
@@ -350,7 +375,7 @@ const uploadFiles = () => {
   }
   props?.handleImportLoading(true);
   let uploadFileNumber = 0;
-    props.handInitTaskList(fileTableList.data).then((res: any) => {
+  props.handInitTaskList(fileTableList.data).then((res: any) => {
     uploadingList.value = fileTableList.data.map((item) => {
       return {
         id: item.id,
@@ -410,7 +435,7 @@ const uploadFiles = () => {
     uploadingList.value.length && handleToggleUploadNotify();
     props.handleCancelVisible();
     fileTableList.data = [];
-    allFileSizes=0;
+    allFileSizes.value = 0;
   });
 };
 
@@ -469,7 +494,7 @@ const uploadKnowledgeFile = () => {
   uploadingList.value.length && handleToggleUploadNotify();
   props.handleCancelVisible();
   fileTableList.data = [];
-  allFileSizes=0;
+  allFileSizes.value = 0;
 };
 
 const handleToggleUploadNotify = () => {
