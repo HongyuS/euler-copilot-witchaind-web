@@ -410,6 +410,7 @@ const uploadFiles = () => {
     uploadingList.value.length && handleToggleUploadNotify();
     props.handleCancelVisible();
     fileTableList.data = [];
+    allFileSizes=0;
   });
 };
 
@@ -468,6 +469,7 @@ const uploadKnowledgeFile = () => {
   uploadingList.value.length && handleToggleUploadNotify();
   props.handleCancelVisible();
   fileTableList.data = [];
+  allFileSizes=0;
 };
 
 const handleToggleUploadNotify = () => {
