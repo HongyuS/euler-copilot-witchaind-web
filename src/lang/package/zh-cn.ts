@@ -143,6 +143,7 @@ export default {
     export: "导出",
     edit: "编辑",
     delete: "删除",
+    batchDelete: "批量删除",
     retry: "重试",
     restart: "重启",
     clearAll: "全部清空",

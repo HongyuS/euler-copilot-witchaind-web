@@ -138,6 +138,7 @@ export default {
     export: "Export",
     edit: "Edit",
     delete: "Delete",
+    batchDelete: "Batch Delete",
     retry: "Retry",
     restart: "Restart",
     clearAll: "Clear all",
