@@ -188,6 +188,8 @@ export default {
     fileName: "文件名",
     fileSize: "大小",
     singleFileSize: "单个文件大小不能超过20MB",
+    fileNums: "文件数",
+    fileSizes: "文件大小",
   },
   formTipText: {
     analyticTip:

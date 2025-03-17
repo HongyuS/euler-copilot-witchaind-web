@@ -184,6 +184,8 @@ export default {
     fileName: "File name",
     fileSize: "Size",
     singleFileSize: "The size of a file cannot exceed 20 MB.",
+    fileNums: "File Number",
+    fileSizes: "File Size",
   },
   formTipText: {
     analyticTip:

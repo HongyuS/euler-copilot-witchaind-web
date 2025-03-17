@@ -18,10 +18,14 @@
         </div>
         <div class="list-action-tip">
           <div>
-            文件数：{{ fileTableList.data.length }}/{{ props.maxFileNum }}
+            {{ $t("dialogTipText.fileNums") }}:{{
+              fileTableList.data.length
+            }}/{{ props.maxFileNum }}
           </div>
           <div>
-            文件大小：{{ allFileSizesInfo }}/{{ props.maxSize }}MB
+            {{ $t("dialogTipText.fileSizes") }}:{{ allFileSizesInfo }}/{{
+              maxFileSizesInfo
+            }}
           </div>
         </div>
       </div>
@@ -213,14 +217,28 @@ const uploadingList = ref<Array<any>>([]);
 const showTaskList = ref(true);
 let allFileSizes = ref(0); // 所有文件大小
 
-let allFileSizesInfo=computed(()=>{
+let allFileSizesInfo = computed(() => {
   // 字节转MB：1 MB = 1024 * 1024 bytes
   if (allFileSizes.value <= 0) return 0;
-  const mbValue = allFileSizes.value / (1024 * 1024);
-  
-  // 保留2位小数并转为数字类型
-  return Number(mbValue.toFixed(2));
-})
+  if (allFileSizes.value < 1024) {
+    return allFileSizes.value + "B";
+  } else if (allFileSizes.value / 1024 < 1024) {
+    return (allFileSizes.value / 1024).toFixed(0) + "KB";
+  } else if (allFileSizes.value / 1024 / 1024 < 1024) {
+    return (allFileSizes.value / 1024 / 1024).toFixed(0) + "MB";
+  } else {
+    return (allFileSizes.value / 1024 / 1024 / 1024).toFixed(0) + "GB";
+  }
+});
+
+let maxFileSizesInfo = computed(() => {
+  if (props.maxSize <= 0) return 0;
+  if (props.maxSize < 1) {
+    return (props.maxSize * 1024).toFixed(0) + "MB";
+  } else {
+    return props.maxSize + "GB";
+  }
+});
 
 // 表格实例引用
 const fileTableRef = ref();
@@ -238,14 +256,14 @@ const handleSelectionChange = (val: TableRow[]) => {
 
 const hasFiles = computed(() => fileTableList.data.length > 0);
 
-const changeAllSizes=(file:any,type?:string)=>{
-  if(type==='add'){
+const changeAllSizes = (file: any, type?: string) => {
+  if (type === "add") {
     allFileSizes.value += file.size as number;
-  }else{
+  } else {
     allFileSizes.value -= file.size as number;
   }
   btnDisabled.value = isMaxMemoryOut(allFileSizes.value, props.maxSize);
-}
+};
 
 const handleChange = (file: UploadFile) => {
   const item: TableRow = {
@@ -254,7 +272,7 @@ const handleChange = (file: UploadFile) => {
     size: bytesToSize(file.size as number),
     file: file,
   };
-  changeAllSizes(file,'add');
+  changeAllSizes(file, "add");
   fileTableList.data.push(item);
 };
 
@@ -322,7 +340,7 @@ const deleteFile = (row?: any) => {
   if (row) {
     const idx = fileTableList.data.findIndex((item: any) => item.id === row.id);
     fileTableList.data.splice(idx, 1);
-    changeAllSizes(row.file,'del');
+    changeAllSizes(row.file, "del");
   }
 };
 
