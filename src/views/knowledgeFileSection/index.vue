@@ -238,8 +238,7 @@
                     </span>
                     <span style="white-space: pre-wrap">
                       <span v-for="itemText in scope.row?.text?.split('\n')">
-                        {{ itemText }}
-                        <br />
+                        <div v-html="itemText"></div>
                       </span>
                     </span>
                   </div>

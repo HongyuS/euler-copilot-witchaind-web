@@ -60,10 +60,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: true,
       proxy: {
         "/witchaind/api": {
-          target: "http://116.63.144.61:9988",
+          target: "https://euler-copilot-master.test.osinfra.cn/witchaind",
           changeOrigin: true,
           ws: false,
-          rewrite: (path) => path.replace(new RegExp("^" + "/witchaind/api"), ""),
+          secure: false, 
+          rewrite: (path) => path.replace(/^\/witchaind\/api/, "/api")
         },
       },
     },
