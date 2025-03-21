@@ -1,26 +1,21 @@
-import request from "@/utils/request";
-import {
-  ChunkRequest,
-  DocDownload,
-  DocListRequest,
-  DocRenameRequest,
-} from "./apiType";
+import request from '@/utils/request';
+import { ChunkRequest, DocDownload, DocListRequest, DocRenameRequest } from './apiType';
 
 class KfAppAPI {
   /** 获取资产库里的文件*/
   static getKbLibraryFile(data: DocListRequest) {
     return request({
       url: `/doc/list`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
   /** 修改资产库里的文件*/
   static updateLibraryFile(data: DocRenameRequest) {
     return request({
       url: `/doc/update`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
@@ -28,8 +23,8 @@ class KfAppAPI {
   static switchLibraryFile(data: { enabled: boolean; id: string }) {
     return request({
       url: `/doc/switch`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
@@ -37,8 +32,8 @@ class KfAppAPI {
   static delLibraryFile(data: { ids: any[] }) {
     return request({
       url: `/doc/rm`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
@@ -46,29 +41,26 @@ class KfAppAPI {
   static runLibraryFile(data: { ids: string[]; run: string }) {
     return request({
       url: `/doc/run`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
   /**导入资产库文档 */
-  static importKbLibraryFile(
-    payload: { data: any; params: any },
-    options: any
-  ) {
+  static importKbLibraryFile(payload: { data: any; params: any }, options: any) {
     return request({
       url: `/doc/upload?kb_id=${payload.params.kb_id}`,
-      method: "post",
+      method: 'post',
       data: payload.data,
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data'
       },
       onUploadProgress(e) {
         const rate = Math.floor((e.loaded / (e.total as number)) * 100);
         if (rate < 100) {
           options.onProgress(rate);
         }
-      },
+      }
     });
   }
 
@@ -76,8 +68,8 @@ class KfAppAPI {
   static downloadLibraryFile(data: { ids: string[] }) {
     return request({
       url: `/doc/download`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
@@ -85,16 +77,16 @@ class KfAppAPI {
   static queryKfTaskList(data: { type: string }) {
     return request({
       url: `/doc/task/list`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
   static stopKfTaskList(data: { id: string }) {
     return request({
       url: `/doc/task/stop`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
@@ -102,21 +94,17 @@ class KfAppAPI {
   static chunkLibraryFile(data: ChunkRequest) {
     return request({
       url: `/chunk/list`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 
   /** 是否启用文件*/
-  static switchLibraryFileSection(data: {
-    enabled: boolean;
-    ids: string[];
-    document_id: string;
-  }) {
+  static switchLibraryFileSection(data: { enabled: boolean; ids: string[]; document_id: string }) {
     return request({
       url: `/chunk/switch`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 }

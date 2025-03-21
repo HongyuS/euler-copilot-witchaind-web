@@ -3,10 +3,10 @@
     <HeaderCom />
     <div class="knowledge-welcome">
       <div class="knowledge-welcome-text">
-        <h1>{{ `Hi, ${$t("assetLibrary.welcomeUsePro")}` }}</h1>
+        <h1>{{ `Hi, ${$t('assetLibrary.welcomeUsePro')}` }}</h1>
       </div>
       <div class="knowledge-show-text">
-        {{ $t("assetLibrary.profile") }}
+        {{ $t('assetLibrary.profile') }}
       </div>
     </div>
   </div>
@@ -14,14 +14,13 @@
 
 <script setup lang="ts">
 // 内部依赖
-import { useSettingsStore, useUserStore } from "@/store";
-import { ThemeEnum } from "@/enums/ThemeEnum";
-import "@/styles/headerBar.scss";
-import HeaderCom from "./headerCom.vue";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
+import { useSettingsStore, useUserStore } from '@/store';
+import { ThemeEnum } from '@/enums/ThemeEnum';
+import '@/styles/headerBar.scss';
+import HeaderCom from './headerCom.vue';
+import { TOKEN_KEY } from '@/enums/CacheEnum';
 const settingsStore = useSettingsStore();
 const { t } = useI18n();
- 
 </script>
 <style lang="scss" scoped>
 .knowledge-welcome {

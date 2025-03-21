@@ -1,5 +1,5 @@
-import request from "@/utils/request";
-import CryptoJS from "crypto-js"; // 导入 CryptoJS
+import request from '@/utils/request';
+import CryptoJS from 'crypto-js'; // 导入 CryptoJS
 
 class AuthAPI {
   /** 注册 接口*/
@@ -8,19 +8,19 @@ class AuthAPI {
     const newData = { ...data, passwd: hashPwd };
     return request({
       url: `/user/add`,
-      method: "post",
-      data: newData,
+      method: 'post',
+      data: newData
     });
   }
-  
+
   /** 登录 接口*/
   static login(data: LoginData) {
     const hashPwd = CryptoJS.SHA256(data.password).toString();
     const newData = { ...data, password: hashPwd };
     return request({
       url: `/user/login`,
-      method: "get",
-      params: newData,
+      method: 'get',
+      params: newData
     });
   }
 
@@ -28,7 +28,7 @@ class AuthAPI {
   static logout() {
     return request({
       url: `/user/logout`,
-      method: "get",
+      method: 'get'
     });
   }
 
@@ -36,8 +36,8 @@ class AuthAPI {
   static userUpdate(data: userUpade) {
     return request({
       url: `/user/update`,
-      method: "post",
-      data: data,
+      method: 'post',
+      data: data
     });
   }
 }
@@ -58,7 +58,7 @@ export interface SigninData {
   /** 昵称 */
   name: string;
   /** 邮箱 */
-  email:string | null;
+  email: string | null;
 }
 
 export interface userUpade {

@@ -1,18 +1,20 @@
 <template>
-  <div ref="iconSelectRef" :style="'width:' + width">
-    <el-popover :visible="popoverVisible" :width="width" placement="bottom-end">
+  <div
+    ref="iconSelectRef"
+    :style="'width:' + width">
+    <el-popover
+      :visible="popoverVisible"
+      :width="width"
+      placement="bottom-end">
       <template #reference>
         <el-input
           class="reference"
           v-model="selectedIcon"
           readonly
           placeholder="点击选择图标"
-          @click="popoverVisible = !popoverVisible"
-        >
+          @click="popoverVisible = !popoverVisible">
           <template #prepend>
-            <template
-              v-if="selectedIcon && selectedIcon.startsWith('el-icon-')"
-            >
+            <template v-if="selectedIcon && selectedIcon.startsWith('el-icon-')">
               <el-icon>
                 <component :is="selectedIcon.replace('el-icon-', '')" />
               </el-icon>
@@ -25,10 +27,9 @@
             <el-icon
               :style="{
                 transform: popoverVisible ? 'rotate(180deg)' : 'rotate(0)',
-                transition: 'transform .5s',
+                transition: 'transform .5s'
               }"
-              @click="popoverVisible = !popoverVisible"
-            >
+              @click="popoverVisible = !popoverVisible">
               <ArrowDown />
             </el-icon>
           </template>
@@ -41,34 +42,40 @@
           v-model="searchText"
           placeholder="搜索图标"
           clearable
-          @input="filterIcons"
-        />
-        <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-          <el-tab-pane label="SVG 图标" name="svg">
+          @input="filterIcons" />
+        <el-tabs
+          v-model="activeTab"
+          @tab-click="handleTabClick">
+          <el-tab-pane
+            label="SVG 图标"
+            name="svg">
             <el-scrollbar height="300px">
               <ul class="icon-container">
                 <li
                   v-for="icon in filteredSvgIcons"
                   :key="'svg-' + icon"
                   class="icon-item"
-                  @click="selectIcon(icon)"
-                >
-                  <el-tooltip :content="icon" placement="bottom" effect="light">
+                  @click="selectIcon(icon)">
+                  <el-tooltip
+                    :content="icon"
+                    placement="bottom"
+                    effect="light">
                     <svg-icon :icon-class="icon" />
                   </el-tooltip>
                 </li>
               </ul>
             </el-scrollbar>
           </el-tab-pane>
-          <el-tab-pane label="Element 图标" name="element">
+          <el-tab-pane
+            label="Element 图标"
+            name="element">
             <el-scrollbar height="300px">
               <ul class="icon-container">
                 <li
                   v-for="icon in filteredEpIcons"
                   :key="icon"
                   class="icon-item"
-                  @click="selectIcon(icon)"
-                >
+                  @click="selectIcon(icon)">
                   <el-icon>
                     <component :is="icon" />
                   </el-icon>
@@ -83,29 +90,29 @@
 </template>
 
 <script setup lang="ts">
-import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
 const props = defineProps({
   modelValue: {
     type: String,
     require: false,
-    default: "",
+    default: ''
   },
   width: {
     type: String,
     require: false,
-    default: "500px",
-  },
+    default: '500px'
+  }
 });
 
-const emit = defineEmits(["update:modelValue"]);
-const selectedIcon = toRef(props, "modelValue");
+const emit = defineEmits(['update:modelValue']);
+const selectedIcon = toRef(props, 'modelValue');
 
 const iconSelectRef = ref();
 const popoverContentRef = ref();
 
-const activeTab = ref("svg"); // 默认激活的Tab
-const searchText = ref(""); // 筛选的值
+const activeTab = ref('svg'); // 默认激活的Tab
+const searchText = ref(''); // 筛选的值
 const popoverVisible = ref(false); // 弹窗显示状态
 
 const svgIcons: string[] = []; //  SVG图标集合
@@ -122,9 +129,9 @@ onMounted(() => {
  * icon 加载
  */
 function loadIcons() {
-  const icons = import.meta.glob("../../assets/icons/*.svg");
+  const icons = import.meta.glob('../../assets/icons/*.svg');
   for (const path in icons) {
-    const iconName = path.replace(/.*\/(.*)\.svg$/, "$1");
+    const iconName = path.replace(/.*\/(.*)\.svg$/, '$1');
     svgIcons.push(iconName);
   }
   filteredSvgIcons.value = svgIcons;
@@ -142,7 +149,7 @@ function handleTabClick(tabPane: any) {
  * icon 筛选
  */
 function filterIcons() {
-  if (activeTab.value === "svg") {
+  if (activeTab.value === 'svg') {
     // 过滤SVG图标逻辑
     filteredSvgIcons.value = searchText.value
       ? svgIcons.filter((iconName) =>
@@ -163,10 +170,10 @@ function filterIcons() {
  * 选择图标
  */
 function selectIcon(iconName: string) {
-  if (activeTab.value === "element") {
-    iconName = "el-icon-" + iconName;
+  if (activeTab.value === 'element') {
+    iconName = 'el-icon-' + iconName;
   }
-  emit("update:modelValue", iconName);
+  emit('update:modelValue', iconName);
   popoverVisible.value = false;
 }
 
@@ -174,7 +181,7 @@ function selectIcon(iconName: string) {
  * 点击容器外的区域关闭弹窗 VueUse onClickOutside
  */
 onClickOutside(iconSelectRef, () => (popoverVisible.value = false), {
-  ignore: [popoverContentRef],
+  ignore: [popoverContentRef]
 });
 </script>
 

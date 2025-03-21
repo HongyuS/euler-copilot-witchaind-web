@@ -8,17 +8,15 @@
         @change="handleCheckAllChange"
         :class="isHoverIndex === 'all' ? 'isChcekHover' : ''"
         @mouseover="onMouseOver('all')"
-        @mouseout="handleMouseOut"
-      >
-        {{ $t("btnText.all") }}
+        @mouseout="handleMouseOut">
+        {{ $t('btnText.all') }}
       </el-checkbox>
     </div>
 
     <el-checkbox-group
       v-model="checkedList"
       @change="handleCheckedChange"
-      class="checkBoxGroup"
-    >
+      class="checkBoxGroup">
       <el-checkbox
         v-for="(item, index) in checkList"
         :key="item.value || item"
@@ -27,21 +25,25 @@
         class=""
         :class="isHoverIndex === index ? 'isChcekHover' : ''"
         @mouseover="onMouseOver(index)"
-        @mouseout="handleMouseOut"
-      >
-        <TextTooltip :content="item.label || item" className="checkBoxText" />
+        @mouseout="handleMouseOut">
+        <TextTooltip
+          :content="item.label || item"
+          className="checkBoxText" />
       </el-checkbox>
     </el-checkbox-group>
   </div>
-  <div class="filter-btn" v-if="filterCustomType === 'checkBox'">
+  <div
+    class="filter-btn"
+    v-if="filterCustomType === 'checkBox'">
     <el-button
       type="primary"
       class="resetBtn"
-      @click="handleSubimitFilter(null)"
-    >
-      {{ $t("btnText.confirm") }}
+      @click="handleSubimitFilter(null)">
+      {{ $t('btnText.confirm') }}
     </el-button>
-    <el-button class="resetBtn cancelBtn" @click="handleSubimitFilter('reset')">
+    <el-button
+      class="resetBtn cancelBtn"
+      @click="handleSubimitFilter('reset')">
       重置
     </el-button>
   </div>
@@ -54,10 +56,11 @@
       clearable
       @clear="hanldeSearhNameFilter"
       @keyup.enter="hanldeSearhNameFilter"
-      v-model="searchName"
-    >
+      v-model="searchName">
       <template #suffix>
-        <el-icon class="el-input__icon" @click="hanldeSearhNameFilter">
+        <el-icon
+          class="el-input__icon"
+          @click="hanldeSearhNameFilter">
           <IconSearch />
         </el-icon>
       </template>
@@ -66,41 +69,41 @@
 </template>
 
 <script lang="ts" setup>
-import TextTooltip from "@/components/TextSingleTootip/index.vue";
-import { IconSearch } from "@computing/opendesign-icons";
-import { CheckboxValueType } from "element-plus";
+import TextTooltip from '@/components/TextSingleTootip/index.vue';
+import { IconSearch } from '@computing/opendesign-icons';
+import { CheckboxValueType } from 'element-plus';
 
-import { ref } from "vue";
+import { ref } from 'vue';
 const { t } = useI18n();
 
 const props = defineProps({
   filterList: {
-    type: <any>[],
+    type: <any>[]
   },
   checkedFilterList: {
-    type: Array,
+    type: Array
   },
   filterType: {
-    type: String,
+    type: String
   },
   handelSubFilterProper: {
     type: Function,
-    default: () => {},
+    default: () => {}
   },
   hanldeSearhNameFilter: {
     type: Function,
-    default: () => {},
+    default: () => {}
   },
   searchPayload: {
-    type: Object,
+    type: Object
   },
   filterProp: {
-    type: String,
+    type: String
   },
   handelSubTimeFilterProper: {
     type: Function,
-    default: () => {},
-  },
+    default: () => {}
+  }
 });
 
 const isHoverIndex = ref();
@@ -115,13 +118,12 @@ const searchName = ref<string>();
 watch(
   () => props.filterList,
   (newVal, oldVal) => {
-    checkAll.value =
-      props.filterList?.length === props.checkedFilterList?.length;
+    checkAll.value = props.filterList?.length === props.checkedFilterList?.length;
     checkList.value = props.filterList as string[];
   },
   {
     deep: true,
-    immediate: true,
+    immediate: true
   }
 );
 
@@ -132,7 +134,7 @@ watch(
   },
   {
     deep: true,
-    immediate: true,
+    immediate: true
   }
 );
 
@@ -146,8 +148,7 @@ const handleCheckAllChange = (val: CheckboxValueType) => {
 };
 const handleCheckedChange = (value: CheckboxValueType[]) => {
   checkAll.value = value.length === props.filterList?.length;
-  isIndeterminate.value =
-    value.length > 0 && props.filterList?.length > value.length;
+  isIndeterminate.value = value.length > 0 && props.filterList?.length > value.length;
 };
 
 const onMouseOver = (index: Number | string) => {
@@ -155,7 +156,7 @@ const onMouseOver = (index: Number | string) => {
 };
 
 const handleMouseOut = () => {
-  isHoverIndex.value = "";
+  isHoverIndex.value = '';
 };
 
 const handleSubimitFilter = (type: any) => {
@@ -188,7 +189,7 @@ const hanldeSearhNameFilter = () => {
   inset: 0;
   z-index: -1;
   width: 168px;
-  content: "";
+  content: '';
   background: rgb(82 163 255);
   transform: translateX(-16px);
 }

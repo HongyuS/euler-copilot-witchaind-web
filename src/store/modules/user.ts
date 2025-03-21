@@ -1,13 +1,13 @@
-import AuthAPI, { SigninData, type LoginData } from "@/api/auth";
-import { type UserInfo } from "@/api/user";
-import { resetRouter } from "@/router";
-import { store } from "@/store";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
+import AuthAPI, { SigninData, type LoginData } from '@/api/auth';
+import { type UserInfo } from '@/api/user';
+import { resetRouter } from '@/router';
+import { store } from '@/store';
+import { TOKEN_KEY } from '@/enums/CacheEnum';
 
-export const useUserStore = defineStore("user", () => {
+export const useUserStore = defineStore('user', () => {
   const user = ref<UserInfo>({
     roles: [],
-    perms: [],
+    perms: []
   });
 
   /**
@@ -24,7 +24,7 @@ export const useUserStore = defineStore("user", () => {
           reject(error);
         });
     });
-  }  
+  }
 
   /**
    * 注册
@@ -56,7 +56,7 @@ export const useUserStore = defineStore("user", () => {
   // remove token
   function resetToken() {
     return new Promise<void>((resolve) => {
-      document.cookie = "";
+      document.cookie = '';
       resetRouter();
       resolve();
     });
@@ -67,7 +67,7 @@ export const useUserStore = defineStore("user", () => {
     login,
     logout,
     resetToken,
-    signin,
+    signin
   };
 });
 
