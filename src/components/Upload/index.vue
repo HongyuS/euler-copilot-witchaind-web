@@ -3,12 +3,31 @@
     <div v-if="hasFiles">
       <el-alert :title="tipText" type="info" show-icon :closable="false" />
       <div class="list-action">
-        <el-button type="primary" @click.stop="selectFiles" class="file-ops">
-          {{ $t("btnText.chooseFile") }}
-        </el-button>
-        <el-button @click="deleteFile()" class="delFileBtn cancelBtn">
-          {{ $t("btnText.delete") }}
-        </el-button>
+        <div>
+          <el-button
+            type="primary"
+            @click.stop="selectFiles"
+            class="file-ops"
+            :disabled="fileTableList.data.length >= props.maxFileNum"
+          >
+            {{ $t("btnText.chooseFile") }}
+          </el-button>
+          <el-button @click="batchDelete()" class="delFileBtn cancelBtn">
+            {{ $t("btnText.batchDelete") }}
+          </el-button>
+        </div>
+        <div class="list-action-tip">
+          <div>
+            {{ $t("dialogTipText.fileNums") }}:{{
+              fileTableList.data.length
+            }}/{{ props.maxFileNum }}
+          </div>
+          <div>
+            {{ $t("dialogTipText.fileSizes") }}:{{ allFileSizesInfo }}/{{
+              maxFileSizesInfo
+            }}
+          </div>
+        </div>
       </div>
       <div class="list-tip">{{ $t("dialogTipText.continueAdd") }}</div>
     </div>
@@ -16,8 +35,10 @@
       action=""
       drag
       multiple
+      :limit="props.maxFileNum"
       :accept="accept"
       :show-file-list="false"
+      :on-exceed="handleExceed"
       :on-success="handlsSuccess"
       :on-change="handleChange"
       :on-progress="handleProgress"
@@ -194,19 +215,35 @@ let selectedFiles: any[] = [];
 const multipleSelection = ref<TableRow[]>([]);
 const uploadingList = ref<Array<any>>([]);
 const showTaskList = ref(true);
+let allFileSizes = ref(0); // 所有文件大小
+
+let allFileSizesInfo = computed(() => {
+  // 字节转MB：1 MB = 1024 * 1024 bytes
+  if (allFileSizes.value <= 0) return 0;
+  if (allFileSizes.value < 1024) {
+    return allFileSizes.value + "B";
+  } else if (allFileSizes.value / 1024 < 1024) {
+    return (allFileSizes.value / 1024).toFixed(0) + "KB";
+  } else if (allFileSizes.value / 1024 / 1024 < 1024) {
+    return (allFileSizes.value / 1024 / 1024).toFixed(0) + "MB";
+  } else {
+    return (allFileSizes.value / 1024 / 1024 / 1024).toFixed(0) + "GB";
+  }
+});
+
+let maxFileSizesInfo = computed(() => {
+  if (props.maxSize <= 0) return 0;
+  if (props.maxSize < 1) {
+    return (props.maxSize * 1024).toFixed(0) + "MB";
+  } else {
+    return props.maxSize + "GB";
+  }
+});
 
 // 表格实例引用
 const fileTableRef = ref();
 const handleSelectionChange = (val: TableRow[]) => {
   multipleSelection.value = val;
-  let allFileSizes = 0;
-  val.forEach((item) => {
-    allFileSizes += item.file.size as number;
-  });
-  btnDisabled.value =
-    isMaxMemoryOut(allFileSizes, props.maxSize) ||
-    val.length > props.maxFileNum ||
-    !val.length;
   selectedFiles = val.map((item) => {
     return {
       id: item.id,
@@ -218,6 +255,16 @@ const handleSelectionChange = (val: TableRow[]) => {
 };
 
 const hasFiles = computed(() => fileTableList.data.length > 0);
+
+const changeAllSizes = (file: any, type?: string) => {
+  if (type === "add") {
+    allFileSizes.value += file.size as number;
+  } else {
+    allFileSizes.value -= file.size as number;
+  }
+  btnDisabled.value = isMaxMemoryOut(allFileSizes.value, props.maxSize);
+};
+
 const handleChange = (file: UploadFile) => {
   const item: TableRow = {
     id: file.uid,
@@ -225,20 +272,15 @@ const handleChange = (file: UploadFile) => {
     size: bytesToSize(file.size as number),
     file: file,
   };
+  changeAllSizes(file, "add");
   fileTableList.data.push(item);
-  selectedFiles.push({
-    id: item.id,
-    name: item.name,
-    file: item.file,
-    percent: 0,
-  });
-  // 异步更新选中状态
-  nextTick(() => {
-    const row = fileTableList.data.find((val) => item.id === val.id);
-    if (row) {
-      fileTableRef.value.toggleRowSelection(row, true);
-    }
-  });
+};
+
+// 超出文件数量限制时的处理
+const handleExceed = () => {
+  ElMessage.warning(
+    `超出文件数量限制,最多只能上传 ${props.maxFileNum} 个文件!`
+  );
 };
 
 const handleProgress = (e: UploadProgressEvent) => {
@@ -287,13 +329,18 @@ watch(
     immediate: true,
   }
 );
-
+const batchDelete = () => {
+  if (!selectedFiles.length) {
+    ElMessage.warning(`请先选择文件再进行批量删除操作！`);
+    return;
+  }
+  selectedFiles.forEach((item) => item && deleteFile(item));
+};
 const deleteFile = (row?: any) => {
   if (row) {
     const idx = fileTableList.data.findIndex((item: any) => item.id === row.id);
     fileTableList.data.splice(idx, 1);
-  } else if (selectedFiles.length > 0) {
-    selectedFiles.forEach((item) => item && deleteFile(item));
+    changeAllSizes(row.file, "del");
   }
 };
 
@@ -330,10 +377,10 @@ const handleLimitSize = (selectedFileData) => {
 
   return flag;
 };
-
+// 提交资产库 .zip
 const uploadFiles = () => {
   if (props.singleFileLimit) {
-    if (handleLimitSize(selectedFiles)) {
+    if (handleLimitSize(fileTableList.data)) {
       ElMessage({
         showClose: true,
         message: t("dialogTipText.singleFileSize"),
@@ -346,8 +393,8 @@ const uploadFiles = () => {
   }
   props?.handleImportLoading(true);
   let uploadFileNumber = 0;
-  props.handInitTaskList(selectedFiles).then((res: any) => {
-    uploadingList.value = selectedFiles.map((item) => {
+  props.handInitTaskList(fileTableList.data).then((res: any) => {
+    uploadingList.value = fileTableList.data.map((item) => {
       return {
         id: item.id,
         name: item.name,
@@ -374,7 +421,7 @@ const uploadFiles = () => {
         },
         onSuccess: (response: any) => {
           uploadFileNumber += 1;
-          if (uploadFileNumber === selectedFiles.length) {
+          if (uploadFileNumber === fileTableList.data.length) {
             props.handleQueryTaskList();
           }
         },
@@ -404,14 +451,16 @@ const uploadFiles = () => {
       }),
     ];
     uploadingList.value.length && handleToggleUploadNotify();
+    props.handleCancelVisible();
+    fileTableList.data = [];
+    allFileSizes.value = 0;
   });
-  props.handleCancelVisible();
-  fileTableList.data = [];
 };
 
+// 资产库内提交文件 .pdf .ms .docx......
 const uploadKnowledgeFile = () => {
   if (props.singleFileLimit) {
-    if (handleLimitSize(selectedFiles)) {
+    if (handleLimitSize(fileTableList.data)) {
       ElMessage({
         showClose: true,
         message: t("dialogTipText.singleFileSize"),
@@ -424,7 +473,7 @@ const uploadKnowledgeFile = () => {
   }
   props?.handleImportLoading(true);
   let uploadFileNumber = 0;
-  uploadingList.value = selectedFiles.map((item) => {
+  uploadingList.value = fileTableList.data.map((item) => {
     return {
       id: item.id,
       name: item.name,
@@ -452,7 +501,7 @@ const uploadKnowledgeFile = () => {
         uploadingList.value.length && handleToggleUploadNotify();
       },
       onSuccess: (response: any) => {
-        props.handleQueryTaskList(selectedFiles);
+        props.handleQueryTaskList(fileTableList.data);
         uploadFileNumber += 1;
         item.percent = 100;
         item.uploadStatus = "success";
@@ -463,6 +512,7 @@ const uploadKnowledgeFile = () => {
   uploadingList.value.length && handleToggleUploadNotify();
   props.handleCancelVisible();
   fileTableList.data = [];
+  allFileSizes.value = 0;
 };
 
 const handleToggleUploadNotify = () => {

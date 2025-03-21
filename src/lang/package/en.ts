@@ -138,6 +138,7 @@ export default {
     export: "Export",
     edit: "Edit",
     delete: "Delete",
+    batchDelete: "Batch Delete",
     retry: "Retry",
     restart: "Restart",
     clearAll: "Clear all",
@@ -183,6 +184,8 @@ export default {
     fileName: "File name",
     fileSize: "Size",
     singleFileSize: "The size of a file cannot exceed 20 MB.",
+    fileNums: "File Number",
+    fileSizes: "File Size",
   },
   formTipText: {
     analyticTip:

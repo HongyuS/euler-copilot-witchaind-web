@@ -6,6 +6,7 @@
   .upload-to-list {
     .list-action {
       display: flex;
+      justify-content: space-between;
 
       .file-ops {
         height: 24px;
@@ -15,11 +16,21 @@
 
       .delFileBtn {
         height: 24px;
-        padding: 4px 20px;
+        padding: 4px 10px;
         font-size: 12px;
 
         span {
           min-width: unset !important;
+        }
+      }
+
+      .list-action-tip {
+        width: 60%;
+        font-size: var(--o-font-size-info);
+        display: flex;
+        justify-content: end;
+        &>:first-child{
+          margin-right: 15px;
         }
       }
     }
@@ -161,7 +172,7 @@
       height: 24px;
     }
 
-    + .upload-tip {
+    +.upload-tip {
       margin-top: 24px;
     }
   }
@@ -171,13 +182,16 @@
     height: 184px;
     cursor: default;
     background-color: var(--o-bg-color-base);
+
     .cell {
       font-size: 12px !important;
     }
+
     .el-table {
       ::-webkit-scrollbar {
         width: 4px !important;
       }
+
       .el-scrollbar__bar.is-vertical {
         width: 4px !important;
       }

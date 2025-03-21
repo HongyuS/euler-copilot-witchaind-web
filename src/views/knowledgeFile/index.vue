@@ -558,7 +558,7 @@
       :tipText="$t('dialogTipText.fileAllFormat')"
       accept=".md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html"
       :maxFileNum="128"
-      :maxSize="0.5"
+      :maxSize="0.488"
       :handleUploadMyFile="handleUploadMyFile"
       :handleQueryTaskList="handleQueryTaskList"
       :handleCancelVisible="handleCancelVisible"

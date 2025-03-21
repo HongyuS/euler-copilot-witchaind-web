@@ -143,6 +143,7 @@ export default {
     export: "导出",
     edit: "编辑",
     delete: "删除",
+    batchDelete: "批量删除",
     retry: "重试",
     restart: "重启",
     clearAll: "全部清空",
@@ -187,6 +188,8 @@ export default {
     fileName: "文件名",
     fileSize: "大小",
     singleFileSize: "单个文件大小不能超过20MB",
+    fileNums: "文件数",
+    fileSizes: "文件大小",
   },
   formTipText: {
     analyticTip:
