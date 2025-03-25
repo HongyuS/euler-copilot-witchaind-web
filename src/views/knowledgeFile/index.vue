@@ -700,7 +700,7 @@ import { StatusEnum, MenuType } from '@/enums/KnowledgeEnum';
 import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
 import FilterContainr from '@/components/TableFilter/index.vue';
 const { t } = useI18n();
-import { ElLoading, type FormInstance, type FormRules } from 'element-plus';
+import { type FormInstance } from 'element-plus';
 import KfAppAPI from '@/api/kfApp';
 import { DocListRequest } from '@/api/apiType';
 import KbAppAPI from '@/api/kbApp';
@@ -711,7 +711,6 @@ import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocal
 
 import { FileForm, DocumentType } from './fileConfig';
 
-const router = useRouter();
 const route = useRoute();
 const dialogImportVisible = ref(false);
 const customColor = ref('#0077FF');
@@ -766,10 +765,15 @@ const currentPageSize = ref(20);
 const dialogEditVisible = ref(false);
 const loading = ref(false);
 const taskListImportDate = ref();
-const taskNumber = ref(0);
 const taskTimer = ref();
 const taskList = ref<any>([]);
-const uploadTaskListData = ref({});
+const uploadTaskListData = ref<{
+  showUploadNotify?: boolean;
+  uploadingList?: Array<any>;
+  showTaskList?: boolean;
+  handleShowTaskList?: Function;
+  handleUploadRestart?: Function;
+}>({});
 const parserMethodOptions = ref<any>([]);
 const userLanguage = ref();
 const isSubmitDisabled = ref(true);
@@ -804,7 +808,7 @@ const fileTableList = reactive<{
 
 watch(
   () => t(''),
-  (newVal, oldVal) => {
+  () => {
     filterStatusList.value = [
       {
         label: t('assetFile.status.analyticFail'),
@@ -897,7 +901,7 @@ watch(
   }
 );
 
-const handleBatchDownBth = (e) => {
+const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 
@@ -1125,7 +1129,7 @@ onUnmounted(() => {
   handleCleartTimer();
 });
 
-const handleVisibleChange = (e) => {
+const handleVisibleChange = (e: boolean) => {
   timeFilterVisible.value = e;
 };
 

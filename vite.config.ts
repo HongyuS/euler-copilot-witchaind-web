@@ -12,7 +12,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons';
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server';
 
 import UnoCSS from 'unocss/vite';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 import { name, version, engines, dependencies, devDependencies } from './package.json';
 
 const __APP_INFO__ = {
@@ -20,7 +20,7 @@ const __APP_INFO__ = {
   buildTimestamp: Date.now()
 };
 
-const pathSrc = resolve(__dirname, 'src');
+const pathSrc = path.resolve(__dirname, './src');
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
   return {
@@ -84,7 +84,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // 是否自动生成 eslint 规则，建议生成之后设置 false
           enabled: false,
           // 指定自动导入函数 eslint 规则的文件
-          filepath: './.eslintrc-auto-import.json',
+          filepath: './.eslintrc.json',
           globalsPropValue: true
         },
         // 是否在 vue 模板中自动导入

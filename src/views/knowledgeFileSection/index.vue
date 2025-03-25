@@ -362,7 +362,7 @@ const handleMouseOut = () => {
   isHoverIndex.value = '';
 };
 
-const handleBatchDownBth = (e) => {
+const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 

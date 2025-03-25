@@ -210,7 +210,8 @@ const props = defineProps({
     default: false
   },
   singleFileSize: {
-    type: Number
+    type: Number,
+    default: 0
   },
   uploadType: {
     type: String
@@ -374,10 +375,10 @@ watch(
   }
 );
 
-const handleLimitSize = (selectedFileData) => {
+const handleLimitSize = (selectedFileData: Array<TableRow>) => {
   let flag = false;
   selectedFileData.forEach((item) => {
-    if (isMaxMemoryOut(item.file.size, props.singleFileSize)) {
+    if (isMaxMemoryOut(item.file.size ?? 0, props.singleFileSize)) {
       flag = true;
     }
   });

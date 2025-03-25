@@ -465,12 +465,13 @@ const handleSigInSubmit = () => {
  * 处理接postmessage收到的数据，根据消息中的语言设置应用语言。
  * 该函数会根据接收到的语言代码更新应用的语言设置，并将其存储在本地存储中。
  */
-const handleMessage = (e: Event) => {
+const handleMessage = (e: MessageEvent) => {
+  console.log(e);
   const langObj = {
     CN: 'zh',
     EN: 'en'
   };
-  let lang = langObj[e.data.lang];
+  let lang: string = langObj[e.data.lang as keyof typeof langObj];
   locale.value = lang;
   appStore.changeLanguage(lang);
   localStorage.setItem('language', lang);

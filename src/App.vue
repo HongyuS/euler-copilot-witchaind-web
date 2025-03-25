@@ -5,10 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useSettingsStore } from '@/store';
-import { ThemeEnum } from '@/enums/ThemeEnum';
+import { useAppStore } from '@/store';
 const appStore = useAppStore();
-const settingsStore = useSettingsStore();
 import '@/styles/app.scss';
 import router from './router';
 

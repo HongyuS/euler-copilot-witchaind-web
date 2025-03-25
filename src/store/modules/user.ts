@@ -2,7 +2,6 @@ import AuthAPI, { SigninData, type LoginData } from '@/api/auth';
 import { type UserInfo } from '@/api/user';
 import { resetRouter } from '@/router';
 import { store } from '@/store';
-import { TOKEN_KEY } from '@/enums/CacheEnum';
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<UserInfo>({

@@ -282,7 +282,7 @@
                 <el-icon
                   ref="inputSearchRef"
                   :class="
-                    sortFilter?.id?.length > 0 || fileFilterVisible ? 'searchIconIsActive' : ''
+                    sortFilter?.id?.length! > 0 || fileFilterVisible ? 'searchIconIsActive' : ''
                   ">
                   <IconSearch />
                 </el-icon>
@@ -355,7 +355,7 @@
                       @click="handeDatePickerShow"
                       @click.stop
                       :class="
-                        sortFilter?.created_time_start?.length > 0 || timeFilterVisible
+                        sortFilter?.created_time_start?.length! > 0 || timeFilterVisible
                           ? 'searchIconIsActive'
                           : ''
                       ">
@@ -535,7 +535,7 @@ import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 
-import { debounce } from 'lodash';
+import { debounce, property } from 'lodash';
 import KbAppAPI from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
@@ -572,7 +572,14 @@ const pagination = ref({
   pageSizes: [10, 20, 30, 40, 50],
   layout: 'total,sizes,prev,pager,next,jumper'
 });
-const sortFilter = ref({});
+interface sortFilterType {
+  id?: string;
+  name?: string;
+  created_time_start?: string;
+  created_time_end?: string;
+  [property: string | number]: string | undefined;
+}
+const sortFilter = ref<sortFilterType>({});
 const currentPage = ref(1);
 const totalCount = ref(0);
 const taskListImportDate = ref();
@@ -590,7 +597,7 @@ const taskListLoading = ref(false);
 const timeFilterVisible = ref(false);
 const fileFilterVisible = ref(false);
 const inputSearchRef = ref();
-const tiemPick = ref();
+const timePick = ref();
 const created_time = ref();
 const shortcuts = ref();
 const fileTableList = reactive<{
@@ -640,13 +647,13 @@ onMounted(() => {
   });
 });
 
-const handleVisibleChange = (e) => {
+const handleVisibleChange = (e: boolean) => {
   timeFilterVisible.value = e;
 };
 
 const handeDatePickerShow = (e: { pageX: string; pageY: string }) => {
   timeFilterVisible.value = true;
-  tiemPick.value.handleOpen();
+  timePick.value.handleOpen();
   let dateTimerContainer = document.querySelector('.datetimerangeClass') as HTMLElement;
   if (dateTimerContainer) {
     dateTimerContainer.style.position = 'absolute';
@@ -655,11 +662,13 @@ const handeDatePickerShow = (e: { pageX: string; pageY: string }) => {
   }
 };
 
-const handleFilterData = (params: any) => {
-  let filterPaylod = {};
+const handleFilterData = (params: sortFilterType) => {
+  let filterPaylod: sortFilterType = {};
   Object.keys(params || {}).forEach((item: string | number) => {
-    if (params[item]?.length > 0) {
-      filterPaylod[item] = params[item];
+    if (params[item]) {
+      if (params[item]?.length > 0) {
+        filterPaylod[item] = params[item];
+      }
     }
   });
   return filterPaylod;

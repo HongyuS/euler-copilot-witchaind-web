@@ -67,7 +67,7 @@
       :label="$t('assetLibrary.embeddedModel')"
       prop="embedding_model">
       <template #label>
-        {{ $t('assetLibrary.embeddedModel') }}
+        {{ $t("assetLibrary.embeddedModel") }}
         <el-tooltip
           :content="$t('formTipText.analyticTip')"
           placement="top"
@@ -112,7 +112,7 @@
       :label="$t('assetLibrary.fileChunkSize')"
       prop="default_chunk_size">
       <template #label>
-        {{ $t('assetLibrary.fileChunkSize') }}
+        {{ $t("assetLibrary.fileChunkSize") }}
         <el-tooltip
           :content="$t('formTipText.fileChunkSizeTip')"
           placement="top"
@@ -139,12 +139,12 @@
         class="resetBtn addDocuType"
         :disabled="ruleForm?.document_type_list?.length >= 10"
         @click="handleAddDocType">
-        {{ $t('btnText.add') }}
+        {{ $t("btnText.add") }}
       </el-button>
       <el-button
         class="resetBtn delAllCocuType"
         @click="handleRemoveAllDocType">
-        {{ $t('btnText.delAll') }}
+        {{ $t("btnText.delAll") }}
       </el-button>
       <div class="supAddCategoris">
         <TextTooltip :content="$t('assetLibrary.supAddCategoris')" />
@@ -174,36 +174,36 @@
         :disabled="isSubmitDisabled"
         :loading="createLoading"
         @click="submitForm(ruleFormRef)">
-        {{ props.configInfo ? $t('btnText.save') : $t('btnText.confirm') }}
+        {{ props.configInfo ? $t("btnText.save") : $t("btnText.confirm") }}
       </el-button>
       <el-button
         class="resetBtn cancelBtn"
         @click="handleCancelForm()">
-        {{ $t('btnText.cancel') }}
+        {{ $t("btnText.cancel") }}
       </el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue';
-import { ElLoading, type ComponentSize, type FormInstance, type FormRules } from 'element-plus';
+import { reactive, ref, watch } from "vue";
+import { ElLoading, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
 import {
   IconCaretDown,
   IconDelete,
   IconSuccess,
-  IconHelpCircle
-} from '@computing/opendesign-icons';
-import '@/styles/knowledgeForm.scss';
-import TextTooltip from '@/components/TextSingleTootip/index.vue';
-import { v4 as uuidv4 } from 'uuid';
-import KbAppAPI from '@/api/kbApp';
+  IconHelpCircle,
+} from "@computing/opendesign-icons";
+import "@/styles/knowledgeForm.scss";
+import TextTooltip from "@/components/TextSingleTootip/index.vue";
+import { v4 as uuidv4 } from "uuid";
+import KbAppAPI from "@/api/kbApp";
 
 const { t } = useI18n();
 const loading = ElLoading.service({
   visible: false,
-  text: `${t('pageTipText.Loading')}...`,
-  background: 'rgba(122, 122, 122, 0.5)'
+  text: `${t("pageTipText.Loading")}...`,
+  background: "rgba(122, 122, 122, 0.5)",
 });
 interface RuleForm {
   default_chunk_size: number;
@@ -216,18 +216,18 @@ interface RuleForm {
   [property: string]: any;
 }
 
-const formSize = ref<ComponentSize>('default');
+const formSize = ref<ComponentSize>("default");
 const ruleFormRef = ref<FormInstance>();
 const createLoading = ref(false);
 const isSubmitDisabled = ref(true);
 const ruleForm = ref<RuleForm>({
-  name: '',
-  language: '',
+  name: "",
+  language: "",
   default_chunk_size: 1024,
-  embedding_model: '',
-  default_parser_method: '',
+  embedding_model: "",
+  default_parser_method: "",
   document_type_list: [],
-  description: ''
+  description: "",
 });
 const languageOptions = ref();
 const emBeddingModelOptions = ref();
@@ -236,50 +236,48 @@ const parserMethodOptions = ref();
 const props = defineProps({
   handelResetForm: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   handleCloseCreateKb: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   handleOpsKbForm: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   formData: {
-    type: <any>{}
+    type: <any>{},
   },
   configInfo: {
-    type: Boolean
+    type: Boolean,
   },
   handleQueryKbData: {
     type: Function,
-    default: () => {}
-  }
+    default: () => {},
+  },
 });
 
 onMounted(() => {
   loading.visible.value = false;
   ruleForm.value = props.formData
     ? JSON.parse(
-        JSON.stringify(
-          ({
-            ...props.formData,
-            document_type_list: props.formData?.document_type_list.filter(
-              (item) => item?.type?.length
-            ),
-            default_chunk_size: props.formData.default_chunk_size || 1024
-          } as RuleForm) || '{}'
-        )
+        JSON.stringify({
+          ...props.formData,
+          document_type_list: props.formData?.document_type_list.filter(
+            (item: any) => item?.type?.length
+          ),
+          default_chunk_size: props.formData.default_chunk_size || 1024,
+        } as RuleForm)
       )
     : ruleForm.value;
 
   KbAppAPI.queryLanguageList().then((res: any) => {
     languageOptions.value = res?.map((item: any) => {
-      if (item === 'English') {
-        return { label: item, value: 'en' };
+      if (item === "English") {
+        return { label: item, value: "en" };
       }
-      return { label: item, value: 'zh' };
+      return { label: item, value: "zh" };
     });
   });
 
@@ -301,7 +299,8 @@ watch(
   () => {
     let flag = false;
     Object.keys(ruleForm.value).forEach((item) => {
-      if (rules?.[item]?.[0]?.required) {
+      const ruleCopy = rules?.[item];
+      if ((Array.isArray(ruleCopy) ? ruleCopy[0] : ruleCopy)?.required) {
         if (!ruleForm.value?.[item]?.toString().length) {
           flag = true;
         }
@@ -316,73 +315,73 @@ watch(
 const rules = reactive<FormRules<RuleForm>>({
   id: [
     {
-      required: true
-    }
+      required: true,
+    },
   ],
   name: [
     {
       required: true,
-      message: t('assetLibrary.message.name'),
-      trigger: ['blur', 'change']
+      message: t("assetLibrary.message.name"),
+      trigger: ["blur", "change"],
     },
     {
       min: 1,
-      message: t('assetLibrary.message.libraryNameLen'),
-      trigger: ['blur', 'change']
-    }
+      message: t("assetLibrary.message.libraryNameLen"),
+      trigger: ["blur", "change"],
+    },
   ],
   language: [
     {
       required: true,
-      message: t('assetLibrary.message.languagePlace'),
-      trigger: ['blur', 'chanblurge']
-    }
+      message: t("assetLibrary.message.languagePlace"),
+      trigger: ["blur", "chanblurge"],
+    },
   ],
   embedding_model: [
     {
       required: true,
-      message: t('assetLibrary.message.modelPlace'),
-      trigger: ['blur', 'change']
-    }
+      message: t("assetLibrary.message.modelPlace"),
+      trigger: ["blur", "change"],
+    },
   ],
   default_parser_method: [
     {
       required: true,
-      message: t('assetLibrary.message.analyticMethodPlace'),
-      trigger: ['blur', 'change']
-    }
+      message: t("assetLibrary.message.analyticMethodPlace"),
+      trigger: ["blur", "change"],
+    },
   ],
   default_chunk_size: [
     {
-      message: t('assetLibrary.message.pleasePlace'),
-      trigger: ['blur', 'change'],
-      required: true
-    }
-  ]
+      message: t("assetLibrary.message.pleasePlace"),
+      trigger: ["blur", "change"],
+      required: true,
+    },
+  ],
 });
 
-const handleCopyTextToclipboard = (text) => {
-  const input = document.createElement('input');
+const handleCopyTextToclipboard = (text: string) => {
+  const input = document.createElement("input");
   input.value = text;
   document.body.appendChild(input);
   input.select();
-  document.execCommand('copy');
+  document.execCommand("copy");
   ElMessage({
     showClose: true,
-    message: t('assetLibrary.copySuccessFul'),
+    message: t("assetLibrary.copySuccessFul"),
     icon: IconSuccess,
-    customClass: 'o-message--success',
-    duration: 3000
+    customClass: "o-message--success",
+    duration: 3000,
   });
   document.body.removeChild(input);
 };
 
 onMounted(() => {
-  const isTransList = document.querySelectorAll('.is-transparent');
+  const isTransList = document.querySelectorAll(".is-transparent");
   isTransList?.forEach((el) => {
-    const span = el.querySelector('span');
-    if (span?.innerHTML === t('assetLibrary.message.pleaseChoose')) {
-      el.classList.add('removeIsTrans');
+    const span = el.querySelector("span");
+    if (span?.innerHTML === t("assetLibrary.message.pleaseChoose")) {
+      el.classList.add("removeIsTrans");
     }
   });
 });
@@ -397,7 +396,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       embedding_model: ruleForm.value.embedding_model,
       default_parser_method: ruleForm.value.default_parser_method,
       default_chunk_size: ruleForm.value.default_chunk_size,
-      document_type_list: ruleForm.value.document_type_list.filter((item) => item.type.length > 0)
+      document_type_list: ruleForm.value.document_type_list.filter((item) => item.type.length > 0),
     };
     if (valid) {
       loading.visible.value = true;
@@ -405,7 +404,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       if (ruleForm.value?.id) {
         KbAppAPI.updateKbLibrary({
           id: ruleForm.value.id,
-          ...payload
+          ...payload,
         })
           .then((res) => {
             props.handleOpsKbForm();
@@ -414,12 +413,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             }
             ElMessage({
               showClose: true,
-              message: t('opsMessage.modifSuccess'),
+              message: t("opsMessage.modifSuccess"),
               icon: IconSuccess,
-              customClass: 'o-message--success',
-              duration: 3000
+              customClass: "o-message--success",
+              duration: 3000,
             });
-            ruleForm.value.document_type_list = res.document_type_list;
+            ruleForm.value.document_type_list = (res as any).document_type_list;
           })
           .finally(() => {
             loading.visible.value = false;
@@ -428,7 +427,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       } else {
         KbAppAPI.createKbLibrary({
           ...payload,
-          document_type_list: ruleForm.value.document_type_list.map((item) => item.type)
+          document_type_list: ruleForm.value.document_type_list.map((item) => item.type),
         })
           .then((res) => {
             props.handleOpsKbForm();
@@ -462,7 +461,7 @@ const handleRemoveAllDocType = () => {
 const handleAddDocType = () => {
   ruleForm.value.document_type_list.push({
     id: uuidv4(),
-    type: ''
+    type: "",
   });
 };
 </script>

@@ -117,7 +117,7 @@ const props = defineProps({
     type: Boolean
   },
   uploadingList: {
-    type: Array,
+    type: Array<any>,
     default: []
   },
   handleShowTaskList: {
@@ -173,13 +173,13 @@ watch(
 );
 watch(
   () => props.taskListImportDate,
-  (newVal, oldVal) => {
+  () => {
     taskStatusList.value = props.uploadingList;
   }
 );
 onMounted(() => {
   if (props.isKnowledgeFileUpload) {
-    taskStatusList.value = props.uploadingList.filter((item) => item.uploadStatus !== 'success');
+    taskStatusList.value = props.uploadingList.filter((item) => item?.uploadStatus !== 'success');
   } else {
     taskStatusList.value = props.uploadingList;
   }

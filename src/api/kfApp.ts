@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { ChunkRequest, DocDownload, DocListRequest, DocRenameRequest } from './apiType';
+import { ChunkRequest, DocListRequest, DocRenameRequest } from './apiType';
 
 class KfAppAPI {
   /** 获取资产库里的文件*/

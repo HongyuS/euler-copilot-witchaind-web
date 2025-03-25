@@ -1,6 +1,4 @@
 import defaultSettings from '@/settings';
-import { ThemeEnum } from '@/enums/ThemeEnum';
-import Color from 'color';
 
 type SettingsValue = boolean | string;
 

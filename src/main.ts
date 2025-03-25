@@ -12,7 +12,6 @@ import setupPlugins from '@/plugins';
 
 // 本地SVG图标
 import 'virtual:svg-icons-register';
-import '@computing/opendesign2/themes/es/css';
 
 // 样式
 import 'element-plus/theme-chalk/dark/css-vars.css';
