@@ -4,12 +4,8 @@
       <el-alert :title="tipText" type="info" show-icon :closable="false" />
       <div class="list-action">
         <div>
-          <el-button
-            type="primary"
-            @click.stop="selectFiles"
-            class="file-ops"
-            :disabled="fileTableList.data.length >= props.maxFileNum"
-          >
+          <el-button type="primary" @click.stop="selectFiles" class="file-ops"
+            :disabled="fileTableList.data.length >= props.maxFileNum">
             {{ $t("btnText.chooseFile") }}
           </el-button>
           <el-button @click="batchDelete()" class="delFileBtn cancelBtn">
@@ -18,61 +14,29 @@
         </div>
         <div class="list-action-tip">
           <div>
-            {{ $t("dialogTipText.fileNums") }}:{{
-              fileTableList.data.length
-            }}/{{ props.maxFileNum }}
+            {{ $t("dialogTipText.fileNums") }}:{{ fileTableList.data.length }}/{{
+              props.maxFileNum
+            }}
           </div>
           <div>
-            {{ $t("dialogTipText.fileSizes") }}:{{ allFileSizesInfo }}/{{
-              maxFileSizesInfo
-            }}
+            {{ $t("dialogTipText.fileSizes") }}:{{ allFileSizesInfo }}/{{ maxFileSizesInfo }}
           </div>
         </div>
       </div>
       <div class="list-tip">{{ $t("dialogTipText.continueAdd") }}</div>
     </div>
-    <el-upload
-      action=""
-      drag
-      multiple
-      :limit="props.maxFileNum"
-      :accept="accept"
-      :show-file-list="false"
-      :on-exceed="handleExceed"
-      :on-success="handlsSuccess"
-      :on-change="handleChange"
-      :on-progress="handleProgress"
-      :auto-upload="false"
-    >
+    <el-upload ref="uploadRef" action="" drag multiple :limit="props.maxFileNum" :accept="accept"
+      :show-file-list="false" :on-exceed="handleExceed" :on-success="handlsSuccess" :on-change="handleChange"
+      :on-progress="handleProgress" :auto-upload="false">
       <div ref="uploadEl" class="upload-block">
         <div v-if="hasFiles" class="upload-preview" @click.stop>
-          <el-table
-            :data="fileTableList.data"
-            max-height="184"
-            @selection-change="handleSelectionChange"
-            ref="fileTableRef"
-          >
-            <el-table-column
-              type="selection"
-              class-name="upload-file-selection"
-              width="48"
-            />
-            <el-table-column
-              prop="name"
-              :label="$t('dialogTipText.fileName')"
-              class-name="upload-file-name"
-              :show-overflow-tooltip="true"
-            />
-            <el-table-column
-              prop="size"
-              :label="$t('dialogTipText.fileSize')"
-              width="120"
-            />
-            <el-table-column
-              prop="action"
-              :label="$t('btnText.operation')"
-              width="100"
-            >
+          <el-table :data="fileTableList.data" max-height="184" @selection-change="handleSelectionChange"
+            ref="fileTableRef">
+            <el-table-column type="selection" class-name="upload-file-selection" width="48" />
+            <el-table-column prop="name" :label="$t('dialogTipText.fileName')" class-name="upload-file-name"
+              :show-overflow-tooltip="true" />
+            <el-table-column prop="size" :label="$t('dialogTipText.fileSize')" width="120" />
+            <el-table-column prop="action" :label="$t('btnText.operation')" width="100">
               <template #default="scope">
                 <el-button text @click="deleteFile(scope.row)">
                   {{ $t("btnText.delete") }}
@@ -108,12 +72,8 @@
       </div>
     </el-upload>
     <div v-if="hasFiles" class="upload-ops-btn">
-      <el-button
-        class="resetBtn"
-        type="primary"
-        :disabled="btnDisabled"
-        @click="uploadType === 'file' ? uploadKnowledgeFile() : uploadFiles()"
-      >
+      <el-button class="resetBtn" type="primary" :disabled="btnDisabled"
+        @click="uploadType === 'file' ? uploadKnowledgeFile() : uploadFiles()">
         {{ $t("btnText.confirm") }}
       </el-button>
       <el-button class="resetBtn cancelBtn" @click="handleCancelUpload()">
@@ -126,10 +86,7 @@
 import { computed, reactive, ref } from "vue";
 import "@/styles/upload.scss";
 import { IconUpload, IconError } from "@computing/opendesign-icons";
-import type {
-  UploadFile,
-  UploadProgressEvent,
-} from "element-plus/es/components/upload/src/upload";
+import type { UploadFile, UploadProgressEvent } from "element-plus/es/components/upload/src/upload";
 const { t } = useI18n();
 import { ElMessage } from "element-plus";
 import { bytesToSize, isMaxMemoryOut } from "@/utils/bytesToSize";
@@ -141,6 +98,7 @@ interface TableRow {
 }
 const doUpload = (options: any) => {
   props.handleUploadMyFile(options);
+
 };
 const progressVal = ref(0);
 const uploadEl = ref(null);
@@ -158,11 +116,11 @@ const props = defineProps({
   },
   handleCancelVisible: {
     type: Function,
-    default: () => {},
+    default: () => { },
   },
   handleQueryTaskList: {
     type: Function,
-    default: () => {},
+    default: () => { },
   },
   maxSize: {
     type: Number,
@@ -170,15 +128,15 @@ const props = defineProps({
   },
   handleUploadMyFile: {
     type: Function,
-    default: () => {},
+    default: () => { },
   },
   handInitTaskList: {
     type: Function,
-    default: () => {},
+    default: () => { },
   },
   handleStopUploadFile: {
     type: Function,
-    default: () => {},
+    default: () => { },
   },
   taskListImportDate: {
     type: Number,
@@ -189,11 +147,11 @@ const props = defineProps({
   },
   toggleUploadNotify: {
     type: Function,
-    default: () => {},
+    default: () => { },
   },
   handleImportLoading: {
     type: Function,
-    default: () => {},
+    default: () => { },
   },
   singleFileLimit: {
     type: Boolean,
@@ -201,6 +159,7 @@ const props = defineProps({
   },
   singleFileSize: {
     type: Number,
+    default: 0,
   },
   uploadType: {
     type: String,
@@ -216,6 +175,7 @@ const multipleSelection = ref<TableRow[]>([]);
 const uploadingList = ref<Array<any>>([]);
 const showTaskList = ref(true);
 let allFileSizes = ref(0); // 所有文件大小
+const uploadRef = ref();
 
 let allFileSizesInfo = computed(() => {
   // 字节转MB：1 MB = 1024 * 1024 bytes
@@ -277,10 +237,9 @@ const handleChange = (file: UploadFile) => {
 };
 
 // 超出文件数量限制时的处理
-const handleExceed = () => {
-  ElMessage.warning(
-    `超出文件数量限制,最多只能上传 ${props.maxFileNum} 个文件!`
-  );
+const handleExceed = (files: File[], uploadFiles: any[]) => {
+  console.log(uploadFiles.length);
+  ElMessage.warning(`超出文件数量限制,最多只能上传 ${props.maxFileNum} 个文件!`);
 };
 
 const handleProgress = (e: UploadProgressEvent) => {
@@ -311,7 +270,7 @@ const handleUploadRestart = (item: any) => {
         return up;
       });
     },
-    onSuccess: (response: any) => {
+    onSuccess: () => {
       item.percent = 100;
       props.handInitTaskList();
     },
@@ -350,7 +309,7 @@ const selectFiles = () => {
 
 watch(
   () => props.taskListImportDate,
-  (newVal, oldVal) => {
+  () => {
     uploadingList.value = props.taskList?.map((item: any) => {
       return {
         id: item.id,
@@ -358,8 +317,7 @@ watch(
         taskId: item.task.id,
         name: item.name,
         size: item?.document_size,
-        percent:
-          item?.task?.status && item?.task?.status !== "pending" ? 100 : 99,
+        percent: item?.task?.status && item?.task?.status !== "pending" ? 100 : 99,
         uploadStatus: item?.task?.status,
       };
     });
@@ -367,10 +325,10 @@ watch(
   }
 );
 
-const handleLimitSize = (selectedFileData) => {
+const handleLimitSize = (selectedFileData: Array<TableRow>) => {
   let flag = false;
   selectedFileData.forEach((item) => {
-    if (isMaxMemoryOut(item.file.size, props.singleFileSize)) {
+    if (isMaxMemoryOut(item.file.size ?? 0, props.singleFileSize)) {
       flag = true;
     }
   });
@@ -419,7 +377,7 @@ const uploadFiles = () => {
             return up;
           });
         },
-        onSuccess: (response: any) => {
+        onSuccess: () => {
           uploadFileNumber += 1;
           if (uploadFileNumber === fileTableList.data.length) {
             props.handleQueryTaskList();
@@ -440,11 +398,8 @@ const uploadFiles = () => {
           percent:
             item?.task?.status === "success"
               ? 100
-              : reportDetail && reportDetail?.current_stage
-                ? (
-                    (reportDetail?.current_stage / reportDetail?.stage_cnt) *
-                    100
-                  ).toFixed(1)
+              : reportDetail?.current_stage
+                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
                 : 0,
           uploadStatus: item?.task?.status,
         };
@@ -453,6 +408,7 @@ const uploadFiles = () => {
     uploadingList.value.length && handleToggleUploadNotify();
     props.handleCancelVisible();
     fileTableList.data = [];
+    uploadRef.value?.clearFiles();
     allFileSizes.value = 0;
   });
 };
@@ -482,36 +438,59 @@ const uploadKnowledgeFile = () => {
       newUploadTask: true,
     };
   });
-  uploadingList.value.forEach((item) => {
-    return doUpload({
-      file: item.file,
-      onProgress: (evt: any) => {
-        if (evt < 100) {
-          item.percent = evt;
-        }
-      },
-      onError: (e: any) => {
-        uploadingList.value = uploadingList.value.map((up) => {
-          if (up.id === e.id) {
-            return { ...e, uploadStatus: "error" };
+  const uploadPromises = uploadingList.value.map((item) => {
+    return new Promise((resolve, reject) => {
+      doUpload({
+        file: item.file,
+        onProgress: (evt: any) => {
+          if (evt < 100) {
+            item.percent = evt;
           }
-          return up;
-        });
-        props?.handleImportLoading(false);
-        uploadingList.value.length && handleToggleUploadNotify();
-      },
-      onSuccess: (response: any) => {
-        props.handleQueryTaskList(fileTableList.data);
-        uploadFileNumber += 1;
-        item.percent = 100;
-        item.uploadStatus = "success";
-      },
-      fileInfo: item,
+        },
+        onError: (e: any) => {
+          uploadingList.value = uploadingList.value.map((up) => {
+            if (up.id === e.id) {
+              return { ...e, uploadStatus: "error" };
+            }
+            return up;
+          });
+          reject(e); // 传递错误
+        },
+        onSuccess: () => {
+          uploadFileNumber += 1;
+          item.percent = 100;
+          item.uploadStatus = "success";
+          resolve(true); // 标记成功
+        },
+        fileInfo: item,
+      });
     });
   });
-  uploadingList.value.length && handleToggleUploadNotify();
+
+  // 所有上传完成后统一更新列表
+  Promise.allSettled(uploadPromises)
+    .then((results) => {
+      const successCount = results.filter(
+        (result) => result.status === 'fulfilled'
+      ).length;
+      const errorCount = results.length - successCount;
+
+      // 统一更新列表
+      props?.handleImportLoading(false);
+      if (errorCount > 0) {
+        handleToggleUploadNotify();
+      }
+
+      // 所有成功后的回调
+      if (errorCount === 0) {
+        props.handleQueryTaskList(fileTableList.data); // 统一更新列表
+      }
+    });
+
+  uploadingList.value.length && handleToggleUploadNotify()
   props.handleCancelVisible();
   fileTableList.data = [];
+  uploadRef.value?.clearFiles();
   allFileSizes.value = 0;
 };
 

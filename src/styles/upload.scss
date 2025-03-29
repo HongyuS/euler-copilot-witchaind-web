@@ -29,7 +29,7 @@
         font-size: var(--o-font-size-info);
         display: flex;
         justify-content: end;
-        &>:first-child{
+        & > :first-child {
           margin-right: 15px;
         }
       }
@@ -136,7 +136,7 @@
         position: absolute;
         inset: 0;
         z-index: -1;
-        content: "";
+        content: '';
         background-color: rgb(235 239 246);
         opacity: 0.9;
       }
@@ -172,7 +172,7 @@
       height: 24px;
     }
 
-    +.upload-tip {
+    + .upload-tip {
       margin-top: 24px;
     }
   }

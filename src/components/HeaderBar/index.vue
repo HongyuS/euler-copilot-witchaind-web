@@ -1,5 +1,7 @@
 <template>
-  <el-affix target=".main-container" :offset="0">
+  <el-affix
+    target=".main-container"
+    :offset="0">
     <!-- 因嵌入copilot页面暂时注释 -->
     <!-- <el-header class="platform-header">
       <span class="platform-title">
@@ -18,11 +20,11 @@
 
 <script setup lang="ts">
 // 内部依赖
-import { useSettingsStore, useUserStore } from "@/store";
-import { ThemeEnum } from "@/enums/ThemeEnum";
-import "@/styles/headerBar.scss";
-import { IconHelpCircle } from "@computing/opendesign-icons";
-import { TOKEN_KEY } from "@/enums/CacheEnum";
+import { useSettingsStore, useUserStore } from '@/store';
+import { ThemeEnum } from '@/enums/ThemeEnum';
+import '@/styles/headerBar.scss';
+import { IconHelpCircle } from '@computing/opendesign-icons';
+import { TOKEN_KEY } from '@/enums/CacheEnum';
 const settingsStore = useSettingsStore();
 const { t } = useI18n();
 </script>

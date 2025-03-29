@@ -1,9 +1,9 @@
-import { setupI18n } from "@/lang";
-import { setupRouter } from "@/router";
-import { setupStore } from "@/store";
-import type { App } from "vue";
-import { setupElIcons } from "./icons";
-import { setupPermission } from "./permission";
+import { setupI18n } from '@/lang';
+import { setupRouter } from '@/router';
+import { setupStore } from '@/store';
+import type { App } from 'vue';
+import { setupElIcons } from './icons';
+import { setupPermission } from './permission';
 
 export default {
   install(app: App<Element>) {
@@ -17,5 +17,5 @@ export default {
     setupPermission();
     // 状态管理(store)
     setupStore(app);
-  },
+  }
 };

@@ -1,11 +1,11 @@
-import { RouteRecordRaw } from "vue-router";
-import { constantRoutes } from "@/router";
-import { store } from "@/store";
-import MenuAPI, { RouteVO } from "@/api/menu";
+import { RouteRecordRaw } from 'vue-router';
+import { constantRoutes } from '@/router';
+import { store } from '@/store';
+import MenuAPI, { RouteVO } from '@/api/menu';
 
-const modules = import.meta.glob("../../views/**/**.vue");
+const modules = import.meta.glob('../../views/**/**.vue');
 
-export const usePermissionStore = defineStore("permission", () => {
+export const usePermissionStore = defineStore('permission', () => {
   /** 所有路由，包括静态和动态路由 */
   const routes = ref<RouteRecordRaw[]>([]);
 
@@ -28,7 +28,7 @@ export const usePermissionStore = defineStore("permission", () => {
 
   return {
     routes,
-    generateRoutes,
+    generateRoutes
   };
 });
 

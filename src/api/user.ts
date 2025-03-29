@@ -1,6 +1,6 @@
-import request from "@/utils/request";
+import request from '@/utils/request';
 
-const USER_BASE_URL = "/api/v1/users";
+const USER_BASE_URL = '/api/v1/users';
 
 class UserAPI {
   /**
@@ -11,7 +11,7 @@ class UserAPI {
   static getInfo() {
     return request<any, UserInfo>({
       url: `${USER_BASE_URL}/me`,
-      method: "get",
+      method: 'get'
     });
   }
 }

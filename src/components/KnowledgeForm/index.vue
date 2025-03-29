@@ -7,79 +7,72 @@
     label-width="auto"
     class="kl-ruleForm"
     :size="formSize"
-    label-position="left"
-  >
+    label-position="left">
     <el-form-item
       :label="$t('assetLibrary.assetId')"
       prop="id"
       class="assetIdClass"
       :id="props.configInfo ? 'asset-box-id' : null"
-      v-if="ruleForm.id?.length > 0"
-    >
+      v-if="ruleForm.id?.length > 0">
       <el-input
         v-model="ruleForm.id"
         minlength="1"
         :disabled="true"
         maxlength="50"
-        :placeholder="$t('assetLibrary.message.pleasePlace')"
-      />
+        :placeholder="$t('assetLibrary.message.pleasePlace')" />
       <el-icon
         v-if="props.configInfo"
         class="copydocument"
-        @click="handleCopyTextToclipboard(ruleForm.id)"
-      >
+        @click="handleCopyTextToclipboard(ruleForm.id)">
         <CopyDocument />
       </el-icon>
     </el-form-item>
-    <el-form-item :label="$t('assetLibrary.name')" prop="name">
+    <el-form-item
+      :label="$t('assetLibrary.name')"
+      prop="name">
       <el-input
         v-model="ruleForm.name"
         minlength="1"
         maxlength="50"
-        :placeholder="$t('assetLibrary.message.pleasePlace')"
-      />
+        :placeholder="$t('assetLibrary.message.pleasePlace')" />
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.desc')"
       prop="description"
-      class="config-size-desc"
-    >
+      class="config-size-desc">
       <el-input
         v-model="ruleForm.description"
         maxlength="150"
         show-word-limit
         type="textarea"
-        :placeholder="$t('assetLibrary.message.pleasePlace')"
-      />
+        :placeholder="$t('assetLibrary.message.pleasePlace')" />
     </el-form-item>
-    <el-form-item :label="$t('assetLibrary.language')" prop="language">
+    <el-form-item
+      :label="$t('assetLibrary.language')"
+      prop="language">
       <el-select
         v-model="ruleForm.language"
         :placeholder="$t('assetLibrary.message.pleaseChoose')"
         :suffix-icon="IconCaretDown"
         :teleported="false"
-        class="select-container"
-      >
+        class="select-container">
         <el-option
           v-for="item in languageOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value"
-        />
+          :value="item.value" />
       </el-select>
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.embeddedModel')"
-      prop="embedding_model"
-    >
+      prop="embedding_model">
       <template #label>
         {{ $t("assetLibrary.embeddedModel") }}
         <el-tooltip
           :content="$t('formTipText.analyticTip')"
           placement="top"
           popper-class="analyticTipBox"
-          effect="light"
-        >
+          effect="light">
           <el-icon>
             <IconHelpCircle />
           </el-icon>
@@ -92,46 +85,39 @@
         :teleported="false"
         class="select-container"
         :disabled="props.formData.id"
-        :suffix-icon="IconCaretDown"
-      >
+        :suffix-icon="IconCaretDown">
         <el-option
           v-for="item in emBeddingModelOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value"
-        />
+          :value="item.value" />
       </el-select>
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.analyticMethod')"
-      prop="default_parser_method"
-    >
+      prop="default_parser_method">
       <el-select
         v-model="ruleForm.default_parser_method"
         :placeholder="$t('assetLibrary.message.pleaseChoose')"
         :suffix-icon="IconCaretDown"
-        popper-class="analyticMethodSelect"
-      >
+        popper-class="analyticMethodSelect">
         <el-option
           v-for="item in parserMethodOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value"
-        />
+          :value="item.value" />
       </el-select>
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.fileChunkSize')"
-      prop="default_chunk_size"
-    >
+      prop="default_chunk_size">
       <template #label>
         {{ $t("assetLibrary.fileChunkSize") }}
         <el-tooltip
           :content="$t('formTipText.fileChunkSizeTip')"
           placement="top"
           popper-class="fileChunkSizeTip"
-          effect="light"
-        >
+          effect="light">
           <el-icon>
             <IconHelpCircle />
           </el-icon>
@@ -141,29 +127,23 @@
         class="config-size"
         v-model="ruleForm.default_chunk_size"
         :min="512"
-        :max="1024"
-      />
+        :max="1024" />
       <span class="form-right-tip">（512~1024）</span>
     </el-form-item>
     <el-form-item
       :label="
-        props.configInfo
-          ? $t('assetLibrary.fileConfigCategory')
-          : $t('assetLibrary.configCategory')
+        props.configInfo ? $t('assetLibrary.fileConfigCategory') : $t('assetLibrary.configCategory')
       "
-      class="config-form"
-    >
+      class="config-form">
       <el-button
         class="resetBtn addDocuType"
         :disabled="ruleForm?.document_type_list?.length >= 10"
-        @click="handleAddDocType"
-      >
+        @click="handleAddDocType">
         {{ $t("btnText.add") }}
       </el-button>
       <el-button
         class="resetBtn delAllCocuType"
-        @click="handleRemoveAllDocType"
-      >
+        @click="handleRemoveAllDocType">
         {{ $t("btnText.delAll") }}
       </el-button>
       <div class="supAddCategoris">
@@ -175,30 +155,30 @@
       v-for="(item, index) in ruleForm.document_type_list"
       :key="`documentType${index}`"
       label="domain"
-      class="domain-config"
-    >
+      class="domain-config">
       <el-input
         v-model="ruleForm.document_type_list[index].type"
-        :placeholder="$t('assetLibrary.message.categoryInfo')"
-      />
-      <el-icon class="deleteConfig" @click="handleRemoveDocType(index)">
+        :placeholder="$t('assetLibrary.message.categoryInfo')" />
+      <el-icon
+        class="deleteConfig"
+        @click="handleRemoveDocType(index)">
         <IconDelete />
       </el-icon>
     </el-form-item>
     <el-form-item
       class="kl-ops-btn"
-      :class="!props.configInfo ? 'kl-create-ops-btn' : null"
-    >
+      :class="!props.configInfo ? 'kl-create-ops-btn' : null">
       <el-button
         class="resetBtn"
         type="primary"
         :disabled="isSubmitDisabled"
         :loading="createLoading"
-        @click="submitForm(ruleFormRef)"
-      >
+        @click="submitForm(ruleFormRef)">
         {{ props.configInfo ? $t("btnText.save") : $t("btnText.confirm") }}
       </el-button>
-      <el-button class="resetBtn cancelBtn" @click="handleCancelForm()">
+      <el-button
+        class="resetBtn cancelBtn"
+        @click="handleCancelForm()">
         {{ $t("btnText.cancel") }}
       </el-button>
     </el-form-item>
@@ -207,12 +187,7 @@
 
 <script lang="ts" setup>
 import { reactive, ref, watch } from "vue";
-import {
-  ElLoading,
-  type ComponentSize,
-  type FormInstance,
-  type FormRules,
-} from "element-plus";
+import { ElLoading, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
 import {
   IconCaretDown,
   IconDelete,
@@ -287,15 +262,13 @@ onMounted(() => {
   loading.visible.value = false;
   ruleForm.value = props.formData
     ? JSON.parse(
-        JSON.stringify(
-          ({
-            ...props.formData,
-            document_type_list: props.formData?.document_type_list.filter(
-              (item) => item?.type?.length
-            ),
-            default_chunk_size: props.formData.default_chunk_size || 1024,
-          } as RuleForm) || "{}"
-        )
+        JSON.stringify({
+          ...props.formData,
+          document_type_list: props.formData?.document_type_list.filter(
+            (item: any) => item?.type?.length
+          ),
+          default_chunk_size: props.formData.default_chunk_size || 1024,
+        } as RuleForm)
       )
     : ruleForm.value;
 
@@ -326,7 +299,8 @@ watch(
   () => {
     let flag = false;
     Object.keys(ruleForm.value).forEach((item) => {
-      if (rules?.[item]?.[0]?.required) {
+      const ruleCopy = rules?.[item];
+      if ((Array.isArray(ruleCopy) ? ruleCopy[0] : ruleCopy)?.required) {
         if (!ruleForm.value?.[item]?.toString().length) {
           flag = true;
         }
@@ -386,7 +360,7 @@ const rules = reactive<FormRules<RuleForm>>({
   ],
 });
 
-const handleCopyTextToclipboard = (text) => {
+const handleCopyTextToclipboard = (text: string) => {
   const input = document.createElement("input");
   input.value = text;
   document.body.appendChild(input);
@@ -422,9 +396,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       embedding_model: ruleForm.value.embedding_model,
       default_parser_method: ruleForm.value.default_parser_method,
       default_chunk_size: ruleForm.value.default_chunk_size,
-      document_type_list: ruleForm.value.document_type_list.filter(
-        (item) => item.type.length > 0
-      ),
+      document_type_list: ruleForm.value.document_type_list.filter((item) => item.type.length > 0),
     };
     if (valid) {
       loading.visible.value = true;
@@ -446,7 +418,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
               customClass: "o-message--success",
               duration: 3000,
             });
-            ruleForm.value.document_type_list = res.document_type_list;
+            ruleForm.value.document_type_list = (res as any).document_type_list;
           })
           .finally(() => {
             loading.visible.value = false;
@@ -455,9 +427,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       } else {
         KbAppAPI.createKbLibrary({
           ...payload,
-          document_type_list: ruleForm.value.document_type_list.map(
-            (item) => item.type
-          ),
+          document_type_list: ruleForm.value.document_type_list.map((item) => item.type),
         })
           .then((res) => {
             props.handleOpsKbForm();

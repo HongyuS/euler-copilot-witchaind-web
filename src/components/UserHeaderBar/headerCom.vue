@@ -12,24 +12,24 @@
           popper-class="dropdown-container userDro"
           class="userDroContainer"
           trigger="click"
-          @visible-change="handleBatchDownBth"
-        >
+          @visible-change="handleBatchDownBth">
           <span class="el-dropdown-link">
             {{ userInfo.name }}
-            <el-icon class="el-icon--right" v-if="!batchDownBth">
+            <el-icon
+              class="el-icon--right"
+              v-if="!batchDownBth">
               <IconCaretDown />
             </el-icon>
             <el-icon
               class="el-icon--right el-icon--caretup"
-              v-if="batchDownBth"
-            >
+              v-if="batchDownBth">
               <IconCaretUp />
             </el-icon>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="handlLogout">
-                {{ $t("login.logOut") }}
+                {{ $t('login.logOut') }}
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -39,12 +39,12 @@
           class="box-item"
           effect="light"
           :content="
-            modelNameStr?`${$t('model.modelName')}：${modelNameStr}` :
-            `${$t('model.modelName')}`
+            modelNameStr ? `${$t('model.modelName')}：${modelNameStr}` : `${$t('model.modelName')}`
           "
-          placement="left"
-        >
-          <el-icon class="setting-icon" @click="handleModelVisible(true)">
+          placement="left">
+          <el-icon
+            class="setting-icon"
+            @click="handleModelVisible(true)">
             <Setting />
           </el-icon>
         </el-tooltip>
@@ -58,19 +58,21 @@
     class="model-dialog"
     width="560"
     @close="handleClose"
-    :title="$t('model.modelConfig')"
-  >
+    :title="$t('model.modelConfig')">
     <el-radio-group
       v-model="openai_api_type"
       class="model-radio"
-      @change="handleRadioChange"
-    >
-      <el-radio value="local" size="large">{{
-        t("model.localModel")
-      }}</el-radio>
-      <el-radio value="online" size="large">{{
-        t("model.onlineModel")
-      }}</el-radio>
+      @change="handleRadioChange">
+      <el-radio
+        value="local"
+        size="large">
+        {{ t('model.localModel') }}
+      </el-radio>
+      <el-radio
+        value="online"
+        size="large">
+        {{ t('model.onlineModel') }}
+      </el-radio>
     </el-radio-group>
 
     <el-form
@@ -80,39 +82,33 @@
       :rules="rules"
       label-position="left"
       :label-width="userLanguage === 'zh' ? '92px' : 'auto'"
-      @validate="handleFormValidate"
-    >
+      @validate="handleFormValidate">
       <!-- 本地模型 -->
       <div class="form-container">
         <el-form-item
           :label="$t('model.modelType')"
           prop="model_name"
-          class="docName"
-        >
+          class="docName">
           <el-select
             v-model="ruleFormLocal.model_name"
             placeholder="选择模型类型"
             class="select-container"
-            :clearable="true"
-          >
+            :clearable="true">
             <el-option
               v-for="item in modelTypes"
               :key="item.id"
               :label="item.model_name"
-              :value="item.id"
-            >
+              :value="item.id">
               <img
                 v-if="item.model_type === 'deepseek'"
                 src="/src/assets/images/deepseek.png"
                 width="25"
-                height="25"
-              />
+                height="25" />
               <img
                 v-if="item.model_type === 'qwen'"
                 src="/src/assets/images/Qwen.png"
                 width="25"
-                height="25"
-              />
+                height="25" />
               {{ item.model_name }}
             </el-option>
           </el-select>
@@ -127,66 +123,63 @@
       :rules="rules"
       label-position="left"
       :label-width="userLanguage === 'zh' ? '92px' : 'auto'"
-      @validate="handleFormValidate"
-    >
+      @validate="handleFormValidate">
       <!-- 在线模型 -->
       <div class="form-container">
         <el-form-item
           :label="$t('API KEY')"
           prop="openai_api_key"
-          class="docName"
-        >
+          class="docName">
           <el-input
             v-model="ruleForm.openai_api_key"
-            :placeholder="$t('model.pleasePlace')"
-          >
+            :placeholder="$t('model.pleasePlace')">
             <template #suffix>
               <el-icon
                 class="warning-icon"
-                v-if="!formValidateStatus.openai_api_key"
-              >
+                v-if="!formValidateStatus.openai_api_key">
                 <WarningFilled />
               </el-icon>
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item :label="$t('Base-Url')" prop="openai_api_base">
+        <el-form-item
+          :label="$t('Base-Url')"
+          prop="openai_api_base">
           <el-input
             v-model="ruleForm.openai_api_base"
-            :placeholder="$t('model.pleasePlace')"
-          >
+            :placeholder="$t('model.pleasePlace')">
             <template #suffix>
               <el-icon
                 class="warning-icon"
-                v-if="!formValidateStatus.openai_api_base"
-              >
+                v-if="!formValidateStatus.openai_api_base">
                 <WarningFilled />
               </el-icon>
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item :label="$t('model.modelType')" prop="model_name">
+        <el-form-item
+          :label="$t('model.modelType')"
+          prop="model_name">
           <el-input
             v-model="ruleForm.model_name"
-            :placeholder="$t('model.pleasePlace')"
-          >
+            :placeholder="$t('model.pleasePlace')">
             <template #suffix>
               <el-icon
                 class="warning-icon"
-                v-if="!formValidateStatus.model_name"
-              >
+                v-if="!formValidateStatus.model_name">
                 <WarningFilled />
               </el-icon>
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item :label="$t('model.maxToken')" prop="max_tokens">
+        <el-form-item
+          :label="$t('model.maxToken')"
+          prop="max_tokens">
           <el-input-number
             class="token-size"
             v-model="ruleForm.max_tokens"
             :min="1024"
-            :max="8096"
-          />
+            :max="8096" />
           <span class="form-right-tip">（1024~8096）</span>
         </el-form-item>
       </div>
@@ -197,16 +190,15 @@
         class="resetBtn"
         type="primary"
         @click="
-          handleConfirmCreateModel(
-            openai_api_type === 'online' ? ruleFormRef : ruleFormRefLocal
-          )
+          handleConfirmCreateModel(openai_api_type === 'online' ? ruleFormRef : ruleFormRefLocal)
         "
-        :loading="submitLoading"
-      >
-        {{ $t("btnText.confirm") }}
+        :loading="submitLoading">
+        {{ $t('btnText.confirm') }}
       </el-button>
-      <el-button class="resetBtn cancelBtn" @click="handleClose">
-        {{ $t("btnText.cancel") }}
+      <el-button
+        class="resetBtn cancelBtn"
+        @click="handleClose">
+        {{ $t('btnText.cancel') }}
       </el-button>
     </div>
   </el-dialog>
@@ -214,30 +206,25 @@
 
 <script setup lang="ts">
 // 内部依赖
-import { useAppStore, useUserStore } from "@/store";
-import "@/styles/headerBar.scss";
-import {
-  IconCaretDown,
-  IconCaretUp,
-  IconError,
-  IconSuccess,
-} from "@computing/opendesign-icons";
-import { ModelForm } from "./modelConfig";
-import { FormInstance, FormItemProp } from "element-plus";
-import KbAppAPI from "@/api/kbApp";
-import defaultSettings from "@/settings";
+import { useAppStore, useUserStore } from '@/store';
+import '@/styles/headerBar.scss';
+import { IconCaretDown, IconCaretUp, IconError, IconSuccess } from '@computing/opendesign-icons';
+import { ModelForm } from './modelConfig';
+import { FormInstance, FormItemProp } from 'element-plus';
+import KbAppAPI from '@/api/kbApp';
+import defaultSettings from '@/settings';
 
 const appStore = useAppStore();
 const userStore = useUserStore();
-const { t,locale} = useI18n();
+const { t, locale } = useI18n();
 const ruleFormRef = ref<FormInstance>();
 const ruleFormRefLocal = ref<FormInstance>();
 const userLanguage = ref();
 const isSubmitDisabled = ref(true);
 const batchDownBth = ref(false);
 const modelVisible = ref(false);
-const openai_api_type = ref("local");
-const value = ref("");
+const openai_api_type = ref('local');
+const value = ref('');
 // 定义一个接口来描述 modelTypes 数组中的对象结构
 interface ModelType {
   model_name: string; // value 属性是字符串类型
@@ -245,76 +232,76 @@ interface ModelType {
   id: string;
 }
 
-const initModelTYpe = ref("");
+const initModelTYpe = ref('');
 
 // 使用接口定义 modelTypes 数组的类型
 let modelTypes: Ref<ModelType[]> = ref([]);
 
 const ruleForm = ref<ModelForm>({
-  openai_api_key: "",
-  openai_api_base: "",
+  openai_api_key: '',
+  openai_api_base: '',
   max_tokens: 1024,
-  model_name: "",
+  model_name: ''
 });
 const ruleFormLocal = ref<ModelForm>({
-  id: "",
-  model_name: "",
+  id: '',
+  model_name: ''
 });
 
 const rules = ref({
   openai_api_key: [
     {
       required: true,
-      message: t("model.pleasePlace"),
-      trigger: ["blur", "change"],
-    },
+      message: t('model.pleasePlace'),
+      trigger: ['blur', 'change']
+    }
   ],
   openai_api_base: [
     {
       required: true,
-      message: t("model.pleasePlace"),
-      trigger: ["blur", "change"],
-    },
+      message: t('model.pleasePlace'),
+      trigger: ['blur', 'change']
+    }
   ],
   max_tokens: [
     {
       required: true,
-      message: t("model.pleasePlace"),
-      trigger: ["blur", "change"],
-    },
+      message: t('model.pleasePlace'),
+      trigger: ['blur', 'change']
+    }
   ],
   model_name: [
     {
       required: true,
-      message: t("model.pleasePlace"),
-      trigger: ["blur", "change"],
-    },
-  ],
+      message: t('model.pleasePlace'),
+      trigger: ['blur', 'change']
+    }
+  ]
 });
 
 const formValidateStatus = ref<any>({
   openai_api_key: true,
   openai_api_base: true,
   max_tokens: true,
-  model_name: true,
+  model_name: true
 });
 
 const userInfo = ref<any>({});
 
-const modelNameStr=ref<string>("");   // 保持当前用户配置的模型名称
+const modelNameStr = ref<string>(''); // 保持当前用户配置的模型名称
 
-const persisitModel = ref<string>("");  // 保持当前用户配置的模型类型，避免刚打开对话框时的单选框切换效果
+const persisitModel = ref<string>(''); // 保持当前用户配置的模型类型，避免刚打开对话框时的单选框切换效果
 
 const handleClose = () => {
   modelVisible.value = false;
-  
+
   openai_api_type.value = persisitModel.value;
 
   formValidateStatus.value = {
     openai_api_key: true,
     openai_api_base: true,
     max_tokens: true,
-    model_name: true,
+    model_name: true
   };
 };
 
@@ -322,24 +309,22 @@ const handleClose = () => {
  * 处理接postmessage收到的数据，根据消息中的语言设置应用语言。
  * 该函数会根据接收到的语言代码更新应用的语言设置，并将其存储在本地存储中。
  */
-const handleMessage = (e: Event)=> {
-
-  const langObj={
-    'CN': 'zh',
-    'EN': 'en'
+const handleMessage = (e: Event) => {
+  const langObj = {
+    CN: 'zh',
+    EN: 'en'
   };
   let lang = langObj[e.data.lang];
   locale.value = lang;
   appStore.changeLanguage(lang);
-  localStorage.setItem("language", lang);
-
+  localStorage.setItem('language', lang);
 };
 
 onMounted(() => {
-  window.addEventListener('message', handleMessage)
-  userInfo.value = JSON.parse(localStorage.getItem("userInfo") || "{}");
+  window.addEventListener('message', handleMessage);
+  userInfo.value = JSON.parse(localStorage.getItem('userInfo') || '{}');
   userLanguage.value = userInfo.value?.language;
-  if (openai_api_type.value === "local") {
+  if (openai_api_type.value === 'local') {
     KbAppAPI.localModelList().then((res) => {
       modelTypes.value = res;
     });
@@ -348,30 +333,30 @@ onMounted(() => {
 });
 onUnmounted(() => window.removeEventListener('message', handleMessage));
 
-const getModelInfo=()=>{
+const getModelInfo = () => {
   KbAppAPI.getdUserModel().then((res) => {
-    persisitModel.value= res.is_online?"online":"local";
+    persisitModel.value = res.is_online ? 'online' : 'local';
     modelNameStr.value = res.model_name;
     if (res.is_online) {
-      openai_api_type.value = "online";
+      openai_api_type.value = 'online';
       ruleForm.value = res;
       ruleFormLocal.value = {};
     } else {
-      openai_api_type.value = "local";
+      openai_api_type.value = 'local';
       ruleFormLocal.value = res;
       initModelTYpe.value = res.id;
       ruleForm.value = { max_tokens: 1024 };
     }
   });
-}
+};
 
 watch(openai_api_type, (val) => {
   if (ruleFormRef.value) {
     ruleFormRef.value.resetFields();
   } else {
-    console.warn("Form instance is not initialized yet.");
+    console.warn('Form instance is not initialized yet.');
   }
-  if (val === "local") {
+  if (val === 'local') {
     KbAppAPI.localModelList().then((res) => {
       modelTypes.value = res;
     });
@@ -396,18 +381,18 @@ watch(
 );
 
 watch(
-  () => useStorage("language", defaultSettings.language).value,
+  () => useStorage('language', defaultSettings.language).value,
   () => {
-    userLanguage.value = useStorage("language", defaultSettings.language).value;
+    userLanguage.value = useStorage('language', defaultSettings.language).value;
   },
   {
     deep: true,
-    immediate: true,
+    immediate: true
   }
 );
 
 const handleRadioChange = () => {
-  if (openai_api_type.value === "local") {
+  if (openai_api_type.value === 'local') {
     ruleFormLocal.value = {};
     ruleFormRefLocal.value.resetFields();
   } else {
@@ -423,7 +408,7 @@ const handleBatchDownBth = (e) => {
 const handlLogout = () => {
   userStore.logout().then((res: any) => {
     if (res && !Object.keys(res).length) {
-      localStorage.removeItem("userInfo");
+      localStorage.removeItem('userInfo');
       userStore.resetToken();
     }
   });
@@ -438,35 +423,35 @@ const handleConfirmCreateModel = async (formData: FormInstance | undefined) => {
 
   await formData.validate((valid, fields) => {
     if (valid) {
-      if (openai_api_type.value === "local") {
+      if (openai_api_type.value === 'local') {
         if (
           ruleFormLocal.value.model_name?.length < 36 ||
           initModelTYpe.value === ruleFormLocal.value.model_name
         ) {
           ElMessage({
             showClose: true,
-            message: "请勿重复配置",
+            message: t('model.repeatTip'),
             icon: IconError,
-            customClass: "o-message--error",
-            duration: 3000,
+            customClass: 'o-message--error',
+            duration: 3000
           });
           return;
         }
       }
       submitLoading.value = true;
       let param = {};
-      if (openai_api_type.value === "online") {
+      if (openai_api_type.value === 'online') {
         param = {
           max_tokens: ruleForm.value.max_tokens || 1024,
           model_name: ruleForm.value.model_name,
           openai_api_base: ruleForm.value.openai_api_base,
           openai_api_key: ruleForm.value.openai_api_key,
-          is_online: true,
+          is_online: true
         };
       } else {
         param = {
           id: ruleFormLocal.value.model_name,
-          is_online: false,
+          is_online: false
         };
       }
       KbAppAPI.addUserModel(param)
@@ -474,10 +459,10 @@ const handleConfirmCreateModel = async (formData: FormInstance | undefined) => {
           modelVisible.value = false;
           ElMessage({
             showClose: true,
-            message: t("opsMessage.modifSuccess"),
+            message: t('opsMessage.modifSuccess'),
             icon: IconSuccess,
-            customClass: "o-message--success",
-            duration: 3000,
+            customClass: 'o-message--success',
+            duration: 3000
           });
           handleModelDialog();
           getModelInfo();
@@ -498,24 +483,24 @@ const handleModelDialog = () => {
     openai_api_key: true,
     openai_api_base: true,
     max_tokens: true,
-    model_name: true,
+    model_name: true
   };
 };
 
 const handleModelVisible = (visible: boolean) => {
   KbAppAPI.getdUserModel().then((res) => {
     modelNameStr.value = res.model_name;
-    persisitModel.value= res.is_online?"online":"local";
+    persisitModel.value = res.is_online ? 'online' : 'local';
     if (res.is_online) {
       ruleForm.value = {
         ...res,
-        max_tokens: res?.max_tokens || 1024,
+        max_tokens: res?.max_tokens || 1024
       };
-      openai_api_type.value = "online";
+      openai_api_type.value = 'online';
     } else {
       initModelTYpe.value = res.id;
       ruleFormLocal.value = res;
-      openai_api_type.value = "local";
+      openai_api_type.value = 'local';
     }
   });
   modelVisible.value = visible;
@@ -601,7 +586,7 @@ const handleModelVisible = (visible: boolean) => {
     }
   }
   .el-dialog__title {
-    font-family: "HarmonyOS Sans SC Bold", sans-serif !important;
+    font-family: 'HarmonyOS Sans SC Bold', sans-serif !important;
     font-weight: 800;
   }
   .el-input {
