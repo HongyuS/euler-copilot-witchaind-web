@@ -430,7 +430,7 @@ const handleConfirmCreateModel = async (formData: FormInstance | undefined) => {
         ) {
           ElMessage({
             showClose: true,
-            message: '请勿重复配置',
+            message: t('model.repeatTip'),
             icon: IconError,
             customClass: 'o-message--error',
             duration: 3000

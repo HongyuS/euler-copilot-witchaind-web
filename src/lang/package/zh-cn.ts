@@ -16,7 +16,7 @@ export default {
         nameMsg: '昵称不能为空',
         required: '请输入昵称',
         notMinThan: '昵称长度不能大于10个字符',
-        popoverMsg: '长度为1-10个字符'
+        popoverMsg: '长度为1-10个字符',
       },
       username: {
         usernameMsg: '用户名不能为空',
@@ -24,7 +24,7 @@ export default {
         notMinThan: '用户名长度不能少于5个字符',
         notMaxThan: '用户名长度不能大于20个字符',
         regxMsg: '用户名只能为小写字母、数字',
-        popoverMsg: '长度为5-20个字符,只能包含小写字母、数字'
+        popoverMsg: '长度为5-20个字符,只能包含小写字母、数字',
       },
       password: {
         passwordMsg: '密码不能为空',
@@ -32,7 +32,7 @@ export default {
         notMinThan: '密码长度不能少于6个字符',
         notMaxThan: '密码长度不能大于20个字符',
         regxMsg: '密码必须包含大写字母、小写字母、数字',
-        popoverMsg: '长度为6-20个字符,必须包含大写字母、小写字母、数字'
+        popoverMsg: '长度为6-20个字符,必须包含大写字母、小写字母、数字',
       },
       passwd: {
         passwordMsg: '密码不能为空',
@@ -40,7 +40,7 @@ export default {
         notMinThan: '密码长度不能少于6个字符',
         notMaxThan: '密码长度不能大于20个字符',
         regxMsg: '密码必须包含大写字母、小写字母、数字',
-        popoverMsg: '长度为6-20个字符,必须包含大写字母、小写字母、数字'
+        popoverMsg: '长度为6-20个字符,必须包含大写字母、小写字母、数字',
       },
       email: {
         emailMsg: '邮箱不能为空',
@@ -48,16 +48,16 @@ export default {
         notMinThan: '邮箱长度不能少于5个字符',
         notMaxThan: '邮箱长度不能大于20个字符',
         regxMsg: '邮箱格式不正确',
-        popoverMsg: '长度为5-20个字符,格式必须为XXX@XXX.XXX'
+        popoverMsg: '长度为5-20个字符,格式必须为XXX@XXX.XXX',
       },
       loginTip: '用户名或密码错误',
-      loginToken: '您的会话已过期，请重新登录'
-    }
+      loginToken: '您的会话已过期，请重新登录',
+    },
   },
   langSelect: {
     message: {
-      success: '切换语言成功'
-    }
+      success: '切换语言成功',
+    },
   },
   assetLibrary: {
     assetLibrary: '资产库',
@@ -74,7 +74,7 @@ export default {
       analyticMethodPlace: '请选择解析方法',
       pleasePlace: '请输入',
       pleaseChoose: '请选择',
-      assetEditSuccess: '配置信息修改成功'
+      assetEditSuccess: '配置信息修改成功',
     },
     piece: '篇',
     file: '文档',
@@ -94,7 +94,7 @@ export default {
     uploadIng: '上传中',
     uploadFailedNet: '上传失败，请检查网络',
     fileSuffiexNot: '文件后缀不符合要求，请检查文件',
-    copySuccessFul: '复制成功'
+    copySuccessFul: '复制成功',
   },
   assetFile: {
     docName: '文档名称',
@@ -109,23 +109,23 @@ export default {
     baseInfo: '基本信息',
     message: {
       name: '请输入文档名称',
-      docNameLen: '资产库名称长度1-15个字符'
+      docNameLen: '资产库名称长度1-15个字符',
     },
     status: {
       analyticIng: '解析中',
       analyticWaitIng: '等待解析',
       analyticFail: '解析失败',
       cancelAnalytic: '取消解析',
-      analyticSucces: '解析成功'
+      analyticSucces: '解析成功',
     },
     open: '开启',
-    close: '关闭'
+    close: '关闭',
   },
 
   fileChunk: {
     parag: '段落',
     table: '表格',
-    img: '图片'
+    img: '图片',
   },
   model: {
     pleasePlace: '请输入',
@@ -134,7 +134,8 @@ export default {
     modelConfig: '模型配置',
     maxToken: '最大Token数',
     localModel: '本地模型',
-    onlineModel: '在线模型'
+    onlineModel: '在线模型',
+    repeatTip: '请勿重复配置',
   },
   btnText: {
     confirm: '确定',
@@ -167,7 +168,8 @@ export default {
     add: '添加',
     analytic: '解析',
     delAll: '删除全部',
-    selectAll: '选择全部'
+    selectAll: '选择全部',
+    reset: '重置',
   },
   dialogTipText: {
     importAssetLibrary: '导入资产库',
@@ -188,22 +190,22 @@ export default {
     fileSize: '大小',
     singleFileSize: '单个文件大小不能超过20MB',
     fileNums: '文件数',
-    fileSizes: '文件大小'
+    fileSizes: '文件大小',
   },
   formTipText: {
     analyticTip:
       '文档分块后，将分块转换为向量的向量化模型类型，先暂支持两种向量化模型bge-large-en（面向英文向量化场景）和bge-large-zh（面向中文向量化场景），默认情况下选择bge-large-zh模型。',
     fileChunkSizeTip:
-      '配置文档上传后，将文件处理成片段分块的大小，分块大小范围为512-1024Token/块，默认使用1024Toke/块对文件进行分块。'
+      '配置文档上传后，将文件处理成片段分块的大小，分块大小范围为512-1024Token/块，默认使用1024Toke/块对文件进行分块。',
   },
   pageTipText: {
     NoData: '暂无数据',
     systemError: '系统出错',
-    Loading: '加载中'
+    Loading: '加载中',
   },
   uploadText: {
     uploadFailed: '上传失败',
-    uploadSuccess: '上传成功'
+    uploadSuccess: '上传成功',
   },
   exportTask: {
     export: '导出任务',
@@ -212,7 +214,7 @@ export default {
     exportSuccess: '导出成功',
     reason: '失败原因',
     downloadTask: '下载任务',
-    canceled: '已取消'
+    canceled: '已取消',
   },
   opsMessage: {
     opsSuccess: '操作成功',
@@ -220,10 +222,10 @@ export default {
     opsCancel: '取消成功',
     opsAnalyticIng: '解析中',
     delSuccess: '删除成功',
-    modifSuccess: '修改成功'
+    modifSuccess: '修改成功',
   },
   timerSearch: {
-    lastHour: '最近 {timer} 小时'
+    lastHour: '最近 {timer} 小时',
   },
-  copyright: '版权所有© 华为软件技术有限公司2024。保留一切权利'
+  copyright: '版权所有© 华为软件技术有限公司2024。保留一切权利',
 };

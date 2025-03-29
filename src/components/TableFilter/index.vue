@@ -44,7 +44,7 @@
     <el-button
       class="resetBtn cancelBtn"
       @click="handleSubimitFilter('reset')">
-      重置
+      {{ $t('btnText.reset') }}
     </el-button>
   </div>
   <div v-if="filterCustomType === 'input'">

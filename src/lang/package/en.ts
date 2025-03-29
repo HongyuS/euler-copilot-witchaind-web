@@ -15,44 +15,44 @@ export default {
       name: {
         nameMsg: 'The name cannot be empty.',
         required: 'Enter a name.',
-        notMinThan: 'The name cannot be longer than 10 characters.'
+        notMinThan: 'The name cannot be longer than 10 characters.',
       },
       username: {
         usernameMsg: 'The username cannot be empty.',
         required: 'Enter a username.',
         notMinThan: 'The username cannot be less than 5 characters.',
         notMaxThan: 'The username cannot be longer than 20 characters.',
-        regxMsg: 'The username can contain only lowercase letters and number.'
+        regxMsg: 'The username can contain only lowercase letters and number.',
       },
       password: {
         passwordMsg: 'The password cannot be empty.',
         required: 'Enter a password.',
         notMinThan: 'The password cannot be less than 6 characters.',
         notMaxThan: 'The password cannot be longer than 20 characters.',
-        regxMsg: 'The password must contain uppercase letters, lowercase letters, and digits.'
+        regxMsg: 'The password must contain uppercase letters, lowercase letters, and digits.',
       },
       passwd: {
         passwordMsg: 'The password cannot be empty.',
         required: 'Enter a password.',
         notMinThan: 'The password cannot be less than 6 characters.',
         notMaxThan: 'The password cannot be longer than 20 characters.',
-        regxMsg: 'The password must contain uppercase letters, lowercase letters, and digits.'
+        regxMsg: 'The password must contain uppercase letters, lowercase letters, and digits.',
       },
       email: {
         emailMsg: 'The email cannot be empty.',
         required: 'Enter an email.',
         notMinThan: 'The email  cannot be less than 5 characters.',
         notMaxThan: 'The email cannot be longer than 20 characters.',
-        regxMsg: 'The email format is incorrect.'
+        regxMsg: 'The email format is incorrect.',
       },
       loginTip: 'The username or password is not correct.',
-      loginToken: 'The session has expired.Please login again.'
-    }
+      loginToken: 'The session has expired.Please login again.',
+    },
   },
   langSelect: {
     message: {
-      success: 'Switch Language Successful!'
-    }
+      success: 'Switch Language Successful!',
+    },
   },
   assetLibrary: {
     assetLibrary: 'Asset Libraries',
@@ -69,7 +69,7 @@ export default {
       analyticMethodPlace: 'Enter a value',
       pleasePlace: 'Enter a value',
       pleaseChoose: 'Select an option',
-      assetEditSuccess: 'Asset library information is modified successfully.'
+      assetEditSuccess: 'Asset library information is modified successfully.',
     },
     piece: 'piece ',
     file: 'documents',
@@ -89,7 +89,7 @@ export default {
     uploadIng: 'Uploading',
     uploadFailedNet: 'Upload failed.Check the netwok.',
     fileSuffiexNot: 'The file name extension is not supported.',
-    copySuccessFul: 'Copy successful'
+    copySuccessFul: 'Copy successful',
   },
   assetFile: {
     docName: 'Document Name',
@@ -104,22 +104,22 @@ export default {
     baseInfo: 'Basic Information',
     message: {
       name: 'Enter an file name.',
-      docNameLen: 'The file name can contain 1 to 15 characters'
+      docNameLen: 'The file name can contain 1 to 15 characters',
     },
     status: {
       analyticIng: 'Parsing',
       analyticWaitIng: 'Parsing waitIng',
       analyticFail: 'Parsing failed',
       cancelAnalytic: 'Parsing canceled',
-      analyticSucces: 'Parsing successful'
+      analyticSucces: 'Parsing successful',
     },
     open: 'Open',
-    close: 'Close'
+    close: 'Close',
   },
   fileChunk: {
     parag: 'Paragraph',
     table: 'table',
-    img: 'Image'
+    img: 'Image',
   },
   model: {
     pleasePlace: 'Enter a value',
@@ -128,7 +128,8 @@ export default {
     modelType: 'Model',
     maxToken: 'Maximum Token Limit',
     localModel: 'Local Model',
-    onlineModel: 'Online Model'
+    onlineModel: 'Online Model',
+    repeatTip: 'Do not duplicate configuration',
   },
   btnText: {
     confirm: 'Ok',
@@ -161,7 +162,8 @@ export default {
     add: 'Add',
     delAll: 'Delete All',
     analytic: 'Analytic',
-    selectAll: 'Select All'
+    selectAll: 'Select All',
+    reset: 'reset',
   },
   dialogTipText: {
     importAssetLibrary: 'Import Document',
@@ -184,22 +186,22 @@ export default {
     fileSize: 'Size',
     singleFileSize: 'The size of a file cannot exceed 20 MB.',
     fileNums: 'File Number',
-    fileSizes: 'File Size'
+    fileSizes: 'File Size',
   },
   formTipText: {
     analyticTip:
       'Vectorization model for transforming document chunks into vectors. Currently,two options are available:bge-large-en for English text bge-large-zh for Chinese text.',
     fileChunkSizeTip:
-      'Chunk size for dividing files after the configuration file is uploaded. The value ranges from 512 to 1024 tokens per chunk. By default, a chunk size of 1024 tokens is used.'
+      'Chunk size for dividing files after the configuration file is uploaded. The value ranges from 512 to 1024 tokens per chunk. By default, a chunk size of 1024 tokens is used.',
   },
   pageTipText: {
     NoData: 'No data available.',
     systemError: 'System error.',
-    Loading: 'Loading'
+    Loading: 'Loading',
   },
   uploadText: {
     uploadFailed: 'Upload failed.',
-    uploadSuccess: 'Upload successful.'
+    uploadSuccess: 'Upload successful.',
   },
   exportTask: {
     export: ' export',
@@ -208,7 +210,7 @@ export default {
     exportSuccess: 'Successful',
     reason: 'Reason',
     downloadTask: 'Download Task',
-    canceled: 'Canceled'
+    canceled: 'Canceled',
   },
   opsMessage: {
     opsSuccess: 'Operation successful.',
@@ -216,10 +218,10 @@ export default {
     opsCancel: 'Operation canceled.',
     delSuccess: 'Deletion successful.',
     opsAnalyticIng: 'AnalyticIng',
-    modifSuccess: 'Modification successful.'
+    modifSuccess: 'Modification successful.',
   },
   timerSearch: {
-    lastHour: 'Last {timer} hour'
+    lastHour: 'Last {timer} hour',
   },
-  copyright: 'Copyright© Huawei Software Technologies Co., Ltd.2024. All rights reserved.'
+  copyright: 'Copyright© Huawei Software Technologies Co., Ltd.2024. All rights reserved.',
 };
