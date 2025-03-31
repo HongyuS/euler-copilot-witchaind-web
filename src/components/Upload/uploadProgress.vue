@@ -111,48 +111,48 @@ import { IconChevronUp, IconChevronDown, IconX } from '@computing/opendesign-ico
 const taskStatusList = ref<any>([]);
 const props = defineProps({
   isKnowledgeFileUpload: {
-    type: Boolean
+    type: Boolean,
   },
   showUploadNotify: {
-    type: Boolean
+    type: Boolean,
   },
   uploadingList: {
     type: Array<any>,
-    default: []
+    default: [],
   },
   handleShowTaskList: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   showTaskList: {
-    type: Boolean
+    type: Boolean,
   },
   handleCloseSingleUpload: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   handleUploadRestart: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   taskListImportDate: {
-    type: Number
+    type: Number,
   },
   importTaskTotal: {
-    type: Number
+    type: Number,
   },
   handleImportScroll: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   taskListLoading: {
     type: Boolean,
-    default: false
+    default: false,
   },
   isShowAllClear: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 });
 
 const handleScroll = (e: any) => {
@@ -168,7 +168,7 @@ watch(
     }
   },
   {
-    deep: true
+    deep: true,
   }
 );
 watch(

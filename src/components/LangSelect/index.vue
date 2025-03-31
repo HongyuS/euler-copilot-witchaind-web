@@ -44,13 +44,13 @@ const userInfo = ref();
 defineProps({
   size: {
     type: String,
-    required: false
-  }
+    required: false,
+  },
 });
 
 const langOptions = [
   { label: '简体中文', value: LanguageEnum.ZH_CN },
-  { label: 'English', value: LanguageEnum.EN }
+  { label: 'English', value: LanguageEnum.EN },
 ];
 
 const appStore = useAppStore();
@@ -75,7 +75,7 @@ const handleLanguageChange = (lang: string) => {
   if (userInfo.value.name) {
     localStorage.setItem('userInfo', JSON.stringify({ name: userInfo.value.name, language: lang }));
     AuthAPI.userUpdate({
-      language: lang
+      language: lang,
     });
   }
   ElMessage({
@@ -83,7 +83,7 @@ const handleLanguageChange = (lang: string) => {
     message: t('langSelect.message.success'),
     icon: IconSuccess,
     customClass: 'o-message--success',
-    duration: 3000
+    duration: 3000,
   });
 };
 </script>

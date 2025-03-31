@@ -17,7 +17,7 @@ import { name, version, engines, dependencies, devDependencies } from './package
 
 const __APP_INFO__ = {
   pkg: { name, version, engines, dependencies, devDependencies },
-  buildTimestamp: Date.now()
+  buildTimestamp: Date.now(),
 };
 
 const pathSrc = path.resolve(__dirname, './src');
@@ -27,8 +27,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     base: '/witchaind/', // 设置打包路径
     resolve: {
       alias: {
-        '@': pathSrc
-      }
+        '@': pathSrc,
+      },
     },
     css: {
       // CSS 预处理器
@@ -38,9 +38,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           javascriptEnabled: true,
           additionalData: `
             @use "@/styles/variables.scss" as *;
-          `
-        }
-      }
+          `,
+        },
+      },
     },
     server: {
       // 允许IP访问
@@ -49,7 +49,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       origin: 'http://localhost:3002',
       // 运行是否自动打开浏览器
       headers: {
-        'Access-control-allow-origin': '*'
+        'Access-control-allow-origin': '*',
       },
       open: true,
       proxy: {
@@ -58,9 +58,9 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           changeOrigin: true,
           ws: false,
           secure: false,
-          rewrite: (path) => path.replace(/^\/witchaind\/api/, '/api')
-        }
-      }
+          rewrite: (path) => path.replace(/^\/witchaind\/api/, '/api'),
+        },
+      },
     },
     plugins: [
       vue(),
@@ -69,7 +69,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       // MOCK 服务
       env.VITE_MOCK_DEV_SERVER === 'true' ? mockDevServerPlugin() : null,
       UnoCSS({
-        hmrTopLevelAwait: false
+        hmrTopLevelAwait: false,
       }),
       AutoImport({
         // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
@@ -78,19 +78,19 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
           ElementPlusResolver(),
           // 自动导入图标组件
-          IconsResolver({})
+          IconsResolver({}),
         ],
         eslintrc: {
           // 是否自动生成 eslint 规则，建议生成之后设置 false
           enabled: false,
           // 指定自动导入函数 eslint 规则的文件
-          filepath: './.eslintrc.json',
-          globalsPropValue: true
+          // filepath: './.eslintrc-auto-import.json',
+          globalsPropValue: true,
         },
         // 是否在 vue 模板中自动导入
         vueTemplate: true,
         // 指定自动导入函数TS类型声明文件路径 (false:关闭自动生成)
-        dts: false
+        dts: false,
         // dts: "src/types/auto-imports.d.ts",
       }),
       Components({
@@ -100,25 +100,25 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // 自动注册图标组件
           IconsResolver({
             // element-plus图标库，其他图标库 https://icon-sets.iconify.design/
-            enabledCollections: ['ep']
-          })
+            enabledCollections: ['ep'],
+          }),
         ],
         // 指定自定义组件位置(默认:src/components)
         dirs: ['src/components', 'src/**/components'],
         // 指定自动导入组件TS类型声明文件路径 (false:关闭自动生成)
-        dts: false
+        dts: false,
         // dts: "src/types/components.d.ts",
       }),
       Icons({
         // 自动安装图标库
-        autoInstall: true
+        autoInstall: true,
       }),
       createSvgIconsPlugin({
         // 指定需要缓存的图标文件夹
         iconDirs: [resolve(pathSrc, 'assets/icons')],
         // 指定symbolId格式
-        symbolId: 'icon-[dir]-[name]'
-      })
+        symbolId: 'icon-[dir]-[name]',
+      }),
     ],
     // 预加载项目必需的组件
     optimizeDeps: {
@@ -197,8 +197,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         'element-plus/es/components/step/style/css',
         'element-plus/es/components/avatar/style/css',
         'element-plus/es/components/descriptions/style/css',
-        'element-plus/es/components/descriptions-item/style/css'
-      ]
+        'element-plus/es/components/descriptions-item/style/css',
+      ],
     },
     // 构建配置
     build: {
@@ -208,11 +208,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         compress: {
           keep_infinity: true, // 防止 Infinity 被压缩成 1/0，这可能会导致 Chrome 上的性能问题
           drop_console: true, // 生产环境去除 console
-          drop_debugger: true // 生产环境去除 debugger
+          drop_debugger: true, // 生产环境去除 debugger
         },
         format: {
-          comments: false // 删除注释
-        }
+          comments: false, // 删除注释
+        },
       },
       rollupOptions: {
         output: {
@@ -232,12 +232,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
               extType = 'fonts';
             }
             return `${extType}/[name].[hash].[ext]`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     define: {
-      __APP_INFO__: JSON.stringify(__APP_INFO__)
-    }
+      __APP_INFO__: JSON.stringify(__APP_INFO__),
+    },
   };
 });

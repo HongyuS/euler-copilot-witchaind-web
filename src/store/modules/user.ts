@@ -6,7 +6,7 @@ import { store } from '@/store';
 export const useUserStore = defineStore('user', () => {
   const user = ref<UserInfo>({
     roles: [],
-    perms: []
+    perms: [],
   });
 
   /**
@@ -66,7 +66,7 @@ export const useUserStore = defineStore('user', () => {
     login,
     logout,
     resetToken,
-    signin
+    signin,
   };
 });
 

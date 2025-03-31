@@ -9,7 +9,7 @@ class AuthAPI {
     return request({
       url: `/user/add`,
       method: 'post',
-      data: newData
+      data: newData,
     });
   }
 
@@ -20,7 +20,7 @@ class AuthAPI {
     return request({
       url: `/user/login`,
       method: 'get',
-      params: newData
+      params: newData,
     });
   }
 
@@ -28,7 +28,7 @@ class AuthAPI {
   static logout() {
     return request({
       url: `/user/logout`,
-      method: 'get'
+      method: 'get',
     });
   }
 
@@ -37,7 +37,7 @@ class AuthAPI {
     return request({
       url: `/user/update`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 }

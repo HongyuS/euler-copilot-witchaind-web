@@ -10,7 +10,7 @@ export function convertUTCToLocalTime(utcDateString: string | number | Date) {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
     .replace(/\//g, '-');
   return localTimer;
@@ -27,7 +27,7 @@ export function uTCToLocalTime(utcDateString: string | number | Date) {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     })
     .replace(/\//g, '-');
   return localTimer;

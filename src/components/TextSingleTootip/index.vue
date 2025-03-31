@@ -23,30 +23,30 @@ export default {
       type: String,
       default: () => {
         return '';
-      }
+      },
     },
     placement: {
       type: String,
       default: () => {
         return 'right';
-      }
+      },
     },
     className: {
       type: String,
       default: () => {
         return '';
-      }
+      },
     },
     refName: {
       type: String,
       default: () => {
         return '';
-      }
-    }
+      },
+    },
   },
   data() {
     return {
-      isShowToolTip: true
+      isShowToolTip: true,
     };
   },
   methods: {
@@ -58,8 +58,8 @@ export default {
       } else {
         this.isShowToolTip = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

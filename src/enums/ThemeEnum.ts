@@ -14,5 +14,5 @@ export const enum ThemeEnum {
   /**
    * 系统自动
    */
-  AUTO = 'auto'
+  AUTO = 'auto',
 }

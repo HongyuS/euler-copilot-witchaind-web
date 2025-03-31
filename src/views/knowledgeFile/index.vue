@@ -435,7 +435,7 @@
                       StatusEnum.FAIL,
                       StatusEnum.CANCEL,
                       StatusEnum.ANALYSIS_ING,
-                      StatusEnum.SUCCESS
+                      StatusEnum.SUCCESS,
                     ].includes(scope.row.status)
                   "
                   text
@@ -511,7 +511,9 @@
     width="432"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
-      <span class="iconAlarmOrange"><IconAlarmOrange /></span>
+      <span class="iconAlarmOrange">
+        <IconAlarmOrange />
+      </span>
       {{ $t('dialogTipText.confirmCancelAnalytic') }}
     </div>
     <div class="tip-ops-btn">
@@ -535,7 +537,9 @@
     width="400"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
-      <span class="iconAlarmOrange"><IconAlarmOrange /></span>
+      <span class="iconAlarmOrange">
+        <IconAlarmOrange />
+      </span>
       <span>
         {{ $t('dialogTipText.confirmDelFile') }}
         <span>
@@ -569,7 +573,9 @@
     width="400"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
-      <span class="iconAlarmOrange"><IconAlarmOrange /></span>
+      <span class="iconAlarmOrange">
+        <IconAlarmOrange />
+      </span>
       <span>
         {{ $t('dialogTipText.confirmDelSelected') }}
       </span>
@@ -653,7 +659,9 @@
           :max="1024" />
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
-          <span class="iconAlarmOrange"><IconAlarmOrange /></span>
+          <span class="iconAlarmOrange">
+            <IconAlarmOrange />
+          </span>
           <span class="editTipText">{{ $t('assetFile.analyticTip') }}</span>
         </div>
       </el-form-item>
@@ -694,7 +702,7 @@ import {
   IconCaretUp,
   IconFilter,
   IconSearch,
-  IconSuccess
+  IconSuccess,
 } from '@computing/opendesign-icons';
 import { StatusEnum, MenuType } from '@/enums/KnowledgeEnum';
 import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
@@ -746,7 +754,7 @@ const searchPayload = ref<any>({
   created_time_start: '',
   created_time_end: '',
   enabled: '',
-  parser_method: []
+  parser_method: [],
 });
 const kbInfo = ref<any>({});
 const checkedFilterList = ref([]);
@@ -757,7 +765,7 @@ const filterEnableList = ref();
 const ruleFormRef = ref<FormInstance>();
 const pagination = ref({
   pageSizes: [10, 20, 30, 40, 50],
-  layout: 'total,sizes,prev,pager,next,jumper'
+  layout: 'total,sizes,prev,pager,next,jumper',
 });
 const currentPage = ref(1);
 const totalCount = ref(0);
@@ -782,28 +790,28 @@ const ruleForm = ref<FileForm>({
   name: '',
   type_id: '',
   parser_method: '',
-  chunk_size: 1024
+  chunk_size: 1024,
 });
 const rules = reactive({
   name: [
     {
       required: true,
       message: t('assetFile.message.name'),
-      trigger: ['blur', 'change']
+      trigger: ['blur', 'change'],
     },
     {
       min: 1,
       message: t('assetFile.message.docNameLen'),
-      trigger: ['blur', 'change']
-    }
-  ]
+      trigger: ['blur', 'change'],
+    },
+  ],
 });
 const shortcuts = ref();
 
 const fileTableList = reactive<{
   data: Array<any>;
 }>({
-  data: []
+  data: [],
 });
 
 watch(
@@ -812,33 +820,33 @@ watch(
     filterStatusList.value = [
       {
         label: t('assetFile.status.analyticFail'),
-        value: StatusEnum.FAIL
+        value: StatusEnum.FAIL,
       },
       {
         label: t('assetFile.status.analyticSucces'),
-        value: StatusEnum.SUCCESS
+        value: StatusEnum.SUCCESS,
       },
       {
         label: t('assetFile.status.cancelAnalytic'),
-        value: StatusEnum.CANCEL
+        value: StatusEnum.CANCEL,
       },
       {
         label: t('assetFile.status.analyticWaitIng'),
-        value: StatusEnum.ANALYSIS_ING
+        value: StatusEnum.ANALYSIS_ING,
       },
       {
         label: t('assetFile.status.analyticIng'),
-        value: StatusEnum.RUNNING
-      }
+        value: StatusEnum.RUNNING,
+      },
     ];
     filterEnableList.value = [
       { label: t('assetFile.open'), value: 'true' },
-      { label: t('assetFile.close'), value: 'false' }
+      { label: t('assetFile.close'), value: 'false' },
     ];
     shortcuts.value = [
       {
         text: t('timerSearch.lastHour', {
-          timer: 12
+          timer: 12,
         }),
         value: () => {
           const end = new Date();
@@ -846,47 +854,47 @@ watch(
           start.setHours(start.getHours() - 12);
 
           return [start, end];
-        }
+        },
       },
       {
         text: t('timerSearch.lastHour', {
-          timer: 1
+          timer: 1,
         }),
         value: () => {
           const end = new Date();
           const start = new Date();
           start.setHours(start.getHours() - 1);
           return [start, end];
-        }
+        },
       },
       {
         text: t('timerSearch.lastHour', {
-          timer: 3
+          timer: 3,
         }),
         value: () => {
           const end = new Date();
           const start = new Date();
           start.setHours(start.getHours() - 3);
           return [start, end];
-        }
+        },
       },
       {
         text: t('timerSearch.lastHour', {
-          timer: 7
+          timer: 7,
         }),
         value: () => {
           const end = new Date();
           const start = new Date();
           start.setHours(start.getHours() - 7);
           return [start, end];
-        }
-      }
+        },
+      },
     ];
     userLanguage.value = JSON.parse(localStorage.getItem('userInfo') || '{}')?.language;
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 );
 
@@ -897,7 +905,7 @@ watch(
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 );
 
@@ -923,7 +931,7 @@ const handleJumpHome = () => {
   window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
 };
 
-const handleHeaderClick = (e: any) => {};
+const handleHeaderClick = () => {};
 
 const handelCategoryFilterProper = (filterList: any) => {
   searchPayload.value.document_type_list = filterList;
@@ -951,14 +959,14 @@ const handleRunKl = (row: any, type: string) => {
   } else {
     KfAppAPI.runLibraryFile({
       ids: [row.id],
-      run: type
-    }).then((res) => {
+      run: type,
+    }).then(() => {
       ElMessage({
         showClose: true,
         message: t('opsMessage.opsAnalyticIng'),
         icon: IconSuccess,
         customClass: 'o-message--success',
-        duration: 3000
+        duration: 3000,
       });
       handleSearchOpsData(true, true);
     });
@@ -968,14 +976,14 @@ const handleRunKl = (row: any, type: string) => {
 const handleConfirmFileAnalytic = () => {
   KfAppAPI.runLibraryFile({
     ids: [opsItem.value.id],
-    run: 'cancel'
-  }).then((res) => {
+    run: 'cancel',
+  }).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsCancel'),
       icon: IconSuccess,
       customClass: 'o-message--success',
-      duration: 3000
+      duration: 3000,
     });
     handleSearchOpsData(true, true);
     handleCancelVisible();
@@ -1017,7 +1025,7 @@ const handlePollAssetFileData = () => {
     page_size: currentPageSize.value,
     kb_id: route.query.kb_id as string,
     ...handleSearchPayload(),
-    ...sortFilter.value
+    ...sortFilter.value,
   })
     .then((res: any) => {
       if (res.page_number === currentPage.value && fileTableList.data?.length) {
@@ -1056,7 +1064,7 @@ const handleSearchData = () => {
       page_size: currentPageSize.value,
       kb_id: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...sortFilter.value
+      ...sortFilter.value,
     },
     true,
     true
@@ -1073,7 +1081,7 @@ const handleQueryKbData = () => {
   KbAppAPI.getKbLibrary({
     id: kbId,
     page_number: 1,
-    page_size: 10
+    page_size: 10,
   }).then((res: any) => {
     kbInfo.value = res.data_list?.[0] || {};
     let categoryList = JSON.parse(
@@ -1083,13 +1091,13 @@ const handleQueryKbData = () => {
       ...categoryList.map((item: { type: string; id: string }) => {
         return {
           label: item.type,
-          value: item.id
+          value: item.id,
         };
       }),
       {
         label: 'default type',
-        value: '00000000-0000-0000-0000-000000000000'
-      }
+        value: '00000000-0000-0000-0000-000000000000',
+      },
     ].filter((item) => item?.label?.length > 0);
   });
 };
@@ -1105,7 +1113,7 @@ onMounted(() => {
       {
         kb_id: kbId as string,
         page_number: 1,
-        page_size: 20
+        page_size: 20,
       },
       true,
       true
@@ -1172,7 +1180,7 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
       page_size: currentPageSize.value,
       kb_id: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...sortFilter.value
+      ...sortFilter.value,
     },
     loadingStatus,
     startPollTimer
@@ -1182,14 +1190,14 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
 const handleSwitch = (row: any) => {
   KfAppAPI.switchLibraryFile({
     id: row.id,
-    enabled: row.enabled
-  }).then((res) => {
+    enabled: row.enabled,
+  }).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsSuccess'),
       icon: IconSuccess,
       customClass: 'o-message--success',
-      duration: 3000
+      duration: 3000,
     });
     handleSearchOpsData(true, true);
   });
@@ -1226,14 +1234,14 @@ const handleSelectRunKl = () => {
     ids: selectionFileData.value.map((item) => {
       return item.id;
     }),
-    run: 'run'
-  }).then((res) => {
+    run: 'run',
+  }).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsAnalyticIng'),
       icon: IconSuccess,
       customClass: 'o-message--success',
-      duration: 3000
+      duration: 3000,
     });
     selectionFileData.value = [];
     multipleTable.value.clearSelection();
@@ -1243,14 +1251,14 @@ const handleSelectRunKl = () => {
 
 const handleConfirmDleSingle = (row: any) => {
   KfAppAPI.delLibraryFile({
-    ids: [row.id]
-  }).then((res) => {
+    ids: [row.id],
+  }).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.delSuccess'),
       icon: IconSuccess,
       customClass: 'o-message--success',
-      duration: 3000
+      duration: 3000,
     });
     let selectData = JSON.parse(JSON.stringify(selectionFileData.value));
     selectData = selectData
@@ -1277,15 +1285,15 @@ const handleConfirmDleSelected = () => {
   KfAppAPI.delLibraryFile({
     ids: selectionFileData.value.map((item) => {
       return item.id;
-    })
+    }),
   })
-    .then((res) => {
+    .then(() => {
       ElMessage({
         showClose: true,
         message: t('opsMessage.delSuccess'),
         icon: IconSuccess,
         customClass: 'o-message--success',
-        duration: 3000
+        duration: 3000,
       });
       currentPage.value = 1;
       handleSearchOpsData(true, true);
@@ -1293,30 +1301,29 @@ const handleConfirmDleSelected = () => {
       selectionFileData.value = [];
       multipleTable.value.clearSelection();
     })
-    .catch((err) => {
+    .catch(() => {
       handleStartPollTimer();
     });
 };
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid) => {
     if (valid) {
       KfAppAPI.updateLibraryFile({
         ...ruleForm.value,
-        document_type: ruleForm.value.document_type
-      }).then((res) => {
+        document_type: ruleForm.value.document_type,
+      }).then(() => {
         ElMessage({
           showClose: true,
           message: t('opsMessage.modifSuccess'),
           icon: IconSuccess,
           customClass: 'o-message--success',
-          duration: 3000
+          duration: 3000,
         });
         handleSearchOpsData(true, true);
         dialogEditVisible.value = false;
       });
-    } else {
     }
   });
 };
@@ -1342,13 +1349,13 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
   sortFilter.value = sortValue
     ? {
-        [sortKey]: sortValue
+        [sortKey]: sortValue,
       }
     : {};
   handleSearchOpsData(true, true);
 };
 
-const handleQueryTaskList = (selectedTaskList: string | any[]) => {
+const handleQueryTaskList = () => {
   handleSearchOpsData(true, false);
 };
 
@@ -1369,15 +1376,15 @@ const handleUploadMyFile = (options: any) => {
   KfAppAPI.importKbLibraryFile(
     {
       data: {
-        files: options.file.raw
+        files: options.file.raw,
       },
       params: {
-        kb_id: route.query.kb_id
-      }
+        kb_id: route.query.kb_id,
+      },
     },
     options
   )
-    .then((res) => {
+    .then(() => {
       options.onSuccess({ ...options.fileInfo, success: 'success' });
     })
     .catch((err) => {

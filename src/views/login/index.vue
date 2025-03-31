@@ -220,7 +220,6 @@
 <script setup lang="ts">
 import '@/styles/login.scss';
 import type { FormInstance } from 'element-plus';
-import { useRoute } from 'vue-router';
 import { useUserStore } from '@/store';
 import { SigninData, type LoginData } from '@/api/auth';
 import HeaderBar from '@/components/HeaderBar/index.vue';
@@ -243,13 +242,13 @@ const signinFormRef = ref<FormInstance>();
 
 const loginData = ref<LoginData>({
   account: '',
-  password: ''
+  password: '',
 });
 const signinData = ref<SigninData>({
   name: '',
   account: '',
   passwd: '',
-  email: null
+  email: null,
 });
 
 // 是否是注册页面
@@ -261,41 +260,41 @@ const loginRules = computed(() => {
       {
         required: true,
         trigger: ['blur', 'change'],
-        message: t('login.message.username.usernameMsg')
+        message: t('login.message.username.usernameMsg'),
       },
       {
         min: 5,
         message: t('login.message.username.notMinThan'),
-        trigger: 'blur'
+        trigger: 'blur',
       },
       {
         max: 20,
         message: t('login.message.username.notMaxThan'),
-        trigger: 'change'
+        trigger: 'change',
       },
       {
         pattern: /^[a-z0-9]+$/,
         message: t('login.message.username.regxMsg'),
-        trigger: ['blur', 'change']
-      }
+        trigger: ['blur', 'change'],
+      },
     ],
     password: [
       {
         required: true,
         trigger: ['blur', 'change'],
-        message: t('login.message.password.passwordMsg')
+        message: t('login.message.password.passwordMsg'),
       },
       {
         min: 6,
         message: t('login.message.password.notMinThan'),
-        trigger: 'blur'
+        trigger: 'blur',
       },
       {
         max: 20,
         message: t('login.message.password.notMaxThan'),
-        trigger: 'change'
-      }
-    ]
+        trigger: 'change',
+      },
+    ],
   };
 });
 const signinRules = computed(() => {
@@ -304,80 +303,80 @@ const signinRules = computed(() => {
       {
         required: true,
         trigger: ['blur', 'change'],
-        message: t('login.message.name.nameMsg')
+        message: t('login.message.name.nameMsg'),
       },
       {
         max: 10,
         message: t('login.message.name.notMinThan'),
-        trigger: 'change'
-      }
+        trigger: 'change',
+      },
     ],
     account: [
       {
         required: true,
         trigger: ['blur', 'change'],
-        message: t('login.message.username.usernameMsg')
+        message: t('login.message.username.usernameMsg'),
       },
       {
         min: 5,
         message: t('login.message.username.notMinThan'),
-        trigger: 'blur'
+        trigger: 'blur',
       },
       {
         max: 20,
         message: t('login.message.username.notMaxThan'),
-        trigger: 'change'
+        trigger: 'change',
       },
       {
         pattern: /^[a-z0-9]+$/,
         message: t('login.message.username.regxMsg'),
-        trigger: ['blur', 'change']
-      }
+        trigger: ['blur', 'change'],
+      },
     ],
     passwd: [
       {
         required: true,
         trigger: ['blur', 'change'],
-        message: t('login.message.password.passwordMsg')
+        message: t('login.message.password.passwordMsg'),
       },
       {
         min: 6,
         message: t('login.message.password.notMinThan'),
-        trigger: 'blur'
+        trigger: 'blur',
       },
       {
         max: 20,
         message: t('login.message.password.notMaxThan'),
-        trigger: 'change'
+        trigger: 'change',
       },
       {
         pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
         message: t('login.message.password.regxMsg'),
-        trigger: 'blur'
-      }
+        trigger: 'blur',
+      },
     ],
     email: [
       {
         required: false,
         trigger: ['blur', 'change'],
-        message: t('login.message.email.emailMsg')
+        message: t('login.message.email.emailMsg'),
       },
       {
         min: 5,
         message: t('login.message.email.notMinThan'),
-        trigger: 'blur'
+        trigger: 'blur',
       },
       {
         max: 20,
         message: t('login.message.email.notMaxThan'),
-        trigger: 'change'
+        trigger: 'change',
       },
       {
         pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         message: t('login.message.email.regxMsg'),
-        trigger: 'blur'
-      }
-    ]
+        trigger: 'blur',
+      },
+    ],
   };
 });
 
@@ -402,7 +401,7 @@ const handleLoginSubmit = () => {
             message: t('login.loginSuccessful'),
             icon: IconSuccess,
             customClass: 'o-message--success',
-            duration: 3000
+            duration: 3000,
           });
           localStorage.setItem('userInfo', JSON.stringify(res));
           window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
@@ -449,7 +448,7 @@ const handleSigInSubmit = () => {
             message: t('login.signinSuccessful'),
             icon: IconSuccess,
             customClass: 'o-message--success',
-            duration: 3000
+            duration: 3000,
           });
           signinFormRef.value?.resetFields();
           isSigIn.value = false;
@@ -469,7 +468,7 @@ const handleMessage = (e: MessageEvent) => {
   console.log(e);
   const langObj = {
     CN: 'zh',
-    EN: 'en'
+    EN: 'en',
   };
   let lang: string = langObj[e.data.lang as keyof typeof langObj];
   locale.value = lang;

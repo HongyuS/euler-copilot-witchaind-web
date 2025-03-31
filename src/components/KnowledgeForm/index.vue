@@ -67,7 +67,7 @@
       :label="$t('assetLibrary.embeddedModel')"
       prop="embedding_model">
       <template #label>
-        {{ $t("assetLibrary.embeddedModel") }}
+        {{ $t('assetLibrary.embeddedModel') }}
         <el-tooltip
           :content="$t('formTipText.analyticTip')"
           placement="top"
@@ -112,7 +112,7 @@
       :label="$t('assetLibrary.fileChunkSize')"
       prop="default_chunk_size">
       <template #label>
-        {{ $t("assetLibrary.fileChunkSize") }}
+        {{ $t('assetLibrary.fileChunkSize') }}
         <el-tooltip
           :content="$t('formTipText.fileChunkSizeTip')"
           placement="top"
@@ -139,12 +139,12 @@
         class="resetBtn addDocuType"
         :disabled="ruleForm?.document_type_list?.length >= 10"
         @click="handleAddDocType">
-        {{ $t("btnText.add") }}
+        {{ $t('btnText.add') }}
       </el-button>
       <el-button
         class="resetBtn delAllCocuType"
         @click="handleRemoveAllDocType">
-        {{ $t("btnText.delAll") }}
+        {{ $t('btnText.delAll') }}
       </el-button>
       <div class="supAddCategoris">
         <TextTooltip :content="$t('assetLibrary.supAddCategoris')" />
@@ -174,36 +174,36 @@
         :disabled="isSubmitDisabled"
         :loading="createLoading"
         @click="submitForm(ruleFormRef)">
-        {{ props.configInfo ? $t("btnText.save") : $t("btnText.confirm") }}
+        {{ props.configInfo ? $t('btnText.save') : $t('btnText.confirm') }}
       </el-button>
       <el-button
         class="resetBtn cancelBtn"
         @click="handleCancelForm()">
-        {{ $t("btnText.cancel") }}
+        {{ $t('btnText.cancel') }}
       </el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, watch } from "vue";
-import { ElLoading, type ComponentSize, type FormInstance, type FormRules } from "element-plus";
+import { reactive, ref, watch } from 'vue';
+import { ElLoading, type ComponentSize, type FormInstance, type FormRules } from 'element-plus';
 import {
   IconCaretDown,
   IconDelete,
   IconSuccess,
   IconHelpCircle,
-} from "@computing/opendesign-icons";
-import "@/styles/knowledgeForm.scss";
-import TextTooltip from "@/components/TextSingleTootip/index.vue";
-import { v4 as uuidv4 } from "uuid";
-import KbAppAPI from "@/api/kbApp";
+} from '@computing/opendesign-icons';
+import '@/styles/knowledgeForm.scss';
+import TextTooltip from '@/components/TextSingleTootip/index.vue';
+import { v4 as uuidv4 } from 'uuid';
+import KbAppAPI from '@/api/kbApp';
 
 const { t } = useI18n();
 const loading = ElLoading.service({
   visible: false,
-  text: `${t("pageTipText.Loading")}...`,
-  background: "rgba(122, 122, 122, 0.5)",
+  text: `${t('pageTipText.Loading')}...`,
+  background: 'rgba(122, 122, 122, 0.5)',
 });
 interface RuleForm {
   default_chunk_size: number;
@@ -216,18 +216,18 @@ interface RuleForm {
   [property: string]: any;
 }
 
-const formSize = ref<ComponentSize>("default");
+const formSize = ref<ComponentSize>('default');
 const ruleFormRef = ref<FormInstance>();
 const createLoading = ref(false);
 const isSubmitDisabled = ref(true);
 const ruleForm = ref<RuleForm>({
-  name: "",
-  language: "",
+  name: '',
+  language: '',
   default_chunk_size: 1024,
-  embedding_model: "",
-  default_parser_method: "",
+  embedding_model: '',
+  default_parser_method: '',
   document_type_list: [],
-  description: "",
+  description: '',
 });
 const languageOptions = ref();
 const emBeddingModelOptions = ref();
@@ -274,10 +274,10 @@ onMounted(() => {
 
   KbAppAPI.queryLanguageList().then((res: any) => {
     languageOptions.value = res?.map((item: any) => {
-      if (item === "English") {
-        return { label: item, value: "en" };
+      if (item === 'English') {
+        return { label: item, value: 'en' };
       }
-      return { label: item, value: "zh" };
+      return { label: item, value: 'zh' };
     });
   });
 
@@ -321,74 +321,74 @@ const rules = reactive<FormRules<RuleForm>>({
   name: [
     {
       required: true,
-      message: t("assetLibrary.message.name"),
-      trigger: ["blur", "change"],
+      message: t('assetLibrary.message.name'),
+      trigger: ['blur', 'change'],
     },
     {
       min: 1,
-      message: t("assetLibrary.message.libraryNameLen"),
-      trigger: ["blur", "change"],
+      message: t('assetLibrary.message.libraryNameLen'),
+      trigger: ['blur', 'change'],
     },
   ],
   language: [
     {
       required: true,
-      message: t("assetLibrary.message.languagePlace"),
-      trigger: ["blur", "chanblurge"],
+      message: t('assetLibrary.message.languagePlace'),
+      trigger: ['blur', 'chanblurge'],
     },
   ],
   embedding_model: [
     {
       required: true,
-      message: t("assetLibrary.message.modelPlace"),
-      trigger: ["blur", "change"],
+      message: t('assetLibrary.message.modelPlace'),
+      trigger: ['blur', 'change'],
     },
   ],
   default_parser_method: [
     {
       required: true,
-      message: t("assetLibrary.message.analyticMethodPlace"),
-      trigger: ["blur", "change"],
+      message: t('assetLibrary.message.analyticMethodPlace'),
+      trigger: ['blur', 'change'],
     },
   ],
   default_chunk_size: [
     {
-      message: t("assetLibrary.message.pleasePlace"),
-      trigger: ["blur", "change"],
+      message: t('assetLibrary.message.pleasePlace'),
+      trigger: ['blur', 'change'],
       required: true,
     },
   ],
 });
 
 const handleCopyTextToclipboard = (text: string) => {
-  const input = document.createElement("input");
+  const input = document.createElement('input');
   input.value = text;
   document.body.appendChild(input);
   input.select();
-  document.execCommand("copy");
+  document.execCommand('copy');
   ElMessage({
     showClose: true,
-    message: t("assetLibrary.copySuccessFul"),
+    message: t('assetLibrary.copySuccessFul'),
     icon: IconSuccess,
-    customClass: "o-message--success",
+    customClass: 'o-message--success',
     duration: 3000,
   });
   document.body.removeChild(input);
 };
 
 onMounted(() => {
-  const isTransList = document.querySelectorAll(".is-transparent");
+  const isTransList = document.querySelectorAll('.is-transparent');
   isTransList?.forEach((el) => {
-    const span = el.querySelector("span");
-    if (span?.innerHTML === t("assetLibrary.message.pleaseChoose")) {
-      el.classList.add("removeIsTrans");
+    const span = el.querySelector('span');
+    if (span?.innerHTML === t('assetLibrary.message.pleaseChoose')) {
+      el.classList.add('removeIsTrans');
     }
   });
 });
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid) => {
     let payload = {
       name: ruleForm.value.name,
       language: ruleForm.value?.language?.toLocaleLowerCase(),
@@ -413,9 +413,9 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             }
             ElMessage({
               showClose: true,
-              message: t("opsMessage.modifSuccess"),
+              message: t('opsMessage.modifSuccess'),
               icon: IconSuccess,
-              customClass: "o-message--success",
+              customClass: 'o-message--success',
               duration: 3000,
             });
             ruleForm.value.document_type_list = (res as any).document_type_list;
@@ -429,7 +429,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
           ...payload,
           document_type_list: ruleForm.value.document_type_list.map((item) => item.type),
         })
-          .then((res) => {
+          .then(() => {
             props.handleOpsKbForm();
           })
           .finally(() => {
@@ -448,8 +448,6 @@ const handleCancelForm = () => {
   props.handleCloseCreateKb();
 };
 
-const formRef = ref<FormInstance>();
-
 const handleRemoveDocType = (index: number) => {
   ruleForm.value.document_type_list.splice(index, 1);
 };
@@ -461,7 +459,7 @@ const handleRemoveAllDocType = () => {
 const handleAddDocType = () => {
   ruleForm.value.document_type_list.push({
     id: uuidv4(),
-    type: "",
+    type: '',
   });
 };
 </script>

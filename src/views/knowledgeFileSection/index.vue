@@ -153,7 +153,9 @@
                 </el-popover>
               </template>
               <template #suffix>
-                <el-icon class="el-input__icon"><IconSearch /></el-icon>
+                <el-icon class="el-input__icon">
+                  <IconSearch />
+                </el-icon>
               </template>
             </el-input>
           </div>
@@ -248,7 +250,7 @@ import KfAppAPI from '@/api/kfApp';
 import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
-import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import '@/styles/knowledgeFileSection.scss';
 import { IconCaretDown, IconSearch, IconCaretUp, IconSuccess } from '@computing/opendesign-icons';
 import { ChunkRequest } from '@/api/apiType';
@@ -261,18 +263,18 @@ const textkeyWord = ref();
 const textType = ref<any>({
   para: t('fileChunk.parag'),
   table: t('fileChunk.table'),
-  image: t('fileChunk.img')
+  image: t('fileChunk.img'),
 });
 const fileType = ref<any>(['para', 'table', 'image']);
 const pagination = ref({
-  layout: 'total,sizes,prev,pager,next,jumper'
+  layout: 'total,sizes,prev,pager,next,jumper',
 });
 const currentPage = ref(1);
 const currentPageSize = ref(20);
 const fileTableList = reactive<{
   data: Array<any>;
 }>({
-  data: []
+  data: [],
 });
 const libraryInfo = ref<any>({});
 const fileInfo = ref<any>({});
@@ -304,7 +306,7 @@ const handleFileSectionData = (payload: ChunkRequest) => {
         res?.data_list?.map((item: { text: String }) => {
           return {
             ...item,
-            text: payload.text?.length ? highlightSearchTerm(item.text, payload.text) : item.text
+            text: payload.text?.length ? highlightSearchTerm(item.text, payload.text) : item.text,
           };
         }) || [];
       totalCount.value = res?.total || 0;
@@ -320,7 +322,7 @@ const handeSearchFileType = () => {
     document_id: ids.value.document_id,
     page_number: currentPage.value,
     page_size: currentPageSize.value,
-    text: textkeyWord.value
+    text: textkeyWord.value,
   };
   if (fileType.value?.length) {
     payload.types = fileType.value;
@@ -373,12 +375,12 @@ onMounted(() => {
   if (kb_Id && kf_Id) {
     ids.value = {
       id: kb_Id,
-      document_id: kf_Id
+      document_id: kf_Id,
     };
     KbAppAPI.getKbLibrary({
       id: kb_Id,
       page_number: 1,
-      page_size: 10
+      page_size: 10,
     }).then((res: any) => {
       libraryInfo.value = res.data_list?.[0];
     });
@@ -386,14 +388,14 @@ onMounted(() => {
       kb_id: kb_Id,
       id: kf_Id,
       page_number: 1,
-      page_size: 10
+      page_size: 10,
     }).then((res: any) => {
       fileInfo.value = res.data_list?.[0];
     });
     handleFileSectionData({
       document_id: kf_Id,
       page_number: 1,
-      page_size: 20
+      page_size: 20,
     });
   }
 });
@@ -402,20 +404,20 @@ const handleSwitch = (row: any) => {
   KfAppAPI.switchLibraryFileSection({
     ids: [row.id],
     document_id: ids.value.document_id,
-    enabled: row.enabled
-  }).then((res) => {
+    enabled: row.enabled,
+  }).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsSuccess'),
       icon: IconSuccess,
       customClass: 'o-message--success',
-      duration: 3000
+      duration: 3000,
     });
     let payload: any = {
       document_id: ids.value.document_id,
       page_number: currentPage.value,
       page_size: currentPageSize.value,
-      text: textkeyWord.value
+      text: textkeyWord.value,
     };
     if (fileType.value?.length) {
       payload.types = fileType.value;
@@ -428,20 +430,20 @@ const handleEnableData = (enabledType: any) => {
   KfAppAPI.switchLibraryFileSection({
     ids: selectedData.value.map((item: any) => item.id),
     document_id: ids.value.document_id,
-    enabled: enabledType
-  }).then((res) => {
+    enabled: enabledType,
+  }).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsSuccess'),
       icon: IconSuccess,
       customClass: 'o-message--error',
-      duration: 3000
+      duration: 3000,
     });
     let payload: any = {
       document_id: ids.value.document_id,
       page_number: currentPage.value,
       page_size: currentPageSize.value,
-      text: textkeyWord.value
+      text: textkeyWord.value,
     };
     if (fileType.value?.length) {
       payload.types = fileType.value;
@@ -456,7 +458,7 @@ const handleSelectionChange = (newSelectonData: any) => {
 
 watch(
   () => fileTableList.data,
-  (newVal, oldVal) => {
+  () => {
     setTimeout(() => {
       let tbodyContainer = document.querySelector('.el-table__body') as HTMLElement;
       let tableContainer = document.querySelector('.el-table') as HTMLElement;
@@ -476,16 +478,16 @@ watch(
 
 watch(
   () => t(''),
-  (newVal, oldVal) => {
+  () => {
     textType.value = {
       para: t('fileChunk.parag'),
       table: t('fileChunk.table'),
-      image: t('fileChunk.img')
+      image: t('fileChunk.img'),
     };
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 );
 
@@ -498,7 +500,7 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
     document_id: kf_Id,
     page_number: currentPage.value,
     page_size: currentPageSize.value,
-    text: textkeyWord.value
+    text: textkeyWord.value,
   };
   if (fileType.value?.length) {
     payload.types = fileType.value;
@@ -513,7 +515,7 @@ const handleInputSearch = debounce((e) => {
     document_id: ids.value.document_id,
     page_number: currentPage.value,
     page_size: currentPageSize.value,
-    text: textkeyWord.value
+    text: textkeyWord.value,
   };
   if (fileType.value?.length) {
     payload.types = fileType.value;

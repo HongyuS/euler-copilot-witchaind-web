@@ -8,7 +8,7 @@ class KbAppAPI {
     return request({
       url: `/kb/list`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -17,7 +17,7 @@ class KbAppAPI {
     return request({
       url: `/kb/rm`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -26,7 +26,7 @@ class KbAppAPI {
     return request({
       url: `/kb/create`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -35,7 +35,7 @@ class KbAppAPI {
     return request({
       url: `/kb/update`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -44,7 +44,7 @@ class KbAppAPI {
     return request({
       url: `/kb/task/list`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -52,7 +52,7 @@ class KbAppAPI {
     return request({
       url: `/kb/task/rm`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -63,14 +63,14 @@ class KbAppAPI {
       method: 'post',
       data: payload.data,
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
       },
       onUploadProgress(e) {
         const rate = Math.floor((e.loaded / (e.total as number)) * 100);
         if (rate < 100) {
           options.onProgress(rate);
         }
-      }
+      },
     });
   }
 
@@ -80,7 +80,7 @@ class KbAppAPI {
     return request({
       url: `/kb/export`,
       data: {
-        id
+        id,
       },
       method: 'post',
       onUploadProgress(e) {
@@ -88,7 +88,7 @@ class KbAppAPI {
         if (rate < 100) {
           options.onProgress(rate);
         }
-      }
+      },
     });
   }
 
@@ -97,30 +97,30 @@ class KbAppAPI {
     return request({
       url: `/kb/download`,
       data: {
-        id: fileId
+        id: fileId,
       },
-      method: 'post'
+      method: 'post',
     });
   }
 
   static queryLanguageList() {
     return request({
       url: `/kb/language`,
-      method: 'get'
+      method: 'get',
     });
   }
 
   static queryEmbeddingModelList() {
     return request({
       url: `/other/embedding_model`,
-      method: 'get'
+      method: 'get',
     });
   }
 
   static queryParseMethodList() {
     return request({
       url: `/other/parse_method`,
-      method: 'get'
+      method: 'get',
     });
   }
 
@@ -129,21 +129,21 @@ class KbAppAPI {
     return request({
       url: `/model/update`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
   static getdUserModel() {
     return request({
       url: `/model/get`,
-      method: 'get'
+      method: 'get',
     });
   }
 
   static localModelList() {
     return request({
       url: `/model/list`,
-      method: 'get'
+      method: 'get',
     });
   }
 }

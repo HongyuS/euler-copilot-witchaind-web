@@ -13,7 +13,7 @@ import router from './router';
 const locale = computed(() => appStore.locale);
 
 onMounted(() => {
-  window.addEventListener('beforeunload', (e) => {
+  window.addEventListener('beforeunload', () => {
     sessionStorage.setItem('beforeunload', '1');
   });
   // 监听页面刷新

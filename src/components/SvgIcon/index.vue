@@ -13,21 +13,21 @@
 const props = defineProps({
   prefix: {
     type: String,
-    default: 'icon'
+    default: 'icon',
   },
   iconClass: {
     type: String,
     required: false,
-    default: ''
+    default: '',
   },
   color: {
     type: String,
-    default: ''
+    default: '',
   },
   size: {
     type: String,
-    default: '1em'
-  }
+    default: '1em',
+  },
 });
 
 const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`);

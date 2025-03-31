@@ -141,7 +141,9 @@
               :placeholder="$t('assetLibrary.message.name')"
               clearable>
               <template #suffix>
-                <el-icon class="el-input__icon"><IconSearch /></el-icon>
+                <el-icon class="el-input__icon">
+                  <IconSearch />
+                </el-icon>
               </template>
             </el-input>
           </div>
@@ -189,7 +191,9 @@
                 <div
                   class="kl-card-more-icon"
                   @click.stop>
-                  <el-icon><IconMore /></el-icon>
+                  <el-icon>
+                    <IconMore />
+                  </el-icon>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -471,7 +475,9 @@
       width="432"
       :title="$t('dialogTipText.tipsText')">
       <div class="delTip">
-        <span class="iconAlarmOrange"><IconAlarmOrange /></span>
+        <span class="iconAlarmOrange">
+          <IconAlarmOrange />
+        </span>
         <span>
           {{ $t('dialogTipText.confirmDelAsset') }}
           <span>
@@ -522,27 +528,25 @@ import {
   IconMore,
   IconSearch,
   IconThumbnail,
-  IconClock,
   IconAlarmOrange,
   IconChevronUp,
   IconChevronDown,
   IconX,
   IconError,
   IconFilter,
-  IconSuccess
+  IconSuccess,
 } from '@computing/opendesign-icons';
 import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 
-import { debounce, property } from 'lodash';
+import { debounce } from 'lodash';
 import KbAppAPI from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import FilterContainr from '@/components/TableFilter/index.vue';
 
 const { t } = useI18n();
-const router = useRouter();
 const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);
 const dialogCreateVisible = ref(false);
@@ -562,7 +566,7 @@ const resetFormData = ref({
   embedding_model: '',
   default_parser_method: '',
   document_type_list: [],
-  description: ''
+  description: '',
 });
 const showTaskExportNotify = ref(false);
 const taskExportList = ref<any[]>([]);
@@ -570,7 +574,7 @@ const showTaskExportList = ref(false);
 const formData = ref(resetFormData.value);
 const pagination = ref({
   pageSizes: [10, 20, 30, 40, 50],
-  layout: 'total,sizes,prev,pager,next,jumper'
+  layout: 'total,sizes,prev,pager,next,jumper',
 });
 interface sortFilterType {
   id?: string;
@@ -603,7 +607,7 @@ const shortcuts = ref();
 const fileTableList = reactive<{
   data: Array<any>;
 }>({
-  data: []
+  data: [],
 });
 const taskTimer = ref();
 
@@ -617,7 +621,7 @@ const handleScroll = (e: { target: any }) => {
 
       KbAppAPI.getKbLibrary({
         page_number: currentPage.value,
-        page_size: currentPageSize.value
+        page_size: currentPageSize.value,
       })
         .then((res: any) => {
           fileTableList.data = [...fileTableList.data, ...res?.data_list];
@@ -643,7 +647,7 @@ const handleQueryKbLibrary = (params: QueryKbRequest) => {
 onMounted(() => {
   handleQueryKbLibrary({
     page_number: 1,
-    page_size: 10
+    page_size: 10,
   });
 });
 
@@ -681,7 +685,7 @@ const hanldeSearhNameFilter = (filterName: string) => {
   handleQueryKbLibrary({
     page_number: currentPage.value,
     page_size: currentPageSize.value,
-    ...handleFilterData(sortFilter.value)
+    ...handleFilterData(sortFilter.value),
   });
   fileFilterVisible.value = false;
 };
@@ -694,7 +698,7 @@ const handleSwitch = (switchType: string) => {
   knoledgekeyWord.value = '';
   handleQueryKbLibrary({
     page_number: currentPage.value,
-    page_size: currentPageSize.value
+    page_size: currentPageSize.value,
   });
 };
 const handleImportKnowledge = () => {
@@ -710,7 +714,7 @@ const handInitTaskList = (selectedFiles: string | any[]) => {
   return KbAppAPI.queryKbTaskList({
     types: ['import_knowledge_base'],
     page_number: 1,
-    page_size: importTaskPageSize.value
+    page_size: importTaskPageSize.value,
   }).then((res: any) => {
     importTaskList.value = res.data_list || [];
     importTaskTotal.value = selectedFiles ? res.total + selectedFiles.length : res.total;
@@ -722,7 +726,7 @@ const handelTaskList = () => {
   KbAppAPI.queryKbTaskList({
     types: ['import_knowledge_base'],
     page_number: 1,
-    page_size: importTaskPageSize.value
+    page_size: importTaskPageSize.value,
   }).then((res: any) => {
     importTaskList.value = res.data_list || [];
     importTaskTotal.value = res.total;
@@ -766,16 +770,16 @@ const handleStopUploadFile = (taskId: string) => {
   taskListImportDate.value = Date.now();
   taskListLoading.value = true;
   let payload: any = {
-    task_id: taskId
+    task_id: taskId,
   };
   if (taskId === 'all') {
     payload = { types: ['import_knowledge_base'] };
   }
-  KbAppAPI.stopKbTaskList(payload).then((res) => {
+  KbAppAPI.stopKbTaskList(payload).then(() => {
     KbAppAPI.queryKbTaskList({
       types: ['import_knowledge_base'],
       page_number: 1,
-      page_size: importTaskPageSize.value
+      page_size: importTaskPageSize.value,
     }).then((res: any) => {
       importTaskList.value = res.data_list || [];
       taskListLoading.value = false;
@@ -799,8 +803,8 @@ const handleExportKl = async (row: any) => {
           name: row.name,
           id: row.id,
           exportStatus: 'pending',
-          taskId: res.data
-        }
+          taskId: res.data,
+        },
       ]?.map((item: any) => {
         let taskOptions = {
           taksInfo: row,
@@ -811,7 +815,7 @@ const handleExportKl = async (row: any) => {
           onError: () => {
             item.exportStatus = 'error';
             item.percent = '0';
-          }
+          },
         };
         KbAppAPI.savebLibrary(row.id, taskOptions)
           .then((taskRes) => {
@@ -839,9 +843,9 @@ const handleExportKl = async (row: any) => {
               : reportDetail
                 ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
                 : 0,
-          exportStatus: item?.task?.status
+          exportStatus: item?.task?.status,
         };
-      })
+      }),
     ];
   });
 };
@@ -861,10 +865,10 @@ const handleUploadRestart = (task: { taskId: string }) => {
         },
         onSuccess: () => {
           item.exportStatus = 'success';
-        }
+        },
       };
       KbAppAPI.savebLibrary(task.taskId, taskOptions)
-        .then((res) => {
+        .then(() => {
           taskOptions.onSuccess();
         })
         .catch(() => {
@@ -877,12 +881,12 @@ const handleUploadRestart = (task: { taskId: string }) => {
 const handleCloseSingleUpload = (taskId: string) => {
   taskExportLoading.value = true;
   let payload: any = {
-    task_id: taskId
+    task_id: taskId,
   };
   if (taskId === 'all') {
     payload = { types: ['export_knowledge_base'] };
   }
-  KbAppAPI.stopKbTaskList(payload).then((res) => {
+  KbAppAPI.stopKbTaskList(payload).then(() => {
     handleInitExportTaskList();
   });
 };
@@ -891,7 +895,7 @@ const handleInitExportTaskList = () => {
   return KbAppAPI.queryKbTaskList({
     types: ['export_knowledge_base'],
     page_number: 1,
-    page_size: exportTaskPageSize.value
+    page_size: exportTaskPageSize.value,
   }).then((res: any) => {
     exportTaskTotal.value = res?.total || 0;
     taskExportLoading.value = false;
@@ -908,7 +912,7 @@ const handleInitExportTaskList = () => {
               : reportDetail
                 ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
                 : 0,
-          exportStatus: item?.task?.status
+          exportStatus: item?.task?.status,
         };
       }) || [];
     if (res?.data_list.every((item: any) => !['pending', 'running'].includes(item?.task?.status))) {
@@ -953,11 +957,11 @@ const handleExportScroll = (e: { target: any }) => {
 
 watch(
   () => t(''),
-  (newVal, oldVal) => {
+  () => {
     shortcuts.value = [
       {
         text: t('timerSearch.lastHour', {
-          timer: 12
+          timer: 12,
         }),
         value: () => {
           const end = new Date();
@@ -965,47 +969,47 @@ watch(
 
           start.setHours(start.getHours() - 12);
           return [start, end];
-        }
+        },
       },
       {
         text: t('timerSearch.lastHour', {
-          timer: 1
+          timer: 1,
         }),
         value: () => {
           const end = new Date();
           const start = new Date();
           start.setHours(start.getHours() - 1);
           return [start, end];
-        }
+        },
       },
       {
         text: t('timerSearch.lastHour', {
-          timer: 3
+          timer: 3,
         }),
         value: () => {
           const end = new Date();
           const start = new Date();
           start.setHours(start.getHours() - 3);
           return [start, end];
-        }
+        },
       },
       {
         text: t('timerSearch.lastHour', {
-          timer: 7
+          timer: 7,
         }),
         value: () => {
           const end = new Date();
           const start = new Date();
           start.setHours(start.getHours() - 7);
           return [start, end];
-        }
-      }
+        },
+      },
     ];
     userLanguage.value = JSON.parse(localStorage.getItem('userInfo') || '{}')?.language;
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 );
 
@@ -1017,7 +1021,7 @@ const handleTimeChange = (e: (string | undefined)[]) => {
   handleQueryKbLibrary({
     page_number: 1,
     page_size: 10,
-    ...handleFilterData(sortFilter.value)
+    ...handleFilterData(sortFilter.value),
   });
   handleCancelVisible();
 };
@@ -1051,13 +1055,13 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   sortFilter.value = data.order
     ? {
         [data.prop === 'created_time' ? 'created_time_order' : 'document_count_order']:
-          data.order === 'descending' ? 'desc' : 'asc'
+          data.order === 'descending' ? 'desc' : 'asc',
       }
     : {};
   handleQueryKbLibrary({
     page_number: currentPage.value,
     page_size: currentPageSize.value,
-    ...handleFilterData(sortFilter.value)
+    ...handleFilterData(sortFilter.value),
   });
 };
 
@@ -1082,12 +1086,12 @@ const handleInputSearch = debounce((e) => {
     [property: string]: any;
   } = {
     page_number: 1,
-    page_size: currentPageSize.value
+    page_size: currentPageSize.value,
   };
   if (e) {
     payload = {
       ...payload,
-      name: e
+      name: e,
     };
 
     if (switchIcon.value === 'list') {
@@ -1105,7 +1109,7 @@ const handleOpsKbConfirm = () => {
     [property: string]: any;
   } = {
     page_number: 1,
-    page_size: 10
+    page_size: 10,
   };
   if (switchIcon.value === 'thumb') {
     currentPage.value = 1;
@@ -1113,13 +1117,13 @@ const handleOpsKbConfirm = () => {
   } else {
     payload = {
       ...payload,
-      ...sortFilter.value
+      ...sortFilter.value,
     };
   }
   payload = {
     ...payload,
     page_number: currentPage.value,
-    page_size: currentPageSize.value
+    page_size: currentPageSize.value,
   };
   if (knoledgekeyWord.value?.length > 0) {
     payload.name = knoledgekeyWord.value;
@@ -1132,7 +1136,7 @@ const handleConfirmDelKb = (row: any) => {
   delTipVisible.value = false;
   KbAppAPI.delKbLibrary({
     id: row.id,
-    task_id: row.task_id
+    task_id: row.task_id,
   })
     .then((res) => {
       if (res) {
@@ -1141,7 +1145,7 @@ const handleConfirmDelKb = (row: any) => {
           message: t('opsMessage.delSuccess'),
           icon: IconSuccess,
           customClass: 'o-message--success',
-          duration: 3000
+          duration: 3000,
         });
         if (switchIcon.value === 'thumb') {
           klCardBox.value.scrollTop = 0;
@@ -1176,7 +1180,7 @@ const handleOpsKbForm = () => {
   handleQueryKbLibrary({
     page_number: 1,
     page_size: 10,
-    ...handleFilterData(sortFilter.value)
+    ...handleFilterData(sortFilter.value),
   });
 };
 
@@ -1186,7 +1190,7 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
   handleQueryKbLibrary({
     page_number: currentPage.value,
     page_size: currentPageSize.value,
-    ...handleFilterData(sortFilter.value)
+    ...handleFilterData(sortFilter.value),
   });
 };
 
@@ -1194,16 +1198,16 @@ const handleUploadMyFile = (options: any) => {
   KbAppAPI.importKbLibrary(
     {
       data: {
-        files: options.file.raw
-      }
+        files: options.file.raw,
+      },
     },
     options
   )
-    .then((res) => {
+    .then(() => {
       options.onProgress(100);
       options.onSuccess({
         ...options.fileInfo,
-        success: 'success'
+        success: 'success',
       });
     })
     .catch((err) => {

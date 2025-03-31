@@ -16,7 +16,7 @@ const defaultSettings: AppSettings = {
   language: LanguageEnum.ZH_CN,
   themeColor: '#409EFF',
   watermarkEnabled: false,
-  watermarkContent: pkg.name
+  watermarkContent: pkg.name,
 };
 
 export default defaultSettings;
