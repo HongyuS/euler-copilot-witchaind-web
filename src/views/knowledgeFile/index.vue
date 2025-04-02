@@ -201,7 +201,6 @@
               sortable
               :label="$t('assetFile.uploadTime')"
               width="200"
-              @header-click="handleHeaderClick"
               @click.stop>
               <template #header>
                 <div class="custom-header">
@@ -930,8 +929,6 @@ const handleSearchPayload = () => {
 const handleJumpHome = () => {
   window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
 };
-
-const handleHeaderClick = () => {};
 
 const handelCategoryFilterProper = (filterList: any) => {
   searchPayload.value.document_type_list = filterList;
