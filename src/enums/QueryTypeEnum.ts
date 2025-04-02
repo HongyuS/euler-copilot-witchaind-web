@@ -33,5 +33,5 @@ export const QueryTypeEnum: Record<string, OptionType> = {
   LIKE_LEFT: { value: 10, label: "LIKE '%s'" },
 
   /** 右模糊匹配 */
-  LIKE_RIGHT: { value: 11, label: "LIKE 's%'" }
+  LIKE_RIGHT: { value: 11, label: "LIKE 's%'" },
 };

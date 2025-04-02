@@ -17,5 +17,5 @@ export default {
     setupPermission();
     // 状态管理(store)
     setupStore(app);
-  }
+  },
 };

@@ -21,10 +21,10 @@ module.exports = {
         'ci', // 修改 CI 配置、脚本
         'revert', // 回滚 commit
         'chore', // 对构建过程或辅助工具和库的更改（不影响源文件、测试用例）
-        'wip' // 对构建过程或辅助工具和库的更改（不影响源文件、测试用例）
-      ]
+        'wip', // 对构建过程或辅助工具和库的更改（不影响源文件、测试用例）
+      ],
     ],
-    'subject-case': [0] // subject大小写不做校验
+    'subject-case': [0], // subject大小写不做校验
   },
 
   prompt: {
@@ -40,7 +40,7 @@ module.exports = {
       footer: '列举关联issue (可选) 例如: #31, #I3244 :\n',
       generatingByAI: '正在通过 AI 生成你的提交简短描述...',
       generatedSelectByAI: '选择一个 AI 生成的简短描述:',
-      confirmCommit: '是否提交或修改commit ?'
+      confirmCommit: '是否提交或修改commit ?',
     },
     // prettier-ignore
     types: [
@@ -88,6 +88,6 @@ module.exports = {
     defaultBody: '',
     defaultIssues: '',
     defaultScope: '',
-    defaultSubject: ''
-  }
+    defaultSubject: '',
+  },
 };

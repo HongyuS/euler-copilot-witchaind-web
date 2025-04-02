@@ -20,13 +20,7 @@
 
 <script setup lang="ts">
 // 内部依赖
-import { useSettingsStore, useUserStore } from '@/store';
-import { ThemeEnum } from '@/enums/ThemeEnum';
 import '@/styles/headerBar.scss';
-import { IconHelpCircle } from '@computing/opendesign-icons';
-import { TOKEN_KEY } from '@/enums/CacheEnum';
-const settingsStore = useSettingsStore();
-const { t } = useI18n();
 </script>
 
 <style lang="scss">

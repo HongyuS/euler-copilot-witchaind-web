@@ -16,7 +16,7 @@ export const useSettingsStore = defineStore('setting', () => {
 
   const settingsMap: Record<string, Ref<SettingsValue>> = {
     fixedHeader,
-    watermarkEnabled
+    watermarkEnabled,
   };
 
   function changeSetting({ key, value }: { key: string; value: SettingsValue }) {
@@ -41,6 +41,6 @@ export const useSettingsStore = defineStore('setting', () => {
     themeColor,
     watermarkEnabled,
     changeSetting,
-    changeThemeColor
+    changeThemeColor,
   };
 });

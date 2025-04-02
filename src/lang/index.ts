@@ -7,11 +7,11 @@ import defaultSettings from '@/settings';
 
 const messages = {
   zh: {
-    ...zhCnLocale
+    ...zhCnLocale,
   },
   en: {
-    ...enLocale
-  }
+    ...enLocale,
+  },
 };
 
 const language = useStorage('language', defaultSettings.language);
@@ -20,7 +20,7 @@ const i18n = createI18n({
   legacy: false,
   locale: language.value,
   messages: messages,
-  globalInjection: true
+  globalInjection: true,
 });
 
 // 全局注册 i18n

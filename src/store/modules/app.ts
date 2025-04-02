@@ -30,7 +30,7 @@ export const useAppStore = defineStore('app', () => {
   return {
     language,
     locale,
-    changeLanguage
+    changeLanguage,
   };
 });
 

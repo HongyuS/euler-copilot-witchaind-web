@@ -7,7 +7,7 @@ class KfAppAPI {
     return request({
       url: `/doc/list`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
   /** 修改资产库里的文件*/
@@ -15,7 +15,7 @@ class KfAppAPI {
     return request({
       url: `/doc/update`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -24,7 +24,7 @@ class KfAppAPI {
     return request({
       url: `/doc/switch`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -33,7 +33,7 @@ class KfAppAPI {
     return request({
       url: `/doc/rm`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -42,7 +42,7 @@ class KfAppAPI {
     return request({
       url: `/doc/run`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -53,14 +53,14 @@ class KfAppAPI {
       method: 'post',
       data: payload.data,
       headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
       },
       onUploadProgress(e) {
         const rate = Math.floor((e.loaded / (e.total as number)) * 100);
         if (rate < 100) {
           options.onProgress(rate);
         }
-      }
+      },
     });
   }
 
@@ -69,7 +69,7 @@ class KfAppAPI {
     return request({
       url: `/doc/download`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -78,7 +78,7 @@ class KfAppAPI {
     return request({
       url: `/doc/task/list`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -86,7 +86,7 @@ class KfAppAPI {
     return request({
       url: `/doc/task/stop`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -95,7 +95,7 @@ class KfAppAPI {
     return request({
       url: `/chunk/list`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 
@@ -104,7 +104,7 @@ class KfAppAPI {
     return request({
       url: `/chunk/switch`,
       method: 'post',
-      data: data
+      data: data,
     });
   }
 }

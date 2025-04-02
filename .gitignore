@@ -40,3 +40,4 @@ package-lock.json
 .gitee/
 .npmrc
 .pnpm-lock.yaml
+pnpm-lock.yaml

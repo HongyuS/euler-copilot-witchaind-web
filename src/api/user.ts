@@ -11,7 +11,7 @@ class UserAPI {
   static getInfo() {
     return request<any, UserInfo>({
       url: `${USER_BASE_URL}/me`,
-      method: 'get'
+      method: 'get',
     });
   }
 }

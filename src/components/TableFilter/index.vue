@@ -78,32 +78,32 @@ const { t } = useI18n();
 
 const props = defineProps({
   filterList: {
-    type: <any>[]
+    type: <any>[],
   },
   checkedFilterList: {
-    type: Array
+    type: Array,
   },
   filterType: {
-    type: String
+    type: String,
   },
   handelSubFilterProper: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   hanldeSearhNameFilter: {
     type: Function,
-    default: () => {}
+    default: () => {},
   },
   searchPayload: {
-    type: Object
+    type: Object,
   },
   filterProp: {
-    type: String
+    type: String,
   },
   handelSubTimeFilterProper: {
     type: Function,
-    default: () => {}
-  }
+    default: () => {},
+  },
 });
 
 const isHoverIndex = ref();
@@ -123,7 +123,7 @@ watch(
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 );
 
@@ -134,7 +134,7 @@ watch(
   },
   {
     deep: true,
-    immediate: true
+    immediate: true,
   }
 );
 
@@ -196,6 +196,7 @@ const hanldeSearhNameFilter = () => {
 
 .filter-btn {
   display: flex;
+
   .resetBtn {
     width: 64px;
     height: 24px;
@@ -209,16 +210,20 @@ const hanldeSearhNameFilter = () => {
   max-height: 500px;
   padding: 0 16px;
   overflow: hidden auto;
+
   :not(.isChcekHover) .is-checked {
     border: unset !important;
+
     .el-checkbox__inner {
       border: unset !important;
     }
   }
+
   .el-checkbox__inner::after {
     left: 5px;
     top: 2px;
   }
+
   .isChcekHover .el-checkbox__inner::after {
     left: 4px;
     top: 1px;

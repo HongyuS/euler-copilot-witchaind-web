@@ -5,11 +5,11 @@ export const enum MessageTypeEnum {
   /* 通知 */
   NOTICE = 'NOTICE',
   /* 待办 */
-  TODO = 'TODO'
+  TODO = 'TODO',
 }
 
 export const MessageTypeLabels = {
   [MessageTypeEnum.MESSAGE]: '消息',
   [MessageTypeEnum.NOTICE]: '通知',
-  [MessageTypeEnum.TODO]: '待办'
+  [MessageTypeEnum.TODO]: '待办',
 };

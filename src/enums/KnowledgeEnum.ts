@@ -6,10 +6,10 @@ export const enum StatusEnum {
   CANCEL = 'canceled',
   ANALYSIS_ING = 'pending',
   SUCCESS = 'success',
-  RUNNING = 'running'
+  RUNNING = 'running',
 }
 
 export const enum MenuType {
   KL_FILE = 'klFile',
-  KL_CONFIG = 'klConfig'
+  KL_CONFIG = 'klConfig',
 }

@@ -27,7 +27,7 @@
             <el-icon
               :style="{
                 transform: popoverVisible ? 'rotate(180deg)' : 'rotate(0)',
-                transition: 'transform .5s'
+                transition: 'transform .5s',
               }"
               @click="popoverVisible = !popoverVisible">
               <ArrowDown />
@@ -96,13 +96,13 @@ const props = defineProps({
   modelValue: {
     type: String,
     require: false,
-    default: ''
+    default: '',
   },
   width: {
     type: String,
     require: false,
-    default: '500px'
-  }
+    default: '500px',
+  },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -181,7 +181,7 @@ function selectIcon(iconName: string) {
  * 点击容器外的区域关闭弹窗 VueUse onClickOutside
  */
 onClickOutside(iconSelectRef, () => (popoverVisible.value = false), {
-  ignore: [popoverContentRef]
+  ignore: [popoverContentRef],
 });
 </script>
 

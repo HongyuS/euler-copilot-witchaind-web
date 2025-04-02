@@ -23,26 +23,26 @@ export default {
   props: {
     value: {
       type: String,
-      default: ''
+      default: '',
     },
     row: {
       //最多显示几行，超过后会...隐藏 为0时不隐藏
       type: [Number, String],
-      default: 0
-    }
+      default: 0,
+    },
   },
   data() {
     return {
       isShowHover: false,
       textStyle: {},
       visible: false,
-      div: null
+      div: null,
     };
   },
   computed: {
     text() {
       return this.$refs.text;
-    }
+    },
   },
   watch: {
     row: function (val) {
@@ -51,12 +51,12 @@ export default {
     value: function () {
       this.isShowHover = false;
       this.textStyle = {
-        cursor: 'text'
+        cursor: 'text',
       };
       this.$nextTick(() => {
         this.getStyle(this.row - 0);
       });
-    }
+    },
   },
   mounted() {
     this.init();
@@ -87,12 +87,12 @@ export default {
           display: '-webkit-box',
           webkitLineClamp: val,
           webkitBoxOrient: 'vertical',
-          cursor: 'pointer'
+          cursor: 'pointer',
         };
       } else {
         this.isShowHover = false;
         this.textStyle = {
-          cursor: 'text'
+          cursor: 'text',
         };
       }
     },
@@ -126,8 +126,8 @@ export default {
         this.div.style.left = 0;
         this.div.classList.remove('active');
       };
-    }
-  }
+    },
+  },
 };
 </script>
 

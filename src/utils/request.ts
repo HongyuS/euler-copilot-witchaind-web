@@ -12,11 +12,11 @@ const service = axios.create({
   timeout: 90000,
   withCredentials: true,
   headers: {
-    'Access-control-allow-origin': '*'
+    'Access-control-allow-origin': '*',
   },
   paramsSerializer: (params) => {
     return qs.stringify(params);
-  }
+  },
 });
 
 // 请求拦截器
@@ -50,7 +50,7 @@ service.interceptors.response.use(
       message: retmsg || i18n.global.t('pageTipText.systemError'),
       icon: IconError,
       customClass: 'o-message--error',
-      duration: 3000
+      duration: 3000,
     });
     return Promise.reject(new Error(retmsg || 'Error'));
   },
@@ -65,13 +65,13 @@ service.interceptors.response.use(
             message: i18n.global.t('login.message.loginTip'),
             icon: IconError,
             customClass: 'o-message--error',
-            duration: 3000
+            duration: 3000,
           });
         } else {
           ElNotification({
             title: i18n.global.t('dialogTipText.tipsText'),
             message: i18n.global.t('login.message.loginToken'),
-            type: 'info'
+            type: 'info',
           });
           useUserStoreHook()
             .resetToken()
@@ -85,7 +85,7 @@ service.interceptors.response.use(
           message: retmsg || error?.message,
           icon: IconError,
           customClass: 'o-message--error',
-          duration: 3000
+          duration: 3000,
         });
       }
     } else {
@@ -94,7 +94,7 @@ service.interceptors.response.use(
         message: error?.message,
         icon: IconError,
         customClass: 'o-message--error',
-        duration: 3000
+        duration: 3000,
       });
     }
     return Promise.reject(error.message);
