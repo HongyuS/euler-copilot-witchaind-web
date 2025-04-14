@@ -1389,9 +1389,17 @@ const handleUploadMyFile = (options: any) => {
     });
 };
 
-const handleDownloadFile = (downloadData: any) => {
-  downloadData.forEach((item: { id: any }) => {
-    window.open(`${window.origin}/witchaind/api/doc/download?id=${item.id}`);
-  });
+const handleDownloadFile = async (downloadData: any) => {
+  for (const item of downloadData) {
+    const url = `${window.origin}/witchaind/api/doc/download?id=${item.id}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'filename'; // 指定文件名
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    await new Promise(resolve => setTimeout(resolve, 333)); // 添加延迟
+  }
 };
 </script>
