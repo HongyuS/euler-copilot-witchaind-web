@@ -6,7 +6,18 @@
     :element-loading-text="loadingText || `${$t('pageTipText.Loading')}...`"
     element-loading-background="rgba(122, 122, 122, 0.5)"></div>
 </template>
+<script lang="ts" setup>
+import { defineProps } from 'vue';
 
+defineProps({
+  loading: {
+    type: Boolean
+  },
+  loadingText: {
+    type: String
+  }
+});
+</script>
 <style>
 .customLoading {
   position: absolute;
