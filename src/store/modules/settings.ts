@@ -1,24 +1,16 @@
-import defaultSettings from "@/settings";
-import { ThemeEnum } from "@/enums/ThemeEnum";
-import Color from "color";
+import defaultSettings from '@/settings';
 
 type SettingsValue = boolean | string;
 
-export const useSettingsStore = defineStore("setting", () => {
+export const useSettingsStore = defineStore('setting', () => {
   // 是否固定头部
-  const fixedHeader = useStorage<boolean>(
-    "fixedHeader",
-    defaultSettings.fixedHeader
-  );
+  const fixedHeader = useStorage<boolean>('fixedHeader', defaultSettings.fixedHeader);
   // 主题颜色
-  const themeColor = useStorage<string>(
-    "themeColor",
-    defaultSettings.themeColor
-  );
-  
+  const themeColor = useStorage<string>('themeColor', defaultSettings.themeColor);
+
   // 是否开启水印
   const watermarkEnabled = useStorage<boolean>(
-    "watermarkEnabled",
+    'watermarkEnabled',
     defaultSettings.watermarkEnabled
   );
 
@@ -27,19 +19,12 @@ export const useSettingsStore = defineStore("setting", () => {
     watermarkEnabled,
   };
 
-  function changeSetting({
-    key,
-    value,
-  }: {
-    key: string;
-    value: SettingsValue;
-  }) {
+  function changeSetting({ key, value }: { key: string; value: SettingsValue }) {
     const setting = settingsMap[key];
     if (setting) {
       setting.value = value;
     }
   }
-
 
   /**
    * 切换主题颜色

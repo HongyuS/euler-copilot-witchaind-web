@@ -12,9 +12,8 @@
           target="_blank"
           class="home-menu"
           :underline="false"
-          @click="handleJumpHome"
-        >
-          {{ $t("btnText.homePage") }}
+          @click="handleJumpHome">
+          {{ $t('btnText.homePage') }}
         </el-link>
         <div>/</div>
         <el-link
@@ -22,8 +21,7 @@
           type="primary"
           target="_blank"
           class="home-menu libraryName"
-          :underline="false"
-        >
+          :underline="false">
           <TextSingleTootip :content="libraryInfo?.name" />
         </el-link>
         <div>/</div>
@@ -34,16 +32,16 @@
     </div>
     <div class="kf-section-container-action">
       <div class="kf-section-container-left">
-        <div class="kf-section-info-title">{{ $t("assetFile.baseInfo") }}</div>
+        <div class="kf-section-info-title">{{ $t('assetFile.baseInfo') }}</div>
         <div class="kf-section-info-desc">
-          <div class="kf-section-info-label">{{ $t("assetFile.docName") }}</div>
+          <div class="kf-section-info-label">{{ $t('assetFile.docName') }}</div>
           <div class="kf-section-info-content">
             <TextSingleTootip :content="fileInfo?.name" />
           </div>
         </div>
         <div class="kf-section-info-desc">
           <div class="kf-section-info-label">
-            {{ $t("assetFile.category") }}
+            {{ $t('assetFile.category') }}
           </div>
           <div class="kf-section-info-content">
             <TextSingleTootip :content="fileInfo?.document_type?.type" />
@@ -51,7 +49,7 @@
         </div>
         <div class="kf-section-info-desc">
           <div class="kf-section-info-label">
-            {{ $t("assetLibrary.analyticMethod") }}
+            {{ $t('assetLibrary.analyticMethod') }}
           </div>
           <div class="kf-section-info-content">
             {{ fileInfo?.parser_method }}
@@ -59,26 +57,22 @@
         </div>
         <div class="kf-section-info-desc">
           <div class="kf-section-info-label">
-            {{ $t("assetFile.uploadTime") }}
+            {{ $t('assetFile.uploadTime') }}
           </div>
           <div class="kf-section-info-content">
-            {{
-              fileInfo?.created_time
-                ? convertUTCToLocalTime(fileInfo?.created_time)
-                : "--"
-            }}
+            {{ fileInfo?.created_time ? convertUTCToLocalTime(fileInfo?.created_time) : '--' }}
           </div>
         </div>
         <div class="kf-section-info-desc">
           <div class="kf-section-info-label">
-            {{ $t("assetFile.chunkSize") }}
+            {{ $t('assetFile.chunkSize') }}
           </div>
           <div class="kf-section-info-content">{{ fileInfo?.chunk_size }}</div>
         </div>
       </div>
       <div class="kf-section-container-right">
         <div class="kf-section-container-table-ops">
-          <div class="kf-pre-title">{{ $t("assetFile.contentView") }}</div>
+          <div class="kf-pre-title">{{ $t('assetFile.contentView') }}</div>
           <div class="kf-btn-search">
             <el-input
               ref="inputRef"
@@ -86,8 +80,7 @@
               class="flie-serch-input"
               :placeholder="$t('assetLibrary.message.pleasePlace')"
               clearable
-              @input="handleInputSearch"
-            >
+              @input="handleInputSearch">
               <template #prepend>
                 <el-popover
                   placement="bottom"
@@ -98,36 +91,28 @@
                   @show="handleShowFileType(true)"
                   @hide="handleShowFileType(false)"
                   v-popover="popoverRef"
-                  v-click-outside="onClickOutside"
-                >
+                  v-click-outside="onClickOutside">
                   <div>
                     <el-checkbox
                       v-model="checkAll"
                       :indeterminate="isIndeterminate"
                       @change="handleCheckAllChange"
-                      :class="
-                        isHoverIndex === 'all' ? 'isFileTypeChcekHover' : ''
-                      "
+                      :class="isHoverIndex === 'all' ? 'isFileTypeChcekHover' : ''"
                       @mouseover="onMouseOver('all')"
-                      @mouseout="handleMouseOut"
-                    >
-                      {{ $t("btnText.all") }}
+                      @mouseout="handleMouseOut">
+                      {{ $t('btnText.all') }}
                     </el-checkbox>
                     <el-checkbox-group
                       v-model="fileType"
-                      @change="handleCheckedCitiesChange"
-                    >
+                      @change="handleCheckedCitiesChange">
                       <el-checkbox
                         v-for="(item, index) in Object.keys(textType)"
                         :key="item"
                         :label="textType[item]"
                         :value="item"
-                        :class="
-                          isHoverIndex === index ? 'isFileTypeChcekHover' : ''
-                        "
+                        :class="isHoverIndex === index ? 'isFileTypeChcekHover' : ''"
                         @mouseover="onMouseOver(index)"
-                        @mouseout="handleMouseOut"
-                      >
+                        @mouseout="handleMouseOut">
                         {{ textType[item] }}
                       </el-checkbox>
                     </el-checkbox-group>
@@ -135,21 +120,24 @@
                   <template #reference>
                     <div
                       class="fileCheckTypeShow"
-                      :class="filteTypeShow ? 'filteTypeShowClass' : null"
-                    >
+                      :class="filteTypeShow ? 'filteTypeShowClass' : null">
                       <div class="fileCheckTypeContent">
                         <span v-if="fileType.length">
                           <span v-if="fileType.length === 3">
-                            {{ $t("btnText.all") }}
+                            {{ $t('btnText.all') }}
                           </span>
-                          <span v-else v-for="(item, index) in fileType">
+                          <span
+                            v-else
+                            v-for="(item, index) in fileType">
                             {{
-                              `${textType[item]}${fileType.length > 1 && index === 0 ? "," : ""}`
+                              `${textType[item]}${fileType.length > 1 && index === 0 ? ',' : ''}`
                             }}
                           </span>
                         </span>
-                        <span v-else class="filterPleaseChoose">
-                          {{ $t("assetLibrary.message.pleaseChoose") }}
+                        <span
+                          v-else
+                          class="filterPleaseChoose">
+                          {{ $t('assetLibrary.message.pleaseChoose') }}
                         </span>
                       </div>
                       <div class="fileTypeIcon">
@@ -157,8 +145,7 @@
                           <IconCaretDown v-if="!filteTypeShow" />
                           <IconCaretUp
                             v-if="filteTypeShow"
-                            class="icon-up el-icon--caretup"
-                          />
+                            class="icon-up el-icon--caretup" />
                         </el-icon>
                       </div>
                     </div>
@@ -166,27 +153,28 @@
                 </el-popover>
               </template>
               <template #suffix>
-                <el-icon class="el-input__icon"><IconSearch /></el-icon>
+                <el-icon class="el-input__icon">
+                  <IconSearch />
+                </el-icon>
               </template>
             </el-input>
           </div>
           <el-dropdown
             placement="bottom"
             popper-class="dropdown-container kf-section-ops-dowlon"
-            @visible-change="handleBatchDownBth"
-          >
+            @visible-change="handleBatchDownBth">
             <el-button
               class="kf-batch-ops"
-              :class="batchDownBth ? 'upBtn' : 'downBtn'"
-            >
-              {{ $t("btnText.batch") }}
-              <el-icon class="el-icon--right" v-if="!batchDownBth">
+              :class="batchDownBth ? 'upBtn' : 'downBtn'">
+              {{ $t('btnText.batch') }}
+              <el-icon
+                class="el-icon--right"
+                v-if="!batchDownBth">
                 <IconCaretDown />
               </el-icon>
               <el-icon
                 class="el-icon--right el-icon--caretup"
-                v-if="batchDownBth"
-              >
+                v-if="batchDownBth">
                 <IconCaretUp />
               </el-icon>
             </el-button>
@@ -194,15 +182,13 @@
               <el-dropdown-menu>
                 <el-dropdown-item
                   :disabled="!(selectedData.length > 0)"
-                  @click="handleEnableData(true)"
-                >
-                  {{ $t("btnText.enable") }}
+                  @click="handleEnableData(true)">
+                  {{ $t('btnText.enable') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   :disabled="!(selectedData.length > 0)"
-                  @click="handleEnableData(false)"
-                >
-                  {{ $t("btnText.close") }}
+                  @click="handleEnableData(false)">
+                  {{ $t('btnText.close') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -212,24 +198,17 @@
           <el-table
             :data="fileTableList.data"
             ref="fileSectionTable"
-            :class-name="
-              fileTableList.data.length < currentPageSize
-                ? 'showPagination'
-                : ''
-            "
-            @selection-change="handleSelectionChange"
-          >
+            :class-name="fileTableList.data.length < currentPageSize ? 'showPagination' : ''"
+            @selection-change="handleSelectionChange">
             <el-table-column
               type="selection"
               class-name="kf-selection"
-              width="46"
-            />
+              width="46" />
 
             <el-table-column
               prop="name"
               :label="$t('btnText.selectAll')"
-              class-name="kf-file-content"
-            >
+              class-name="kf-file-content">
               <template #default="scope">
                 <div class="kf-file-content-box">
                   <div class="kf-file-content-text">
@@ -238,8 +217,7 @@
                     </span>
                     <span style="white-space: pre-wrap">
                       <span v-for="itemText in scope.row?.text?.split('\n')">
-                        {{ itemText }}
-                        <br />
+                        <div v-html="itemText"></div>
                       </span>
                     </span>
                   </div>
@@ -247,11 +225,7 @@
                     <el-switch
                       v-model:model-value="scope.row.enabled"
                       @change="handleSwitch(scope.row)"
-                      style="
-                        --el-switch-on-color: #24ab36;
-                        --el-switch-off-color: #c3cedf;
-                      "
-                    />
+                      style="--el-switch-on-color: #24ab36; --el-switch-off-color: #c3cedf" />
                   </div>
                 </div>
               </template>
@@ -264,45 +238,36 @@
             :layout="pagination.layout"
             :total="totalCount"
             @change="handleChangePage"
-            popper-class="kbLibraryPage"
-          />
+            popper-class="kbLibraryPage" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import KbAppAPI from "@/api/kbApp";
-import KfAppAPI from "@/api/kfApp";
-import HeaderBar from "@/components/UserHeaderBar/headerCom.vue";
-import TextSingleTootip from "@/components/TextSingleTootip/index.vue";
-import CustomLoading from "@/components/CustomLoading/index.vue";
-import {
-  convertUTCToLocalTime,
-  uTCToLocalTime,
-} from "@/utils/convertUTCToLocalTime";
-import "@/styles/knowledgeFileSection.scss";
-import {
-  IconCaretDown,
-  IconSearch,
-  IconCaretUp,
-  IconSuccess,
-} from "@computing/opendesign-icons";
-import { ChunkRequest } from "@/api/apiType";
-import { debounce } from "lodash";
-import { CheckboxValueType } from "element-plus";
+import KbAppAPI from '@/api/kbApp';
+import KfAppAPI from '@/api/kfApp';
+import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
+import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
+import CustomLoading from '@/components/CustomLoading/index.vue';
+import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+import '@/styles/knowledgeFileSection.scss';
+import { IconCaretDown, IconSearch, IconCaretUp, IconSuccess } from '@computing/opendesign-icons';
+import { ChunkRequest } from '@/api/apiType';
+import { debounce } from 'lodash';
+import { CheckboxValueType } from 'element-plus';
 const { t } = useI18n();
 
 const route = useRoute();
 const textkeyWord = ref();
 const textType = ref<any>({
-  para: t("fileChunk.parag"),
-  table: t("fileChunk.table"),
-  image: t("fileChunk.img"),
+  para: t('fileChunk.parag'),
+  table: t('fileChunk.table'),
+  image: t('fileChunk.img'),
 });
-const fileType = ref<any>(["para", "table", "image"]);
+const fileType = ref<any>(['para', 'table', 'image']);
 const pagination = ref({
-  layout: "total,sizes,prev,pager,next,jumper",
+  layout: 'total,sizes,prev,pager,next,jumper',
 });
 const currentPage = ref(1);
 const currentPageSize = ref(20);
@@ -328,7 +293,7 @@ const batchDownBth = ref(false);
 
 const highlightSearchTerm = (text: String, searchTerm: any) => {
   const highlightedTerm = `<span class="highlighted-term">${searchTerm}</span>`;
-  const regex = new RegExp(searchTerm, "gi");
+  const regex = new RegExp(searchTerm, 'gi');
   return text.replace(regex, highlightedTerm);
 };
 
@@ -341,9 +306,7 @@ const handleFileSectionData = (payload: ChunkRequest) => {
         res?.data_list?.map((item: { text: String }) => {
           return {
             ...item,
-            text: payload.text?.length
-              ? highlightSearchTerm(item.text, payload.text)
-              : item.text,
+            text: payload.text?.length ? highlightSearchTerm(item.text, payload.text) : item.text,
           };
         }) || [];
       totalCount.value = res?.total || 0;
@@ -378,7 +341,7 @@ const handleShowFileType = (showStatus: boolean) => {
 const handleCheckAllChange = (val: CheckboxValueType) => {
   isIndeterminate.value = false;
   if (val) {
-    fileType.value = ["para", "table", "image"];
+    fileType.value = ['para', 'table', 'image'];
   } else {
     fileType.value = [];
   }
@@ -389,8 +352,7 @@ const handleCheckedCitiesChange = (value: CheckboxValueType[]) => {
   fileType.value = value;
   const checkedCount = value.length;
   checkAll.value = checkedCount === Object.keys(textType.value).length;
-  isIndeterminate.value =
-    checkedCount > 0 && checkedCount < Object.keys(textType.value).length;
+  isIndeterminate.value = checkedCount > 0 && checkedCount < Object.keys(textType.value).length;
   handeSearchFileType();
 };
 
@@ -399,10 +361,10 @@ const onMouseOver = (index: Number | string) => {
 };
 
 const handleMouseOut = () => {
-  isHoverIndex.value = "";
+  isHoverIndex.value = '';
 };
 
-const handleBatchDownBth = (e) => {
+const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 
@@ -443,12 +405,12 @@ const handleSwitch = (row: any) => {
     ids: [row.id],
     document_id: ids.value.document_id,
     enabled: row.enabled,
-  }).then((res) => {
+  }).then(() => {
     ElMessage({
       showClose: true,
-      message: t("opsMessage.opsSuccess"),
+      message: t('opsMessage.opsSuccess'),
       icon: IconSuccess,
-      customClass: "o-message--success",
+      customClass: 'o-message--success',
       duration: 3000,
     });
     let payload: any = {
@@ -469,12 +431,12 @@ const handleEnableData = (enabledType: any) => {
     ids: selectedData.value.map((item: any) => item.id),
     document_id: ids.value.document_id,
     enabled: enabledType,
-  }).then((res) => {
+  }).then(() => {
     ElMessage({
       showClose: true,
-      message: t("opsMessage.opsSuccess"),
+      message: t('opsMessage.opsSuccess'),
       icon: IconSuccess,
-      customClass: "o-message--error",
+      customClass: 'o-message--error',
       duration: 3000,
     });
     let payload: any = {
@@ -496,20 +458,18 @@ const handleSelectionChange = (newSelectonData: any) => {
 
 watch(
   () => fileTableList.data,
-  (newVal, oldVal) => {
+  () => {
     setTimeout(() => {
-      let tbodyContainer = document.querySelector(
-        ".el-table__body"
-      ) as HTMLElement;
-      let tableContainer = document.querySelector(".el-table") as HTMLElement;
+      let tbodyContainer = document.querySelector('.el-table__body') as HTMLElement;
+      let tableContainer = document.querySelector('.el-table') as HTMLElement;
       if (tableContainer) {
         if (
           tbodyContainer?.getBoundingClientRect().height >
           tableContainer?.getBoundingClientRect().height
         ) {
-          tableContainer.style.height = "calc(100% - 96px)";
+          tableContainer.style.height = 'calc(100% - 96px)';
         } else {
-          tableContainer.style.height = "unset";
+          tableContainer.style.height = 'unset';
         }
       }
     }, 100);
@@ -517,12 +477,12 @@ watch(
 );
 
 watch(
-  () => t(""),
-  (newVal, oldVal) => {
+  () => t(''),
+  () => {
     textType.value = {
-      para: t("fileChunk.parag"),
-      table: t("fileChunk.table"),
-      image: t("fileChunk.img"),
+      para: t('fileChunk.parag'),
+      table: t('fileChunk.table'),
+      image: t('fileChunk.img'),
     };
   },
   {
@@ -564,11 +524,11 @@ const handleInputSearch = debounce((e) => {
 }, 200);
 
 const handleJumpHome = () => {
-  window.open(`${window.origin}/witchaind/#/knowledge/library`, "_self");
+  window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
 };
 
 const handleJumpFile = () => {
   const kb_Id = route.query.kb_id as string;
-  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kb_Id}`, "_self");
+  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kb_Id}`, '_self');
 };
 </script>

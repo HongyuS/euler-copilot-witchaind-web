@@ -5,40 +5,42 @@
       effect="dark"
       :disabled="isShowToolTip"
       :content="content"
-      :placement="placement"
-    >
-      <p class="over-flow" :class="className" @mouseover="onMouseOver(refName)">
-        <span :ref="refName">{{ content || "-" }}</span>
+      :placement="placement">
+      <p
+        class="over-flow"
+        :class="className"
+        @mouseover="onMouseOver(refName)">
+        <span :ref="refName">{{ content || '-' }}</span>
       </p>
     </el-tooltip>
   </div>
 </template>
 <script>
 export default {
-  name: "TextTooltip",
+  name: 'TextTooltip',
   props: {
     content: {
       type: String,
       default: () => {
-        return "";
+        return '';
       },
     },
     placement: {
       type: String,
       default: () => {
-        return "right";
+        return 'right';
       },
     },
     className: {
       type: String,
       default: () => {
-        return "";
+        return '';
       },
     },
     refName: {
       type: String,
       default: () => {
-        return "";
+        return '';
       },
     },
   },

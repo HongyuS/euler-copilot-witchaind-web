@@ -14,8 +14,7 @@ body,
   width: 100%;
   min-width: 600px;
   overflow-y: auto;
-  background: url("/src/assets/images/login-background-light.png") center/100%
-    100%;
+  background: url('/src/assets/images/login-background-light.png') center/100% 100%;
 }
 
 .main-container {
@@ -29,6 +28,5 @@ body,
 }
 
 html.dark .euler-copilot-container {
-  background: url("@/assets/images/login-background-dark.jpg") no-repeat center
-    right;
+  background: url('@/assets/images/login-background-dark.jpg') no-repeat center right;
 }

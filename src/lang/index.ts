@@ -1,10 +1,9 @@
-import type { App } from "vue";
-import { createI18n } from "vue-i18n";
-import { useAppStoreHook } from "@/store/modules/app";
+import type { App } from 'vue';
+import { createI18n } from 'vue-i18n';
 // 本地语言包
-import enLocale from "./package/en";
-import zhCnLocale from "./package/zh-cn";
-import defaultSettings from "@/settings";
+import enLocale from './package/en';
+import zhCnLocale from './package/zh-cn';
+import defaultSettings from '@/settings';
 
 const messages = {
   zh: {
@@ -15,7 +14,7 @@ const messages = {
   },
 };
 
-const language = useStorage("language", defaultSettings.language);
+const language = useStorage('language', defaultSettings.language);
 
 const i18n = createI18n({
   legacy: false,

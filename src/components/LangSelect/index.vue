@@ -2,18 +2,16 @@
   <el-dropdown
     trigger="click"
     :popper-class="
-      !userInfo?.name?.length
-        ? 'dropdown-container notUserDrop'
-        : 'dropdown-container languageDrop'
-    "
-  >
+      !userInfo?.name?.length ? 'dropdown-container notUserDrop' : 'dropdown-container languageDrop'
+    ">
     <div class="language-container">
       <div>
         <img
           v-if="language === 'zh'"
-          src="/src/assets/images/language-zh.svg"
-        />
-        <img v-else src="/src/assets/images/language-en.svg" />
+          src="/src/assets/images/language-zh.svg" />
+        <img
+          v-else
+          src="/src/assets/images/language-en.svg" />
       </div>
       <div class="laguageChecd">
         {{ languageText }}
@@ -25,8 +23,7 @@
           v-for="item in langOptions"
           :key="item.value"
           :command="item.value"
-          @click="handleLanguageChange(item.value)"
-        >
+          @click="handleLanguageChange(item.value)">
           {{ item.label }}
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -35,12 +32,12 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import { useAppStore } from "@/store/modules/app";
-import { LanguageEnum } from "@/enums/LanguageEnum";
-import defaultSettings from "@/settings";
-import AuthAPI from "@/api/auth";
-import { IconSuccess } from "@computing/opendesign-icons";
+import { useI18n } from 'vue-i18n';
+import { useAppStore } from '@/store/modules/app';
+import { LanguageEnum } from '@/enums/LanguageEnum';
+import defaultSettings from '@/settings';
+import AuthAPI from '@/api/auth';
+import { IconSuccess } from '@computing/opendesign-icons';
 const languageText = ref();
 const language = ref();
 const userInfo = ref();
@@ -52,8 +49,8 @@ defineProps({
 });
 
 const langOptions = [
-  { label: "简体中文", value: LanguageEnum.ZH_CN },
-  { label: "English", value: LanguageEnum.EN },
+  { label: '简体中文', value: LanguageEnum.ZH_CN },
+  { label: 'English', value: LanguageEnum.EN },
 ];
 
 const appStore = useAppStore();
@@ -61,12 +58,12 @@ const { locale, t } = useI18n();
 
 const handeQueryLanguage = () => {
   setTimeout(() => {
-    language.value = useStorage("language", defaultSettings.language).value;
-    languageText.value = language.value === "zh" ? "简体中文" : "English";
+    language.value = useStorage('language', defaultSettings.language).value;
+    languageText.value = language.value === 'zh' ? '简体中文' : 'English';
   });
 };
 onMounted(() => {
-  userInfo.value = JSON.parse(localStorage.getItem("userInfo") || "{}");
+  userInfo.value = JSON.parse(localStorage.getItem('userInfo') || '{}');
   handeQueryLanguage();
 });
 
@@ -74,21 +71,18 @@ const handleLanguageChange = (lang: string) => {
   locale.value = lang;
   appStore.changeLanguage(lang);
   language.value = lang;
-  languageText.value = lang === "zh" ? "简体中文" : "English";
+  languageText.value = lang === 'zh' ? '简体中文' : 'English';
   if (userInfo.value.name) {
-    localStorage.setItem(
-      "userInfo",
-      JSON.stringify({ name: userInfo.value.name, language: lang })
-    );
+    localStorage.setItem('userInfo', JSON.stringify({ name: userInfo.value.name, language: lang }));
     AuthAPI.userUpdate({
       language: lang,
     });
   }
   ElMessage({
     showClose: true,
-    message: t("langSelect.message.success"),
+    message: t('langSelect.message.success'),
     icon: IconSuccess,
-    customClass: "o-message--success",
+    customClass: 'o-message--success',
     duration: 3000,
   });
 };

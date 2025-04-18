@@ -13,6 +13,7 @@
     display: flex;
     gap: 8px;
     align-items: center;
+
     .project-name {
       font-size: 16px;
       letter-spacing: 0px;
@@ -47,7 +48,7 @@
 .user-platform-header {
   width: 100%;
   height: 300px;
-  background: url("/src/assets/images/userHeader.jpeg") center/101% 100%;
+  background: url('/src/assets/images/userHeader.jpeg') center/101% 100%;
 }
 
 .page-platform-header {
@@ -57,7 +58,7 @@
 
 .user-platform-header,
 .page-platform-header {
-  min-width: 1240px;
+
   .header-container {
     display: flex;
     align-items: center;

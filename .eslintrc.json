@@ -1,0 +1,29 @@
+{
+  "root": true,
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "extraFileExtensions": [".vue"],
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  },
+  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "extends": ["prettier"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "warn",
+    "no-undef": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    "quotes": "off"
+  },
+  "env": {
+    "browser": true, // 声明代码运行在浏览器环境
+    "es2021": true // 启用 ES2021 全局变量
+  }
+}

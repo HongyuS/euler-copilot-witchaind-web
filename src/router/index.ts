@@ -1,41 +1,41 @@
-import type { App } from "vue";
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import type { App } from 'vue';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 
 // 静态路由
 export const constantRoutes: RouteRecordRaw[] = [
   {
-    path: "/",
-    name: "/",
-    redirect: "/login",
+    path: '/',
+    name: '/',
+    redirect: '/login',
   },
   {
-    path: "/login",
-    component: () => import("@/views/login/index.vue"),
+    path: '/login',
+    component: () => import('@/views/login/index.vue'),
     meta: { hidden: true },
   },
   {
-    path: "/NotFoundPage",
-    component: () => import("@/views/notFoundPage/index.vue"),
+    path: '/NotFoundPage',
+    component: () => import('@/views/notFoundPage/index.vue'),
     meta: { hidden: true },
   },
   {
-    path: "/knowledge/library",
-    component: () => import("@/views/knowledgeLibrary/index.vue"),
+    path: '/knowledge/library',
+    component: () => import('@/views/knowledgeLibrary/index.vue'),
     meta: { hidden: true },
   },
   {
-    path: "/knowledge/file",
-    component: () => import("@/views/knowledgeFile/index.vue"),
+    path: '/knowledge/file',
+    component: () => import('@/views/knowledgeFile/index.vue'),
     meta: { hidden: true },
   },
   {
-    path: "/knowledge/fileSection",
-    component: () => import("@/views/knowledgeFileSection/index.vue"),
+    path: '/knowledge/fileSection',
+    component: () => import('@/views/knowledgeFileSection/index.vue'),
     meta: { hidden: true },
   },
   {
-    path: "/:catchAll(.*)",
-    redirect: "/NotFoundPage",
+    path: '/:catchAll(.*)',
+    redirect: '/NotFoundPage',
   },
 ];
 /**
@@ -57,12 +57,12 @@ export function setupRouter(app: App<Element>) {
  * 重置路由
  */
 export function resetRouter() {
-  window.open(`${window.origin}/witchaind/#/login`, "_self");
+  window.open(`${window.origin}/witchaind/#/login`, '_self');
 }
 
 router.beforeEach((to, from, next) => {
-  sessionStorage.setItem('routerName', to.fullPath) //存储当前路由
-  next()
-})
+  sessionStorage.setItem('routerName', to.fullPath); //存储当前路由
+  next();
+});
 
 export default router;

@@ -11,9 +11,8 @@
           type="primary"
           target="_blank"
           class="home-menu"
-          :underline="false"
-        >
-          {{ $t("btnText.homePage") }}
+          :underline="false">
+          {{ $t('btnText.homePage') }}
         </el-link>
         <div>/</div>
         <div class="kf-name">
@@ -21,11 +20,7 @@
         </div>
       </div>
       <div class="kf-right-title">
-        {{
-          menuType === MenuType.KL_FILE
-            ? $t("btnText.assetDocList")
-            : $t("btnText.configInfo")
-        }}
+        {{ menuType === MenuType.KL_FILE ? $t('btnText.assetDocList') : $t('btnText.configInfo') }}
       </div>
     </div>
     <div class="kf-container-action">
@@ -33,57 +28,53 @@
         <div
           class="kf-file-btn"
           :class="menuType === MenuType.KL_FILE ? 'kf-ops-btn' : ''"
-          @click="handleChangeMenu(MenuType.KL_FILE)"
-        >
-          {{ $t("btnText.assetDocList") }}
+          @click="handleChangeMenu(MenuType.KL_FILE)">
+          {{ $t('btnText.assetDocList') }}
         </div>
         <div
           class="kf-file-config"
           :class="menuType === MenuType.KL_CONFIG ? 'kf-ops-btn' : ''"
-          @click="handleChangeMenu(MenuType.KL_CONFIG)"
-        >
-          {{ $t("btnText.configInfo") }}
+          @click="handleChangeMenu(MenuType.KL_CONFIG)">
+          {{ $t('btnText.configInfo') }}
         </div>
       </div>
-      <div class="kf-container-right" v-if="menuType === MenuType.KL_FILE">
+      <div
+        class="kf-container-right"
+        v-if="menuType === MenuType.KL_FILE">
         <div class="kf-container-table-ops">
           <el-button
             type="primary"
             style="margin-right: 24px"
             @click="handleImportKnowledge"
-            class="importFileBtn"
-          >
-            {{ $t("btnText.importFile") }}
+            class="importFileBtn">
+            {{ $t('btnText.importFile') }}
           </el-button>
           <el-dropdown
             placement="bottom"
             popper-class="dropdown-container kf-ops-dowlon"
-            @visible-change="handleBatchDownBth"
-          >
+            @visible-change="handleBatchDownBth">
             <el-button :class="batchDownBth ? 'upBtn' : 'downBtn'">
-              {{ $t("btnText.batchDown") }}
-              <el-icon class="el-icon--right" v-if="!batchDownBth">
+              {{ $t('btnText.batchDown') }}
+              <el-icon
+                class="el-icon--right"
+                v-if="!batchDownBth">
                 <IconCaretDown />
               </el-icon>
               <el-icon
                 class="el-icon--right el-icon--caretup"
-                v-if="batchDownBth"
-              >
+                v-if="batchDownBth">
                 <IconCaretUp />
               </el-icon>
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item
-                  @click="handleDownloadFile(fileTableList.data)"
-                >
-                  {{ $t("btnText.downloadAll") }}
+                <el-dropdown-item @click="handleDownloadFile(fileTableList.data)">
+                  {{ $t('btnText.downloadAll') }}
                 </el-dropdown-item>
                 <el-dropdown-item
                   :disabled="!(selectionFileData.length > 0)"
-                  @click="handleDownloadFile(selectionFileData)"
-                >
-                  {{ $t("btnText.downloadChoose") }}
+                  @click="handleDownloadFile(selectionFileData)">
+                  {{ $t('btnText.downloadChoose') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -91,16 +82,14 @@
           <el-button
             class="delFileBtn"
             :disabled="!(selectionFileData.length > 0)"
-            @click="handleSelectRunKl"
-          >
-            {{ $t("btnText.analytic") }}
+            @click="handleSelectRunKl">
+            {{ $t('btnText.analytic') }}
           </el-button>
           <el-button
             class="delFileBtn cancelBtn"
             :disabled="!(selectionFileData.length > 0)"
-            @click="handleSelectDeleteKl"
-          >
-            {{ $t("btnText.delete") }}
+            @click="handleSelectDeleteKl">
+            {{ $t('btnText.delete') }}
           </el-button>
         </div>
         <div class="kf-container-table-box">
@@ -112,34 +101,30 @@
             @selection-change="handleSelectionChange"
             @sort-change="handleSortChange"
             ref="multipleTable"
-            :border="true"
-          >
+            :border="true">
             <el-table-column
               type="selection"
               :fixed="true"
               class-name="kl-selection"
               width="35"
-              :reserve-selection="true"
-            />
+              :reserve-selection="true" />
             <el-table-column
               prop="name"
               :label="$t('assetFile.docName')"
               show-overflow-tooltip
               :fixed="true"
               class-name="kl-name"
-              min-width="150"
-            >
+              min-width="150">
               <template #header>
                 <div class="custom-header">
-                  <span>{{ $t("assetFile.docName") }}</span>
+                  <span>{{ $t('assetFile.docName') }}</span>
                   <el-icon
                     ref="inputSearchRef"
                     :class="
                       searchPayload?.name?.length > 0 || fileFilterVisible
                         ? 'searchIconIsActive'
                         : ''
-                    "
-                  >
+                    ">
                     <IconSearch />
                   </el-icon>
                   <el-popover
@@ -150,22 +135,19 @@
                     :virtual-ref="inputSearchRef"
                     :show-arrow="false"
                     trigger="click"
-                    virtual-triggering
-                  >
+                    virtual-triggering>
                     <FilterContainr
                       filterType="input"
                       v-model:serachName="searchPayload.name"
                       :hanldeSearhNameFilter="hanldeSearhNameFilter"
-                      :searchPayload="searchPayload"
-                    />
+                      :searchPayload="searchPayload" />
                   </el-popover>
                 </div>
               </template>
               <template #default="scope">
                 <span
                   class="kf-name-row"
-                  @click="handleJumpFileSection(scope.row)"
-                >
+                  @click="handleJumpFileSection(scope.row)">
                   {{ scope.row.name }}
                 </span>
               </template>
@@ -174,20 +156,17 @@
               prop="document_type"
               :label="$t('assetFile.category')"
               width="150"
-              show-overflow-tooltip
-            >
+              show-overflow-tooltip>
               <template #header>
                 <div class="custom-header">
-                  <span>{{ $t("assetFile.category") }}</span>
+                  <span>{{ $t('assetFile.category') }}</span>
                   <el-icon
                     ref="buttonRef"
                     :class="
-                      searchPayload?.document_type_list?.length > 0 ||
-                      categoryFilterVisible
+                      searchPayload?.document_type_list?.length > 0 || categoryFilterVisible
                         ? 'searchIconIsActive'
                         : ''
-                    "
-                  >
+                    ">
                     <IconFilter />
                   </el-icon>
                   <el-popover
@@ -198,14 +177,12 @@
                     :virtual-ref="buttonRef"
                     :show-arrow="false"
                     trigger="click"
-                    virtual-triggering
-                  >
+                    virtual-triggering>
                     <FilterContainr
                       filterType="checkBox"
                       :handelSubFilterProper="handelCategoryFilterProper"
                       :filterList="filterCategoryList"
-                      :checkedFilterList="checkedFilterList"
-                    />
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
@@ -217,20 +194,17 @@
               prop="chunk_size"
               :label="$t('assetFile.chunkSize')"
               sortable
-              width="120"
-            />
+              width="120" />
             <el-table-column
               prop="created_time"
               class-name="upload-time-cell"
               sortable
               :label="$t('assetFile.uploadTime')"
               width="200"
-              @header-click="handleHeaderClick"
-              @click.stop
-            >
+              @click.stop>
               <template #header>
                 <div class="custom-header">
-                  <span>{{ $t("assetFile.uploadTime") }}</span>
+                  <span>{{ $t('assetFile.uploadTime') }}</span>
                   <el-date-picker
                     popper-class="datetimerangeClass"
                     placement="bottom"
@@ -245,25 +219,21 @@
                     :unlink-panels="true"
                     @change="handleTimeChange"
                     ref="tiemPick"
-                    @visible-change="handleVisibleChange"
-                  />
+                    @visible-change="handleVisibleChange" />
                   <el-popover
                     :visible="timeFilterVisible"
                     popper-class="filterPopper timeFilterPo"
                     placement="bottom-start"
-                    :show-arrow="false"
-                  >
+                    :show-arrow="false">
                     <template #reference>
                       <el-icon
                         @click="handeDatePickerShow"
                         @click.stop
                         :class="
-                          searchPayload?.created_time_start?.length > 0 ||
-                          timeFilterVisible
+                          searchPayload?.created_time_start?.length > 0 || timeFilterVisible
                             ? 'searchIconIsActive'
                             : ''
-                        "
-                      >
+                        ">
                         <IconFilter />
                       </el-icon>
                     </template>
@@ -277,11 +247,10 @@
             <el-table-column
               prop="status"
               :label="$t('assetFile.analyticStatus')"
-              width="220"
-            >
+              width="220">
               <template #header>
                 <div class="custom-header">
-                  <span>{{ $t("assetFile.analyticStatus") }}</span>
+                  <span>{{ $t('assetFile.analyticStatus') }}</span>
                   <el-icon
                     ref="statusRef"
                     @click.stop
@@ -289,8 +258,7 @@
                       searchPayload?.status?.length > 0 || statusFilterVisible
                         ? 'searchIconIsActive'
                         : ''
-                    "
-                  >
+                    ">
                     <IconFilter />
                   </el-icon>
                   <el-popover
@@ -301,68 +269,58 @@
                     :virtual-ref="statusRef"
                     :show-arrow="false"
                     trigger="click"
-                    virtual-triggering
-                  >
+                    virtual-triggering>
                     <FilterContainr
                       filterType="checkBox"
                       :filterList="filterStatusList"
                       :handelSubFilterProper="handelStatusFilterProper"
-                      :checkedFilterList="checkedFilterList"
-                    />
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
               <template #default="scope">
                 <div
                   v-if="scope.row.task.status === StatusEnum.FAIL"
-                  class="statusFail"
-                >
-                  {{ $t("assetFile.status.analyticFail") }}
+                  class="statusFail">
+                  {{ $t('assetFile.status.analyticFail') }}
                 </div>
                 <div
                   v-if="scope.row.task.status === StatusEnum.SUCCESS"
-                  class="statusSuccess"
-                >
-                  {{ $t("assetFile.status.analyticSucces") }}
+                  class="statusSuccess">
+                  {{ $t('assetFile.status.analyticSucces') }}
                 </div>
                 <div
                   v-if="scope.row.task.status === StatusEnum.CANCEL"
-                  class="statusCancel"
-                >
-                  {{ $t("assetFile.status.cancelAnalytic") }}
+                  class="statusCancel">
+                  {{ $t('assetFile.status.cancelAnalytic') }}
                 </div>
                 <div
                   v-if="scope.row.task.status === StatusEnum.ANALYSIS_ING"
-                  class="statusWaitIng"
-                >
+                  class="statusWaitIng">
                   <div class="icon-box icon-loading"></div>
-                  {{ $t("assetFile.status.analyticWaitIng") }}
+                  {{ $t('assetFile.status.analyticWaitIng') }}
                 </div>
                 <div
                   class="statusAnalysis"
-                  v-if="scope.row.task.status === StatusEnum.RUNNING"
-                >
+                  v-if="scope.row.task.status === StatusEnum.RUNNING">
                   <div class="percent-box">
                     <el-progress
                       :percentage="
                         scope.row.task?.reports?.[0]?.current_stage &&
                         scope.row.task?.reports?.[0]?.stage_cnt
                           ? Math.floor(
-                              ((scope.row.task?.reports?.[0]?.current_stage ||
-                                0) /
-                                (scope.row.task?.reports?.[0]?.stage_cnt ||
-                                  0)) *
+                              ((scope.row.task?.reports?.[0]?.current_stage || 0) /
+                                (scope.row.task?.reports?.[0]?.stage_cnt || 0)) *
                                 100
                             )
                           : 0
                       "
                       :color="customColor"
                       striped
-                      striped-flow
-                    />
+                      striped-flow />
                   </div>
                   <div class="statusAnalysisText">
-                    {{ $t("assetFile.status.analyticIng") }}
+                    {{ $t('assetFile.status.analyticIng') }}
                   </div>
                 </div>
               </template>
@@ -371,20 +329,17 @@
               prop="parser_method"
               :label="$t('assetFile.parsingMethod')"
               width="150"
-              show-overflow-tooltip
-            >
+              show-overflow-tooltip>
               <template #header>
                 <div class="custom-header">
-                  <span>{{ $t("assetFile.parsingMethod") }}</span>
+                  <span>{{ $t('assetFile.parsingMethod') }}</span>
                   <el-icon
                     ref="parserMethodRef"
                     :class="
-                      searchPayload?.parser_method?.length > 0 ||
-                      parserMethodVisible
+                      searchPayload?.parser_method?.length > 0 || parserMethodVisible
                         ? 'searchIconIsActive'
                         : ''
-                    "
-                  >
+                    ">
                     <IconFilter />
                   </el-icon>
                   <el-popover
@@ -395,14 +350,12 @@
                     :virtual-ref="parserMethodRef"
                     :show-arrow="false"
                     trigger="click"
-                    virtual-triggering
-                  >
+                    virtual-triggering>
                     <FilterContainr
                       filterType="checkBox"
                       :handelSubFilterProper="handelParserMethodFilterProper"
                       :filterList="parserMethodOptions"
-                      :checkedFilterList="checkedFilterList"
-                    />
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
@@ -410,17 +363,14 @@
             <el-table-column
               prop="status"
               :label="$t('assetFile.parsingComTime')"
-              width="200"
-            >
+              width="200">
               <template #default="scope">
                 <div>
                   {{
-                    scope?.row?.task?.status === "success" &&
+                    scope?.row?.task?.status === 'success' &&
                     scope?.row?.task?.reports?.[0]?.create_time
-                      ? convertUTCToLocalTime(
-                          scope?.row?.task?.reports?.[0]?.create_time
-                        )
-                      : "--"
+                      ? convertUTCToLocalTime(scope?.row?.task?.reports?.[0]?.create_time)
+                      : '--'
                   }}
                 </div>
               </template>
@@ -428,11 +378,10 @@
             <el-table-column
               prop="enabled"
               :label="$t('btnText.enable')"
-              width="120"
-            >
+              width="120">
               <template #header>
                 <div class="custom-header">
-                  <span>{{ $t("btnText.enable") }}</span>
+                  <span>{{ $t('btnText.enable') }}</span>
                   <el-icon
                     ref="enableRef"
                     @click.stop
@@ -440,8 +389,7 @@
                       searchPayload?.enabled?.length > 0 || enableFilterVisible
                         ? 'searchIconIsActive'
                         : ''
-                    "
-                  >
+                    ">
                     <IconFilter />
                   </el-icon>
                   <el-popover
@@ -452,14 +400,12 @@
                     :virtual-ref="enableRef"
                     :show-arrow="false"
                     trigger="click"
-                    virtual-triggering
-                  >
+                    virtual-triggering>
                     <FilterContainr
                       :filterList="filterEnableList"
                       filterType="checkBox"
                       :handelSubFilterProper="handelEnableFilterProper"
-                      :checkedFilterList="checkedFilterList"
-                    />
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
@@ -467,26 +413,20 @@
                 <el-switch
                   v-model:model-value="scope.row.enabled"
                   @change="handleSwitch(scope.row)"
-                  style="
-                    --el-switch-on-color: #24ab36;
-                    --el-switch-off-color: #c3cedf;
-                  "
-                />
+                  style="--el-switch-on-color: #24ab36; --el-switch-off-color: #c3cedf" />
               </template>
             </el-table-column>
             <el-table-column
               prop="action"
               :label="$t('btnText.operation')"
               width="220"
-              fixed="right"
-            >
+              fixed="right">
               <template #default="scope">
                 <el-button
                   v-if="scope.row.status === StatusEnum.RUNNING"
                   text
-                  @click="handleRunKl(scope.row, 'cancel')"
-                >
-                  {{ $t("btnText.cancel") }}
+                  @click="handleRunKl(scope.row, 'cancel')">
+                  {{ $t('btnText.cancel') }}
                 </el-button>
                 <el-button
                   v-if="
@@ -498,26 +438,25 @@
                     ].includes(scope.row.status)
                   "
                   text
-                  @click="handleRunKl(scope.row, 'run')"
-                >
-                  {{ $t("btnText.analytic") }}
+                  @click="handleRunKl(scope.row, 'run')">
+                  {{ $t('btnText.analytic') }}
                 </el-button>
                 <el-button
                   text
                   :disabled="scope.row.status === StatusEnum.RUNNING"
-                  @click="handleEditKl(scope.row)"
-                >
-                  {{ $t("btnText.edit") }}
+                  @click="handleEditKl(scope.row)">
+                  {{ $t('btnText.edit') }}
                 </el-button>
-                <el-button text @click="handleDownloadFile([scope.row])">
-                  {{ $t("btnText.download") }}
+                <el-button
+                  text
+                  @click="handleDownloadFile([scope.row])">
+                  {{ $t('btnText.download') }}
                 </el-button>
                 <el-button
                   :disabled="scope.row.status === StatusEnum.RUNNING"
                   text
-                  @click="handleDeleteKl(scope.row)"
-                >
-                  {{ $t("btnText.delete") }}
+                  @click="handleDeleteKl(scope.row)">
+                  {{ $t('btnText.delete') }}
                 </el-button>
               </template>
             </el-table-column>
@@ -530,19 +469,16 @@
             :layout="pagination.layout"
             :total="totalCount"
             popper-class="kbLibraryPage"
-            @change="handleChangePage"
-          />
+            @change="handleChangePage" />
         </div>
       </div>
       <div
         class="kf-container-right kf-container-form"
-        v-if="menuType === MenuType.KL_CONFIG"
-      >
+        v-if="menuType === MenuType.KL_CONFIG">
         <KnowledgeForm
           :configInfo="true"
           :formData="kbInfo"
-          :handleQueryKbData="handleQueryKbData"
-        />
+          :handleQueryKbData="handleQueryKbData" />
       </div>
     </div>
   </div>
@@ -550,15 +486,14 @@
     v-model="dialogImportVisible"
     class="upload-dialog"
     align-center
-    :title="$t('btnText.importFile')"
-  >
+    :title="$t('btnText.importFile')">
     <Upload
       :singleFileLimit="true"
       :singleFileSize="0.05"
       :tipText="$t('dialogTipText.fileAllFormat')"
-      accept=".md,.xlsx,.pdf,.docx,.txt"
+      accept=".md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html"
       :maxFileNum="128"
-      :maxSize="0.5"
+      :maxSize="0.488"
       :handleUploadMyFile="handleUploadMyFile"
       :handleQueryTaskList="handleQueryTaskList"
       :handleCancelVisible="handleCancelVisible"
@@ -566,30 +501,31 @@
       :taskListImportDate="taskListImportDate"
       :toggleUploadNotify="toggleUploadNotify"
       :handleImportLoading="handleImportLoading"
-      uploadType="file"
-    />
+      uploadType="file" />
   </el-dialog>
   <el-dialog
     align-center
     v-model="cancelTipVisible"
     class="tip-dialog"
     width="432"
-    :title="$t('dialogTipText.tipsText')"
-  >
+    :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
-      <span class="iconAlarmOrange"><IconAlarmOrange /></span>
-      {{ $t("dialogTipText.confirmCancelAnalytic") }}
+      <span class="iconAlarmOrange">
+        <IconAlarmOrange />
+      </span>
+      {{ $t('dialogTipText.confirmCancelAnalytic') }}
     </div>
     <div class="tip-ops-btn">
-      <el-button class="resetBtn" @click="handleConfirmFileAnalytic">
-        {{ $t("btnText.confirm") }}
+      <el-button
+        class="resetBtn"
+        @click="handleConfirmFileAnalytic">
+        {{ $t('btnText.confirm') }}
       </el-button>
       <el-button
         type="primary"
         class="resetBtn cancelBtn"
-        @click="handleCancelVisible"
-      >
-        {{ $t("btnText.cancel") }}
+        @click="handleCancelVisible">
+        {{ $t('btnText.cancel') }}
       </el-button>
     </div>
   </el-dialog>
@@ -598,19 +534,20 @@
     v-model="delTipVisible"
     class="tip-dialog"
     width="400"
-    :title="$t('dialogTipText.tipsText')"
-  >
+    :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
-      <span class="iconAlarmOrange"><IconAlarmOrange /></span>
+      <span class="iconAlarmOrange">
+        <IconAlarmOrange />
+      </span>
       <span>
-        {{ $t("dialogTipText.confirmDelFile") }}
+        {{ $t('dialogTipText.confirmDelFile') }}
         <span>
           【
           <span class="delToolTip">
             <TextSingleTootip :content="opsItem.name" />
           </span>
           】
-          {{ userLanguage === "zh" ? "吗？" : null }}
+          {{ userLanguage === 'zh' ? '吗？' : null }}
         </span>
       </span>
     </div>
@@ -618,12 +555,13 @@
       <el-button
         class="resetBtn"
         type="primary"
-        @click="handleConfirmDleSingle(opsItem)"
-      >
-        {{ $t("btnText.confirm") }}
+        @click="handleConfirmDleSingle(opsItem)">
+        {{ $t('btnText.confirm') }}
       </el-button>
-      <el-button class="resetBtn cancelBtn" @click="handleCancelVisible">
-        {{ $t("btnText.cancel") }}
+      <el-button
+        class="resetBtn cancelBtn"
+        @click="handleCancelVisible">
+        {{ $t('btnText.cancel') }}
       </el-button>
     </div>
   </el-dialog>
@@ -632,24 +570,26 @@
     v-model="delSelectTipVisible"
     class="tip-dialog"
     width="400"
-    :title="$t('dialogTipText.tipsText')"
-  >
+    :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
-      <span class="iconAlarmOrange"><IconAlarmOrange /></span>
+      <span class="iconAlarmOrange">
+        <IconAlarmOrange />
+      </span>
       <span>
-        {{ $t("dialogTipText.confirmDelSelected") }}
+        {{ $t('dialogTipText.confirmDelSelected') }}
       </span>
     </div>
     <div class="tip-ops-btn">
       <el-button
         class="resetBtn"
         type="primary"
-        @click="handleConfirmDleSelected"
-      >
-        {{ $t("btnText.confirm") }}
+        @click="handleConfirmDleSelected">
+        {{ $t('btnText.confirm') }}
       </el-button>
-      <el-button class="resetBtn cancelBtn" @click="handleCancelVisible">
-        {{ $t("btnText.cancel") }}
+      <el-button
+        class="resetBtn cancelBtn"
+        @click="handleCancelVisible">
+        {{ $t('btnText.cancel') }}
       </el-button>
     </div>
   </el-dialog>
@@ -659,8 +599,7 @@
     class="edit-dialog"
     align-center
     width="560"
-    :title="$t('dialogTipText.eidtFile')"
-  >
+    :title="$t('dialogTipText.eidtFile')">
     <el-form
       ref="ruleFormRef"
       style="max-width: 600px"
@@ -668,67 +607,61 @@
       :rules="rules"
       label-width="116"
       class="kl-ruleForm kf-ruleForm"
-      label-position="left"
-    >
+      label-position="left">
       <el-form-item
         :label="$t('assetFile.docName')"
         prop="name"
-        class="docName"
-      >
+        class="docName">
         <el-input
           v-model="ruleForm.name"
-          :placeholder="$t('assetLibrary.message.pleasePlace')"
-        />
+          :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
       <el-form-item
         :label="$t('assetLibrary.analyticMethod')"
-        prop="parser_method"
-      >
+        prop="parser_method">
         <el-select
           v-model="ruleForm.parser_method"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
           :teleported="false"
-          :suffix-icon="IconCaretDown"
-        >
+          :suffix-icon="IconCaretDown">
           <el-option
             v-for="item in parserMethodOptions"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
-          />
+            :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('assetFile.category')" prop="type_id">
+      <el-form-item
+        :label="$t('assetFile.category')"
+        prop="type_id">
         <el-select
           v-model="ruleForm.type_id"
           popper-class="docTypeClass"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
           :suffix-icon="IconCaretDown"
-          :teleported="false"
-        >
+          :teleported="false">
           <el-option
             v-for="item in filterCategoryList"
             :key="item.value"
             :label="item.label"
-            :value="item.value"
-          />
+            :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item
         :label="$t('assetLibrary.fileChunkSize')"
         prop="szie"
-        class="fileChunkSize"
-      >
+        class="fileChunkSize">
         <el-input-number
           class="config-size"
           v-model="ruleForm.chunk_size"
           :min="512"
-          :max="1024"
-        />
+          :max="1024" />
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
-          <span class="iconAlarmOrange"><IconAlarmOrange /></span>
-          <span class="editTipText">{{ $t("assetFile.analyticTip") }}</span>
+          <span class="iconAlarmOrange">
+            <IconAlarmOrange />
+          </span>
+          <span class="editTipText">{{ $t('assetFile.analyticTip') }}</span>
         </div>
       </el-form-item>
       <el-form-item class="kl-ops-btn">
@@ -736,12 +669,13 @@
           class="resetBtn"
           type="primary"
           :disabled="isSubmitDisabled"
-          @click="submitForm(ruleFormRef)"
-        >
-          {{ $t("btnText.confirm") }}
+          @click="submitForm(ruleFormRef)">
+          {{ $t('btnText.confirm') }}
         </el-button>
-        <el-button class="resetBtn cancelBtn" @click="handleCancelVisible()">
-          {{ $t("btnText.cancel") }}
+        <el-button
+          class="resetBtn cancelBtn"
+          @click="handleCancelVisible()">
+          {{ $t('btnText.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>
@@ -755,13 +689,12 @@
     :handleUploadRestart="uploadTaskListData.handleUploadRestart"
     :taskListImportDate="taskListImportDate"
     :importTaskTotal="importTaskTotal"
-    :isShowAllClear="false"
-  />
+    :isShowAllClear="false" />
 </template>
 <script setup lang="ts">
-import HeaderBar from "@/components/UserHeaderBar/headerCom.vue";
-import UploadProgress from "@/components/Upload/uploadProgress.vue";
-import "@/styles/knowledgeFile.scss";
+import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
+import UploadProgress from '@/components/Upload/uploadProgress.vue';
+import '@/styles/knowledgeFile.scss';
 import {
   IconAlarmOrange,
   IconCaretDown,
@@ -769,30 +702,26 @@ import {
   IconFilter,
   IconSearch,
   IconSuccess,
-} from "@computing/opendesign-icons";
-import { StatusEnum, MenuType } from "@/enums/KnowledgeEnum";
-import KnowledgeForm from "@/components/KnowledgeForm/index.vue";
-import FilterContainr from "@/components/TableFilter/index.vue";
+} from '@computing/opendesign-icons';
+import { StatusEnum, MenuType } from '@/enums/KnowledgeEnum';
+import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
+import FilterContainr from '@/components/TableFilter/index.vue';
 const { t } = useI18n();
-import { ElLoading, type FormInstance, type FormRules } from "element-plus";
-import KfAppAPI from "@/api/kfApp";
-import { DocListRequest } from "@/api/apiType";
-import KbAppAPI from "@/api/kbApp";
-import TextTooltip from "@/components/TextSingleTootip/index.vue";
+import { type FormInstance } from 'element-plus';
+import KfAppAPI from '@/api/kfApp';
+import { DocListRequest } from '@/api/apiType';
+import KbAppAPI from '@/api/kbApp';
+import TextTooltip from '@/components/TextSingleTootip/index.vue';
 
-import CustomLoading from "@/components/CustomLoading/index.vue";
-import {
-  convertUTCToLocalTime,
-  uTCToLocalTime,
-} from "@/utils/convertUTCToLocalTime";
+import CustomLoading from '@/components/CustomLoading/index.vue';
+import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 
-import { FileForm, DocumentType } from "./fileConfig";
+import { FileForm, DocumentType } from './fileConfig';
 
-const router = useRouter();
 const route = useRoute();
 const dialogImportVisible = ref(false);
-const customColor = ref("#0077FF");
-const menuType = ref("klFile");
+const customColor = ref('#0077FF');
+const menuType = ref('klFile');
 const buttonRef = ref();
 const created_time = ref();
 const statusRef = ref();
@@ -816,14 +745,14 @@ const multipleTable = ref();
 const selectionFileData = ref<any[]>([]);
 const importTaskTotal = ref(0);
 const searchPayload = ref<any>({
-  name: "",
+  name: '',
   document_type_list: [],
-  chunk_size_order: "",
-  created_time_order: "",
+  chunk_size_order: '',
+  created_time_order: '',
   status: [],
-  created_time_start: "",
-  created_time_end: "",
-  enabled: "",
+  created_time_start: '',
+  created_time_end: '',
+  enabled: '',
   parser_method: [],
 });
 const kbInfo = ref<any>({});
@@ -835,7 +764,7 @@ const filterEnableList = ref();
 const ruleFormRef = ref<FormInstance>();
 const pagination = ref({
   pageSizes: [10, 20, 30, 40, 50],
-  layout: "total,sizes,prev,pager,next,jumper",
+  layout: 'total,sizes,prev,pager,next,jumper',
 });
 const currentPage = ref(1);
 const totalCount = ref(0);
@@ -843,31 +772,36 @@ const currentPageSize = ref(20);
 const dialogEditVisible = ref(false);
 const loading = ref(false);
 const taskListImportDate = ref();
-const taskNumber = ref(0);
 const taskTimer = ref();
 const taskList = ref<any>([]);
-const uploadTaskListData = ref({});
+const uploadTaskListData = ref<{
+  showUploadNotify?: boolean;
+  uploadingList?: Array<any>;
+  showTaskList?: boolean;
+  handleShowTaskList?: Function;
+  handleUploadRestart?: Function;
+}>({});
 const parserMethodOptions = ref<any>([]);
 const userLanguage = ref();
 const isSubmitDisabled = ref(true);
 const ruleForm = ref<FileForm>({
-  id: "",
-  name: "",
-  type_id: "",
-  parser_method: "",
+  id: '',
+  name: '',
+  type_id: '',
+  parser_method: '',
   chunk_size: 1024,
 });
 const rules = reactive({
   name: [
     {
       required: true,
-      message: t("assetFile.message.name"),
-      trigger: ["blur", "change"],
+      message: t('assetFile.message.name'),
+      trigger: ['blur', 'change'],
     },
     {
       min: 1,
-      message: t("assetFile.message.docNameLen"),
-      trigger: ["blur", "change"],
+      message: t('assetFile.message.docNameLen'),
+      trigger: ['blur', 'change'],
     },
   ],
 });
@@ -880,37 +814,37 @@ const fileTableList = reactive<{
 });
 
 watch(
-  () => t(""),
-  (newVal, oldVal) => {
+  () => t(''),
+  () => {
     filterStatusList.value = [
       {
-        label: t("assetFile.status.analyticFail"),
+        label: t('assetFile.status.analyticFail'),
         value: StatusEnum.FAIL,
       },
       {
-        label: t("assetFile.status.analyticSucces"),
+        label: t('assetFile.status.analyticSucces'),
         value: StatusEnum.SUCCESS,
       },
       {
-        label: t("assetFile.status.cancelAnalytic"),
+        label: t('assetFile.status.cancelAnalytic'),
         value: StatusEnum.CANCEL,
       },
       {
-        label: t("assetFile.status.analyticWaitIng"),
+        label: t('assetFile.status.analyticWaitIng'),
         value: StatusEnum.ANALYSIS_ING,
       },
       {
-        label: t("assetFile.status.analyticIng"),
+        label: t('assetFile.status.analyticIng'),
         value: StatusEnum.RUNNING,
       },
     ];
     filterEnableList.value = [
-      { label: t("assetFile.open"), value: "true" },
-      { label: t("assetFile.close"), value: "false" },
+      { label: t('assetFile.open'), value: 'true' },
+      { label: t('assetFile.close'), value: 'false' },
     ];
     shortcuts.value = [
       {
-        text: t("timerSearch.lastHour", {
+        text: t('timerSearch.lastHour', {
           timer: 12,
         }),
         value: () => {
@@ -922,7 +856,7 @@ watch(
         },
       },
       {
-        text: t("timerSearch.lastHour", {
+        text: t('timerSearch.lastHour', {
           timer: 1,
         }),
         value: () => {
@@ -933,7 +867,7 @@ watch(
         },
       },
       {
-        text: t("timerSearch.lastHour", {
+        text: t('timerSearch.lastHour', {
           timer: 3,
         }),
         value: () => {
@@ -944,7 +878,7 @@ watch(
         },
       },
       {
-        text: t("timerSearch.lastHour", {
+        text: t('timerSearch.lastHour', {
           timer: 7,
         }),
         value: () => {
@@ -955,9 +889,7 @@ watch(
         },
       },
     ];
-    userLanguage.value = JSON.parse(
-      localStorage.getItem("userInfo") || "{}"
-    )?.language;
+    userLanguage.value = JSON.parse(localStorage.getItem('userInfo') || '{}')?.language;
   },
   {
     deep: true,
@@ -976,35 +908,27 @@ watch(
   }
 );
 
-const handleBatchDownBth = (e) => {
+const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 
 const handleSearchPayload = () => {
-  const searchParams = Object.keys(searchPayload.value || {}).reduce(
-    (pre: any, item) => {
-      if (
-        searchPayload.value?.[item]?.length > 0 &&
-        searchPayload.value?.[item] !== "all"
-      ) {
-        pre[item] = searchPayload.value[item];
-        if (item === "enabled") {
-          pre[item] = JSON.parse(searchPayload.value[item]);
-        }
+  const searchParams = Object.keys(searchPayload.value || {}).reduce((pre: any, item) => {
+    if (searchPayload.value?.[item]?.length > 0 && searchPayload.value?.[item] !== 'all') {
+      pre[item] = searchPayload.value[item];
+      if (item === 'enabled') {
+        pre[item] = JSON.parse(searchPayload.value[item]);
       }
+    }
 
-      return pre;
-    },
-    {}
-  );
+    return pre;
+  }, {});
   return searchParams || {};
 };
 
 const handleJumpHome = () => {
-  window.open(`${window.origin}/witchaind/#/knowledge/library`, "_self");
+  window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
 };
-
-const handleHeaderClick = (e: any) => {};
 
 const handelCategoryFilterProper = (filterList: any) => {
   searchPayload.value.document_type_list = filterList;
@@ -1016,7 +940,7 @@ const handelStatusFilterProper = (filterList: any) => {
   handleSearchData();
 };
 const handelEnableFilterProper = (filterList: any) => {
-  searchPayload.value.enabled = filterList.length === 2 ? "all" : filterList[0];
+  searchPayload.value.enabled = filterList.length === 2 ? 'all' : filterList[0];
   handleSearchData();
 };
 
@@ -1026,19 +950,19 @@ const handelParserMethodFilterProper = (filterList: any) => {
 };
 
 const handleRunKl = (row: any, type: string) => {
-  if (type === "cancel") {
+  if (type === 'cancel') {
     cancelTipVisible.value = true;
     opsItem.value = row;
   } else {
     KfAppAPI.runLibraryFile({
       ids: [row.id],
       run: type,
-    }).then((res) => {
+    }).then(() => {
       ElMessage({
         showClose: true,
-        message: t("opsMessage.opsAnalyticIng"),
+        message: t('opsMessage.opsAnalyticIng'),
         icon: IconSuccess,
-        customClass: "o-message--success",
+        customClass: 'o-message--success',
         duration: 3000,
       });
       handleSearchOpsData(true, true);
@@ -1049,13 +973,13 @@ const handleRunKl = (row: any, type: string) => {
 const handleConfirmFileAnalytic = () => {
   KfAppAPI.runLibraryFile({
     ids: [opsItem.value.id],
-    run: "cancel",
-  }).then((res) => {
+    run: 'cancel',
+  }).then(() => {
     ElMessage({
       showClose: true,
-      message: t("opsMessage.opsCancel"),
+      message: t('opsMessage.opsCancel'),
       icon: IconSuccess,
-      customClass: "o-message--success",
+      customClass: 'o-message--success',
       duration: 3000,
     });
     handleSearchOpsData(true, true);
@@ -1108,9 +1032,7 @@ const handlePollAssetFileData = () => {
           return;
         }
         fileTableList.data = fileTableList.data.map((item) => {
-          let fileData = res?.data_list?.filter(
-            (file: any) => file.id === item.id
-          )?.[0];
+          let fileData = res?.data_list?.filter((file: any) => file.id === item.id)?.[0];
           return fileData || item;
         });
       }
@@ -1128,7 +1050,7 @@ const hanldeSearhNameFilter = (filterName: string) => {
 const handleJumpFileSection = (row: any) => {
   window.open(
     `${window.origin}/witchaind/#/knowledge/fileSection?kb_id=${route.query.kb_id}&file_id=${row.id}`,
-    "_self"
+    '_self'
   );
 };
 
@@ -1160,9 +1082,7 @@ const handleQueryKbData = () => {
   }).then((res: any) => {
     kbInfo.value = res.data_list?.[0] || {};
     let categoryList = JSON.parse(
-      JSON.stringify(
-        Array.from(new Set(res.data_list?.[0]?.document_type_list)) || "[]"
-      )
+      JSON.stringify(Array.from(new Set(res.data_list?.[0]?.document_type_list)) || '[]')
     );
     filterCategoryList.value = [
       ...categoryList.map((item: { type: string; id: string }) => {
@@ -1172,8 +1092,8 @@ const handleQueryKbData = () => {
         };
       }),
       {
-        label: "default type",
-        value: "00000000-0000-0000-0000-000000000000",
+        label: 'default type',
+        value: '00000000-0000-0000-0000-000000000000',
       },
     ].filter((item) => item?.label?.length > 0);
   });
@@ -1202,7 +1122,7 @@ onMounted(() => {
     });
     handleQueryKbData();
   }
-  document.addEventListener("click", () => handleDateTimerange);
+  document.addEventListener('click', () => handleDateTimerange);
 });
 
 const handleCleartTimer = () => {
@@ -1214,39 +1134,34 @@ onUnmounted(() => {
   handleCleartTimer();
 });
 
-const handleVisibleChange = (e) => {
+const handleVisibleChange = (e: boolean) => {
   timeFilterVisible.value = e;
 };
 
 const handeDatePickerShow = (e: { pageX: string; pageY: string }) => {
   timeFilterVisible.value = true;
   tiemPick.value.handleOpen();
-  let dateTimerContainer = document.querySelector(
-    ".datetimerangeClass"
-  ) as HTMLElement;
+  let dateTimerContainer = document.querySelector('.datetimerangeClass') as HTMLElement;
   if (dateTimerContainer) {
-    dateTimerContainer.style.position = "absolute";
-    dateTimerContainer.style.left = e.pageX + "px";
-    dateTimerContainer.style.top = e.pageY + "px";
+    dateTimerContainer.style.position = 'absolute';
+    dateTimerContainer.style.left = e.pageX + 'px';
+    dateTimerContainer.style.top = e.pageY + 'px';
   }
 };
 
 const handleDateTimerange = (e: { target: Node | null }) => {
-  const dateTimeContainer = document.querySelector(".datetimerangeClass");
-  const timeFilterPo = document.querySelector(".timeFilterPo");
+  const dateTimeContainer = document.querySelector('.datetimerangeClass');
+  const timeFilterPo = document.querySelector('.timeFilterPo');
   if (dateTimeContainer) {
-    if (
-      !dateTimeContainer.contains(e.target) &&
-      !timeFilterPo?.contains(e.target)
-    ) {
+    if (!dateTimeContainer.contains(e.target) && !timeFilterPo?.contains(e.target)) {
       timeFilterVisible.value = false;
     }
   }
 };
 
 const handleTimeChange = (e: (string | undefined)[]) => {
-  searchPayload.value.created_time_start = e?.[0] ? uTCToLocalTime(e?.[0]) : "";
-  searchPayload.value.created_time_end = e?.[1] ? uTCToLocalTime(e?.[1]) : "";
+  searchPayload.value.created_time_start = e?.[0] ? uTCToLocalTime(e?.[0]) : '';
+  searchPayload.value.created_time_end = e?.[1] ? uTCToLocalTime(e?.[1]) : '';
   handleSearchOpsData(true, true);
   handleCancelVisible();
 };
@@ -1255,10 +1170,7 @@ const handleChangeMenu = (type: string) => {
   menuType.value = type;
 };
 
-const handleSearchOpsData = (
-  loadingStatus: boolean,
-  startPollTimer: boolean
-) => {
+const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
   handeAssetLibraryData(
     {
       page_number: currentPage.value,
@@ -1276,12 +1188,12 @@ const handleSwitch = (row: any) => {
   KfAppAPI.switchLibraryFile({
     id: row.id,
     enabled: row.enabled,
-  }).then((res) => {
+  }).then(() => {
     ElMessage({
       showClose: true,
-      message: t("opsMessage.opsSuccess"),
+      message: t('opsMessage.opsSuccess'),
       icon: IconSuccess,
-      customClass: "o-message--success",
+      customClass: 'o-message--success',
       duration: 3000,
     });
     handleSearchOpsData(true, true);
@@ -1319,13 +1231,13 @@ const handleSelectRunKl = () => {
     ids: selectionFileData.value.map((item) => {
       return item.id;
     }),
-    run: "run",
-  }).then((res) => {
+    run: 'run',
+  }).then(() => {
     ElMessage({
       showClose: true,
-      message: t("opsMessage.opsAnalyticIng"),
+      message: t('opsMessage.opsAnalyticIng'),
       icon: IconSuccess,
-      customClass: "o-message--success",
+      customClass: 'o-message--success',
       duration: 3000,
     });
     selectionFileData.value = [];
@@ -1337,12 +1249,12 @@ const handleSelectRunKl = () => {
 const handleConfirmDleSingle = (row: any) => {
   KfAppAPI.delLibraryFile({
     ids: [row.id],
-  }).then((res) => {
+  }).then(() => {
     ElMessage({
       showClose: true,
-      message: t("opsMessage.delSuccess"),
+      message: t('opsMessage.delSuccess'),
       icon: IconSuccess,
-      customClass: "o-message--success",
+      customClass: 'o-message--success',
       duration: 3000,
     });
     let selectData = JSON.parse(JSON.stringify(selectionFileData.value));
@@ -1372,12 +1284,12 @@ const handleConfirmDleSelected = () => {
       return item.id;
     }),
   })
-    .then((res) => {
+    .then(() => {
       ElMessage({
         showClose: true,
-        message: t("opsMessage.delSuccess"),
+        message: t('opsMessage.delSuccess'),
         icon: IconSuccess,
-        customClass: "o-message--success",
+        customClass: 'o-message--success',
         duration: 3000,
       });
       currentPage.value = 1;
@@ -1386,30 +1298,29 @@ const handleConfirmDleSelected = () => {
       selectionFileData.value = [];
       multipleTable.value.clearSelection();
     })
-    .catch((err) => {
+    .catch(() => {
       handleStartPollTimer();
     });
 };
 
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  await formEl.validate((valid, fields) => {
+  await formEl.validate((valid) => {
     if (valid) {
       KfAppAPI.updateLibraryFile({
         ...ruleForm.value,
         document_type: ruleForm.value.document_type,
-      }).then((res) => {
+      }).then(() => {
         ElMessage({
           showClose: true,
-          message: t("opsMessage.modifSuccess"),
+          message: t('opsMessage.modifSuccess'),
           icon: IconSuccess,
-          customClass: "o-message--success",
+          customClass: 'o-message--success',
           duration: 3000,
         });
         handleSearchOpsData(true, true);
         dialogEditVisible.value = false;
       });
-    } else {
     }
   });
 };
@@ -1431,13 +1342,8 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
 
 const sortFilter = ref({});
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
-  let sortKey =
-    data.prop === "chunk_size" ? "chunk_size_order" : "created_time_order";
-  let sortValue = data.order
-    ? data.order === "ascending"
-      ? "asc"
-      : "desc"
-    : null;
+  let sortKey = data.prop === 'chunk_size' ? 'chunk_size_order' : 'created_time_order';
+  let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
   sortFilter.value = sortValue
     ? {
         [sortKey]: sortValue,
@@ -1446,7 +1352,7 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   handleSearchOpsData(true, true);
 };
 
-const handleQueryTaskList = (selectedTaskList: string | any[]) => {
+const handleQueryTaskList = () => {
   handleSearchOpsData(true, false);
 };
 
@@ -1475,17 +1381,25 @@ const handleUploadMyFile = (options: any) => {
     },
     options
   )
-    .then((res) => {
-      options.onSuccess({ ...options.fileInfo, success: "success" });
+    .then(() => {
+      options.onSuccess({ ...options.fileInfo, success: 'success' });
     })
     .catch((err) => {
       options.onError({ ...options.fileInfo, error: err });
     });
 };
 
-const handleDownloadFile = (downloadData: any) => {
-  downloadData.forEach((item: { id: any }) => {
-    window.open(`${window.origin}/witchaind/api/doc/download?id=${item.id}`);
-  });
+const handleDownloadFile = async (downloadData: any) => {
+  for (const item of downloadData) {
+    const url = `${window.origin}/witchaind/api/doc/download?id=${item.id}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'filename'; // 指定文件名
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    await new Promise(resolve => setTimeout(resolve, 333)); // 添加延迟
+  }
 };
 </script>
