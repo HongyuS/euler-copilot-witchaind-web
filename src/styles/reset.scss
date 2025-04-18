@@ -229,11 +229,11 @@ $newHoverBg: linear-gradient(
 }
 .el-button--primary,
 .bgThumb {
-  background: $newbg !important;
+  // background: $newbg !important;
   border-color: #c7d2fbc0 !important;
   &:hover {
     color: white !important;
-    background: $newHoverBg !important;
+    // background: $newHoverBg !important;
     border-color: #c7d2fbc0 !important;
   }
 }
