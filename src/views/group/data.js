@@ -1,0 +1,3 @@
+const groupList = [];
+
+export { groupList };
