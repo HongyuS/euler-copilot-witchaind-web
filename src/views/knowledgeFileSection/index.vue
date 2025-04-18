@@ -1,35 +1,7 @@
 <template>
-  <div class="page-platform-header">
-    <HeaderBar />
-  </div>
   <CustomLoading :loading="loading" />
 
   <div class="kf-section-container">
-    <div class="kf-section-container-top">
-      <div class="kf-section-left-menu">
-        <el-link
-          type="primary"
-          target="_blank"
-          class="home-menu"
-          :underline="false"
-          @click="handleJumpHome">
-          {{ $t('btnText.homePage') }}
-        </el-link>
-        <div>/</div>
-        <el-link
-          @click="handleJumpFile"
-          type="primary"
-          target="_blank"
-          class="home-menu libraryName"
-          :underline="false">
-          <TextSingleTootip :content="libraryInfo?.name" />
-        </el-link>
-        <div>/</div>
-        <div class="kf-section-name">
-          <TextSingleTootip :content="fileInfo?.name" />
-        </div>
-      </div>
-    </div>
     <div class="kf-section-container-action">
       <div class="kf-section-container-left">
         <div class="kf-section-info-title">{{ $t('assetFile.baseInfo') }}</div>
