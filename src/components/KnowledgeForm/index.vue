@@ -84,7 +84,7 @@
         :placeholder="$t('assetLibrary.message.pleaseChoose')"
         :teleported="false"
         class="select-container"
-        :disabled="props.formData.id"
+        :disabled="props.formData?.id"
         :suffix-icon="IconCaretDown">
         <el-option
           v-for="item in emBeddingModelOptions"
