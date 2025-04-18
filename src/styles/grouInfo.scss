@@ -1,0 +1,91 @@
+.group-info {
+    padding: 24px;
+
+    .group-info-title {
+        display: flex;
+        align-items: center;
+
+        .group-left-menu {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            height: 16px;
+
+            .home-menu {
+                display: inline-block;
+                max-width: 80px;
+                height: 16px;
+                font-size: 12px;
+                line-height: 16px;
+            }
+
+            .group-name {
+                max-width: 152px;
+                font-size: 12px;
+                font-weight: 700;
+                display: flex;
+                line-height: 16px;
+                & div{
+                    margin-left: 4px;
+                }
+                .last-name{
+                    text-overflow: ellipsis;
+                    width: 130px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        .group-mid-menu {
+            width: 400px;
+            height: 32px;
+            background-color: white;
+            display: flex;
+            border-radius: 4px;
+            position: absolute;
+            left: 50%; 
+            transform: translateX(-50%); 
+            .section {
+                width: 197px;
+                height: 28px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+                font-weight: 700;
+                margin: 2px ;
+                cursor: pointer;
+            }
+
+            .section-active {
+
+                color: white;
+                background-color: rgb(99, 149, 253);
+                border-radius: 4px;
+            }
+        }
+    }
+    .group-info-content{
+        width: 100%;
+        height: calc(100vh - 100px);
+        border-radius: 8px;
+        background-color: rgb(253,254,255);
+        margin-top: 16px;
+        padding: 24px;
+       
+        .empty-content{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: calc(100vh - 100px);
+            .group-btn{
+                border-radius: 4px !important;
+                width: 96px;
+                background-color: rgb(99,149,253);
+            }
+        }
+    }
+}

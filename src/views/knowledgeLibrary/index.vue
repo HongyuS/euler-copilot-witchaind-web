@@ -1,8 +1,14 @@
 <template>
-  <UserHeaderBar />
   <CustomLoading :loading="loading" />
-
-  <div class="knowledgeLibrary-container">
+  <div class="empty-content" v-if="!fileTableList.data.length">
+    <EmptyStatus
+      description="暂无资产"
+      buttonText="新建资产库"
+      buttonClass="group-btn"
+      @click="handleCreateKnowledge"
+    />
+  </div>
+  <div v-else class="knowledgeLibrary-container">
     <div
       v-if="showTaskExportNotify"
       class="o-export-progress-notify"
@@ -115,7 +121,7 @@
       class="knowledgeLibrary-box knowledgeLibrary-table-box"
       :class="{ knowledgeLibrayList: switchIcon === 'list' }">
       <div class="kl-tilte">
-        {{ $t('assetLibrary.assetLibrary') }}
+          {{ groupName }}
       </div>
       <div class="kl-ops">
         <div class="kl-left-btn">
@@ -518,7 +524,6 @@
     :taskListLoading="taskListLoading" />
 </template>
 <script lang="ts" setup>
-import UserHeaderBar from '@/components/UserHeaderBar/index.vue';
 import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import Upload from '@/components/Upload/index.vue';
@@ -545,7 +550,16 @@ import KbAppAPI from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import FilterContainr from '@/components/TableFilter/index.vue';
+import { defineProps } from 'vue';
+import router from '@/router';
+import { useGroupStore } from '@/store/modules/group';
+import EmptyStatus from '@/components/EmptyStatus/index.vue'
 
+defineProps({
+groupName: {
+  type: String
+},
+});
 const { t } = useI18n();
 const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);
@@ -940,21 +954,6 @@ const handleExportScroll = (e: { target: any }) => {
   }
 };
 
-// const handleQueryExportTaskList = () => {
-//   taskExportTimer.value = setInterval(() => {
-//     KbAppAPI.queryKbTaskList({
-//       type: "save_knowledge_base",
-//     }).then((res: any) => {
-//       taskExportList.value = res || [];
-//       taskListExportDate.value = Date.now();
-//       if (res?.every((item) => item.status !== "pending")) {
-//         clearInterval(taskExportTimer.value);
-//         taskExportTimer.value = null;
-//       }
-//     });
-//   }, 2500);
-// };
-
 watch(
   () => t(''),
   () => {
@@ -1034,9 +1033,18 @@ const handleCancelVisible = () => {
   dialogImportVisible.value = false;
   dialogCreateVisible.value = false;
 };
+const { navGroup } =  storeToRefs(useGroupStore());
 
 const handleJumpAssets = (kbItem: any) => {
-  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kbItem.id}`, '_self');
+  let groupNav = navGroup.value;
+  groupNav[2]={
+      name:kbItem.name,
+      path:'/libraryInfo',
+      query:{
+        kb_id:kbItem.id
+      }}
+  router.push({path:'/libraryInfo',query:{kb_id:kbItem.id}},);
+  
 };
 
 const handleAddFile = () => {
