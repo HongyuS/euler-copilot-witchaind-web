@@ -413,6 +413,7 @@
           @change="handleChangePage" />
       </div>
     </div>
+  </div>
     <el-dialog
       v-model="dialogImportVisible"
       class="upload-dialog"
@@ -510,7 +511,6 @@
         </el-button>
       </div>
     </el-dialog>
-  </div>
   <UploadProgress
     :showUploadNotify="uploadTaskListData.showUploadNotify"
     :uploadingList="uploadTaskListData.uploadingList"
@@ -560,6 +560,7 @@ groupName: {
   type: String
 },
 });
+const { navGroup } =  storeToRefs(useGroupStore());
 const { t } = useI18n();
 const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);
@@ -1024,7 +1025,6 @@ const handleTimeChange = (e: (string | undefined)[]) => {
   });
   handleCancelVisible();
 };
-
 const handleCreateKnowledge = () => {
   dialogCreateVisible.value = true;
 };
@@ -1033,7 +1033,6 @@ const handleCancelVisible = () => {
   dialogImportVisible.value = false;
   dialogCreateVisible.value = false;
 };
-const { navGroup } =  storeToRefs(useGroupStore());
 
 const handleJumpAssets = (kbItem: any) => {
   let groupNav = navGroup.value;

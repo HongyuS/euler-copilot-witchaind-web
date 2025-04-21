@@ -5,6 +5,7 @@ export const useGroupStore = defineStore(
   () => {
     let navGroup = ref([{ name: '数据治理', path: '/group', query: {} }]);
     let groupMenu = ref('knowledge');
+    let knowledgeTabActive = ref('document');
 
     let handleSwitchMenu = (menu: string) => {
       groupMenu.value = menu;
@@ -12,11 +13,16 @@ export const useGroupStore = defineStore(
     let delNav = (value: number) => {
       navGroup.value.splice(value);
     };
+    let handleKnowledgeTab = (key: string) => {
+      knowledgeTabActive.value = key;
+    };
     return {
       navGroup,
       groupMenu,
+      knowledgeTabActive,
       handleSwitchMenu,
       delNav,
+      handleKnowledgeTab,
     };
   },
   {

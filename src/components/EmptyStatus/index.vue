@@ -42,6 +42,9 @@ const handleButtonClick = () => {
 };
 </script>
 
-<style scoped>
+<style>
 /* 如果需要自定义样式可以在这里添加 */
+.el-empty__description>p{
+    font-size: 12px !important;
+}
 </style>
