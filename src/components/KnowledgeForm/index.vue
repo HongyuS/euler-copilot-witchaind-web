@@ -42,7 +42,7 @@
       class="config-size-desc">
       <el-input
         v-model="ruleForm.description"
-        maxlength="150"
+        maxlength="200"
         show-word-limit
         type="textarea"
         :placeholder="$t('assetLibrary.message.pleasePlace')" />
@@ -126,9 +126,53 @@
       <el-input-number
         class="config-size"
         v-model="ruleForm.default_chunk_size"
-        :min="512"
+        :min="128"
         :max="1024" />
-      <span class="form-right-tip">（512~1024）</span>
+      <span class="form-right-tip">128~1024）</span>
+    </el-form-item>
+    <el-form-item
+      :label="$t('assetLibrary.fileChunkSize')"
+      prop="default_chunk_size">
+      <template #label>
+        {{ $t('assetLibrary.numberUpperLimit') }}
+        <el-tooltip
+          :content="$t('formTipText.fileChunkSizeTip')"
+          placement="top"
+          popper-class="fileChunkSizeTip"
+          effect="light">
+          <el-icon>
+            <IconHelpCircle />
+          </el-icon>
+        </el-tooltip>
+      </template>
+      <el-input-number
+        class="config-size"
+        v-model="ruleForm.default_chunk_size"
+        :min="128"
+        :max="1024" />
+      <span class="form-right-tip">（128~1024）</span>
+    </el-form-item>
+    <el-form-item
+      :label="$t('assetLibrary.fileChunkSize')"
+      prop="default_chunk_size">
+      <template #label>
+        {{ $t('assetLibrary.sizeUpperLimit') }}
+        <el-tooltip
+          :content="$t('formTipText.fileChunkSizeTip')"
+          placement="top"
+          popper-class="fileChunkSizeTip"
+          effect="light">
+          <el-icon>
+            <IconHelpCircle />
+          </el-icon>
+        </el-tooltip>
+      </template>
+      <el-input-number
+        class="config-size"
+        v-model="ruleForm.default_chunk_size"
+        :min="128"
+        :max="2048" />
+      <span class="form-right-tip">（128M~2048M）</span>
     </el-form-item>
     <el-form-item
       :label="
