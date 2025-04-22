@@ -46,7 +46,7 @@
                   :content="`，${$t('dialogTipText.fileSize')} ${bytesToSize(item?.file?.size || item?.size || 0)}`" />
               </div>
               <div
-                v-if="!['success', 'canceled'].includes(item.uploadStatus)"
+                v-if="!['success', 'canceled','error'].includes(item.uploadStatus)"
                 class="upload-status">
                 {{ `，${$t('assetLibrary.uploadIng')}...` }}
               </div>
@@ -72,7 +72,7 @@
             <span>{{ $t('uploadText.uploadSuccess') }}</span>
           </div>
           <div
-            v-if="item.error"
+            v-if="['error'].includes(item.uploadStatus)"
             class="upload-error">
             <span>
               <el-icon class="icon-tip"><WarningFilled /></el-icon>
