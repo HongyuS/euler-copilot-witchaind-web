@@ -966,7 +966,7 @@ const handleConfirmFileAnalytic = () => {
 const handCheckTableData = (tableList) => {
   checkTableSelecData.value = tableList.filter((checkItem) => {
     const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
-    return selecData && selecData.task.status !== 'success';
+    return selecData && selecData.task.status === 'pending';
   });
 };
 
