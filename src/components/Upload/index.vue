@@ -369,7 +369,7 @@ watch(
         taskId: item.task.id,
         name: item.name,
         size: item?.document_size,
-        percent: 100,
+        percent: item?.task?.status && item?.task?.status !== 'pending' ? 100 : 99,
         uploadStatus: item?.task?.status,
       };
     });
@@ -434,7 +434,6 @@ const uploadFiles = () => {
         },
         onSuccess: () => {
           uploadFileNumber += 1;
-          item.percent = 100;
           if (uploadFileNumber === fileTableList.data.length) {
             props.handleQueryTaskList();
             fileTableList.data = [];
