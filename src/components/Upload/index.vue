@@ -290,8 +290,7 @@ const handleChange = (file: UploadFile) => {
 };
 
 // 超出文件数量限制时的处理
-const handleExceed = (files: File[], uploadFiles: any[]) => {
-  console.log(uploadFiles.length);
+const handleExceed = () => {
   ElMessage.warning(`超出文件数量限制,最多只能上传 ${props.maxFileNum} 个文件!`);
 };
 
@@ -423,20 +422,25 @@ const uploadFiles = () => {
           }
         },
         onError: (e: any) => {
+          uploadFileNumber += 1;
           uploadingList.value = uploadingList.value.map((up) => {
             if (up.id === e.id) {
-              return e;
+              return { ...e, uploadStatus: 'error'};
             }
             return up;
           });
+          props?.handleImportLoading(false);
+          handleToggleUploadNotify();
         },
         onSuccess: () => {
           uploadFileNumber += 1;
           if (uploadFileNumber === fileTableList.data.length) {
             props.handleQueryTaskList();
+            fileTableList.data = [];
+            props?.handleImportLoading(false);
           }
         },
-        fileInfo: item,
+        fileInfo: item
       });
     });
     uploadingList.value = [
@@ -458,11 +462,10 @@ const uploadFiles = () => {
         };
       }),
     ];
-    uploadingList.value.length && handleToggleUploadNotify();
     props.handleCancelVisible();
-    fileTableList.data = [];
     uploadRef.value?.clearFiles();
     allFileSizes.value = 0;
+    uploadingList.value.length && handleToggleUploadNotify();
   });
 };
 
@@ -507,6 +510,8 @@ const uploadKnowledgeFile = () => {
             }
             return up;
           });
+          props?.handleImportLoading(false);
+          handleToggleUploadNotify(); // 立即显示错误状态
           reject(e); // 传递错误
         },
         onSuccess: () => {

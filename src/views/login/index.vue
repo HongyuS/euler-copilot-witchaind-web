@@ -436,7 +436,6 @@ const handleBackLogin = () => {
  * 注册请求
  */
 const handleSigInSubmit = () => {
-  console.log(signinData.value, signinFormRef);
   signinFormRef.value?.validate((valid) => {
     if (valid) {
       signinLoding.value = true;
@@ -465,7 +464,6 @@ const handleSigInSubmit = () => {
  * 该函数会根据接收到的语言代码更新应用的语言设置，并将其存储在本地存储中。
  */
 const handleMessage = (e: MessageEvent) => {
-  console.log(e);
   const langObj = {
     CN: 'zh',
     EN: 'en',
