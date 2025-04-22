@@ -3,13 +3,15 @@
         <!-- 通用标题部分 -->
         <div class="group-info-title">
             <div class="group-left-menu">
-                <el-link @click="handleHomeClick" type="primary" class="home-menu" :underline="false">
+                <div class="group-menu-item">
+                    <el-link @click="handleHomeClick" type="primary" class="home-menu" :underline="false">
                     {{ navGroup[0]?.name }}
                 </el-link>
-                <div v-if="navGroup.length > 1">
+                </div>
+                <div v-if="navGroup.length > 1" class="group-menu-item">
                     <div v-if="router.currentRoute.value.path.includes('/groupInfo')" class="group-name">
-                        /
-                        <div>
+                        <div>/</div>
+                        <div class="last-name">
                             {{ navGroup[1]?.name }}
                         </div>
                     </div>
@@ -21,10 +23,10 @@
                         </el-link>
                     </div>
                 </div>
-                <div v-if="navGroup.length > 2">
+                <div v-if="navGroup.length > 2" class="group-menu-item">
                     <div v-if="router.currentRoute.value.path.includes('/libraryInfo')" class="group-name">
-                        /
-                        <div>
+                        <div>/</div>
+                        <div class="last-name">
                             {{ navGroup[2]?.name }}
                         </div>
                     </div>
@@ -36,9 +38,9 @@
                         </el-link>
                     </div>
                 </div>
-                <div v-if="navGroup.length > 3">
+                <div v-if="navGroup.length > 3" class="group-menu-item">
                     <div  class="group-name">
-                        /
+                        <div>/</div>
                         <div class="last-name">
                             {{ navGroup[3]?.name }}
                         </div>

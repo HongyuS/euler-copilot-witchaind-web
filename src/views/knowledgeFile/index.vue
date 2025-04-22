@@ -1,19 +1,41 @@
 <template>
   <div class="kf-container">
     <div class="kf-container-action">
-      <div class="kf-container-right" v-if="menuType === MenuType.KL_FILE">
+      <div
+        class="kf-container-right"
+        v-if="menuType === MenuType.KL_FILE">
         <div class="kf-container-table-ops">
-          <el-button type="primary" style="margin-right: 24px" @click="handleImportKnowledge" class="importFileBtn">
+          <el-button
+            type="primary"
+            style="margin-right: 8px"
+            @click="handleImportKnowledge"
+            class="importFileBtn">
             {{ $t('btnText.importFile') }}
           </el-button>
-          <el-dropdown placement="bottom" popper-class="dropdown-container kf-ops-dowlon"
-            @visible-change="handleBatchDownBth">
-            <el-button :class="batchDownBth ? 'upBtn' : 'downBtn'">
-              {{ $t('btnText.batchDown') }}
-              <el-icon class="el-icon--right" v-if="!batchDownBth">
+          <el-button
+            type="primary"
+            style="margin-right: 8px"
+            @click="handleImportKnowledge"
+            class="dataSetBtn">
+            {{ $t('生成数据集') }}
+          </el-button>
+          <el-dropdown
+            placement="bottom"
+            popper-class="dropdown-container kf-ops-dowlon"
+            @visible-change="handleBatchDownBth"
+            :disabled="!(selectionFileData.length > 0)">
+            <el-button
+              :class="batchDownBth ? 'upBtn' : 'downBtn'"
+              :disabled="!(selectionFileData.length > 0)">
+              {{ $t('btnText.batchOps') }}
+              <el-icon
+                class="el-icon--right"
+                v-if="!batchDownBth">
                 <IconCaretDown />
               </el-icon>
-              <el-icon class="el-icon--right el-icon--caretup" v-if="batchDownBth">
+              <el-icon
+                class="el-icon--right el-icon--caretup"
+                v-if="batchDownBth">
                 <IconCaretUp />
               </el-icon>
             </el-button>
@@ -22,67 +44,118 @@
                 <el-dropdown-item @click="handleDownloadFile(fileTableList.data)">
                   {{ $t('btnText.downloadAll') }}
                 </el-dropdown-item>
-                <el-dropdown-item :disabled="!(selectionFileData.length > 0)"
+                <el-dropdown-item
+                  :disabled="!(selectionFileData.length > 0)"
                   @click="handleDownloadFile(selectionFileData)">
                   {{ $t('btnText.downloadChoose') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  :disabled="!(selectionFileData.length > 0)"
+                  @click="handleSelectRunKl">
+                  {{ $t('btnText.batchAnalytic') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  :disabled="!(selectionFileData.length > 0)"
+                  @click="handleSelectDeleteKl">
+                  {{ $t('btnText.batchDelete') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-button class="delFileBtn" :disabled="!(selectionFileData.length > 0)" @click="handleSelectRunKl">
-            {{ $t('btnText.analytic') }}
-          </el-button>
-          <el-button class="delFileBtn cancelBtn" :disabled="!(selectionFileData.length > 0)"
-            @click="handleSelectDeleteKl">
-            {{ $t('btnText.delete') }}
-          </el-button>
         </div>
         <div class="kf-container-table-box">
-          <el-table :data="fileTableList.data" class="fileTableContainer" cell-calss-name="tableCell"
-            :row-key="(row) => row.id" @selection-change="handleSelectionChange" @sort-change="handleSortChange"
-            ref="multipleTable" v-loading="loading" :border="true">
-            <el-table-column type="selection" :fixed="true" class-name="kl-selection" width="35"
-              :reserve-selection="true" />
-            <el-table-column prop="name" :label="$t('assetFile.docName')" show-overflow-tooltip :fixed="true"
-              class-name="kl-name" min-width="150">
+          <el-table
+            :data="fileTableList.data"
+            class="fileTableContainer"
+            cell-calss-name="tableCell"
+            :row-key="(row) => row.id"
+            @selection-change="handleSelectionChange"
+            @sort-change="handleSortChange"
+            ref="multipleTable"
+            v-loading="loading"
+            :border="true">
+            <el-table-column
+              type="selection"
+              :fixed="true"
+              class-name="kl-selection"
+              width="35"
+              :reserve-selection="true"
+              :selectable="checkSelecTable" />
+            <el-table-column
+              prop="name"
+              :label="$t('assetFile.docName')"
+              show-overflow-tooltip
+              :fixed="true"
+              class-name="kl-name"
+              min-width="150">
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.docName') }}</span>
-                  <el-icon ref="inputSearchRef" :class="searchPayload?.name?.length > 0 || fileFilterVisible
-                      ? 'searchIconIsActive'
-                      : ''
+                  <el-icon
+                    ref="inputSearchRef"
+                    :class="
+                      searchPayload?.name?.length > 0 || fileFilterVisible
+                        ? 'searchIconIsActive'
+                        : ''
                     ">
                     <IconSearch />
                   </el-icon>
-                  <el-popover ref="popoverRef" v-model:visible="fileFilterVisible"
-                    popper-class="inputSearchFilterPopper" placement="bottom-start" :virtual-ref="inputSearchRef"
-                    :show-arrow="false" trigger="click" virtual-triggering>
-                    <FilterContainr filterType="input" v-model:serachName="searchPayload.name"
-                      :hanldeSearhNameFilter="hanldeSearhNameFilter" :searchPayload="searchPayload" />
+                  <el-popover
+                    ref="popoverRef"
+                    v-model:visible="fileFilterVisible"
+                    popper-class="inputSearchFilterPopper"
+                    placement="bottom-start"
+                    :virtual-ref="inputSearchRef"
+                    :show-arrow="false"
+                    trigger="click"
+                    virtual-triggering>
+                    <FilterContainr
+                      filterType="input"
+                      v-model:serachName="searchPayload.name"
+                      :hanldeSearhNameFilter="hanldeSearhNameFilter"
+                      :searchPayload="searchPayload" />
                   </el-popover>
                 </div>
               </template>
               <template #default="scope">
-                <span class="kf-name-row" @click="handleJumpFileSection(scope.row)">
+                <span
+                  class="kf-name-row"
+                  @click="handleJumpFileSection(scope.row)">
                   {{ scope.row.name }}
                 </span>
               </template>
             </el-table-column>
-            <el-table-column prop="document_type" :label="$t('assetFile.category')" width="150" show-overflow-tooltip>
+            <el-table-column
+              prop="document_type"
+              :label="$t('assetFile.category')"
+              width="150"
+              show-overflow-tooltip>
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.category') }}</span>
-                  <el-icon ref="buttonRef" :class="searchPayload?.document_type_list?.length > 0 || categoryFilterVisible
-                      ? 'searchIconIsActive'
-                      : ''
+                  <el-icon
+                    ref="buttonRef"
+                    :class="
+                      searchPayload?.document_type_list?.length > 0 || categoryFilterVisible
+                        ? 'searchIconIsActive'
+                        : ''
                     ">
                     <IconFilter />
                   </el-icon>
-                  <el-popover ref="popoverRef" v-model:visible="categoryFilterVisible" popper-class="filterPopper"
-                    placement="bottom-start" :virtual-ref="buttonRef" :show-arrow="false" trigger="click"
+                  <el-popover
+                    ref="popoverRef"
+                    v-model:visible="categoryFilterVisible"
+                    popper-class="filterPopper"
+                    placement="bottom-start"
+                    :virtual-ref="buttonRef"
+                    :show-arrow="false"
+                    trigger="click"
                     virtual-triggering>
-                    <FilterContainr filterType="checkBox" :handelSubFilterProper="handelCategoryFilterProper"
-                      :filterList="filterCategoryList" :checkedFilterList="checkedFilterList" />
+                    <FilterContainr
+                      filterType="checkBox"
+                      :handelSubFilterProper="handelCategoryFilterProper"
+                      :filterList="filterCategoryList"
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
@@ -90,22 +163,49 @@
                 <span>{{ scope.row.document_type.type }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="chunk_size" :label="$t('assetFile.chunkSize')" sortable width="120" />
-            <el-table-column prop="created_time" class-name="upload-time-cell" sortable
-              :label="$t('assetFile.uploadTime')" width="200" @click.stop>
+            <el-table-column
+              prop="chunk_size"
+              :label="$t('assetFile.chunkSize')"
+              sortable
+              width="120" />
+            <el-table-column
+              prop="created_time"
+              class-name="upload-time-cell"
+              sortable
+              :label="$t('assetFile.uploadTime')"
+              width="200"
+              @click.stop>
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.uploadTime') }}</span>
-                  <el-date-picker popper-class="datetimerangeClass" placement="bottom" class="timer-picker"
-                    v-model="created_time" type="datetimerange" :teleported="true" :shortcuts="shortcuts"
-                    start-placeholder="开始时间" end-placeholder="结束时间" time-format="HH:mm" :unlink-panels="true"
-                    @change="handleTimeChange" ref="tiemPick" @visible-change="handleVisibleChange" />
-                  <el-popover :visible="timeFilterVisible" popper-class="filterPopper timeFilterPo"
-                    placement="bottom-start" :show-arrow="false">
+                  <el-date-picker
+                    popper-class="datetimerangeClass"
+                    placement="bottom"
+                    class="timer-picker"
+                    v-model="created_time"
+                    type="datetimerange"
+                    :teleported="true"
+                    :shortcuts="shortcuts"
+                    start-placeholder="开始时间"
+                    end-placeholder="结束时间"
+                    time-format="HH:mm"
+                    :unlink-panels="true"
+                    @change="handleTimeChange"
+                    ref="tiemPick"
+                    @visible-change="handleVisibleChange" />
+                  <el-popover
+                    :visible="timeFilterVisible"
+                    popper-class="filterPopper timeFilterPo"
+                    placement="bottom-start"
+                    :show-arrow="false">
                     <template #reference>
-                      <el-icon @click="handeDatePickerShow" @click.stop :class="searchPayload?.created_time_start?.length > 0 || timeFilterVisible
-                          ? 'searchIconIsActive'
-                          : ''
+                      <el-icon
+                        @click="handeDatePickerShow"
+                        @click.stop
+                        :class="
+                          searchPayload?.created_time_start?.length > 0 || timeFilterVisible
+                            ? 'searchIconIsActive'
+                            : ''
                         ">
                         <IconFilter />
                       </el-icon>
@@ -117,49 +217,80 @@
                 <span>{{ convertUTCToLocalTime(scope.row.created_time) }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="status" :label="$t('assetFile.analyticStatus')" width="220">
+            <el-table-column
+              prop="status"
+              :label="$t('assetFile.analyticStatus')"
+              width="220">
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.analyticStatus') }}</span>
-                  <el-icon ref="statusRef" @click.stop :class="searchPayload?.status?.length > 0 || statusFilterVisible
-                      ? 'searchIconIsActive'
-                      : ''
+                  <el-icon
+                    ref="statusRef"
+                    @click.stop
+                    :class="
+                      searchPayload?.status?.length > 0 || statusFilterVisible
+                        ? 'searchIconIsActive'
+                        : ''
                     ">
                     <IconFilter />
                   </el-icon>
-                  <el-popover ref="popoverRef" v-model:visible="statusFilterVisible" popper-class="filterPopper"
-                    placement="bottom-start" :virtual-ref="statusRef" :show-arrow="false" trigger="click"
+                  <el-popover
+                    ref="popoverRef"
+                    v-model:visible="statusFilterVisible"
+                    popper-class="filterPopper"
+                    placement="bottom-start"
+                    :virtual-ref="statusRef"
+                    :show-arrow="false"
+                    trigger="click"
                     virtual-triggering>
-                    <FilterContainr filterType="checkBox" :filterList="filterStatusList"
-                      :handelSubFilterProper="handelStatusFilterProper" :checkedFilterList="checkedFilterList" />
+                    <FilterContainr
+                      filterType="checkBox"
+                      :filterList="filterStatusList"
+                      :handelSubFilterProper="handelStatusFilterProper"
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
               <template #default="scope">
-                <div v-if="scope.row.task.status === StatusEnum.FAIL" class="statusFail">
+                <div
+                  v-if="scope.row.task.status === StatusEnum.FAIL"
+                  class="statusFail">
                   {{ $t('assetFile.status.analyticFail') }}
                 </div>
-                <div v-if="scope.row.task.status === StatusEnum.SUCCESS" class="statusSuccess">
+                <div
+                  v-if="scope.row.task.status === StatusEnum.SUCCESS"
+                  class="statusSuccess">
                   {{ $t('assetFile.status.analyticSucces') }}
                 </div>
-                <div v-if="scope.row.task.status === StatusEnum.CANCEL" class="statusCancel">
+                <div
+                  v-if="scope.row.task.status === StatusEnum.CANCEL"
+                  class="statusCancel">
                   {{ $t('assetFile.status.cancelAnalytic') }}
                 </div>
-                <div v-if="scope.row.task.status === StatusEnum.ANALYSIS_ING" class="statusWaitIng">
+                <div
+                  v-if="scope.row.task.status === StatusEnum.ANALYSIS_ING"
+                  class="statusWaitIng">
                   <div class="icon-box icon-loading"></div>
                   {{ $t('assetFile.status.analyticWaitIng') }}
                 </div>
-                <div class="statusAnalysis" v-if="scope.row.task.status === StatusEnum.RUNNING">
+                <div
+                  class="statusAnalysis"
+                  v-if="scope.row.task.status === StatusEnum.RUNNING">
                   <div class="percent-box">
-                    <el-progress :percentage="scope.row.task?.reports?.[0]?.current_stage &&
+                    <el-progress
+                      :percentage="
+                        scope.row.task?.reports?.[0]?.current_stage &&
                         scope.row.task?.reports?.[0]?.stage_cnt
-                        ? Math.floor(
-                          ((scope.row.task?.reports?.[0]?.current_stage || 0) /
-                            (scope.row.task?.reports?.[0]?.stage_cnt || 0)) *
-                          100
-                        )
-                        : 0
-                      " :color="customColor" striped striped-flow />
+                          ? Math.floor(
+                              ((scope.row.task?.reports?.[0]?.current_stage || 0) /
+                                (scope.row.task?.reports?.[0]?.stage_cnt || 0)) *
+                                100
+                            )
+                          : 0
+                      "
+                      :color="customColor"
+                      striped
+                      striped-flow />
                   </div>
                   <div class="statusAnalysisText">
                     {{ $t('assetFile.status.analyticIng') }}
@@ -167,107 +298,189 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="parser_method" :label="$t('assetFile.parsingMethod')" width="150"
+            <el-table-column
+              prop="parser_method"
+              :label="$t('assetFile.parsingMethod')"
+              width="150"
               show-overflow-tooltip>
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.parsingMethod') }}</span>
-                  <el-icon ref="parserMethodRef" :class="searchPayload?.parser_method?.length > 0 || parserMethodVisible
-                      ? 'searchIconIsActive'
-                      : ''
+                  <el-icon
+                    ref="parserMethodRef"
+                    :class="
+                      searchPayload?.parser_method?.length > 0 || parserMethodVisible
+                        ? 'searchIconIsActive'
+                        : ''
                     ">
                     <IconFilter />
                   </el-icon>
-                  <el-popover ref="popoverRef" v-model:visible="parserMethodVisible" popper-class="filterPopper"
-                    placement="bottom-start" :virtual-ref="parserMethodRef" :show-arrow="false" trigger="click"
+                  <el-popover
+                    ref="popoverRef"
+                    v-model:visible="parserMethodVisible"
+                    popper-class="filterPopper"
+                    placement="bottom-start"
+                    :virtual-ref="parserMethodRef"
+                    :show-arrow="false"
+                    trigger="click"
                     virtual-triggering>
-                    <FilterContainr filterType="checkBox" :handelSubFilterProper="handelParserMethodFilterProper"
-                      :filterList="parserMethodOptions" :checkedFilterList="checkedFilterList" />
+                    <FilterContainr
+                      filterType="checkBox"
+                      :handelSubFilterProper="handelParserMethodFilterProper"
+                      :filterList="parserMethodOptions"
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="status" :label="$t('assetFile.parsingComTime')" width="200">
+            <el-table-column
+              prop="status"
+              :label="$t('assetFile.parsingComTime')"
+              width="200">
               <template #default="scope">
                 <div>
                   {{
                     scope?.row?.task?.status === 'success' &&
-                      scope?.row?.task?.reports?.[0]?.create_time
+                    scope?.row?.task?.reports?.[0]?.create_time
                       ? convertUTCToLocalTime(scope?.row?.task?.reports?.[0]?.create_time)
                       : '--'
                   }}
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="enabled" :label="$t('btnText.enable')" width="120">
+            <el-table-column
+              prop="enabled"
+              :label="$t('btnText.enable')"
+              width="120">
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('btnText.enable') }}</span>
-                  <el-icon ref="enableRef" @click.stop :class="searchPayload?.enabled?.length > 0 || enableFilterVisible
-                      ? 'searchIconIsActive'
-                      : ''
+                  <el-icon
+                    ref="enableRef"
+                    @click.stop
+                    :class="
+                      searchPayload?.enabled?.length > 0 || enableFilterVisible
+                        ? 'searchIconIsActive'
+                        : ''
                     ">
                     <IconFilter />
                   </el-icon>
-                  <el-popover ref="popoverRef" v-model:visible="enableFilterVisible" popper-class="filterPopper"
-                    placement="bottom-start" :virtual-ref="enableRef" :show-arrow="false" trigger="click"
+                  <el-popover
+                    ref="popoverRef"
+                    v-model:visible="enableFilterVisible"
+                    popper-class="filterPopper"
+                    placement="bottom-start"
+                    :virtual-ref="enableRef"
+                    :show-arrow="false"
+                    trigger="click"
                     virtual-triggering>
-                    <FilterContainr :filterList="filterEnableList" filterType="checkBox"
-                      :handelSubFilterProper="handelEnableFilterProper" :checkedFilterList="checkedFilterList" />
+                    <FilterContainr
+                      :filterList="filterEnableList"
+                      filterType="checkBox"
+                      :handelSubFilterProper="handelEnableFilterProper"
+                      :checkedFilterList="checkedFilterList" />
                   </el-popover>
                 </div>
               </template>
               <template #default="scope">
-                <el-switch v-model:model-value="scope.row.enabled" @change="handleSwitch(scope.row)"
+                <el-switch
+                  v-model:model-value="scope.row.enabled"
+                  @change="handleSwitch(scope.row)"
                   style="--el-switch-on-color: #24ab36; --el-switch-off-color: #c3cedf" />
               </template>
             </el-table-column>
-            <el-table-column prop="action" :label="$t('btnText.operation')" width="220" fixed="right">
+            <el-table-column
+              prop="action"
+              :label="$t('btnText.operation')"
+              width="220"
+              fixed="right">
               <template #default="scope">
-                <el-button v-if="scope.row.status === StatusEnum.RUNNING" text
+                <el-button
+                  v-if="scope.row.status === StatusEnum.RUNNING"
+                  text
                   @click="handleRunKl(scope.row, 'cancel')">
                   {{ $t('btnText.cancel') }}
                 </el-button>
-                <el-button v-if="
-                  [
-                    StatusEnum.FAIL,
-                    StatusEnum.CANCEL,
-                    StatusEnum.ANALYSIS_ING,
-                    StatusEnum.SUCCESS,
-                  ].includes(scope.row.status)
-                " text @click="handleRunKl(scope.row, 'run')">
+                <el-button
+                  v-if="
+                    [
+                      StatusEnum.FAIL,
+                      StatusEnum.CANCEL,
+                      StatusEnum.ANALYSIS_ING,
+                      StatusEnum.SUCCESS,
+                    ].includes(scope.row.status)
+                  "
+                  text
+                  @click="handleRunKl(scope.row, 'run')">
                   {{ $t('btnText.analytic') }}
                 </el-button>
-                <el-button text :disabled="scope.row.status === StatusEnum.RUNNING" @click="handleEditKl(scope.row)">
+                <el-button
+                  text
+                  :disabled="scope.row.status === StatusEnum.RUNNING"
+                  @click="handleEditKl(scope.row)">
                   {{ $t('btnText.edit') }}
                 </el-button>
-                <el-button text @click="handleDownloadFile([scope.row])">
+                <el-button
+                  text
+                  @click="handleDownloadFile([scope.row])">
                   {{ $t('btnText.download') }}
                 </el-button>
-                <el-button :disabled="scope.row.status === StatusEnum.RUNNING" text @click="handleDeleteKl(scope.row)">
+                <el-button
+                  :disabled="scope.row.status === StatusEnum.RUNNING"
+                  text
+                  @click="handleDeleteKl(scope.row)">
                   {{ $t('btnText.delete') }}
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
-          <el-pagination v-if="fileTableList.data?.length > 0" v-model:current-page="currentPage"
-            v-model:page-size="currentPageSize" :page-sizes="pagination.pageSizes" :layout="pagination.layout"
-            :total="totalCount" popper-class="kbLibraryPage" @change="handleChangePage" />
+          <el-pagination
+            v-if="fileTableList.data?.length > 0"
+            v-model:current-page="currentPage"
+            v-model:page-size="currentPageSize"
+            :page-sizes="pagination.pageSizes"
+            :layout="pagination.layout"
+            :total="totalCount"
+            popper-class="kbLibraryPage"
+            @change="handleChangePage" />
         </div>
       </div>
-      <div class="kf-container-right kf-container-form" v-if="menuType === MenuType.KL_CONFIG">
-        <KnowledgeForm :configInfo="true" :formData="kbInfo" :handleQueryKbData="handleQueryKbData" />
+      <div
+        class="kf-container-right kf-container-form"
+        v-if="menuType === MenuType.KL_CONFIG">
+        <KnowledgeForm
+          :configInfo="true"
+          :formData="kbInfo"
+          :handleQueryKbData="handleQueryKbData" />
       </div>
     </div>
   </div>
-  <el-dialog v-model="dialogImportVisible" class="upload-dialog" align-center :title="$t('btnText.importFile')">
-    <Upload :singleFileLimit="true" :singleFileSize="0.05" :tipText="$t('dialogTipText.fileAllFormat')"
-      accept=".md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html" :maxFileNum="128" :maxSize="0.488"
-      :handleUploadMyFile="handleUploadMyFile" :handleQueryTaskList="handleQueryTaskList"
-      :handleCancelVisible="handleCancelVisible" :taskList="taskList" :taskListImportDate="taskListImportDate"
-      :toggleUploadNotify="toggleUploadNotify" :handleImportLoading="handleImportLoading" uploadType="file" />
+  <el-dialog
+    v-model="dialogImportVisible"
+    class="upload-dialog"
+    align-center
+    :title="$t('btnText.importFile')">
+    <Upload
+      :singleFileLimit="true"
+      :singleFileSize="0.05"
+      :tipText="$t('dialogTipText.fileAllFormat')"
+      accept=".md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html"
+      :maxFileNum="128"
+      :maxSize="0.488"
+      :handleUploadMyFile="handleUploadMyFile"
+      :handleQueryTaskList="handleQueryTaskList"
+      :handleCancelVisible="handleCancelVisible"
+      :taskList="taskList"
+      :taskListImportDate="taskListImportDate"
+      :toggleUploadNotify="toggleUploadNotify"
+      :handleImportLoading="handleImportLoading"
+      uploadType="file" />
   </el-dialog>
-  <el-dialog align-center v-model="cancelTipVisible" class="tip-dialog" width="432"
+  <el-dialog
+    align-center
+    v-model="cancelTipVisible"
+    class="tip-dialog"
+    width="432"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
@@ -276,15 +489,25 @@
       {{ $t('dialogTipText.confirmCancelAnalytic') }}
     </div>
     <div class="tip-ops-btn">
-      <el-button class="resetBtn" @click="handleConfirmFileAnalytic">
+      <el-button
+        class="resetBtn"
+        @click="handleConfirmFileAnalytic">
         {{ $t('btnText.confirm') }}
       </el-button>
-      <el-button type="primary" class="resetBtn cancelBtn" @click="handleCancelVisible">
+      <el-button
+        type="primary"
+        class="resetBtn cancelBtn"
+        @click="handleCancelVisible">
         {{ $t('btnText.cancel') }}
       </el-button>
     </div>
   </el-dialog>
-  <el-dialog align-center v-model="delTipVisible" class="tip-dialog" width="400" :title="$t('dialogTipText.tipsText')">
+  <el-dialog
+    align-center
+    v-model="delTipVisible"
+    class="tip-dialog"
+    width="400"
+    :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
         <IconAlarmOrange />
@@ -302,15 +525,24 @@
       </span>
     </div>
     <div class="tip-ops-btn">
-      <el-button class="resetBtn" type="primary" @click="handleConfirmDleSingle(opsItem)">
+      <el-button
+        class="resetBtn"
+        type="primary"
+        @click="handleConfirmDleSingle(opsItem)">
         {{ $t('btnText.confirm') }}
       </el-button>
-      <el-button class="resetBtn cancelBtn" @click="handleCancelVisible">
+      <el-button
+        class="resetBtn cancelBtn"
+        @click="handleCancelVisible">
         {{ $t('btnText.cancel') }}
       </el-button>
     </div>
   </el-dialog>
-  <el-dialog align-center v-model="delSelectTipVisible" class="tip-dialog" width="400"
+  <el-dialog
+    align-center
+    v-model="delSelectTipVisible"
+    class="tip-dialog"
+    width="400"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
@@ -321,35 +553,82 @@
       </span>
     </div>
     <div class="tip-ops-btn">
-      <el-button class="resetBtn" type="primary" @click="handleConfirmDleSelected">
+      <el-button
+        class="resetBtn"
+        type="primary"
+        @click="handleConfirmDleSelected">
         {{ $t('btnText.confirm') }}
       </el-button>
-      <el-button class="resetBtn cancelBtn" @click="handleCancelVisible">
+      <el-button
+        class="resetBtn cancelBtn"
+        @click="handleCancelVisible">
         {{ $t('btnText.cancel') }}
       </el-button>
     </div>
   </el-dialog>
-  <el-dialog v-if="dialogEditVisible" v-model="dialogEditVisible" class="edit-dialog" align-center width="560"
+  <el-dialog
+    v-if="dialogEditVisible"
+    v-model="dialogEditVisible"
+    class="edit-dialog"
+    align-center
+    width="560"
     :title="$t('dialogTipText.eidtFile')">
-    <el-form ref="ruleFormRef" style="max-width: 600px" :model="ruleForm" :rules="rules" label-width="116"
-      class="kl-ruleForm kf-ruleForm" label-position="left">
-      <el-form-item :label="$t('assetFile.docName')" prop="name" class="docName">
-        <el-input v-model="ruleForm.name" :placeholder="$t('assetLibrary.message.pleasePlace')" />
+    <el-form
+      ref="ruleFormRef"
+      style="max-width: 600px"
+      :model="ruleForm"
+      :rules="rules"
+      label-width="116"
+      class="kl-ruleForm kf-ruleForm"
+      label-position="left">
+      <el-form-item
+        :label="$t('assetFile.docName')"
+        prop="name"
+        class="docName">
+        <el-input
+          v-model="ruleForm.name"
+          :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
-      <el-form-item :label="$t('assetLibrary.analyticMethod')" prop="parser_method">
-        <el-select v-model="ruleForm.parser_method" :placeholder="$t('assetLibrary.message.pleaseChoose')"
-          :teleported="false" :suffix-icon="IconCaretDown">
-          <el-option v-for="item in parserMethodOptions" :key="item.value" :label="item.label" :value="item.value" />
+      <el-form-item
+        :label="$t('assetLibrary.analyticMethod')"
+        prop="parser_method">
+        <el-select
+          v-model="ruleForm.parser_method"
+          :placeholder="$t('assetLibrary.message.pleaseChoose')"
+          :teleported="false"
+          :suffix-icon="IconCaretDown">
+          <el-option
+            v-for="item in parserMethodOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('assetFile.category')" prop="type_id">
-        <el-select v-model="ruleForm.type_id" popper-class="docTypeClass"
-          :placeholder="$t('assetLibrary.message.pleaseChoose')" :suffix-icon="IconCaretDown" :teleported="false">
-          <el-option v-for="item in filterCategoryList" :key="item.value" :label="item.label" :value="item.value" />
+      <el-form-item
+        :label="$t('assetFile.category')"
+        prop="type_id">
+        <el-select
+          v-model="ruleForm.type_id"
+          popper-class="docTypeClass"
+          :placeholder="$t('assetLibrary.message.pleaseChoose')"
+          :suffix-icon="IconCaretDown"
+          :teleported="false">
+          <el-option
+            v-for="item in filterCategoryList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('assetLibrary.fileChunkSize')" prop="szie" class="fileChunkSize">
-        <el-input-number class="config-size" v-model="ruleForm.chunk_size" :min="512" :max="1024" />
+      <el-form-item
+        :label="$t('assetLibrary.fileChunkSize')"
+        prop="szie"
+        class="fileChunkSize">
+        <el-input-number
+          class="config-size"
+          v-model="ruleForm.chunk_size"
+          :min="512"
+          :max="1024" />
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
           <span class="iconAlarmOrange">
@@ -359,20 +638,31 @@
         </div>
       </el-form-item>
       <el-form-item class="kl-ops-btn">
-        <el-button class="resetBtn" type="primary" :disabled="isSubmitDisabled" @click="submitForm(ruleFormRef)">
+        <el-button
+          class="resetBtn"
+          type="primary"
+          :disabled="isSubmitDisabled"
+          @click="submitForm(ruleFormRef)">
           {{ $t('btnText.confirm') }}
         </el-button>
-        <el-button class="resetBtn cancelBtn" @click="handleCancelVisible()">
+        <el-button
+          class="resetBtn cancelBtn"
+          @click="handleCancelVisible()">
           {{ $t('btnText.cancel') }}
         </el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
-  <UploadProgress :isKnowledgeFileUpload="true" :showUploadNotify="uploadTaskListData.showUploadNotify"
-    :uploadingList="uploadTaskListData.uploadingList" :showTaskList="uploadTaskListData.showTaskList"
+  <UploadProgress
+    :isKnowledgeFileUpload="true"
+    :showUploadNotify="uploadTaskListData.showUploadNotify"
+    :uploadingList="uploadTaskListData.uploadingList"
+    :showTaskList="uploadTaskListData.showTaskList"
     :handleShowTaskList="uploadTaskListData.handleShowTaskList"
-    :handleUploadRestart="uploadTaskListData.handleUploadRestart" :taskListImportDate="taskListImportDate"
-    :importTaskTotal="importTaskTotal" :isShowAllClear="false" />
+    :handleUploadRestart="uploadTaskListData.handleUploadRestart"
+    :taskListImportDate="taskListImportDate"
+    :importTaskTotal="importTaskTotal"
+    :isShowAllClear="false" />
 </template>
 <script setup lang="ts">
 import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
@@ -429,6 +719,7 @@ const opsItem = ref();
 const multipleTable = ref();
 const selectionFileData = ref<any[]>([]);
 const importTaskTotal = ref(0);
+const checkTableSelecData = ref([]);
 const searchPayload = ref<any>({
   name: '',
   document_type_list: [],
@@ -672,6 +963,13 @@ const handleConfirmFileAnalytic = () => {
   });
 };
 
+const handCheckTableData = (tableList) => {
+  checkTableSelecData.value = tableList.filter((checkItem) => {
+    const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
+    return selecData && selecData.task.status !== 'success';
+  });
+};
+
 const handeAssetLibraryData = (
   payload: DocListRequest,
   loadingStatus: boolean,
@@ -683,6 +981,9 @@ const handeAssetLibraryData = (
   loading.value = loadingStatus;
   KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
+      if (res.data_list?.length) {
+        handCheckTableData(res.data_list);
+      }
       if (!res?.data_list?.length && currentPage.value !== 1) {
         currentPage.value = 1;
         handleSearchOpsData(true, true);
@@ -721,6 +1022,9 @@ const handlePollAssetFileData = () => {
           return fileData || item;
         });
       }
+      if (res.data_list?.length) {
+        handCheckTableData(res.data_list);
+      }
     })
     .finally(() => {
       loading.value = false;
@@ -734,24 +1038,22 @@ const hanldeSearhNameFilter = (filterName: string) => {
 const groupStore = useGroupStore();
 const { navGroup } = storeToRefs(groupStore);
 const handleJumpFileSection = (row: any) => {
-
   let groupNav = navGroup.value;
   groupNav[3] = {
     name: row.name,
     path: '/documentInfo',
     query: {
       kb_id: route.query.kb_id,
-      file_id: row.id
-    }
-  }
+      file_id: row.id,
+    },
+  };
   router.push({
     path: '/documentInfo',
     query: {
       kb_id: route.query.kb_id,
-      file_id: row.id
-    }
-  })
-
+      file_id: row.id,
+    },
+  });
 };
 
 const handleSearchData = () => {
@@ -927,6 +1229,7 @@ const handleSelectDeleteKl = () => {
 };
 
 const handleSelectRunKl = () => {
+  checkTableSelecData.value = selectionFileData.value;
   KfAppAPI.runLibraryFile({
     ids: selectionFileData.value.map((item) => {
       return item.id;
@@ -1046,8 +1349,8 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
   sortFilter.value = sortValue
     ? {
-      [sortKey]: sortValue,
-    }
+        [sortKey]: sortValue,
+      }
     : {};
   handleSearchOpsData(true, true);
 };
@@ -1099,7 +1402,11 @@ const handleDownloadFile = async (downloadData: any) => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    await new Promise(resolve => setTimeout(resolve, 333)); // 添加延迟
+    await new Promise((resolve) => setTimeout(resolve, 333)); // 添加延迟
   }
+};
+
+const checkSelecTable = (row) => {
+  return checkTableSelecData.value.every((item) => item?.id !== row?.id);
 };
 </script>

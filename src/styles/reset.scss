@@ -545,6 +545,18 @@ div:focus {
   }
 }
 
+.el-link--primary{
+  display: inline-block;
+    width: 100%;
+  span{
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
 .custom-header,
 .asset-custom-header {
   .el-date-editor--datetimerange {
