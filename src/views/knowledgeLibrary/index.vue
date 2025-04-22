@@ -38,7 +38,7 @@
             v-for="(item, index) in taskExportList"
             :key="item.id"
             class="item">
-            <di class="item-box">
+            <div class="item-box">
               <div class="item-info">
                 <div class="item-name">
                   <h2 class="item-name-text">
@@ -53,7 +53,7 @@
               <div class="item-close">
                 <IconX @click="handleCloseSingleUpload(item.taskId)" />
               </div>
-            </di>
+            </div>
             <div class="taskStatusPer">
               <div
                 class="waitExport"
@@ -180,7 +180,7 @@
               @change="handleSelectAll"
             />
           </span>
-          <span class="multipleSelectNum">
+          <span v-if="multiple && switchIcon === 'thumb'" class="multipleSelectNum">
             已选 <span>{{ multipleSelection.length }}</span> 项
           </span>
         </div>

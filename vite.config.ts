@@ -198,6 +198,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         'element-plus/es/components/avatar/style/css',
         'element-plus/es/components/descriptions/style/css',
         'element-plus/es/components/descriptions-item/style/css',
+        `monaco-editor/esm/vs/language/json/json.worker`,
+        `monaco-editor/esm/vs/language/css/css.worker`,
+        `monaco-editor/esm/vs/language/html/html.worker`,
+        `monaco-editor/esm/vs/language/typescript/ts.worker`,
+        `monaco-editor/esm/vs/editor/editor.worker`,
       ],
     },
     // 构建配置
