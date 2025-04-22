@@ -13,7 +13,7 @@
 
             .home-menu {
                 display: inline-block;
-                max-width: 80px;
+                max-width: 120px;
                 height: 16px;
                 font-size: 12px;
                 line-height: 16px;
@@ -30,9 +30,17 @@
                 }
                 .last-name{
                     text-overflow: ellipsis;
-                    width: 130px;
+                    max-width: 130px;
                     overflow: hidden;
                     white-space: nowrap;
+                }
+            }
+
+            .group-menu-item{
+                display: flex;
+                .library-name{
+                    display: flex;
+                    align-items: center;
                 }
             }
         }
