@@ -85,6 +85,10 @@
           padding: 8px 15px;
         }
 
+        .dataSetBtn{
+          margin-left: unset !important;
+        }
+
         .is-disabled {
           background: #ebedf3;
         }
@@ -439,6 +443,17 @@
   }
   .el-dropdown-menu__item {
     font-size: 12px;
+  }
+}
+
+.el-dropdown.is-disabled{
+  .el-button{
+    color: var(--o-button-color_disabled) !important;
+  }
+  .el-button:hover{
+    color: var(--o-button-color_disabled) !important;
+    background-color: var(--o-button-bg-color_disabled) !important;
+    border-color: var(--o-button-border-color_disabled) !important;
   }
 }
 
