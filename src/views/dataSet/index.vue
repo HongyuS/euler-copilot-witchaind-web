@@ -18,8 +18,7 @@
           @visible-change="handleBatchDownBth"
           :disabled="!(selectionDataSetList.length > 0)">
           <el-button
-            :class="batchDownBth ? 'upBtn' : 'downBtn'"
-            :disabled="!(selectionDataSetList.length > 0)">
+            :class="batchDownBth ? 'upBtn' : 'downBtn'">
             {{ $t('btnText.batchOps') }}
             <el-icon
               class="el-icon--right"
@@ -145,7 +144,7 @@
                   ref="statusRef"
                   @click.stop
                   :class="
-                    searchPayload?.status?.length > 0 || statusFilterVisible
+                    searchPayload?.status?.length || statusFilterVisible
                       ? 'searchIconIsActive'
                       : ''
                   ">

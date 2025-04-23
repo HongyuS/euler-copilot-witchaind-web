@@ -57,10 +57,10 @@
           :suffix-icon="IconCaretDown"
           :teleported="false">
           <el-option
-            v-for="item in [{value:'测试',label:'测试'}]"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value" />
+            v-for="item in []"
+            :key="item?.value"
+            :label="item?.label"
+            :value="item?.value" />
         </el-select>
       </el-form-item>
       <el-form-item
