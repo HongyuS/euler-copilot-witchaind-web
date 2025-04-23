@@ -145,6 +145,7 @@ export default {
     edit: '编辑',
     delete: '删除',
     batchDelete: '批量删除',
+    batchExport: '批量导出',
     retry: '重试',
     restart: '重启',
     clearAll: '全部清空',

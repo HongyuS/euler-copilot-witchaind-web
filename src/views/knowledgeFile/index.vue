@@ -16,6 +16,7 @@
             type="primary"
             style="margin-right: 8px"
             @click="handleImportKnowledge"
+            :disabled="!(selectionFileData.length > 0)"
             class="dataSetBtn">
             {{ $t('生成数据集') }}
           </el-button>
@@ -653,6 +654,9 @@
       </el-form-item>
     </el-form>
   </el-dialog>
+  <DataSetDialog
+    :dialogEditVisible="true"
+  />
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -665,7 +669,6 @@
     :isShowAllClear="false" />
 </template>
 <script setup lang="ts">
-import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import '@/styles/knowledgeFile.scss';
 import {
@@ -692,6 +695,7 @@ import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocal
 import { FileForm, DocumentType } from './fileConfig';
 import router from '@/router';
 import { useGroupStore } from '@/store/modules/group';
+import DataSetDialog from './dataSetDialog.vue';
 
 const route = useRoute();
 const dialogImportVisible = ref(false);
@@ -966,7 +970,7 @@ const handleConfirmFileAnalytic = () => {
 const handCheckTableData = (tableList) => {
   checkTableSelecData.value = tableList.filter((checkItem) => {
     const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
-    return selecData && selecData.task.status === 'pending';
+    return selecData && ['pending','running'].includes(selecData.task.status);
   });
 };
 
