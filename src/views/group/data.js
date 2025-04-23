@@ -1,3 +1,40 @@
-const groupList = [];
+const groupList = [
+    {
+        id:'11111',
+        name:'团队名称1',
+        type:'公开',
+        desc:'这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介',
+        owner:'zhangsan',
+        member:8
+    },{
+        id:'22222',
+        name:'团队名称2',
+        type:'公开',
+        desc:'这是团队名称1的团队简介',
+        owner:'zhangsan',
+        member:8
+    },{
+        id:'33333',
+        name:'团队名称3',
+        type:'私密',
+        desc:'这是团队名称1的团队简介',
+        owner:'zhangsan',
+        member:8
+    },{
+        id:'44444',
+        name:'团队名称4',
+        type:'私密',
+        desc:'这是团队名称1的团队简介',
+        owner:'zhangsan',
+        member:8
+    },{
+        id:'5555',
+        name:'团队名称5',
+        type:'私密',
+        desc:'这是团队名称1的团队简介',
+        owner:'zhangsan',
+        member:8
+    },
+];
 
 export { groupList };

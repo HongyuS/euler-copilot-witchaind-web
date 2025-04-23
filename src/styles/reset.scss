@@ -448,7 +448,8 @@ div:focus {
 
 .model-dialog,
 .create-dialog,
-.edit-dialog {
+.edit-dialog,
+.dataSet-edit-dialog {
   .el-form-item__content {
     button.is-disabled {
       background: #b8d9ff !important;
