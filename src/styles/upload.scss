@@ -39,6 +39,8 @@
       margin: 8px 0;
       font-size: var(--o-font-size-info);
       line-height: var(--o-line-height-info);
+      display: flex;
+      align-items: center;
     }
 
     &.has-files {

@@ -33,8 +33,9 @@
                     <div v-else class="library-name" @click="handleGroupClick(2,navGroup[2])">
                         <el-link class="home-menu" @click="() => router.push('/groupInfo')" type="primary"
                             target="_blank" :underline="false">
-                            /
-                            {{ navGroup[2].name }}
+                            <span class="last-name">/
+                                {{ navGroup[2].name }}
+                            </span>
                         </el-link>
                     </div>
                 </div>

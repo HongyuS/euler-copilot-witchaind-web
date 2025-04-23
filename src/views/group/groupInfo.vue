@@ -2,11 +2,9 @@
   <GroupLayout>
     <!-- 知识库内容 -->
     <template v-slot:default>
-      <div v-show="groupMenu === 'knowledge'">
         <div>
           <knowledgeLibrary :groupName="groupName" />
         </div>
-      </div>
     </template>
   </GroupLayout>
 </template>

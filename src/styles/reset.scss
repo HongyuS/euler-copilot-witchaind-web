@@ -223,17 +223,15 @@ $newHoverBg: linear-gradient(
  */
 .el-button {
   &:hover {
-    color: #5d7dffc0 !important;
-    border-color: #5d7dffc0 !important;
+    color: #5d7dffc0 ;
+    border-color: #5d7dffc0 ;
   }
 }
 .el-button--primary,
 .bgThumb {
-  // background: $newbg !important;
   border-color: #c7d2fbc0 !important;
   &:hover {
     color: white !important;
-    // background: $newHoverBg !important;
     border-color: #c7d2fbc0 !important;
   }
 }
@@ -297,7 +295,9 @@ div:focus {
     font-size: 12px;
   }
 }
-
+.el-dialog{
+  border-radius: 8px !important;
+}
 .el-dialog__header {
   .el-dialog__title {
     font-size: 16px;

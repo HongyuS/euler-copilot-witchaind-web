@@ -29,7 +29,7 @@
           v-for="(item, index) in taskStatusList"
           :key="item.id"
           class="item">
-          <di class="item-box">
+          <div class="item-box">
             <div class="item-info">
               <div
                 :class="
@@ -56,7 +56,7 @@
               v-if="typeof item.id === 'string'">
               <IconX @click="handleCloseSingleUpload(item.taskId)" />
             </div>
-          </di>
+          </div>
           <el-progress
             :percentage="item.percent"
             v-if="item.uploadStatus !== 'canceled'"

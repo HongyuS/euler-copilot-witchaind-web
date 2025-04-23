@@ -1,5 +1,5 @@
 <template>
-  <CustomLoading :loading="loading" />
+  <CustomLoading :dark="false" :loading="loading" />
 
   <div class="kf-section-container">
     <div class="kf-section-container-action">

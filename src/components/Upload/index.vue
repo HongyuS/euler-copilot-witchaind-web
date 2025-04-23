@@ -19,6 +19,7 @@
           </el-button>
           <el-button
             @click="batchDelete()"
+            :disabled="multipleSelection.length === 0"
             class="delFileBtn cancelBtn">
             {{ $t('btnText.batchDelete') }}
           </el-button>
@@ -34,7 +35,11 @@
           </div>
         </div>
       </div>
-      <div class="list-tip">{{ $t('dialogTipText.continueAdd') }}</div>
+      <div class="list-tip">
+        <el-icon>
+          <IconAlertCircle/>
+        </el-icon>
+        {{ $t('dialogTipText.continueAdd') }}</div>
     </div>
     <el-upload
       ref="uploadRef"
@@ -139,7 +144,7 @@
 <script lang="ts" setup>
 import { computed, reactive, ref } from 'vue';
 import '@/styles/upload.scss';
-import { IconUpload, IconError } from '@computing/opendesign-icons';
+import { IconUpload, IconError, IconAlertCircle } from '@computing/opendesign-icons';
 import type { UploadFile, UploadProgressEvent } from 'element-plus/es/components/upload/src/upload';
 const { t } = useI18n();
 import { ElMessage } from 'element-plus';
