@@ -45,7 +45,7 @@
       <div class="kf-section-container-right">
         <div class="kf-section-container-table-ops">
           <div class="kf-pre-title">{{ $t('assetFile.contentView') }}</div>
-          <div class="kf-btn-search">
+          <div v-if="fileInfo?.task?.status === 'success'"  class="kf-btn-search">
             <el-input
               ref="inputRef"
               v-model="textkeyWord"
@@ -132,6 +132,7 @@
             </el-input>
           </div>
           <el-dropdown
+            v-if="fileInfo?.task?.status === 'success'" 
             placement="bottom"
             popper-class="dropdown-container kf-section-ops-dowlon"
             @visible-change="handleBatchDownBth">
@@ -166,7 +167,7 @@
             </template>
           </el-dropdown>
         </div>
-        <div class="kf-section-container-table-box">
+        <div v-if="fileInfo?.task?.status === 'success'" class="kf-section-container-table-box">
           <el-table
             :data="fileTableList.data"
             ref="fileSectionTable"
@@ -211,6 +212,15 @@
             :total="totalCount"
             @change="handleChangePage"
             popper-class="kbLibraryPage" />
+        </div>
+        <div v-if="fileInfo?.task?.status === 'pending'">
+          <el-empty description="等待解析" />
+        </div>
+        <div v-if="fileInfo?.task?.status === 'running'">
+          <el-empty description="解析中" />
+        </div>
+        <div v-if="fileInfo?.task?.status === 'error'">
+          <el-empty description="解析失败" />
         </div>
       </div>
     </div>
