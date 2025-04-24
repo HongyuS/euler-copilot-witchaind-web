@@ -437,7 +437,6 @@ const uploadFiles = () => {
           if (uploadFileNumber === fileTableList.data.length) {
             props.handleQueryTaskList();
             fileTableList.data = [];
-            props?.handleImportLoading(false);
           }
         },
         fileInfo: item
