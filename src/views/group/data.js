@@ -1,40 +1,92 @@
 const groupList = [
-    {
-        id:'11111',
-        name:'团队名称1',
-        type:'公开',
-        desc:'这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介',
-        owner:'zhangsan',
-        member:8
-    },{
-        id:'22222',
-        name:'团队名称2',
-        type:'公开',
-        desc:'这是团队名称1的团队简介',
-        owner:'zhangsan',
-        member:8
-    },{
-        id:'33333',
-        name:'团队名称3',
-        type:'私密',
-        desc:'这是团队名称1的团队简介',
-        owner:'zhangsan',
-        member:8
-    },{
-        id:'44444',
-        name:'团队名称4',
-        type:'私密',
-        desc:'这是团队名称1的团队简介',
-        owner:'zhangsan',
-        member:8
-    },{
-        id:'5555',
-        name:'团队名称5',
-        type:'私密',
-        desc:'这是团队名称1的团队简介',
-        owner:'zhangsan',
-        member:8
-    },
+  {
+    id: '11111',
+    name: '团队名称1',
+    type: '公开',
+    desc: '这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介',
+    owner: 'zhangsan',
+    member: 8,
+  },
+  {
+    id: '22222',
+    name: '团队名称2',
+    type: '公开',
+    desc: '这是团队名称1的团队简介',
+    owner: 'zhangsan',
+    member: 8,
+  },
+  {
+    id: '33333',
+    name: '团队名称3',
+    type: '私密',
+    desc: '这是团队名称1的团队简介',
+    owner: 'zhangsan',
+    member: 8,
+  },
+  {
+    id: '44444',
+    name: '团队名称4',
+    type: '私密',
+    desc: '这是团队名称1的团队简介',
+    owner: 'zhangsan',
+    member: 8,
+  },
+  {
+    id: '5555',
+    name: '团队名称5',
+    type: '私密',
+    desc: '这是团队名称1的团队简介',
+    owner: 'zhangsan',
+    member: 8,
+  },
+];
+let testList = [
+  {
+    id: 1,
+    dataName: 'CVPR-2023',
+    children: [
+      {
+        id: 11,
+        testName: '图像分类测试',
+        desc: 'ResNet50在ImageNet数据集上的基准测试',
+        modelType: 'ResNet-50',
+        status: 'success',
+        score: 92,
+        creator: '张三',
+        date: '2023-03-15 14:30',
+      },
+      {
+        id: 12,
+        testName: '图像分类测试',
+        desc: 'ResNet50在ImageNet数据集上的基准测试',
+        modelType: 'ResNet-50',
+        status: 'running',
+        score: 92,
+        creator: '张三',
+        date: '2023-03-15 14:30',
+      },
+      {
+        id: 13,
+        testName: '图像分类测试',
+        desc: 'ResNet50在ImageNet数据集上的基准测试',
+        modelType: 'ResNet-50',
+        status: 'failed',
+        score: 92,
+        creator: '张三',
+        date: '2023-03-15 14:30',
+      },
+      {
+        id: 14,
+        testName: '图像分类测试',
+        desc: 'ResNet50在ImageNet数据集上的基准测试',
+        modelType: 'ResNet-50',
+        status: 'pending',
+        score: 92,
+        creator: '张三',
+        date: '2023-03-15 14:30',
+      },
+    ],
+  },
 ];
 
-export { groupList };
+export { groupList, testList };
