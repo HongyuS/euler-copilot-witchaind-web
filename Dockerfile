@@ -7,7 +7,6 @@ RUN npm install pnpm -g --registry=https://registry.npmmirror.com && \
     pnpm install --registry=https://registry.npmmirror.com && \
     pnpm run build
 
-
 FROM hub.oepkgs.net/openeuler/openeuler:22.03-lts-sp4
 
 ENV TZ Asia/Shanghai
