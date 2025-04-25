@@ -602,7 +602,7 @@ const handleModelVisible = (visible: boolean) => {
   }
 
   .el-dialog__title {
-    font-family: 'HarmonyOS Sans SC Bold', sans-serif !important;
+    font-family: 'HarmonyOS Sans SC Regular', sans-serif !important;
     font-weight: 800;
   }
 
