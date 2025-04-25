@@ -15,7 +15,7 @@
           <el-button
             type="primary"
             style="margin-right: 8px"
-            @click="handleImportKnowledge"
+            @click="handleGenerateDataSet"
             :disabled="!(selectionFileData.length > 0)"
             class="dataSetBtn">
             {{ $t('生成数据集') }}
@@ -654,9 +654,7 @@
       </el-form-item>
     </el-form>
   </el-dialog>
-  <DataSetDialog
-    :dialogEditVisible="true"
-  />
+  <DataSetDialog :generateDialogVisible="generateDialogVisible" />
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -724,6 +722,7 @@ const multipleTable = ref();
 const selectionFileData = ref<any[]>([]);
 const importTaskTotal = ref(0);
 const checkTableSelecData = ref([]);
+const generateDialogVisible = ref(false);
 const searchPayload = ref<any>({
   name: '',
   document_type_list: [],
@@ -970,7 +969,7 @@ const handleConfirmFileAnalytic = () => {
 const handCheckTableData = (tableList) => {
   checkTableSelecData.value = tableList.filter((checkItem) => {
     const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
-    return selecData && ['pending','running'].includes(selecData.task.status);
+    return selecData && ['pending', 'running'].includes(selecData.task.status);
   });
 };
 
@@ -1412,5 +1411,9 @@ const handleDownloadFile = async (downloadData: any) => {
 
 const checkSelecTable = (row) => {
   return checkTableSelecData.value.every((item) => item?.id !== row?.id);
+};
+
+const handleGenerateDataSet = () => {
+  generateDialogVisible.value = true;
 };
 </script>

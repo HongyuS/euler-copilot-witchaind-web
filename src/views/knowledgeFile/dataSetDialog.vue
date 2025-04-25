@@ -1,7 +1,7 @@
 <template>
   <el-dialog
-    v-if="false"
-    v-model="props.dialogEditVisible"
+    v-if="props.generateDialogVisible"
+    v-model="props.generateDialogVisible"
     class="dataSet-edit-dialog"
     align-center
     width="550"
@@ -116,7 +116,6 @@ const ruleForm = ref({
 });
 const ruleFormRef = ref();
 const isSubmitDisabled = ref(true);
-const value2 = ref(true);
 const rules = reactive({
   dataSetName: [
     {
@@ -148,7 +147,7 @@ const rules = reactive({
   ],
 })
 const props = defineProps({
-  dialogEditVisible: {
+  generateDialogVisible: {
     type: Boolean,
     default: false,
   },
