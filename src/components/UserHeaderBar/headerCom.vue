@@ -318,7 +318,7 @@ const handleMessage = (e: MessageEvent) => {
     CN: 'zh',
     EN: 'en',
   };
-  let lang = langObj[e.data.lang as keyof typeof langObj];
+  let lang = langObj[e.data.lang as keyof typeof langObj] ?? 'zh';
   locale.value = lang;
   appStore.changeLanguage(lang);
   localStorage.setItem('language', lang);
@@ -602,7 +602,7 @@ const handleModelVisible = (visible: boolean) => {
   }
 
   .el-dialog__title {
-    font-family: 'HarmonyOS Sans SC Bold', sans-serif !important;
+    font-family: 'HarmonyOS Sans SC Regular', sans-serif !important;
     font-weight: 800;
   }
 

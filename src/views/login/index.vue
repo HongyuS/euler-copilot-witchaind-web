@@ -468,7 +468,7 @@ const handleMessage = (e: MessageEvent) => {
     CN: 'zh',
     EN: 'en',
   };
-  let lang: string = langObj[e.data.lang as keyof typeof langObj];
+  let lang: string = langObj[e.data.lang as keyof typeof langObj] ?? 'zh';
   locale.value = lang;
   appStore.changeLanguage(lang);
   localStorage.setItem('language', lang);
