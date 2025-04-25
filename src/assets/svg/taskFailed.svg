@@ -1,0 +1,46 @@
+<svg width="192.376953" height="110.195312" viewBox="0 0 192.377 110.195" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<linearGradient x1="126.028969" y1="137.590866" x2="126.028969" y2="67.226517" id="paint_linear_1349_10176_0" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#B8BDC6"/>
+			<stop offset="0.110000" stop-color="#BABFC8" stop-opacity="0.968627"/>
+			<stop offset="0.260000" stop-color="#BFC4CC" stop-opacity="0.878431"/>
+			<stop offset="0.420000" stop-color="#C8CCD3" stop-opacity="0.741176"/>
+			<stop offset="0.610000" stop-color="#D4D7DE" stop-opacity="0.549020"/>
+			<stop offset="0.800000" stop-color="#E3E5EB" stop-opacity="0.301961"/>
+			<stop offset="1.000000" stop-color="#F5F6FA" stop-opacity="0.000000"/>
+		</linearGradient>
+	</defs>
+	<g opacity="0.170000">
+		<rect id="矩形" x="85.262695" y="71.839844" width="81.532555" height="67.982903" transform="rotate(180 85.262695 71.839844)" fill="url(#paint_linear_1349_10176_0)" fill-opacity="1.000000"/>
+	</g>
+	<rect id="矩形" x="85.262695" y="7.373047" width="81.532555" height="3.519391" transform="rotate(180 85.262695 7.373047)" fill="#FFFFFF" fill-opacity="1.000000"/>
+	<rect id="矩形" x="83.502930" y="6.288086" width="1.466413" height="1.466413" transform="rotate(180 83.502930 6.288086)" fill="#E1E4EA" fill-opacity="1.000000"/>
+	<rect id="矩形" x="80.817383" y="6.288086" width="1.466413" height="1.466413" transform="rotate(180 80.817383 6.288086)" fill="#E1E4EA" fill-opacity="1.000000"/>
+	<rect id="矩形" x="78.127930" y="6.288086" width="1.466413" height="1.466413" transform="rotate(180 78.127930 6.288086)" fill="#E1E4EA" fill-opacity="1.000000"/>
+	<rect id="矩形" x="79.012695" y="29.868164" width="69.654610" height="15.397335" transform="rotate(180 79.012695 29.868164)" fill="#E1E4EA" fill-opacity="1.000000"/>
+	<rect id="矩形" x="9.628906" y="9.628906" rx="4.814234" width="9.628468" height="9.628468" transform="rotate(180 9.628906 9.628906)" fill="#FFFFFF" fill-opacity="1.000000"/>
+	<path id="路径" d="M7.34 2.4L2.28 7.22" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M2.28 2.4L7.34 7.22" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M183.37 60.02C198.43 69.01 192.6 88.69 174.99 88.09C142.2 86.98 151.52 58.73 127.72 41.45" stroke="#6395FD" stroke-opacity="1.000000" stroke-width="0.750000" stroke-dasharray="4 4"/>
+	<circle id="椭圆形" cx="20.644531" cy="60.001953" r="2.231880" stroke="#6395FD" stroke-opacity="1.000000" stroke-width="0.750000"/>
+	<path id="路径" d="M116.59 68.63L178.17 68.63L178.17 109.69L111.89 109.69" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M148.26 22.44L33.88 22.44L33.88 94.33L88.22 94.33L88.22 106.99L70.66 106.99C70.16 106.96 69.69 107.22 69.43 107.64C69.18 108.07 69.18 108.6 69.43 109.03C69.69 109.46 70.16 109.71 70.66 109.69L111.79 109.69C112.51 109.65 113.08 109.06 113.08 108.34C113.08 107.62 112.51 107.02 111.79 106.99L94.22 106.99L94.22 94.33L148.26 94.33L148.26 22.44Z" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<rect id="矩形" x="33.887695" y="22.382812" width="114.380203" height="64.228882" fill="#FBFDFF" fill-opacity="1.000000"/>
+	<rect id="矩形" x="33.887695" y="22.382812" width="114.380203" height="64.228882" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000"/>
+	<path id="路径" d="M39.13 29.77L144.12 29.77" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round" stroke-linecap="round"/>
+	<rect id="矩形" x="139.207031" y="25.172852" width="1.742099" height="1.742099" fill="#B8BCC1" fill-opacity="1.000000"/>
+	<rect id="矩形" x="136.021484" y="25.172852" width="1.742099" height="1.742099" fill="#B8BCC1" fill-opacity="1.000000"/>
+	<rect id="矩形" x="142.400391" y="25.172852" width="1.742099" height="1.742099" fill="#B8BCC1" fill-opacity="1.000000"/>
+	<rect id="矩形" x="69.119141" y="35.367188" width="34.270069" height="39.716328" fill="#E8EBF2" fill-opacity="1.000000"/>
+	<path id="路径" d="M107.87 21.63C76.97 -2.83 35.36 7.51 41.82 43C45.45 62.93 31.39 72.77 22.03 61.78" stroke="#6395FD" stroke-opacity="1.000000" stroke-width="0.750000" stroke-dasharray="4 4"/>
+	<path id="路径" d="M99.94 10.54L99.94 10.54C98.79 9.03 100.5 7.33 102.02 8.47C103.18 9.99 101.46 11.7 99.94 10.54Z" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M172.68 58.64L172.68 58.64C171.52 57.13 173.24 55.42 174.75 56.57C175.91 58.08 174.19 59.79 172.68 58.64Z" stroke="#B8BCC1" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M81.18 50.74L81.18 59.04L81.18 80.99L106.45 80.99L115.65 71.56L115.65 41.3L102.08 41.3L103.59 44.96L99.68 51.37L101.96 54.8L99.84 57.37L99.09 62.61L96.49 57.37L98.08 54.8L93.78 51.08L96.11 44.83L92.02 41.3L81.23 41.3L81.18 50.74Z" fill="#F0F6FF" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="路径" d="M81.18 50.74L81.18 59.04L81.18 80.99L106.45 80.99L115.65 71.56L115.65 41.3L102.08 41.3L103.59 44.96L99.68 51.37L101.96 54.8L99.84 57.37L99.09 62.61L96.49 57.37L98.08 54.8L93.78 51.08L96.11 44.83L92.02 41.3L81.23 41.3L81.18 50.74Z" stroke="#91969B" stroke-opacity="1.000000" stroke-width="1.000000"/>
+	<path id="路径" d="M106.5 80.94L106.59 71.63L115.55 71.63L106.5 80.94Z" fill="#E8EBF2" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="路径" d="M106.59 71.63L115.55 71.63L106.5 80.94L106.59 71.63Z" stroke="#91969B" stroke-opacity="1.000000" stroke-width="1.000000"/>
+	<path id="形状" d="M102.118 67.2334C100.86 65.9746 98.9678 65.5986 97.3237 66.2793C95.6797 66.96 94.6079 68.5645 94.6079 70.3438C94.6079 72.123 95.6797 73.7275 97.3237 74.4082C98.9678 75.0889 100.86 74.7129 102.118 73.4541C103.836 71.7363 103.836 68.9512 102.118 67.2334ZM99.0088 71.0762L100.839 72.9062L101.569 72.1729L99.7388 70.3428L101.569 68.5127L100.839 67.7822L99.0088 69.6123L97.1787 67.7822L96.4453 68.5127L98.2754 70.3428L96.4453 72.1729L97.1787 72.9062L99.0088 71.0762Z" clip-rule="evenodd" fill="#6395FD" fill-opacity="1.000000" fill-rule="evenodd"/>
+</svg>

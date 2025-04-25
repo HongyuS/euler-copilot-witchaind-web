@@ -51,85 +51,87 @@
   }
 
   .statusFail,
-      .statusSuccess,
-      .statusCancel {
-        height: 24px;
+  .statusSuccess,
+  .statusCancel {
+    height: 24px;
+    width: fit-content;
+    padding: 0px 8px;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgb(255 255 255);
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  .statusFail {
+    background: rgb(227, 32, 32);
+  }
+
+  .statusSuccess {
+    background: rgb(36, 171, 54);
+  }
+
+  .statusCancel {
+    background: rgb(141, 152, 170);
+  }
+
+  .statusWaitIng {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  @keyframes rotate-img {
+    from {
+      transform: rotate(0);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .icon-loading {
+    height: 16px;
+    width: 16px;
+    background-repeat: no-repeat !important;
+    background-size: 100% !important;
+    display: inline-block;
+    background: url('/src/assets/icons/taskLoading.png');
+  }
+
+  .icon-box {
+    animation: rotate-img 0.8s infinite linear;
+  }
+
+  .statusGenerate {
+    display: flex;
+    align-items: center;
+
+    .percent-box {
+      .el-progress-bar {
+        width: 88px;
+      }
+      .el-progress__text {
         width: fit-content;
-        padding: 0px 8px;
-        font-size: 12px;
-        line-height: 24px;
-        color: rgb(255 255 255);
-        text-align: center;
-        border-radius: 2px;
       }
+    }
 
-      .statusFail {
-        background: rgb(227, 32, 32);
-      }
+    .el-progress__text {
+      width: 24px;
+      min-width: 18px;
+      color: rgb(0 0 0);
+    }
 
-      .statusSuccess {
-        background: rgb(36, 171, 54);
-      }
+    .statusGenerateText {
+      font-size: 12px;
+      font-family: 'HarmonyOS Sans SC Medium';
+      margin-left: 2px;
+      color: rgb(0 0 0);
+    }
+  }
 
-      .statusCancel {
-        background: rgb(141, 152, 170);
-      }
-
-      .statusWaitIng {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-      }
-
-      @keyframes rotate-img {
-        from {
-          transform: rotate(0);
-        }
-
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      .icon-loading {
-        height: 16px;
-        width: 16px;
-        background-repeat: no-repeat !important;
-        background-size: 100% !important;
-        display: inline-block;
-        background: url('/src/assets/icons/taskLoading.png');
-      }
-
-      .icon-box {
-        animation: rotate-img 0.8s infinite linear;
-      }
-
-      .statusGenerate {
-        display: flex;
-        align-items: center;
-
-        .percent-box {
-          .el-progress-bar {
-            width: 88px;
-          }
-          .el-progress__text {
-            width: fit-content;
-          }
-        }
-
-        .el-progress__text {
-          width: 24px;
-          min-width: 18px;
-          color: rgb(0 0 0);
-        }
-
-        .statusGenerateText {
-          font-size: 12px;
-          font-family: 'HarmonyOS Sans SC Medium';
-          margin-left: 2px;
-          color: rgb(0 0 0);
-        }
-      }
-
-
+  .dataSet-container-table-box{
+    margin-top: 16px;
+  }
 }
