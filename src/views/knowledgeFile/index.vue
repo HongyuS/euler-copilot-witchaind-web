@@ -15,7 +15,8 @@
           <el-button
             type="primary"
             style="margin-right: 8px"
-            @click="handleImportKnowledge"
+            @click="handleGenerateDataSet"
+            :disabled="!(selectionFileData.length > 0)"
             class="dataSetBtn">
             {{ $t('生成数据集') }}
           </el-button>
@@ -653,6 +654,7 @@
       </el-form-item>
     </el-form>
   </el-dialog>
+  <DataSetDialog :generateDialogVisible="generateDialogVisible" />
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -665,7 +667,6 @@
     :isShowAllClear="false" />
 </template>
 <script setup lang="ts">
-import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import '@/styles/knowledgeFile.scss';
 import {
@@ -692,6 +693,7 @@ import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocal
 import { FileForm, DocumentType } from './fileConfig';
 import router from '@/router';
 import { useGroupStore } from '@/store/modules/group';
+import DataSetDialog from './dataSetDialog.vue';
 
 const route = useRoute();
 const dialogImportVisible = ref(false);
@@ -720,6 +722,7 @@ const multipleTable = ref();
 const selectionFileData = ref<any[]>([]);
 const importTaskTotal = ref(0);
 const checkTableSelecData = ref([]);
+const generateDialogVisible = ref(false);
 const searchPayload = ref<any>({
   name: '',
   document_type_list: [],
@@ -966,7 +969,7 @@ const handleConfirmFileAnalytic = () => {
 const handCheckTableData = (tableList) => {
   checkTableSelecData.value = tableList.filter((checkItem) => {
     const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
-    return selecData && selecData.task.status === 'pending';
+    return selecData && ['pending', 'running'].includes(selecData.task.status);
   });
 };
 
@@ -1408,5 +1411,9 @@ const handleDownloadFile = async (downloadData: any) => {
 
 const checkSelecTable = (row) => {
   return checkTableSelecData.value.every((item) => item?.id !== row?.id);
+};
+
+const handleGenerateDataSet = () => {
+  generateDialogVisible.value = true;
 };
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <!-- <div class="evaluate-empty-content">
+  <div class="evaluate-empty-content" v-if="testList.length === 0">
         <EmptyStatus description="暂无评测信息，去数据集管理生成一个吧！" buttonText="去生成评测" buttonClass="group-btn" @click="handleCreate" />
-    </div> -->
-  <div class="group-table-box">
+    </div>
+  <div class="group-table-box" v-else>
     <div class="test-manage-header">
       <el-dropdown placement="bottom" popper-class="kf-ops-dowlon dropdown-container"
         @visible-change="handleBatchDownBth" :disabled="true">
@@ -32,7 +32,8 @@
       </el-dropdown>
       <el-input v-model="search" placeholder="请输入评测名称"  class="search-input" @keyup.enter="handleSearch" :suffix-icon="IconSearch"/>
     </div>
-    <el-table :data="testList" style="width: 100%; margin-bottom: 20px" row-key="id" bordered default-expand-all>
+    <el-table :data="testList" style="width: 100%; margin-bottom: 20px" row-key="id" 
+    bordered default-expand-all @selection-change="handleSelectionChange" >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="dataName" width="120" label="所用数据集" />
       <el-table-column prop="testName" width="120" label="测试名称">
@@ -121,6 +122,7 @@ const { } = storeToRefs(store);
 const { handleKnowledgeTab } = store;
 const batchDownBth = ref(false);
 const search = ref('');
+const selectedRow = ref([]);
 const currentPage = ref(1);
 const totalCount = ref(testList.length);
 const currentPageSize = ref(20);
@@ -140,6 +142,11 @@ const handleSearch = () => {};
 const handleCreate = () => {
   handleKnowledgeTab('dataset');
 }
+
+const handleSelectionChange = (val: any) => {
+  console.log(val);
+  selectedRow.value = val;
+};
 
 const handleChangePage = (pageNum: number, pageSize: number) => {
   currentPage.value = pageNum;
@@ -323,5 +330,9 @@ const handleDelete = (row: any) => {
   position: absolute !important;
   left: -50px;
   top: 16px;
+}
+.group-table-box .el-table__header-wrapper .el-table-column--selection .el-checkbox .is-indeterminate.el-checkbox__input .el-checkbox__inner::before{
+  top: 5px;
+  transform: scaleY(0.5) translateX(3px);
 }
 </style>

@@ -89,6 +89,11 @@
           margin-left: unset !important;
         }
 
+        .dataSetBtn.is-disabled{
+          color: var(--o-button-color_disabled) !important;
+          background: #ebedf3;
+        }
+
         .is-disabled {
           background: #ebedf3;
         }
@@ -473,12 +478,12 @@
   padding: 4px 8px;
 }
 
-.edit-dialog {
+.edit-dialog,.dataSet-edit-dialog {
   padding: 0 !important;
   .el-dialog__body {
     padding-bottom: 0 !important;
   }
-  .kf-ruleForm {
+  .kf-ruleForm,.dataSet-ruleForm {
     .el-form-item {
       gap: unset !important;
       margin-bottom: 24px;

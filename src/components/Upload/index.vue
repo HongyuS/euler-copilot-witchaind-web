@@ -296,7 +296,6 @@ const handleChange = (file: UploadFile) => {
 
 // 超出文件数量限制时的处理
 const handleExceed = (files: File[], uploadFiles: any[]) => {
-  console.log(uploadFiles.length);
   ElMessage.warning(`超出文件数量限制,最多只能上传 ${props.maxFileNum} 个文件!`);
 };
 

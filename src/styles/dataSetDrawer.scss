@@ -1,0 +1,151 @@
+.dataSetDrawerContainer{
+    width: 60% !important;
+    .el-drawer__header{
+        padding-top: 24px !important;
+        padding-left: 24px !important;
+        padding-bottom: 16px !important;
+        margin: unset !important;
+        .el-drawer__title{
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--o-text-color-primary);
+
+        }
+    }
+    .el-drawer__footer{
+        padding:0 24px 0 0 !important;
+        height: 48px !important;
+        display: flex;
+        align-items: center;
+        box-shadow: 0px -8px 16px 0px rgba(0, 0,0,0.1);
+        background-color: var(--o-bg-color-base);
+    }
+    .el-checkbox__input.is-indeterminate .el-checkbox__inner:before {
+        width: 12px !important;
+        top: 4px !important;
+    }
+
+    .dataSetInfoContainer{
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        padding: 16px 24px 24px !important;
+        background-color: var(--o-bg-color-light);
+        border-radius: 8px;
+        margin-bottom: 16px;
+        .dataSetInfoBox{
+            display: flex;
+            justify-content: space-between;
+        }
+        .dataSetInfoNameBox,.dataSetInfoDescBox{
+            display: flex;
+            gap: 24px;
+        }
+        .dataSetInfoNameBox{
+            align-items: center;
+        }
+
+        .dataSetInfoLabel{
+            color: var(--o-text-color-secondary);
+            font-size: 12px;
+            position: relative;
+        }
+
+        .dataSetInfoLabel::before{
+            position: absolute;
+            color: var(--el-color-danger);
+            content: "*";
+            left: -8px;
+            top: 1px;
+        }
+
+        .dataSetInfoTitle{
+            font-size: 14px;
+        }
+
+        .dataSetInfoContent{
+            width: 412px;
+            color: var(--o-text-color-primary);
+            font-size: 12px;
+        }
+
+        .dataSetInfoEdit{
+            color: #6395fd;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .dataSetInfoOps{
+            display: flex;
+            gap: 8px;
+            color: #6395fd;
+            cursor: pointer;
+            font-size: 12px;
+        }
+    }
+
+    .dataSetInfoCenterBox{
+        display: flex;
+        justify-content:space-between;
+        margin-bottom: 8px;
+        .dataSetInfoRight{
+            display: flex;
+            gap: 8px;
+            .dataSetListBox,.dataSetScoreBox{
+                height: 32px;
+                padding:0 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: var(--o-bg-color-dark);
+                border-radius: 4px;
+                .dataSetListIcon{
+                    margin-top: 5px;
+                    margin-right: 4px;
+                }
+                .dataSetScoreIcon{
+                    margin-top: 4px;
+                    margin-right: 4px;
+                }
+                .dataSetListText,.dataSetScoreText{
+                    margin-right: 8px;
+                    color: var(--o-text-color-secondary);
+                }
+
+                .dataSetListNumber{
+                    font-size: 14px;
+                }
+
+                .dataSetScoreNumber{
+                    color: var(--o-color-major);
+                    font-size: 14px;
+                }
+            }
+        }
+        .el-button.is-disabled, .el-button.is-disabled:hover {
+            background-color: #ebedf3 !important;
+            background-image: none;
+            border-color: unset !important;
+           color: var(--o-button-color_disabled) !important;
+            cursor: not-allowed;
+        }
+    }
+    
+      .el-table tbody tr td:first-child .cell {
+        padding-left: 16px !important;
+      }
+    
+      .el-table tbody .el-table__cell:not(.el-table__expanded-cell):first-child,
+      .el-table thead .cell,
+      .el-table tbody .el-table-column--selection + th.el-table__cell,
+      .el-table-column--selection + td.el-table__cell {
+        padding: unset !important;
+      }
+     tbody .el-table__cell{
+        padding: 0 !important;
+      }
+      .el-table__row .cell{
+        padding: 8px !important;
+      }
+}
