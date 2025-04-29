@@ -285,7 +285,7 @@
               </div>
               <div class="kl-card-file-icon">
                 <img
-                  src="/src/assets/images/file.png"
+                  src="/src/assets/images/file_count.svg"
                   class="filePng" />
                 <div class="kl-card-file">
                   <span class="kl-file-num">{{ item.document_count }}</span>
@@ -297,7 +297,7 @@
               </div>
               <div class="kl-card-file-icon">
                 <img
-                  src="/src/assets/images/file.png"
+                  src="/src/assets/images/file_size.svg"
                   class="filePng" />
                 <div class="kl-card-file">
                  {{ bytesToSize(item.document_size) }}
@@ -305,7 +305,7 @@
               </div>
               <div class="kl-card-timer-icon">
                 <img
-                  src="/src/assets/images/timer.png"
+                  src="/src/assets/images/date_time.svg"
                   class="timePng" />
                 <div class="kl-card-timer">
                   <TextSingleTootip :content="convertUTCToLocalTime(item.created_time)" />

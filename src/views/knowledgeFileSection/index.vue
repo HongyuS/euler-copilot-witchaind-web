@@ -214,13 +214,13 @@
             popper-class="kbLibraryPage" />
         </div>
         <div v-if="fileInfo?.task?.status === 'pending'">
-          <el-empty description="等待解析" />
+          <el-empty description="等待解析" image="src/assets/images/empty_pending.svg" />
         </div>
         <div v-if="fileInfo?.task?.status === 'running'">
-          <el-empty description="解析中" />
+          <el-empty description="解析中" image="src/assets/images/empty_running.svg" />
         </div>
         <div v-if="fileInfo?.task?.status === 'error'">
-          <el-empty description="解析失败" />
+          <el-empty description="解析失败" image="src/assets/images/empty_failed.svg" />
         </div>
       </div>
     </div>

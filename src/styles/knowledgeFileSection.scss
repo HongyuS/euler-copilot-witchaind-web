@@ -81,6 +81,16 @@
       border-top-right-radius: 4px;
       border-bottom-right-radius: 4px;
 
+      .el-empty{
+        display: flex;
+        align-items: center;
+        height: calc(100vh - 400px);
+      .el-empty__image{
+          width: 320px;
+          height: 130px;
+        }
+      }
+
       .kf-section-container-table-ops {
         display: flex;
         gap: 24px;

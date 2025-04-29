@@ -57,10 +57,8 @@
                                 <div class="group-card-footer">
                                     <div class="info">
                                         @{{ item.authorName }}
-                                        <span style="margin-left: 16px;">
-                                            <el-icon>
-                                                <User />
-                                            </el-icon>
+                                        <span class="member-count">
+                                            <img src="@/assets/images/member_count.svg" />
                                             {{ item.memberCount }}人
                                         </span>
                                     </div>
