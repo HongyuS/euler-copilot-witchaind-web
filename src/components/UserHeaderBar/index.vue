@@ -1,6 +1,6 @@
 <template>
   <div class="user-platform-header">
-    <HeaderCom />
+    <el-header />
     <div class="knowledge-welcome">
       <div class="knowledge-welcome-text">
         <h1>{{ `Hi, ${$t('assetLibrary.welcomeUsePro')}` }}</h1>
@@ -15,7 +15,6 @@
 <script setup lang="ts">
 // 内部依赖
 import '@/styles/headerBar.scss';
-import HeaderCom from './headerCom.vue';
 </script>
 <style lang="scss" scoped>
 .knowledge-welcome {

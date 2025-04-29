@@ -159,10 +159,10 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>
+                <el-dropdown-item @click="handleBatchDelete" >
                   {{ $t('btnText.batchDelete') }}
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item @click="handleBatchExport" >
                   {{ $t('btnText.batchExport') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -180,7 +180,7 @@
               @change="handleSelectAll"
             />
           </span>
-          <span v-if="multiple && switchIcon === 'thumb'" class="multipleSelectNum">
+          <span v-if="multipleSelection.length>0 " class="multipleSelectNum">
             已选 <span>{{ multipleSelection.length }}</span> 项
           </span>
         </div>
@@ -223,7 +223,6 @@
       </div>
       <div
         class="kl-card-box"
-        @scroll="handleScroll"
         ref="klCardBox"
         v-if="switchIcon === 'thumb'">
         <div
@@ -755,6 +754,13 @@ const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 
+const handleBatchDelete = () => {
+  console.log(multipleSelection.value);
+}
+
+const handleBatchExport = () => {
+}
+
 const handleMultipleSelect = () => {
   multiple.value = !multiple.value;
   handleSelectAll(false);
@@ -845,6 +851,9 @@ const handleSwitch = (switchType: string) => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   knoledgekeyWord.value = '';
+  multipleSelection.value = [];
+  isIndeterminate.value = false;
+
   handleQueryKbLibrary({
     page_number: currentPage.value,
     page_size: currentPageSize.value,
@@ -1168,7 +1177,8 @@ const handleCancelVisible = () => {
   dialogCreateVisible.value = false;
 };
 
-const handleJumpAssets = (kbItem: any) => {
+const handleJumpAssets = async (kbItem: any) => {
+  await router.push({path:'/libraryInfo',query:{kb_id:kbItem.id}},);
   let groupNav = navGroup.value;
   groupNav[2]={
       name:kbItem.name,
@@ -1176,7 +1186,6 @@ const handleJumpAssets = (kbItem: any) => {
       query:{
         kb_id:kbItem.id
       }}
-  router.push({path:'/libraryInfo',query:{kb_id:kbItem.id}},);
   
 };
 
