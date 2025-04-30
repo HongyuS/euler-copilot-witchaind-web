@@ -1040,7 +1040,14 @@ const hanldeSearhNameFilter = (filterName: string) => {
 };
 const groupStore = useGroupStore();
 const { navGroup } = storeToRefs(groupStore);
-const handleJumpFileSection = (row: any) => {
+const handleJumpFileSection = async (row: any) => {
+  await router.push({
+    path: '/documentInfo',
+    query: {
+      kb_id: route.query.kb_id,
+      file_id: row.id,
+    },
+  });
   let groupNav = navGroup.value;
   groupNav[3] = {
     name: row.name,
@@ -1050,13 +1057,6 @@ const handleJumpFileSection = (row: any) => {
       file_id: row.id,
     },
   };
-  router.push({
-    path: '/documentInfo',
-    query: {
-      kb_id: route.query.kb_id,
-      file_id: row.id,
-    },
-  });
 };
 
 const handleSearchData = () => {

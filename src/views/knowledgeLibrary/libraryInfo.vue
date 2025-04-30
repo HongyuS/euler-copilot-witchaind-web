@@ -3,7 +3,7 @@
     <!-- 知识库内容 -->
     <template v-slot:default>
       <div v-show="groupMenu === 'knowledge'">
-        <div class="library-info-title">{{ navGroup[2].name }}</div>
+        <div class="library-info-title">{{ navGroup[2]?.name }}</div>
         <el-tabs
           v-model="knowledgeTabActive"
           class="library-info-tabs"

@@ -34,7 +34,7 @@
                         <el-link class="home-menu" @click="() => router.push('/groupInfo')" type="primary"
                             target="_blank" :underline="false">
                             <span class="last-name">/
-                                {{ navGroup[2].name }}
+                                {{ navGroup[2]?.name }}
                             </span>
                         </el-link>
                     </div>
