@@ -323,6 +323,7 @@
       </div>
     </div>
   </div>
+  <CreateEvaluate :dialogEvaluateVisible="dialogEvaluateVisible" :rowData="rowData" :close="handleCloseDialogue" />
 </template>
 
 <script setup lang="ts">
@@ -331,6 +332,7 @@ import { useGroupStore } from '@/store/modules/group';
 import { IconCaretDown, IconFilter, IconCaretUp } from '@computing/opendesign-icons';
 import { DataSetStatusEnum } from '@/enums/KnowledgeEnum';
 import FilterContainr from '@/components/TableFilter/index.vue';
+import CreateEvaluate from '@/views/dataSet/craeteEvaluate.vue';
 
 import { ref } from 'vue';
 import '@/styles/dataSet.scss';
@@ -338,7 +340,9 @@ const store = useGroupStore();
 const selectionDataSetList = ref([]);
 const batchDownBth = ref(false);
 const dataSetTableList = ref([
-     
+     {dataSetName:'数据集06',dataSetDesc:'数据集06描述',dataSetNumber:10,
+     dataSetClean:true,dataSetStatus:DataSetStatusEnum.FAIL,dataSetCreator:'admin',
+     dataSetCreatime:'2022-03-22 12:22:22',dataSetScore:99},
 ]);
 const loading = ref(false);
 const checkedFilterList = ref([]);
@@ -353,6 +357,12 @@ const creatorRef = ref();
 const statusFilterVisible = ref(false);
 const creatorVisible = ref(false);
 const enableFilterVisible = ref(false);
+const dialogEvaluateVisible = ref(false);
+const rowData = ref({});
+
+const handleCloseDialogue = () => {
+  dialogEvaluateVisible.value = false;
+};
 
 const fileTableList = reactive<{
   data: Array<any>;
@@ -406,7 +416,10 @@ const handleExportDataSet = async (downloadData: any) => {};
 
 const handleEditDataSet = (row: any) => {};
 
-const handleRunDataSet = (row: any, type: string) => {};
+const handleRunDataSet = (row: any, type: string) => {
+  dialogEvaluateVisible.value = true;
+  rowData.value = row;
+};
 
 const handleSwitch = (row: any) => {};
 

@@ -1,46 +1,52 @@
 <template>
-    <el-drawer v-model="props.visible" :show-close="false" size="70%" :destroy-on-close="false">
-        <template #header="{ close, titleId, titleClass }">
-            <h4 :id="titleId" class="drawer-title">{{ props.rowData?.testName }}</h4>
-            <el-button @click="close">
+    <el-drawer v-model="props.visible" @close="handleClose" :show-close="props.rowData?.status !== 'success'" size="70%"
+        :destroy-on-close="false">
+        <template #header>
+            <h4 class="drawer-title">{{ props.rowData?.testName }}</h4>
+            <el-button v-if="props.rowData?.status === 'success'">
                 下载报告
             </el-button>
         </template>
-        <div v-if="props.rowData?.status === 'pending'">
-            等待测试
-        </div>
-        <div v-if="props.rowData?.status === 'failed'">
-            测试失败
-        </div>
-        <div v-if="props.rowData?.status === 'running'">
-            测试中...
-        </div>
-        <div v-else>
-            <div class="chart-container">
-                <div id="rightChart"></div>
-                <div id="leftChart"></div>
+        <template #default>
+            <div class="empty-container" v-if="props.rowData?.status === 'pending'">
+                <el-empty description="等待测试" image="src/assets/images/empty_pending.svg" />
             </div>
-            <div class="table-container">
-                <el-table :data="[{}]" row-key="id" bordered>
-                    <el-table-column prop="dataName" width="150" label="问题" fixed />
-                    <el-table-column prop="testName" width="300" label="标准答案" />
-                    <el-table-column prop="desc" width="300" label="原始片段" />
-                    <el-table-column prop="modelType" width="300" label="答案" />
-                    <el-table-column prop="modelType" width="300" label="检索到的片段" />
-                    <el-table-column prop="modelType" width="150" label="文档来源" />
-                    <el-table-column prop="modelType" width="130" label="上下文关联性" fixed="right" />
-                    <el-table-column prop="modelType" width="100" label="召回率" fixed="right" />
-                    <el-table-column prop="modelType" width="100" label="忠实度" fixed="right" />
-                    <el-table-column prop="modelType" width="120" label="答案相关性" fixed="right" />
-                    <el-table-column prop="modelType" width="130" label="最大公共子串" fixed="right" />
-                    <el-table-column prop="modelType" width="100" label="编辑距离" fixed="right" />
-                    <el-table-column prop="modelType" width="130" label="杰卡徳距离" fixed="right" />
-                </el-table>
-                <el-pagination v-model:current-page="currentPage" v-model:page-size="currentPageSize"
-                    :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
-                    popper-class="kbLibraryPage" @change="handleChangePage" />
+            <div class="empty-container" v-else-if="props.rowData?.status === 'failed'">
+                <el-empty description="测试失败" image="src/assets/images/empty_failed.svg" />
             </div>
-        </div>
+            <div class="empty-container" v-else-if="props.rowData?.status === 'running'">
+                <el-empty description="测试中..." image="src/assets/images/empty_running.svg" />
+            </div>
+            <div v-else>
+                <div class="chart-container">
+                    <div id="rightChart"></div>
+                    <div id="leftChart"></div>
+                </div>
+                <div class="table-container">
+                    <el-table :data="[{}]" row-key="id" bordered>
+                        <el-table-column prop="dataName" width="150" label="问题" fixed />
+                        <el-table-column prop="testName" width="300" label="标准答案" />
+                        <el-table-column prop="desc" width="300" label="原始片段" />
+                        <el-table-column prop="modelType" width="300" label="答案" />
+                        <el-table-column prop="modelType" width="300" label="检索到的片段" />
+                        <el-table-column prop="modelType" width="150" label="文档来源" />
+                        <el-table-column prop="modelType" width="130" label="上下文关联性" fixed="right" />
+                        <el-table-column prop="modelType" width="100" label="召回率" fixed="right" />
+                        <el-table-column prop="modelType" width="100" label="忠实度" fixed="right" />
+                        <el-table-column prop="modelType" width="120" label="答案相关性" fixed="right" />
+                        <el-table-column prop="modelType" width="130" label="最大公共子串" fixed="right" />
+                        <el-table-column prop="modelType" width="100" label="编辑距离" fixed="right" />
+                        <el-table-column prop="modelType" width="130" label="杰卡徳距离" fixed="right" />
+                    </el-table>
+                    <el-pagination v-model:current-page="currentPage" v-model:page-size="currentPageSize"
+                        :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
+                        popper-class="kbLibraryPage" @change="handleChangePage" />
+                </div>
+            </div>
+        </template>
+        <template #footer>
+            <el-button @click="handleClose">关闭</el-button>
+        </template>
     </el-drawer>
 </template>
 <script lang='ts' setup>
@@ -50,6 +56,7 @@ import { onMounted, onBeforeUnmount, watch, nextTick, ref } from 'vue';
 const props = defineProps({
     visible: Boolean,
     rowData: Object,
+    close: Function,
 });
 
 const currentPage = ref(1);
@@ -333,6 +340,9 @@ onBeforeUnmount(() => {
     window.removeEventListener('resize', debounceResize);
 });
 
+const handleClose = () => {
+    props.close?.();
+}
 </script>
 
 <style lang="scss">
@@ -344,11 +354,24 @@ onBeforeUnmount(() => {
         font-size: 16px;
         font-weight: 700;
         color: black;
+        line-height: 32px;
     }
 }
 
 .el-drawer__body {
     padding: 16px 24px 24px 24px;
+
+    .empty-container {
+        height: calc(100vh - 192px);
+        display: flex;
+        align-items: center;
+        justify-self: center;
+
+        .el-empty__image {
+            width: 320px;
+            height: 130px;
+        }
+    }
 }
 
 .chart-container {
@@ -438,5 +461,10 @@ onBeforeUnmount(() => {
         height: var(--el-input-inner-height) !important;
     }
 
+}
+
+.el-drawer__footer {
+    box-shadow: 0 -8px 16px 0 rgba(0, 0, 0, 0.1);
+    padding: 8px 24px;
 }
 </style>
