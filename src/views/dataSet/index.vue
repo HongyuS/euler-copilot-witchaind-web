@@ -23,9 +23,9 @@
           placement="bottom"
           popper-class="dropdown-container dataSet-ops-dowlon"
           @visible-change="handleBatchDownBth"
-          :disabled="!(selectionDataSetList.length > 0)">
+          :disabled="!selectionDataSetList.length">
           <el-button
-            :class="batchDownBth ? 'upBtn' : 'downBtn'" :disabled="!(selectionDataSetList.length > 0)">
+            :class="batchDownBth ? 'upBtn' : 'downBtn'" :disabled="!selectionDataSetList.length">
             {{ $t('btnText.batchOps') }}
             <el-icon
               class="el-icon--right"
@@ -41,12 +41,12 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item
-                :disabled="!(selectionDataSetList.length > 0)"
+                :disabled="!selectionDataSetList.length"
                 @click="handleSelectExportDataSet">
                 {{ $t('btnText.batchExport') }}
               </el-dropdown-item>
               <el-dropdown-item
-                :disabled="!(selectionDataSetList.length > 0)"
+                :disabled="!selectionDataSetList.length"
                 @click="handleSelectDeleteDataSet">
                 {{ $t('btnText.batchDelete') }}
               </el-dropdown-item>
@@ -109,7 +109,7 @@
                   ref="enableRef"
                   @click.stop
                   :class="
-                    searchPayload?.enabled?.length > 0 || enableFilterVisible
+                    searchPayload?.enabled?.length || enableFilterVisible
                       ? 'searchIconIsActive'
                       : ''
                   ">
@@ -238,7 +238,7 @@
                 <el-icon
                   ref="creatorRef"
                   :class="
-                    searchPayload?.creator?.length > 0 || creatorVisible ? 'searchIconIsActive' : ''
+                    searchPayload?.creator?.length || creatorVisible ? 'searchIconIsActive' : ''
                   ">
                   <IconFilter />
                 </el-icon>
@@ -321,7 +321,7 @@
           </el-table-column>
         </el-table>
         <el-pagination
-          v-if="fileTableList.data?.length > 0"
+          v-if="fileTableList.data?.length"
           v-model:current-page="currentPage"
           v-model:page-size="currentPageSize"
           :page-sizes="pagination.pageSizes"
@@ -406,7 +406,7 @@ const { handleKnowledgeTab } = store;
 
 const handleSearchPayload = () => {
   const searchParams = Object.keys(searchPayload.value || {}).reduce((pre: any, item) => {
-    if (searchPayload.value?.[item]?.length > 0 && searchPayload.value?.[item] !== 'all') {
+    if (searchPayload.value?.[item]?.length && searchPayload.value?.[item] !== 'all') {
       pre[item] = searchPayload.value[item];
       if (item === 'enabled') {
         pre[item] = JSON.parse(searchPayload.value[item]);
