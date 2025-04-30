@@ -107,6 +107,15 @@ class KfAppAPI {
       data: data,
     });
   }
+
+  /** 查询文档日志*/
+  static documentLog(data: { docId: string }) {
+    return request({
+      url: `/doc/task_report`,
+      method: 'get',
+      params: data,
+    });
+  }
 }
 
 export default KfAppAPI;
