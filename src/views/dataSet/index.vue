@@ -333,6 +333,11 @@
     </div>
   </div>
   <CreateEvaluate :dialogEvaluateVisible="dialogEvaluateVisible" :rowData="rowData" :close="handleCloseDialogue" />
+  <DataSetDrawer
+    v-if="dataSetDrawerVisible"
+    :dataSetDrawerVisible="dataSetDrawerVisible"
+    :dataSetRow="dataSetRow"
+    :handleDataSetProps="handleDataSetProps" />
 </template>
 
 <script setup lang="ts">
@@ -341,6 +346,7 @@ import { useGroupStore } from '@/store/modules/group';
 import { IconCaretDown, IconFilter, IconCaretUp } from '@computing/opendesign-icons';
 import { DataSetStatusEnum } from '@/enums/KnowledgeEnum';
 import FilterContainr from '@/components/TableFilter/index.vue';
+import DataSetDrawer from './dataSetDrawer.vue';
 import CreateEvaluate from '@/views/dataSet/craeteEvaluate.vue';
 import dataSetAPI from '@/api/dataSet';
 import router from '@/router';
@@ -370,6 +376,8 @@ const creatorRef = ref();
 const statusFilterVisible = ref(false);
 const creatorVisible = ref(false);
 const enableFilterVisible = ref(false);
+const dataSetDrawerVisible = ref(false);
+const dataSetRow = ref({});
 const dialogEvaluateVisible = ref(false);
 const rowData = ref({});
 const checkTableSelecData = ref([]);
@@ -576,7 +584,10 @@ const handleDeleteDataSet = (row: any) => {};
 
 const handleExportDataSet = async (downloadData: any) => {};
 
-const handleEditDataSet = (row: any) => {};
+const handleEditDataSet = (row: any) => {
+  dataSetRow.value = row;
+  dataSetDrawerVisible.value = true;
+};
 
 const handleRunDataSet = (row: any, type: string) => {
   dialogEvaluateVisible.value = true;
@@ -635,4 +646,7 @@ watch(
   }
 );
 
+const handleDataSetProps = () => {
+  dataSetDrawerVisible.value = false;
+};
 </script>
