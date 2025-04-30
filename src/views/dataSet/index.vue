@@ -12,13 +12,20 @@
     class="dataSet-container">
     <div>
       <div>
+        <el-button
+            type="primary"
+            style="margin-right: 8px"
+            @click="handleImportDataSet"
+            class="importFileBtn">
+            {{ $t('导入数据集') }}
+          </el-button>
         <el-dropdown
           placement="bottom"
           popper-class="dropdown-container dataSet-ops-dowlon"
           @visible-change="handleBatchDownBth"
           :disabled="!(selectionDataSetList.length > 0)">
           <el-button
-            :class="batchDownBth ? 'upBtn' : 'downBtn'">
+            :class="batchDownBth ? 'upBtn' : 'downBtn'" :disabled="!(selectionDataSetList.length > 0)">
             {{ $t('btnText.batchOps') }}
             <el-icon
               class="el-icon--right"
@@ -81,19 +88,19 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="dataSetDesc"
+            prop="description"
             :label="$t('数据集简介')"
             show-overflow-tooltip>
             <template #default="scope">
-              <span>{{ scope.row.dataSetDesc }}</span>
+              <span>{{ scope.row.description }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="dataSetNumber"
+            prop="dataCnt"
             :label="$t('数据集条目')"
             sortable />
           <el-table-column
-            prop="isDataClean"
+            prop="isDataCleared"
             :label="$t('是否进行数据清洗')">
             <template #header>
               <div class="custom-header">
@@ -132,9 +139,8 @@
                 style="--el-switch-on-color: #24ab36; --el-switch-off-color: #c3cedf" />
             </template>
           </el-table-column>
-
           <el-table-column
-            prop="dataSetStatus"
+            prop="generateStatus"
             :label="$t('状态')"
             width="220">
             <template #header>
@@ -169,29 +175,29 @@
             </template>
             <template #default="scope">
               <div
-                v-if="scope.row.dataSetStatus === DataSetStatusEnum.FAIL"
+                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.FAILED"
                 class="statusFail">
                 {{ $t('生成失败') }}
               </div>
               <div
-                v-if="scope.row.dataSetStatus === DataSetStatusEnum.SUCCESS"
+                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.SUCCESS"
                 class="statusSuccess">
                 {{ $t('生成完毕') }}
               </div>
               <div
-                v-if="scope.row.dataSetStatus === DataSetStatusEnum.CANCEL"
+                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.CANCELED"
                 class="statusCancel">
                 {{ $t('取消生成') }}
               </div>
               <div
-                v-if="scope.row.dataSetStatus === DataSetStatusEnum.GENERATE_ING"
+                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.PENDING"
                 class="statusWaitIng">
                 <div class="icon-box icon-loading"></div>
                 {{ $t('等待生成') }}
               </div>
               <div
                 class="statusGenerate"
-                v-if="scope.row.dataSetStatus === DataSetStatusEnum.RUNNING">
+                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING">
                 <div class="percent-box">
                   <el-progress
                     :percentage="
@@ -215,7 +221,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="dataSetScore"
+            prop="score"
             :label="`${$t('数据集质量分数')}(1~100)`"
             width="240"
             show-overflow-tooltip
@@ -259,7 +265,11 @@
             class-name="upload-time-cell"
             :label="$t('完成时间')"
             sortable
-            @click.stop></el-table-column>
+            @click.stop>
+            <template #default="scope">
+               {{ scope.row.generateTask.createdTime }}
+            </template>
+          </el-table-column>
 
           <el-table-column
             prop="action"
@@ -268,7 +278,7 @@
             fixed="right">
             <template #default="scope">
               <el-button
-                v-if="scope.row.dataSetStatus === DataSetStatusEnum.RUNNING"
+                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING"
                 text
                 @click="handlePauseDataSet(scope.row, 'cancel')">
                 {{ $t('暂停') }}
@@ -276,10 +286,9 @@
               <el-button
                 v-if="
                   [
-                    DataSetStatusEnum.FAIL,
-                    DataSetStatusEnum.CANCEL,
-                    DataSetStatusEnum.ANALYSIS_ING,
-                  ].includes(scope.row.dataSetStatus)
+                    DataSetStatusEnum.FAILED,
+                    DataSetStatusEnum.CANCELED,
+                  ].includes(scope.row.generateTask.generateStatus)
                 "
                 text
                 @click="handleRunDataSet(scope.row, 'run')">
@@ -287,13 +296,13 @@
               </el-button>
               <el-button
                 text
-                :disabled="scope.row.dataSetStatus === DataSetStatusEnum.RUNNING"
+                :disabled="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING"
                 @click="handleEditDataSet(scope.row)">
                 {{ $t('btnText.edit') }}
               </el-button>
               <el-button
                 text
-                :disabled="scope.row.dataSetStatus === DataSetStatusEnum.SUCCESS"
+                :disabled="scope.row.generateTask.generateStatus === DataSetStatusEnum.SUCCESS"
                 @click="handleDataSetEval(scope.row)">
                 {{ $t('评测') }}
               </el-button>
@@ -303,7 +312,7 @@
                 {{ $t('导出') }}
               </el-button>
               <el-button
-                :disabled="scope.row.dataSetStatus === DataSetStatusEnum.RUNNING"
+                :disabled="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING"
                 text
                 @click="handleDeleteDataSet(scope.row)">
                 {{ $t('btnText.delete') }}
@@ -333,16 +342,20 @@ import { IconCaretDown, IconFilter, IconCaretUp } from '@computing/opendesign-ic
 import { DataSetStatusEnum } from '@/enums/KnowledgeEnum';
 import FilterContainr from '@/components/TableFilter/index.vue';
 import CreateEvaluate from '@/views/dataSet/craeteEvaluate.vue';
+import dataSetAPI from '@/api/dataSet';
+import router from '@/router';
+const route = useRoute();
+const { t } = useI18n();
 
 import { ref } from 'vue';
 import '@/styles/dataSet.scss';
 const store = useGroupStore();
-const selectionDataSetList = ref([]);
+const selectionDataSetList = ref<any>([]);
 const batchDownBth = ref(false);
 const dataSetTableList = ref([
-     {dataSetName:'数据集06',dataSetDesc:'数据集06描述',dataSetNumber:10,
-     dataSetClean:true,dataSetStatus:DataSetStatusEnum.FAIL,dataSetCreator:'admin',
-     dataSetCreatime:'2022-03-22 12:22:22',dataSetScore:99},
+     {dataSetName:'数据集06',description:'数据集06描述',dataCnt:10,
+     isDataCleared:true,generateTask:{generateStatus:DataSetStatusEnum.FAILED,createdTime:'2022-03-22 12:22:22'},dataSetCreator:'admin',
+     score:99},
 ]);
 const loading = ref(false);
 const checkedFilterList = ref([]);
@@ -359,6 +372,9 @@ const creatorVisible = ref(false);
 const enableFilterVisible = ref(false);
 const dialogEvaluateVisible = ref(false);
 const rowData = ref({});
+const checkTableSelecData = ref([]);
+const pollingKfTimer = ref();
+const sortFilter = ref({});
 
 const handleCloseDialogue = () => {
   dialogEvaluateVisible.value = false;
@@ -376,22 +392,165 @@ const pagination = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
 });
 const searchPayload = ref<any>({
-  name: '',
-  document_type_list: [],
-  chunk_size_order: '',
-  created_time_order: '',
-  status: [],
-  created_time_start: '',
-  created_time_end: '',
-  enabled: '',
-  parser_method: [],
+  isDataCleared: [],
 });
 const { handleKnowledgeTab } = store;
+
+const handleSearchPayload = () => {
+  const searchParams = Object.keys(searchPayload.value || {}).reduce((pre: any, item) => {
+    if (searchPayload.value?.[item]?.length > 0 && searchPayload.value?.[item] !== 'all') {
+      pre[item] = searchPayload.value[item];
+      if (item === 'enabled') {
+        pre[item] = JSON.parse(searchPayload.value[item]);
+      }
+    }
+
+    return pre;
+  }, {});
+  return searchParams || {};
+};
+
+const handleSortChange = (data: { column: any; prop: string; order: any }) => {
+  let sortKey = data.prop === 'score' ? 'scoreOrder' : null;
+  let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
+  sortFilter.value = sortValue
+    ? {
+        [sortKey || data.prop]: sortValue,
+      }
+    : {};
+  handleSearchOpsData(true, true);
+};
+
+const handlePollFileDataSet = () => {
+  dataSetAPI.queryDataSetList({
+    page_number: currentPage.value,
+    page_size: currentPageSize.value,
+    kbId: route.query.kb_id as string,
+    ...handleSearchPayload(),
+    ...sortFilter.value,
+  })
+    .then((res: any) => {
+      if (res.page_number === currentPage.value && fileTableList.data?.length) {
+        if (!res?.data_list?.length && currentPage.value !== 1) {
+          currentPage.value = 1;
+          handleSearchOpsData(true, true);
+          return;
+        }
+        fileTableList.data = fileTableList.data.map((item) => {
+          let fileData = res?.data_list?.filter((file: any) => file.id === item.id)?.[0];
+          return fileData || item;
+        });
+      }
+      if (res.data_list?.length) {
+        handCheckTableData(res.data_list);
+      }
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const handleStartPollTimer = () => {
+  pollingKfTimer.value = setInterval(() => handlePollFileDataSet(), 15000);
+};
+
+const handCheckTableData = (tableList: { filter: (arg0: (checkItem: any) => any) => never[]; find: (arg0: (notCheckItem: any) => boolean) => any; }) => {
+  checkTableSelecData.value = tableList.filter((checkItem) => {
+    const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
+    return selecData && ['pending', 'running'].includes(selecData.task.status);
+  });
+};
+
+const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
+  handleQueryDataSetList(
+    {
+      page_number: currentPage.value,
+      page_size: currentPageSize.value,
+      kbId: route.query.kb_id as string,
+      ...handleSearchPayload(),
+      ...sortFilter.value,
+    },
+    loadingStatus,
+    startPollTimer
+  );
+};
+
+const handleQueryDataSetList = (
+  payload: any,
+  loadingStatus: boolean,
+  pollTimer: boolean
+)=>{
+  if (pollTimer) {
+    handleCleartTimer();
+  }
+  loading.value = loadingStatus;
+  dataSetAPI.queryDataSetList(payload)
+    .then((res: any) => {
+      if (res.data_list?.length) {
+        handCheckTableData(res.data_list);
+      }
+      if (!res?.data_list?.length && currentPage.value !== 1) {
+        currentPage.value = 1;
+        handleSearchOpsData(true, true);
+        return;
+      }
+      fileTableList.data = res?.data_list || [];
+      currentPage.value = res.page_number;
+      currentPageSize.value = res.page_size;
+      totalCount.value = res.total;
+      if (pollTimer) {
+        handleStartPollTimer();
+      }
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+}
+
+const handleCleartTimer = () => {
+  clearInterval(pollingKfTimer.value);
+  pollingKfTimer.value = null;
+};
+
+const handleSearchData = () => {
+  handleQueryDataSetList(
+    {
+      page_number: 1,
+      page_size: currentPageSize.value,
+      kbId: route.query.kb_id as string,
+      ...handleSearchPayload(),
+      ...sortFilter.value,
+    },
+    true,
+    true
+  );
+  enableFilterVisible.value = false;
+  statusFilterVisible.value = false;
+  creatorVisible.value = false
+};
+
+onMounted(() => {
+  const kbId = route.query.kb_id;
+  if (kbId?.length) {
+    handleQueryDataSetList(
+      {
+        kbId: kbId as string,
+        page_number: 1,
+        page_size: 20,
+      },
+      true,
+      true
+    );
+  }
+});
 
 const handleToCreate = () => {
   handleKnowledgeTab('document');
 };
-const handelEnableFilterProper = (filterList: any) => {};
+const handelEnableFilterProper = (filterList: any) => {
+  searchPayload.value.isDataCleared = filterList.length === 2 ? 'all' : filterList[0];
+  handleSearchData();
+};
 
 const handleBatchDownBth = () => {};
 
@@ -399,16 +558,19 @@ const handleSelectExportDataSet = () => {};
 
 const handleSelectDeleteDataSet = () => {};
 
-const handleSelectionChange = (newSelection: any[]) => {};
-
-const handleSortChange = (data: { column: any; prop: string; order: any }) => {};
+const handleSelectionChange = (newSelection: any[]) => {
+  selectionDataSetList.value = newSelection;
+};
 
 const checkSelecTable = (row: any) => {
   return true;
 };
 const handleJumpFileSection = (row: any) => {};
 
-const handelStatusFilterProper = (filterList: any) => {};
+const handelStatusFilterProper = (filterList: any) => {
+  searchPayload.value.generateStatus = filterList;
+  handleSearchData();
+};
 
 const handleDeleteDataSet = (row: any) => {};
 
@@ -432,5 +594,45 @@ const handleDataSetEval = (row: any) =>{
 }
 
 const handlePauseDataSet = (row: any, p0: string) =>{}
+
+const handleImportDataSet = () =>{
+
+}
+
+watch(
+  () => t(''),
+  () => {
+    filterStatusList.value = [
+      {
+        label: t('生成失败'),
+        value: DataSetStatusEnum.FAILED,
+      },
+      {
+        label: t('生成完毕'),
+        value: DataSetStatusEnum.SUCCESS,
+      },
+      {
+        label: t('取消生成'),
+        value: DataSetStatusEnum.CANCELED,
+      },
+      {
+        label: t('等待生成'),
+        value: DataSetStatusEnum.PENDING,
+      },
+      {
+        label: t('生成中'),
+        value: DataSetStatusEnum.RUNNING,
+      },
+    ];
+    filterEnableList.value = [
+      { label: t('是'), value: 'true' },
+      { label: t('否'), value: 'false' },
+    ];
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 
 </script>

@@ -10,11 +10,12 @@ export const enum StatusEnum {
 }
 
 export const enum DataSetStatusEnum {
-  FAIL = 'failed',
-  CANCEL = 'canceled',
-  GENERATE_ING = 'pending',
-  SUCCESS = 'success',
-  RUNNING = 'running',
+ PENDING = 'pending',
+RUNNING = 'running',
+SUCCESS ='success',
+FAILED = 'failed',
+CANCELED = 'canceled',
+ DELETED ='deleted'
 }
 
 export const enum MenuType {

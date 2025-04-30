@@ -654,7 +654,7 @@
       </el-form-item>
     </el-form>
   </el-dialog>
-  <DataSetDialog :generateDialogVisible="generateDialogVisible" />
+  <DataSetDialog :generateDialogVisible="generateDialogVisible" :handleGenerateDataSet="handleGenerateDataSet"/>
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -1413,7 +1413,7 @@ const checkSelecTable = (row) => {
   return checkTableSelecData.value.every((item) => item?.id !== row?.id);
 };
 
-const handleGenerateDataSet = () => {
-  generateDialogVisible.value = true;
+const handleGenerateDataSet = (visible) => {
+  generateDialogVisible.value = visible;
 };
 </script>
