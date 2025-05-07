@@ -6,7 +6,7 @@ class KbAppAPI {
   /** 获取用户所有知识库*/
   static getKbLibrary(data: QueryKbRequest) {
     return request({
-      url: `/kb/list`,
+      url: `/kb/team`,
       method: 'post',
       data: data,
     });
@@ -22,20 +22,22 @@ class KbAppAPI {
   }
 
   /** 创建用户知识库*/
-  static createKbLibrary(data: CreateKbRequest) {
+  static createKbLibrary(params: { teamId: string }, data: CreateKbRequest) {
     return request({
-      url: `/kb/create`,
+      url: `/kb`,
       method: 'post',
       data: data,
+      params,
     });
   }
 
   /**更新资产库 */
-  static updateKbLibrary(data: UpdateKbRequest) {
+  static updateKbLibrary(params: { teamId: string }, data: UpdateKbRequest) {
     return request({
-      url: `/kb/update`,
-      method: 'post',
+      url: `/kb`,
+      method: 'put',
       data: data,
+      params,
     });
   }
 
@@ -105,14 +107,14 @@ class KbAppAPI {
 
   static queryLanguageList() {
     return request({
-      url: `/kb/language`,
+      url: `/other/tokenizer`,
       method: 'get',
     });
   }
 
   static queryEmbeddingModelList() {
     return request({
-      url: `/other/embedding_model`,
+      url: `/other/embedding`,
       method: 'get',
     });
   }

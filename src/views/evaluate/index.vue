@@ -1,4 +1,5 @@
 <template>
+  <CustomLoading :dark="false" :loading="loading" />
   <div class="evaluate-empty-content" v-if="testList.length === 0">
     <EmptyStatus description="暂无评测信息，去数据集管理生成一个吧！" buttonText="去生成评测" buttonClass="group-btn" @click="handleCreate" />
   </div>
@@ -21,21 +22,20 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>
-              {{ $t('btnText.batchDelete') }}
+            <el-dropdown-item @click="handleBatchDownload" >
+              批量下载
             </el-dropdown-item>
-            <el-dropdown-item>
-              {{ $t('btnText.batchExport') }}
+            <el-dropdown-item @click="handleBatchDelete" >
+              {{ $t('btnText.batchDelete') }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-input v-model="inputValue" placeholder="请输入评测名称" class="search-input" @keyup.enter="handleSearch"
+      <el-input v-model="searchParam.testingName" placeholder="请输入评测名称" class="search-input" @input="handleInput"
         :suffix-icon="IconSearch" />
     </div>
     <el-table ref="testingTableRef" :data="testList" style="width: 100%; 
-      margin-bottom: 20px" row-key="datasetId" 
-      bordered default-expand-all @selection-change="handleSelectionChange"
+      margin-bottom: 20px" row-key="datasetId" bordered default-expand-all @selection-change="handleSelectionChange"
       @select="handleSelectRow" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="dataName" width="120" label="所用数据集" />
@@ -160,20 +160,20 @@
         <template #default="scope">
           <div v-if="!scope.row.dataName">
             <el-button v-if="scope.row.status === StatusEnum.RUNNING" type="text"
-              @click="handleStop(scope.row)">暂停</el-button>
+              @click="handleRunTesting(false, scope.row)">暂停</el-button>
             <el-button :disabled="scope.row.status === StatusEnum.SUCCESS" v-else type="text"
-              @click="handleRestart(scope.row)">重启</el-button>
+              @click="handleRunTesting(true, scope.row)">重启</el-button>
             <el-button :disabled="scope.row.status === StatusEnum.RUNNING" type="text"
               @click="handleDownload(scope.row)">下载</el-button>
             <el-button :disabled="scope.row.status === StatusEnum.RUNNING" type="text"
-              @click="handleDelete(scope.row)">删除</el-button>
+              @click="handleDelete([scope.row])">删除</el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination v-if="testList.length > 0" v-model:current-page="currentPage" v-model:page-size="currentPageSize"
       :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount" popper-class="kbLibraryPage"
-      @change="handleChangePage" />
+      @size-change="handleSizeChange" @current-change="handleCurrentChange" @change="handleChangePage" />
   </div>
   <testData :visible="testDataVisible" :rowData="testRowData" :close="closeFn" />
 </template>
@@ -187,8 +187,11 @@ import { IconCaretDown, IconCaretUp, IconFilter, IconSearch } from "@computing/o
 import testData from "./testData.vue";
 import { storeToRefs } from "pinia";
 import FilterContainr from "@/components/TableFilter/index.vue";
+import EvaluateAPI from "@/api/evaluate";
+import CustomLoading from '@/components/CustomLoading/index.vue';
+import { debounce } from "lodash";
 
-let testList = [
+let testList = ref([
   {
     datasetId: 1,
     dataName: 'CVPR-2023',
@@ -281,16 +284,17 @@ let testList = [
       },
     ],
   },
-];
+]);
 const store = useGroupStore();
-const { } = storeToRefs(store);
+const { knowledgeTabActive } = storeToRefs(store);
 const { handleKnowledgeTab } = store;
 const batchDownBth = ref(false);
 const inputValue = ref('');
 const testingTableRef = ref();
 const selectedRow = ref([]);
+const loading = ref(false);
 const currentPage = ref(1);
-const totalCount = ref(testList.length);
+const totalCount = ref(testList.value.length);
 const currentPageSize = ref(20);
 const pagination = ref({
   pageSizes: [10, 20, 30, 40, 50],
@@ -305,6 +309,15 @@ const modelRef = ref();
 const statusRef = ref();
 const creatorRef = ref();
 const modelList = ref([]);
+let searchParam = ref({
+  datasetId: "6586f21b",
+  testingId: "",
+  testingName: "",
+  llmId: "",
+  runStatus: "",
+  scoresOrder: "asc",
+  authorName: "",
+})
 const statusList = [
   {
     value: StatusEnum.SUCCESS,
@@ -339,7 +352,15 @@ const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 
-const handleSearch = () => { };
+const handleInput = debounce(() => {
+  currentPage.value = 1;
+  let param = {
+    ...searchParam.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value
+  };
+  queryTestList(param);
+}, 200);
 
 const handleCreate = () => {
   handleKnowledgeTab('dataset');
@@ -361,31 +382,87 @@ const handleSelectRow = (selection: any[], row: any) => {
 }
 
 const handleChangePage = (pageNum: number, pageSize: number) => {
+  console.log(pageNum, pageSize)
   currentPage.value = pageNum;
   currentPageSize.value = pageSize;
+  let param = {
+    ...searchParam.value,
+    page: pageNum,
+    pageSize: pageSize,
+  };
+
+  queryTestList(param);
 };
 
 const handleTestData = (row: any) => {
   testDataVisible.value = true;
   testRowData.value = row;
-  console.log(row);
 }
-const handleStop = (row: any) => {
-  console.log(row);
-}
-const handleRestart = (row: any) => {
-  console.log(row);
+const handleRunTesting = (isRun: boolean, row: any) => {
+  let param = {
+    testingId: row.testingId,
+    run: isRun,
+  }
+  EvaluateAPI.runTesting(param).then((res) => {
+
+  })
 }
 const handleDownload = (row: any) => {
-  console.log(row);
+  const url = `${window.origin}/witchaind/api/testing/download?testingId=${row.testingId}`;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'filename'; // 指定文件名
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
-const handleDelete = (row: any) => {
-  console.log(row);
+const handleBatchDownload = () => {
+  selectedRow.value.forEach((item: any) => {
+    setTimeout(()=>{
+      handleDownload(item)
+    },300)
+  })
+}
+const handleDelete = (arr: any) => {
+  console.log(arr);
+  let idList = arr.map((item: any) => {
+    return item.testingId
+  })
+  EvaluateAPI.deleteTesting(idList).then((res) => {
+    console.log(res);
+  })
+}
+
+const handleBatchDelete = () => {
+  handleDelete(selectedRow.value)
 }
 const handelStatusFilterProper = (filterList: any) => {
   console.log(filterList);
 };
 const closeFn = () => {
-  testDataVisible.value = false; 
+  testDataVisible.value = false;
 }
+
+const queryTestList = (params: any) => {
+  loading.value = true;
+  EvaluateAPI.testingList(params).then((res: any) => {
+    console.log(res);
+    testList.value = res.testings;
+  }).finally(() => {
+    loading.value = false;
+  })
+}
+watch(knowledgeTabActive, () => {
+  if (knowledgeTabActive.value === 'evaluation') {
+    console.log(knowledgeTabActive.value);
+    let param = {
+      ...searchParam.value,
+      testingName: inputValue.value,
+      page: currentPage.value,
+      pageSize: currentPageSize.value
+    };
+    queryTestList(param);
+  }
+})
 </script>

@@ -377,7 +377,7 @@ const pagination = ref({
 });
 const searchPayload = ref<any>({
   name: '',
-  document_type_list: [],
+  docTypes: [],
   chunk_size_order: '',
   created_time_order: '',
   status: [],

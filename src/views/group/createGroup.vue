@@ -4,7 +4,7 @@
         @close="handleCancelVisible">
         <el-form ref="ruleFormRef" class="evaluate-form" :model="form" labelPosition="left" :rules="rules">
             <el-form-item label="团队名称" prop="teamName" :label-width="formLabelWidth">
-                <el-input v-model="form.teamName" autocomplete="off" :placeholder="t('model.pleasePlace')" />
+                <el-input maxlength="100" v-model="form.teamName" autocomplete="off" :placeholder="t('model.pleasePlace')" />
             </el-form-item>
             <el-form-item label="团队简介" prop="description" :label-width="formLabelWidth">
                 <el-input v-model="form.description" :rows="4" show-word-limit type="textarea" maxlength="200"
@@ -16,7 +16,7 @@
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button type="primary" :disabled="isSubmitDisabled" @click="handleSubmit(ruleFormRef)">确定</el-button>
+                <el-button type="primary" :disabled="props.dialogueType === 'edit' ?(isSubmitDisabled || isEditSubmitDisabled):isSubmitDisabled" @click="handleSubmit(ruleFormRef)">确定</el-button>
                 <el-button @click="handleCancelVisible">
                     取消
                 </el-button>
@@ -25,6 +25,7 @@
     </el-dialog>
 </template>
 <script lang="ts" setup>
+import GroupAPI from '@/api/group';
 import { FormInstance, FormRules } from 'element-plus';
 
 const { t, } = useI18n();
@@ -34,26 +35,26 @@ const props = defineProps({
     currentRow: Object,
     close: Function,
     dialogueType: String,
+    handlequeryTeamList: Function,
 })
 const ruleFormRef = ref<FormInstance>()
 const formLabelWidth = '100px';
 const isSubmitDisabled = ref(true);
 interface RuleForm {
-    testId: string;
+    testId?: string;
     teamName: string;
     description: string;
-    isPublic: boolean | null;
+    isPublic: boolean;
     [property: string]: any;
 }
 let form = ref<RuleForm>({
-    testId: '',
     teamName: '',
     description: '',
     isPublic: false,
 });
 watch(() => props.createGroupVisible, () => {
     if (props.dialogueType && props.dialogueType === 'edit') {
-        form.value = JSON.parse( JSON.stringify({ ...props.currentRow }))
+        form.value = JSON.parse(JSON.stringify({ ...props.currentRow }))
     }
 })
 const rules = reactive<FormRules>({
@@ -65,28 +66,90 @@ const rules = reactive<FormRules>({
         { message: t('model.pleasePlace'), trigger: 'blur' },
     ],
 });
-const handleSubmit = async (formEl: FormInstance | undefined) => {
-    if (!formEl) return
-    await formEl.validate((valid,) => {
-        if (valid) {
-            console.log('submit!',form.value)
-        }
-    })
-    props.close?.();
+watch(
+    () => form.value.teamName,
+    () => {
+        isSubmitDisabled.value = !form.value.teamName?.length;
+    },
+    {
+        deep: true,
+        immediate: true,
+    }
+);
+const isEditSubmitDisabled = computed(()=>{
+    let oldData = JSON.stringify({teamName:props.currentRow?.teamName,description:props.currentRow?.description,isPublic:props.currentRow?.isPublic})
+    let newData = JSON.stringify({teamName:form.value.teamName,description:form.value.description,isPublic:form.value.isPublic})
+    return oldData === newData
+})
+
+const handelResetForm = () => {
     ruleFormRef.value?.resetFields();
     form.value = {
-        testId:'',
+        testId: '',
         teamName: '',
         description: '',
         isPublic: false,
     };
+
+}
+const handleSubmit = async (formEl: FormInstance | undefined) => {
+    if (!formEl) return
+    await formEl.validate((valid,) => {
+        if (valid) {
+            console.log('submit!', form.value)
+            if (props.dialogueType && props.dialogueType === 'edit') {
+                GroupAPI.updateTeam(
+                    { teamId: form.value.teamId },
+                    {
+                        teamName: form.value.teamName,
+                        description: form.value.description,
+                        isPublic: form.value.isPublic,
+                    }
+                ).then(() => {
+                    ElMessage({
+                        message: '团队更新成功',
+                        type: 'success',
+                    })
+                }).finally(() => {
+                    props.handlequeryTeamList?.({ teamType: "mycreated", page: 1, pageSize: 20 })
+                    props.close?.();
+                    ruleFormRef.value?.resetFields();
+                    form.value = {
+                        testId: '',
+                        teamName: '',
+                        description: '',
+                        isPublic: false,
+                    };
+                })
+            } else {
+                GroupAPI.createTeam(form.value).then((res) => {
+                    console.log(res)
+                    ElMessage({
+                        message: '团队创建成功',
+                        type: 'success',
+                    })
+                }).finally(() => {
+                    props.handlequeryTeamList?.({ teamType: "mycreated", page: 1, pageSize: 20 })
+                    props.close?.();
+                    ruleFormRef.value?.resetFields();
+                    form.value = {
+                        testId: '',
+                        teamName: '',
+                        description: '',
+                        isPublic: false,
+                    };
+                })
+
+            }
+        }
+    })
 }
 
 const handleCancelVisible = () => {
     props.close?.();
     ruleFormRef.value?.resetFields();
     form.value = {
-        testId:'',
+        testId: '',
         teamName: '',
         description: '',
         isPublic: false,
