@@ -2,6 +2,7 @@
   <el-dialog
     v-if="props.generateDialogVisible"
     v-model="props.generateDialogVisible"
+    @close="handleGenerateDialogVisible"
     class="dataSet-edit-dialog"
     align-center
     width="550"
@@ -16,68 +17,72 @@
       label-position="left">
       <el-form-item
         :label="$t('数据集名称')"
-        prop="dataSetName"
+        prop="name"
         class="dataSetName">
-        <el-input :placeholder="$t('assetLibrary.message.pleasePlace')" />
+        <el-input
+          maxlength="150"
+          minlength="1"
+          v-model="ruleForm.name"
+          :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
       <el-form-item
         :label="$t('数据集简介')"
-        prop="dataSetDesc">
+        prop="description">
         <el-input
           :rows="4"
           show-word-limit
           type="textarea"
+          v-model="ruleForm.description"
           maxlength="200"
-          :placeholder="$t('assetLibrary.message.pleasePlace')"
-           />
+          :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
       <el-form-item
         :label="$t('文档数量')"
-        prop="fileNumber">
-        <span>3</span>
+        prop="documentIds">
+        <span>{{ ruleForm.documentIds.length }}</span>
       </el-form-item>
 
       <el-form-item
         :label="$t('数据集条目')"
-        prop="dataSetNumber"
+        prop="dataCnt"
         class="dataSetNumber">
         <el-input-number
           class="config-size"
-          v-model="ruleForm.dataSetNumber"
+          v-model="ruleForm.dataCnt"
           :min="1"
           :max="512" />
       </el-form-item>
       <el-form-item
         :label="$t('模型类型')"
-        prop="modelType">
+        prop="llmId">
         <el-select
-          v-model="ruleForm.modelType"
+          v-model="ruleForm.llmId"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
-          :class="ruleForm.modelType.length ? 'selectedType' : 'notSelectedType'"
+          :class="ruleForm.llmId.length ? 'selectedType' : 'notSelectedType'"
           :suffix-icon="IconCaretDown"
           :teleported="false">
           <el-option
-            v-for="item in []"
-            :key="item?.value"
-            :label="item?.label"
-            :value="item?.value" />
+            v-for="item in llmList"
+            :key="item?.llmId"
+            :label="item?.llmName"
+            :value="item?.llmId" />
         </el-select>
       </el-form-item>
       <el-form-item
         :label="$t('是否进行数据清洗')"
-        prop="isDataClean"
+        prop="isDataCleared"
         class="isDataClean">
         <el-switch
-          v-model="ruleForm.isDataClean"
+          v-model="ruleForm.isDataCleared"
           class="ml-2"
           style="--el-switch-on-color: #13ce66" />
       </el-form-item>
       <el-form-item
         :label="$t('是否补全上下文')"
-        prop="isComContext"
+        prop="isChunkRelated"
         class="isComContext">
         <el-switch
-        v-model="ruleForm.isComContext"
+          v-model="ruleForm.isChunkRelated"
           class="ml-2"
           style="--el-switch-on-color: #13ce66" />
       </el-form-item>
@@ -99,59 +104,124 @@
   </el-dialog>
 </template>
 <script setup>
-import {
-  IconCaretDown,
-} from '@computing/opendesign-icons';
+import { IconCaretDown } from '@computing/opendesign-icons';
 import '@/styles/dataSetDialog.scss';
+import dataSetAPI from '@/api/dataSet'
 import { ref } from 'vue';
-const { t, } = useI18n();
+const { t } = useI18n();
 const ruleForm = ref({
-  dataSetName:'',
-  dataSetDesc:'',
-  fileNumber:1,
-  dataSetNumber:1,
-  modelType:'',
-  isDataClean:true,
-  isComContext:false,
+  name: '',
+  description: '',
+  documentIds: [],
+  dataCnt: 1,
+  llmId: '',
+  isDataCleared: false,
+  isChunkRelated: false,
 });
 const ruleFormRef = ref();
 const isSubmitDisabled = ref(true);
-const rules = reactive({
-  dataSetName: [
+const llmList = ref([]);
+const rules = ref({
+  name: [
     {
       required: true,
       message: t('model.pleasePlace'),
       trigger: ['blur', 'change'],
     },
   ],
-  dataSetDesc:[
+  description: [
     {
       required: true,
       message: t('model.pleasePlace'),
       trigger: ['blur', 'change'],
     },
   ],
-  dataSetNumber:[
+  dataCnt: [
     {
       required: true,
       message: t('model.pleasePlace'),
       trigger: ['blur', 'change'],
     },
   ],
-  modelType:[
+  llmId: [
     {
       required: true,
       message: t('assetLibrary.message.pleaseChoose'),
       trigger: ['blur', 'change'],
     },
   ],
-})
+});
 const props = defineProps({
   generateDialogVisible: {
     type: Boolean,
     default: false,
   },
+  handleGenerateDataSet: {
+    type: Function,
+    default: () => {},
+  },
+  selectionFileData: {
+    type: Array,
+    default: [],
+  },
 });
 
-const submitForm = () => {};
+watch(
+  () => props.selectionFileData,
+  () => {
+    ruleForm.documentIds = props.selectionFileData.map((item) => item.id);
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+
+watch(
+  () => ruleForm.value,
+  () => {
+    isSubmitDisabled.value = !Object.keys(rules.value).every((item) => {
+      return ruleForm.value[item].toString().length;
+    });
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+
+const handleGenerateDialogVisible = () => {
+  props.handleGenerateDataSet(false);
+};
+
+const handleResetDataSet = () => {
+  ruleForm.value = {
+    name: '',
+    description: '',
+    documentIds: [],
+    dataCnt: 1,
+    llmId: '',
+    isDataCleared: false,
+    isChunkRelated: false,
+  };
+};
+
+const submitForm = ()=>{
+  dataSetAPI.createDataSet(ruleForm.value).then(res=>{
+    handleCancelVisible()
+  })
+}
+
+const handleCancelVisible = () => {
+  props.handleGenerateDataSet(false);
+  handleResetDataSet();
+};
+
+onMounted(()=>{
+  dataSetAPI.queryLlmData().then(res=>{
+    llmList.value = res.llms ||[];
+  })
+})
+
+
 </script>
