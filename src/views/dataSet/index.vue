@@ -400,6 +400,15 @@ const pagination = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
 });
 const searchPayload = ref<any>({
+  name: '',
+  docTypes: [],
+  chunk_size_order: '',
+  created_time_order: '',
+  status: [],
+  created_time_start: '',
+  created_time_end: '',
+  enabled: '',
+  parser_method: [],
   isDataCleared: [],
 });
 const { handleKnowledgeTab } = store;

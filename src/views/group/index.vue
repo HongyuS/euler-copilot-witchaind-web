@@ -4,7 +4,7 @@
     <div class="group-container">
         <div class="group-box">
             <el-tabs type="border-card" class="group-tabs" default-active="mycreated" v-model="activeName"
-                @tab-click="handleTabClick">
+                @tab-change="handleTabChange">
                 <el-tab-pane class="group-tabs-item" v-for="tab in groupTabs" :name="tab.name" :key="tab.name"
                     :label="tab.label">
                     <div class="group-tab-header">
@@ -43,16 +43,17 @@
                     <div class="group-content-container">
                         <!-- 卡片布局 -->
                         <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
-                            <div class="group-card-item"
-                                v-for="item in groupList"
-                                :key="item.teamId">
+                            <div class="group-card-item" v-for="item in groupList" :key="item.teamId">
                                 <div class="group-card-title" @click="handleToGroup(item)">
                                     <span class="group-card-title-name">{{ item.teamName }}</span>
                                     <span v-if="item.isPublic" class="card-type card-type-public">公开</span>
-                                    <span v-else class="card-type card-type-privacy'">私密</span>
+                                    <span v-else class="card-type card-type-privacy">私密</span>
                                 </div>
                                 <div class="group-card-desc">
-                                    {{ item.description }}
+                                    <el-tooltip popper-class="desc-popper" effect="dark" :content="item.description"
+                                        placement="top-start">
+                                        {{ item.description }}
+                                    </el-tooltip>
                                 </div>
                                 <div class="group-card-footer">
                                     <div class="info">
@@ -62,7 +63,7 @@
                                             {{ item.memberCount }}人
                                         </span>
                                     </div>
-                                    <el-button text @click="handleEditKl(item)" >
+                                    <el-button text @click="handleEditKl(item)">
                                         编辑
                                     </el-button>
                                 </div>
@@ -71,25 +72,25 @@
                         <!-- 列表布局 -->
                         <div class="group-table-box" v-else>
                             <el-table :data="groupList" :border="true">
-                                <el-table-column prop="teamName" label="团队名称" :show-overflow-tooltip="true" width="300"
-                                    :fixed="true" class-name="group-name">
+                                <el-table-column prop="teamName" label="团队名称" :show-overflow-tooltip="true" width="200"
+                                    class-name="group-name">
                                     <template #default="scope">
                                         <span class="group-name-row" @click="handleToGroup(scope.row)">
                                             {{ scope.row.teamName }}
                                         </span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="description" label="团队简介" :show-overflow-tooltip="true" />
-                                <el-table-column prop="memberCount" sortable width="150" label="团队人数" />
-                                <el-table-column prop="document_count" sortable width="150" label="团队权限">
+                                <el-table-column prop="description" label="团队简介" width="200" :show-overflow-tooltip="true" />
+                                <el-table-column prop="memberCount" width="150" label="团队人数" />
+                                <el-table-column prop="isPublic" width="150" label="团队权限">
                                     <template #default="scope">
                                         <span v-if="scope.row.isPublic" class="card-type card-type-public">公开</span>
                                         <span v-else class="card-type card-type-privacy">私密</span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="authorName" sortable width="150" label="创建人" />
-                                <el-table-column prop="document_count" sortable width="150" label="创建时间" />
-                                <el-table-column prop="action" :label="$t('btnText.operation')" width="180">
+                                <el-table-column prop="authorName" width="150" label="创建人" />
+                                <el-table-column prop="createdtime" width="150" label="创建时间" />
+                                <el-table-column prop="action" :label="$t('btnText.operation')" width="100">
                                     <template #default="scope">
                                         <el-button text @click="handleEditKl(scope.row)">
                                             {{ $t('btnText.edit') }}
@@ -99,22 +100,16 @@
                             </el-table>
                         </div>
                     </div>
-                    <el-pagination 
-                        v-if="groupList?.length > 0"
-                        :current-page="currentPage"
-                        :page-size="currentPageSize"
-                        :page-sizes="pagination.pageSizes"
-                        :layout="pagination.layout"
-                        :total="totalCount"
-                        popper-class="kbLibraryPage"
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange" 
-                    />
+                    <el-pagination v-if="groupList?.length > 0" :current-page="currentPage" :page-size="currentPageSize"
+                        :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
+                        popper-class="kbLibraryPage" @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange" />
                 </el-tab-pane>
             </el-tabs>
         </div>
     </div>
-    <CreateGroup :createGroupVisible="createGroupVisible" :dialogueType="dialogueType" :currentRow="currentRow" :close="() => handleCreateGroup(false)" />
+    <CreateGroup :createGroupVisible="createGroupVisible" :handlequeryTeamList="handlequeryTeamList"
+        :dialogueType="dialogueType" :currentRow="currentRow" :close="() => handleCreateGroup(false)" />
 </template>
 <script lang="ts" setup>
 import UserHeaderBar from '@/components/UserHeaderBar/index.vue';
@@ -131,6 +126,10 @@ import router from '@/router/index';
 import { useGroupStore } from '@/store/modules/group.js';
 import CreateGroup from './createGroup.vue';
 import GroupAPI from '@/api/group';
+import { TabPaneName } from 'element-plus';
+
+const groupStore = useGroupStore();
+const { setCurTeamInfo } = groupStore;
 
 const activeName = ref('mycreated');
 const currentRow = ref({});
@@ -156,8 +155,16 @@ const totalCount = ref(groupList.value.length);
 const currentPageSize = ref(20);
 const loading = ref(false);
 
-const handleTabClick = (tab: any, event: any) => {
-    activeName.value = tab.name;
+const handleTabChange = (tabName: TabPaneName) => {
+    activeName.value = tabName.toString();
+    teamSearchName.value = '';
+    currentPage.value = 1;
+    let param = {
+        teamType: tabName.toString(),
+        page: currentPage.value,
+        pageSize: currentPageSize.value
+    };
+    handlequeryTeamList(param);
 };
 
 const handleCurrentChange = (pageNum: number) => {
@@ -209,13 +216,13 @@ const handleCreateGroup = (value: boolean) => {
     dialogueType.value = 'create';
 }
 
-const handleEditKl = (row: any) => { 
+const handleEditKl = (row: any) => {
     currentRow.value = row;
     createGroupVisible.value = true;
     dialogueType.value = 'edit';
 }
 
-const handleInputSearch = debounce((e) => {
+const handleInputSearch = debounce(() => {
     currentPage.value = 1;
     let param = {
         teamType: activeName.value,
@@ -230,18 +237,20 @@ const handleSwitch = (switchType: string) => {
     switchIcon.value = switchType;
 };
 const handleToGroup = async (row: any) => {
-    await router.push({ path: `/groupInfo`, query: { name: row.teamName } });
+    await router.push({ path: `/groupInfo`, query: { name: row.teamName, id: row.teamId } });
     let groupNav = navGroup.value;
     groupNav[1] = {
         name: row.teamName,
         path: '/groupInfo',
         query: {
-            name: row.teamName
+            name: row.teamName,
+            id: row.teamId
         }
     }
+    setCurTeamInfo(row);
 }
 
-const handlequeryTeamList = (param: { teamType: string, teamName: string, page: number, pageSize: number }) => {
+const handlequeryTeamList = (param: { teamType: string, page: number, pageSize: number, teamName?: string }) => {
     loading.value = true;
     GroupAPI.teamList(param).then((res: any) => {
         groupList.value = res.teams;
@@ -262,3 +271,8 @@ onMounted(() => {
 })
 
 </script>
+<style lang="scss">
+    .desc-popper {
+        max-width: 376px !important;
+    }
+</style>

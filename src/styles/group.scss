@@ -1,7 +1,7 @@
 .group-container {
     width: 100%;
-    height: calc(100vh - 300px);
-    padding: 0 24px 24px;
+    height: calc(100vh - 304px);
+    padding: 0 24px;
     background: rgb(239 239 239);
     min-width: 820px;
 
@@ -10,8 +10,7 @@
         display: flex;
         flex-direction: column;
         width: 100%;
-        height: calc(100vh - 319px);
-        padding-bottom: 24px;
+        height: calc(100vh - 304px);
         overflow-y: auto;
         background: rgb(253 254 255);
         border-radius: 4px;
@@ -87,7 +86,8 @@
                     }
                 }
                 .group-content-container{
-                  min-height: calc(100vh - 470px);
+                  min-height: calc(100vh - 454px);
+                  margin-top: 16px;
                   
                 .group-tabs-content {
                     margin-top: 16px;
@@ -96,7 +96,8 @@
                     display: grid;
                     grid-template-columns: repeat(auto-fill, 339px);
                     gap: 16px;
-    
+                    max-height: 690px;
+                    overflow-y: auto;
                     .group-card-item {
 
                           width: 339px;
@@ -141,11 +142,13 @@
                             font-size: 12px;
                             line-height: 16px;
                             color: rgb(78, 88, 101);
-                            margin: 4px 0 16px;
+                            margin: 6px 0 14px;
                             overflow: hidden;
                             display: -webkit-box;
                             -webkit-line-clamp: 2;
                             -webkit-box-orient: vertical;
+                            cursor: pointer;
+                            
                         }
     
                         .group-card-footer {
@@ -169,7 +172,7 @@
                     }
                 }
                 .group-table-box {
-                    padding: 16px 0 24px;
+                    padding: 0 0 24px;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
@@ -200,6 +203,11 @@
                       thead tr th {
                         background-color: #f4f6fa;
                       }
+                    }
+
+                    .el-table__body-wrapper{
+                      max-height: 660px;
+                      overflow-y: auto
                     }
                 
                     .group-name-row {
@@ -269,6 +277,9 @@
                     }
                   }
                 }
+            }
+            .el-tabs__content{
+              padding: 16px 24px 0 !important;
             }
         }
     }

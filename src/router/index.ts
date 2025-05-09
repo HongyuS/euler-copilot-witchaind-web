@@ -6,7 +6,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: '/',
-    redirect: '/login',
+    redirect: '/group',
   },
   {
     path: '/login',
