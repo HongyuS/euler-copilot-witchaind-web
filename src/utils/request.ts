@@ -5,6 +5,7 @@ import { TOKEN_KEY } from '@/enums/CacheEnum';
 import qs from 'qs';
 import i18n from '@/lang/index';
 import { IconError } from '@computing/opendesign-icons';
+import { useAppStore } from '@/store/modules/app';
 
 // 创建 axios 实例
 const service = axios.create({
@@ -22,9 +23,14 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    const appStore = useAppStore();
+    const { parentToken } = storeToRefs(appStore);
     const accessToken = localStorage.getItem(TOKEN_KEY);
     if (accessToken) {
       config.headers.Authorization = accessToken;
+    }
+    if (parentToken) {
+      config.headers['Authorization'] = `Bearer ${parentToken}`;
     }
     return config;
   },

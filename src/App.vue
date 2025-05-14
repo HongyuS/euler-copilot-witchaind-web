@@ -15,36 +15,47 @@ import router from './router';
 const appStore = useAppStore();
 const { locale } = useI18n();
 const locales = computed(() => appStore.locale);
+const { changeParentToken } = appStore;
 // 新增路由状态标记
 const isManualNavigation = ref(false);
 
 const handleMessage = (e: MessageEvent) => {
-  if(e.data?.type !== 'changeLanguage') {
-    return;
-  }
-  const langObj = {
-    CN: 'zh',
-    EN: 'en',
-  };
-  let lang = langObj[e.data.lang as keyof typeof langObj] ?? 'zh';
+  if(e.data?.type === 'changeLanguage') {
+    const langObj = {
+      CN: 'zh',
+      EN: 'en',
+    };
+    let lang = langObj[e.data.lang as keyof typeof langObj] ?? 'zh';
 
-  // 更新 vue-i18n locale
-  locale.value = lang;
-  
-  // 更新 store 中的语言设置
-  appStore.changeLanguage(lang);
+    // 更新 vue-i18n locale
+    locale.value = lang;
+    
+    // 更新 store 中的语言设置
+    appStore.changeLanguage(lang);
 
-  // 更新用户信息
-  const userInfoStr = localStorage.getItem('userInfo');
-  if (userInfoStr) {
-    const userInfo = JSON.parse(userInfoStr);
-    localStorage.setItem('userInfo', JSON.stringify({ ...userInfo, language: lang }));
-    AuthAPI.userUpdate({
-      language: lang,
-    });
+    // 更新用户信息
+    const userInfoStr = localStorage.getItem('userInfo');
+    if (userInfoStr) {
+      const userInfo = JSON.parse(userInfoStr);
+      localStorage.setItem('userInfo', JSON.stringify({ ...userInfo, language: lang }));
+      AuthAPI.userUpdate({
+        language: lang,
+      });
+    }
+    // 保存语言设置
+    localStorage.setItem('language', lang);
+  }else if(e.data?.type === 'parentToken') {
+    const token = e.data.parentToken;
+      console.log(token)
+      if(token){
+        changeParentToken(token);
+      }else{
+        ElMessage({
+          message: '未获取到token数据！',
+          type: 'warning',
+        })
+      }
   }
-  // 保存语言设置
-  localStorage.setItem('language', lang);
 };
 
 onMounted(() => {
