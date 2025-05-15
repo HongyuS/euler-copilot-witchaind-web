@@ -29,8 +29,8 @@ service.interceptors.request.use(
     if (accessToken) {
       config.headers.Authorization = accessToken;
     }
-    if (parentToken) {
-      config.headers['Authorization'] = `Bearer ${parentToken}`;
+    if (parentToken.value) {
+      config.headers['Authorization'] = `Bearer ${parentToken.value}`;
     }
     return config;
   },

@@ -46,7 +46,6 @@ const handleMessage = (e: MessageEvent) => {
     localStorage.setItem('language', lang);
   }else if(e.data?.type === 'parentToken') {
     const token = e.data.parentToken;
-      console.log(token)
       if(token){
         changeParentToken(token);
       }else{
