@@ -229,15 +229,16 @@
     </div>
   </div>
   <el-dialog
+    class="kf-section-edit-dialog"
     v-model="contentDialogVisible"
-    title="Warning"
+    title="编辑"
     width="500"
     align-center
   >
   <el-input
-    v-model="rowData.text"
-    style="width: 496px; height: 440px"
+    v-model="sectionText"
     type="textarea"
+    autosize
     placeholder="请输入内容"
     maxlength="1000"
   />
@@ -252,7 +253,6 @@
   </el-dialog>
 </template>
 <script setup lang="ts">
-import KbAppAPI from '@/api/kbApp';
 import KfAppAPI from '@/api/kfApp';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
@@ -286,7 +286,7 @@ const fileTableList = reactive<{
 }>({
   data: [],
 });
-const libraryInfo = ref<any>({});
+const sectionText = ref('');
 const fileInfo = ref<any>({});
 const loading = ref(false);
 const totalCount = ref(0);
@@ -392,14 +392,6 @@ onMounted(() => {
       id: kb_Id,
       document_id: kf_Id,
     };
-    // KbAppAPI.getKbLibrary({
-    //   teamId: curTeamInfo.value?.teamId,
-    //   kbId: kb_Id,
-    //   page_number: 1,
-    //   page_size: 10,
-    // }).then((res: any) => {
-    //   libraryInfo.value = res.data_list?.[0];
-    // });
     KfAppAPI.getKbLibraryFile({
       kbId: kb_Id,
       docId: kf_Id,
@@ -418,9 +410,8 @@ onMounted(() => {
 
 const handleSwitch = (row: any) => {
   KfAppAPI.updateFileSection({
-    chunkId: row.id,
+    chunkId: row.chunkId,
   },{
-    text: row.text,
     enabled: row.enabled,
   }).then(() => {
     ElMessage({
@@ -444,7 +435,7 @@ const handleSwitch = (row: any) => {
 };
 
 const handleEnableData = (enabledType: any) => {
-  let idArr = selectedData.value.map((item: any) => item.id)
+  let idArr = selectedData.value.map((item: any) => item.chunkId)
   KfAppAPI.switchFileSection({enabled: enabledType},idArr).then(() => {
     ElMessage({
       showClose: true,
@@ -508,6 +499,13 @@ watch(
   }
 );
 
+watch(()=>contentDialogVisible.value,()=>{
+  sectionText.value = rowData.value?.text;
+},{
+  deep: true,
+  immediate: true,
+})
+
 const handleChangePage = (pageNum: number, pageSize: number) => {
   currentPage.value = pageNum;
   currentPageSize.value = pageSize;
@@ -550,7 +548,7 @@ const handleSaveContent = () => {
     chunkId: rowData.value.chunkId
   },
     {
-      text: rowData.value.text,
+      text: sectionText.value,
     }
   ).then(() => {
     let payload: any = {

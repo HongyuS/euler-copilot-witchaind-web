@@ -81,7 +81,7 @@
   })
 
   const downloadLogFn = () => {
-    const url = `${window.origin}/witchaind/api/doc/download?docId=1234567890`;
+    const url = `${window.origin}/witchaind/api/doc/report/download?docId=${route.query.file_id as string}`;
     const a = document.createElement('a');
     a.href = url;
     a.download = 'filename'; // 指定文件名

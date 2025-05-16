@@ -322,6 +322,10 @@
 
             .kf-file-content-ops {
               padding: 16px 0;
+              min-width: 70px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
             }
           }
         }
@@ -508,5 +512,14 @@
   .el-table__body {
     // -webkit-border-horizontal-spacing: 13px; // 水平间距
     -webkit-border-vertical-spacing: 8px; // 垂直间距
+  }
+}
+
+.kf-section-edit-dialog{
+  .el-dialog__header{
+
+  }
+  .el-textarea__inner{
+    max-height: 500px;
   }
 }

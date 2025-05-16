@@ -24,7 +24,6 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 const app = createApp(App);
 
 app.use(createPinia().use(piniaPluginPersistedstate));
-app.use(router);
 app.use(ElementPlus, {
   locale: zhCn,
 });

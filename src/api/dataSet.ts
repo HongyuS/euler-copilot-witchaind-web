@@ -20,19 +20,24 @@ class dataSetAPI {
   }
 
   /** 删除数据集管理*/
-  static delDataSet(dataSetId: string) {
+  static delDataSet(data: string[]) {
     return request({
-      url: `/dataSet?databaseId=${dataSetId}`,
+      url: `/dataset`,
       method: 'delete',
+      data,
     });
   }
 
   /**更新数据集管理 */
-  static updateDataSet(data: any) {
+  static updateDataSet(
+    params: { databaseId: string },
+    data: { datasetName?: string; description?: string }
+  ) {
     return request({
       url: `/dataset`,
       method: 'put',
-      data: data,
+      params,
+      data,
     });
   }
 
@@ -41,6 +46,14 @@ class dataSetAPI {
     return request({
       url: `/dataset/data`,
       method: 'post',
+      data: data,
+    });
+  }
+  /**删除数据集内的问答数据 */
+  static deleteDataInfo(data: any) {
+    return request({
+      url: `/dataset/data`,
+      method: 'delete',
       data: data,
     });
   }
@@ -67,7 +80,7 @@ class dataSetAPI {
     return request({
       url: `/dataset/generate`,
       method: 'post',
-      data,
+      params: data,
     });
   }
 
@@ -94,7 +107,7 @@ class dataSetAPI {
     return request({
       url: `/dataset/export`,
       method: 'post',
-      data: datasetIds,
+      params: datasetIds,
     });
   }
 
@@ -102,6 +115,14 @@ class dataSetAPI {
     return request({
       url: `/other/llm`,
       method: 'get',
+    });
+  }
+
+  static isHaveTesting(params: { datasetId: string }) {
+    return request({
+      url: '/dataset/testing/exist',
+      method: 'get',
+      params,
     });
   }
 }

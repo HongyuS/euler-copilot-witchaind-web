@@ -1,5 +1,5 @@
 .dataSetDrawerContainer{
-    width: 60% !important;
+    width: 65% !important;
     .el-drawer__header{
         padding-top: 24px !important;
         padding-left: 24px !important;
@@ -147,5 +147,12 @@
       }
       .el-table__row .cell{
         padding: 8px !important;
+      }
+      .dataChunkText{
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2; /* 控制显示行数 */
+        text-overflow: ellipsis;
       }
 }

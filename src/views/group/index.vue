@@ -134,17 +134,7 @@ const { setCurTeamInfo } = groupStore;
 const activeName = ref('mycreated');
 const currentRow = ref({});
 const dialogueType = ref('create');
-let groupList = ref([
-    {
-        teamId: 1,
-        teamName: '我的团队1',
-        teamType: 'mycreated',
-        description: '这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介这是团队名称1的团队简介',
-        authorName: '作者',
-        memberCount: 10,
-        isPublic: true
-    },
-])
+let groupList = ref<any>([]);
 
 const pagination = ref({
     pageSizes: [10, 20, 30, 40, 50],

@@ -1,6 +1,6 @@
 <template>
   <CustomLoading :dark="false" :loading="loading" />
-  <div class="evaluate-empty-content" v-if="testList.length === 0">
+  <div class="evaluate-empty-content" v-if="!searchParam.testingName && testList.length === 0">
     <EmptyStatus description="暂无评测信息，去数据集管理生成一个吧！" buttonText="去生成评测" buttonClass="group-btn" @click="handleCreate" />
   </div>
   <div class="group-table-box" v-else>
@@ -31,21 +31,21 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-input v-model="searchParam.testingName" placeholder="请输入评测名称" class="search-input" @input="handleInput"
-        :suffix-icon="IconSearch" />
+      <el-input v-model="searchParam.testingName" placeholder="请输入评测名称" class="search-input" 
+      @input="handleInput" :suffix-icon="IconSearch" />
     </div>
     <el-table ref="testingTableRef" :data="testList" style="width: 100%; 
-      margin-bottom: 20px" row-key="datasetId" bordered default-expand-all @selection-change="handleSelectionChange"
-      @select="handleSelectRow" @sort-change="handleSortChange">
+      margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
+      @selection-change="handleSelectionChange" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="dataName" width="120" label="所用数据集" />
-      <el-table-column prop="testName" width="120" label="测试名称">
+      <el-table-column prop="datasetName" width="120" label="所用数据集" />
+      <el-table-column prop="testingName" width="120" label="测试名称">
         <template #default="scope">
-          <div class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testName }} </div>
+          <div class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </div>
         </template>
       </el-table-column>
-      <el-table-column prop="desc" label="简介" />
-      <el-table-column prop="modelType" width="150" label="模型类型">
+      <el-table-column prop="description" label="简介" />
+      <el-table-column prop="modelType" width="250" label="模型类型">
         <template #header>
           <div class="custom-header">
             <span>模型类型</span>
@@ -62,7 +62,15 @@
             </el-popover>
           </div>
         </template>
+        <template #default="scope">
+          <div v-if="scope.row.llm">
+            <img :src="`data:image/svg+xml;base64,${scope.row.llm?.llmIcon}`"/>
+            {{ scope.row.llm?.llmName}}
+          </div>
+        </template>
       </el-table-column>
+      <el-table-column prop="searchMethod" width="150" label="检索方法"></el-table-column>
+      <el-table-column prop="topk" width="80" label="Top_k"></el-table-column>
       <el-table-column prop="status" width="200" label="状态">
         <template #header>
           <div class="custom-header">
@@ -81,30 +89,22 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="scope.row.status === StatusEnum.FAIL" class="statusFail">
+          <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.FAIL" class="statusFail">
             测试失败
           </div>
-          <div v-if="scope.row.status === StatusEnum.SUCCESS" class="statusSuccess">
+          <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.SUCCESS" class="statusSuccess">
             测试成功
           </div>
-          <div v-if="scope.row.status === StatusEnum.CANCEL" class="statusCancel">
+          <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.CANCEL" class="statusCancel">
             取消测试
           </div>
-          <div v-if="scope.row.status === StatusEnum.ANALYSIS_ING" class="statusWaitIng">
+          <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.ANALYSIS_ING" class="statusWaitIng">
             <div class="icon-box icon-loading"></div>
             等待测试
           </div>
-          <div class="statusAnalysis" v-if="scope.row.status === StatusEnum.RUNNING">
+          <div class="statusAnalysis" v-if="scope.row.testingTask?.taskStatus === StatusEnum.RUNNING">
             <div class="percent-box">
-              <el-progress :percentage="scope.row?.reports?.[0]?.current_stage &&
-                scope.row?.reports?.[0]?.stage_cnt
-                ? Math.floor(
-                  ((scope.row?.reports?.[0]?.current_stage || 0) /
-                    (scope.row?.reports?.[0]?.stage_cnt || 0)) *
-                  100
-                )
-                : 0
-                " color="#0077FF" striped striped-flow />
+              <el-progress :percentage="scope.row?.testingTask?.taskCompleted ?? 0" color="#0077FF" striped striped-flow />
             </div>
             <div class="statusAnalysisText">
               测试中
@@ -112,7 +112,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="score" width="150" label="综合评分(0-100)">
+      <el-table-column prop="aveScore" width="150" label="综合评分(0-100)">
         <template #header>
           <div class="custom-header">
             <span>综合评分(0-100)</span>
@@ -124,8 +124,11 @@
             </div>
           </div>
         </template>
+        <template #default="scope">
+          {{ scope.row.aveScore<0 ?'--':scope.row.aveScore}}
+        </template>
       </el-table-column>
-      <el-table-column prop="creator" width="100" label="创建人">
+      <el-table-column prop="authorName" width="100" label="创建人">
         <template #header>
           <div class="custom-header">
             <span>创建人</span>
@@ -143,7 +146,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="date" width="150" label="完成时间">
+      <el-table-column prop="createdTime" width="150" label="完成时间">
         <template #header>
           <div class="custom-header">
             <span>完成时间</span>
@@ -155,15 +158,18 @@
             </div>
           </div>
         </template>
+        <template #default="scope">
+          {{ scope.row.testingTask?.createdTime }}
+        </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template #default="scope">
-          <div v-if="!scope.row.dataName">
-            <el-button v-if="scope.row.status === StatusEnum.RUNNING" type="text"
-              @click="handleRunTesting(false, scope.row)">暂停</el-button>
+          <div v-if="!scope.row.datasetId">
+            <el-button v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) " type="text"
+              @click="handleStopTesting(scope.row)">暂停</el-button>
             <el-button :disabled="scope.row.status === StatusEnum.SUCCESS" v-else type="text"
               @click="handleRunTesting(true, scope.row)">重启</el-button>
-            <el-button :disabled="scope.row.status === StatusEnum.RUNNING" type="text"
+            <el-button :disabled="scope.row.status !== 'idle'" type="text"
               @click="handleDownload(scope.row)">下载</el-button>
             <el-button :disabled="scope.row.status === StatusEnum.RUNNING" type="text"
               @click="handleDelete([scope.row])">删除</el-button>
@@ -173,9 +179,9 @@
     </el-table>
     <el-pagination v-if="testList.length > 0" v-model:current-page="currentPage" v-model:page-size="currentPageSize"
       :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount" popper-class="kbLibraryPage"
-      @size-change="handleSizeChange" @current-change="handleCurrentChange" @change="handleChangePage" />
+       @change="handleChangePage" />
   </div>
-  <testData :visible="testDataVisible" :rowData="testRowData" :close="closeFn" />
+  <testCase :visible="testDataVisible" :rowData="testRowData" :close="closeFn" />
 </template>
 
 <script setup lang="ts">
@@ -183,113 +189,20 @@ import "@/styles/evaluate.scss"
 import EmptyStatus from '@/components/EmptyStatus/index.vue'
 import { useGroupStore } from "@/store/modules/group";
 import { StatusEnum } from "@/enums/KnowledgeEnum";
-import { IconCaretDown, IconCaretUp, IconFilter, IconSearch } from "@computing/opendesign-icons";
-import testData from "./testData.vue";
+import { IconAlarm, IconCaretDown, IconCaretUp, IconFilter, IconSearch } from "@computing/opendesign-icons";
+import testCase from "./testCase.vue";
 import { storeToRefs } from "pinia";
 import FilterContainr from "@/components/TableFilter/index.vue";
 import EvaluateAPI from "@/api/evaluate";
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import { debounce } from "lodash";
 
-let testList = ref([
-  {
-    datasetId: 1,
-    dataName: 'CVPR-2023',
-    children: [
-      {
-        testId: 11,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'success',
-        score: 92,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-      {
-        testId: 12,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'running',
-        score: 91,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-      {
-        testId: 13,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'failed',
-        score: 22,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-      {
-        testId: 14,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'pending',
-        score: 77,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-    ],
-  },
-  {
-    datasetId: 2,
-    dataName: 'CVPR-2024',
-    children: [
-      {
-        testId: 11,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'success',
-        score: 92,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-      {
-        testId: 12,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'running',
-        score: 91,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-      {
-        testId: 13,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'failed',
-        score: 22,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-      {
-        testId: 14,
-        testName: '图像分类测试',
-        desc: 'ResNet50在ImageNet数据集上的基准测试',
-        modelType: 'ResNet-50',
-        status: 'pending',
-        score: 77,
-        creator: '张三',
-        date: '2023-03-15 14:30',
-      },
-    ],
-  },
-]);
+const route = useRoute();
+const testList:any = ref([]);
 const store = useGroupStore();
 const { knowledgeTabActive } = storeToRefs(store);
 const { handleKnowledgeTab } = store;
 const batchDownBth = ref(false);
-const inputValue = ref('');
 const testingTableRef = ref();
 const selectedRow = ref([]);
 const loading = ref(false);
@@ -310,11 +223,11 @@ const statusRef = ref();
 const creatorRef = ref();
 const modelList = ref([]);
 let searchParam = ref({
-  datasetId: "6586f21b",
-  testingId: "",
+  datasetId: "",
+  testingId: null,
   testingName: "",
   llmId: "",
-  runStatus: "",
+  runStatus: null,
   scoresOrder: "asc",
   authorName: "",
 })
@@ -346,6 +259,18 @@ const checkedFilterList = ref([
 
   }
 ]);
+const pollingKfTimer = ref();
+const sortFilter = ref({});
+const searchPayload = ref<any>({
+  kbId:'',  
+  testingId: '',
+  testingName: '',
+  llmId: '',
+  runStatus: [],
+  scoresOrder: 'desc',
+  authorName: '',
+});
+
 const handleSortChange = (column: string, order: string) => {
 }
 const handleBatchDownBth = (e: boolean) => {
@@ -359,7 +284,21 @@ const handleInput = debounce(() => {
     page: currentPage.value,
     pageSize: currentPageSize.value
   };
-  queryTestList(param);
+  loading.value = true;
+  EvaluateAPI.testingList({kbId:route.query.kb_id,...param}).then((res: any) => {
+    testList.value = res.datasetTestings?.map((item: any) => {
+      const newItem={
+        datasetId: item.datasetId,
+        datasetName: item.datasetName,
+        children:item.testings,
+      }
+      return newItem;
+    });
+    
+ 
+  }).finally(() => {
+    loading.value = false;
+  })
 }, 200);
 
 const handleCreate = () => {
@@ -377,12 +316,7 @@ const handleSelectionChange = (val: any) => {
   selectedRow.value = selectArr;
 };
 
-const handleSelectRow = (selection: any[], row: any) => {
-  console.log(selection, row);
-}
-
 const handleChangePage = (pageNum: number, pageSize: number) => {
-  console.log(pageNum, pageSize)
   currentPage.value = pageNum;
   currentPageSize.value = pageSize;
   let param = {
@@ -404,8 +338,28 @@ const handleRunTesting = (isRun: boolean, row: any) => {
     run: isRun,
   }
   EvaluateAPI.runTesting(param).then((res) => {
-
+    handeAssetLibraryData(
+      {
+        kbId: route.query.kb_id as string,
+        page: 1,
+        pageSize: 20,
+      },
+      true,
+      true
+    );
   })
+}
+const handleStopTesting = (row: any) => {
+  ElMessageBox.confirm('确定暂停测试？点击确定后将停止测试，请谨慎操作。', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+      }).then(() => {
+        handleRunTesting(false, row);
+      })
 }
 const handleDownload = (row: any) => {
   const url = `${window.origin}/witchaind/api/testing/download?testingId=${row.testingId}`;
@@ -418,19 +372,37 @@ const handleDownload = (row: any) => {
   document.body.removeChild(a);
 }
 const handleBatchDownload = () => {
+  let flag = true;
+  selectedRow.value.forEach((item: any) => {
+    if (item.runStatus !== 'idle') {
+      flag = false;
+    }
+  })
+  if(!flag){
+    ElMessage.error('只有【测试成功】的评测信息才可以下载！')
+    return;
+  }
   selectedRow.value.forEach((item: any) => {
     setTimeout(()=>{
       handleDownload(item)
     },300)
   })
 }
+
 const handleDelete = (arr: any) => {
-  console.log(arr);
   let idList = arr.map((item: any) => {
     return item.testingId
   })
   EvaluateAPI.deleteTesting(idList).then((res) => {
-    console.log(res);
+    handeAssetLibraryData(
+      {
+        kbId: route.query.kb_id as string,
+        page: 1,
+        pageSize: 20,
+      },
+      true,
+      true
+    );
   })
 }
 
@@ -446,23 +418,152 @@ const closeFn = () => {
 
 const queryTestList = (params: any) => {
   loading.value = true;
-  EvaluateAPI.testingList(params).then((res: any) => {
-    console.log(res);
-    testList.value = res.testings;
+  EvaluateAPI.testingList({kbId:route.query.kb_id,...params}).then((res: any) => {
+    testList.value = res.datasetTestings?.map((item: any) => {
+      const newItem={
+        datasetId: item.datasetId,
+        datasetName: item.datasetName,
+        children:item.testings,
+      }
+      return newItem;
+    });
+    
+ 
   }).finally(() => {
     loading.value = false;
   })
 }
+const handlePollAssetFileData = () => {
+  EvaluateAPI.testingList({
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
+    kbId: route.query.kb_id as string,
+    ...handleSearchPayload(),
+    ...sortFilter.value,
+  })
+    .then((res: any) => {
+      if (!res?.datasetTestings?.length && currentPage.value && currentPage.value !== 1) {
+        currentPage.value = 1;
+        handleSearchOpsData(true, true);
+        return;
+      }
+      testList.value = (res?.datasetTestings || []).map((item: any) => {
+        const newItem={
+          datasetId: item.datasetId,
+          datasetName: item.datasetName,
+          children:item.testings,
+        }
+        return newItem;
+      });
+      
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+const handleStartPollTimer = () => {
+  pollingKfTimer.value = setInterval(() => handlePollAssetFileData(), 15000);
+};
+const handleSearchPayload = () => {
+  const searchParams = Object.keys(searchPayload.value || {}).reduce((pre: any, item) => {
+    if (searchPayload.value?.[item]?.length > 0 && searchPayload.value?.[item] !== 'all') {
+      pre[item] = searchPayload.value[item];
+      if (item === 'enabled') {
+        pre[item] = JSON.parse(searchPayload.value[item]);
+      }
+    }
+
+    return pre;
+  }, {});
+  return searchParams || {};
+};
+const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
+  handeAssetLibraryData(
+    {
+      page_number: currentPage.value,
+      page_size: currentPageSize.value,
+      kbId: route.query.kb_id as string,
+      ...handleSearchPayload(),
+      ...sortFilter.value,
+    },
+    loadingStatus,
+    startPollTimer
+  );
+};
+const handeAssetLibraryData = (
+  payload: any,
+  loadingStatus: boolean,
+  pollTimer: boolean
+) => {
+  if (pollTimer) {
+    handleCleartTimer();
+  }
+  loading.value = loadingStatus;
+  EvaluateAPI.testingList(payload)
+    .then((res: any) => {
+      if (!res?.datasetTestings?.length && currentPage.value && currentPage.value !== 1) {
+        currentPage.value = 1;
+        handleSearchOpsData(true, true);
+        return;
+      }
+      testList.value = (res?.datasetTestings || []).map((item: any) => {
+        const newItem={
+          datasetId: item.datasetId,
+          datasetName: item.datasetName,
+          children:item.testings,
+        }
+        return newItem;
+      });
+      
+      currentPage.value = res.page_number;
+      currentPageSize.value = res.page_size;
+      totalCount.value = res.total;
+      if (pollTimer) {
+        handleStartPollTimer();
+      }
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
 watch(knowledgeTabActive, () => {
   if (knowledgeTabActive.value === 'evaluation') {
     console.log(knowledgeTabActive.value);
-    let param = {
-      ...searchParam.value,
-      testingName: inputValue.value,
-      page: currentPage.value,
-      pageSize: currentPageSize.value
-    };
-    queryTestList(param);
+    handeAssetLibraryData(
+      {
+        kbId: route.query.kb_id as string,
+        page: 1,
+        pageSize: 20,
+      },
+      true,
+      true
+    );
+  }else{
+    handleCleartTimer();
   }
 })
+onMounted(() => {
+  const kbId = route.query.kb_id;
+  if (kbId?.length && knowledgeTabActive.value === 'document' ) {
+    handeAssetLibraryData(
+      {
+        kbId: kbId as string,
+        page: 1,
+        pageSize: 20,
+      },
+      true,
+      true
+    );
+  }
+});
+
+const handleCleartTimer = () => {
+  clearInterval(pollingKfTimer.value);
+  pollingKfTimer.value = null;
+};
+
+onUnmounted(() => {
+  handleCleartTimer();
+});
 </script>

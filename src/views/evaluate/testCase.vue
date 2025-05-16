@@ -1,9 +1,9 @@
 <template>
-    <el-drawer v-model="props.visible" @close="handleClose" :show-close="props.rowData?.status !== 'success'" size="70%"
+    <el-drawer v-model="props.visible" @close="handleClose" :show-close="props.rowData?.testingTask?.taskStatus !== 'success'" size="70%"
         :destroy-on-close="false">
         <template #header>
-            <h4 class="drawer-title">{{ props.rowData?.testName }}</h4>
-            <el-button v-if="props.rowData?.status === 'success'">
+            <h4 class="drawer-title">{{ props.rowData?.testingName }}</h4>
+            <el-button v-if="props.rowData?.testingTask?.taskStatus === 'success'" @click="handleDownloadReport" >
                 下载报告
             </el-button>
         </template>
@@ -23,20 +23,75 @@
                     <div id="leftChart"></div>
                 </div>
                 <div class="table-container">
-                    <el-table :data="[{}]" row-key="id" bordered>
-                        <el-table-column prop="dataName" width="150" label="问题" fixed />
-                        <el-table-column prop="testName" width="300" label="标准答案" />
-                        <el-table-column prop="desc" width="300" label="原始片段" />
-                        <el-table-column prop="modelType" width="300" label="答案" />
-                        <el-table-column prop="modelType" width="300" label="检索到的片段" />
-                        <el-table-column prop="modelType" width="150" label="文档来源" />
-                        <el-table-column prop="modelType" width="130" label="上下文关联性" fixed="right" />
-                        <el-table-column prop="modelType" width="100" label="召回率" fixed="right" />
-                        <el-table-column prop="modelType" width="100" label="忠实度" fixed="right" />
-                        <el-table-column prop="modelType" width="120" label="答案相关性" fixed="right" />
-                        <el-table-column prop="modelType" width="130" label="最大公共子串" fixed="right" />
-                        <el-table-column prop="modelType" width="100" label="编辑距离" fixed="right" />
-                        <el-table-column prop="modelType" width="130" label="杰卡徳距离" fixed="right" />
+                    <el-table :data="testCaseList" row-key="id" bordered>
+                        <el-table-column prop="question" width="150" label="问题" fixed>
+                            <template #default="scope">
+                                <el-tooltip
+                                    class="box-item"
+                                    effect="dark"
+                                    :content="scope.row.question"
+                                    placement="top"
+                                >
+                                    <div class="dataChunkText">{{ scope.row.question }}</div>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="answer" width="300" label="标准答案" fixed >
+                            <template #default="scope">
+                                <el-tooltip
+                                    class="box-item"
+                                    effect="dark"
+                                    :content="scope.row.answer"
+                                    placement="top"
+                                >
+                                    <div class="dataChunkText">{{ scope.row.answer }}</div>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="llmAnswer" width="300" label="大模型的回答" >
+                            <template #default="scope">
+                                <el-tooltip
+                                    class="box-item"
+                                    effect="dark"
+                                    :content="scope.row.llmAnswer"
+                                    placement="top"
+                                >
+                                    <div class="dataChunkText">{{ scope.row.llmAnswer }}</div>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="relatedChunk" width="300" label="检索到的片段" >
+                            <template #default="scope">
+                                <el-tooltip
+                                    class="box-item"
+                                    effect="dark"
+                                    :content="scope.row.relatedChunk"
+                                    placement="top"
+                                >
+                                    <div class="dataChunkText">{{ scope.row.relatedChunk }}</div>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="docName" width="150" label="来源文档" >
+                            <template #default="scope">
+                                <el-tooltip
+                                    class="box-item"
+                                    effect="dark"
+                                    :content="scope.row.docName"
+                                    placement="top"
+                                >
+                                    <div class="dataChunkText">{{ scope.row.docName }}</div>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="score" width="150" label="综合得分" />
+                        <el-table-column prop="pre" width="60" label="精确率" fixed="right" />
+                        <el-table-column prop="rec" width="60" label="召回率" fixed="right" />
+                        <el-table-column prop="fai" width="60" label="忠实值" fixed="right" />
+                        <el-table-column prop="rel" width="90" label="可解释性" fixed="right" />
+                        <el-table-column prop="lcs" width="120" label="最长公共子串得分" fixed="right" />
+                        <el-table-column prop="leve" width="100" label="编辑距离得分" fixed="right" />
+                        <el-table-column prop="jac" width="120" label="杰卡徳相似系数" fixed="right" />
                     </el-table>
                     <el-pagination v-model:current-page="currentPage" v-model:page-size="currentPageSize"
                         :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
@@ -50,6 +105,7 @@
     </el-drawer>
 </template>
 <script lang='ts' setup>
+import EvaluateAPI from '@/api/evaluate';
 import * as echarts from 'echarts';
 import { onMounted, onBeforeUnmount, watch, nextTick, ref } from 'vue';
 
@@ -70,11 +126,42 @@ const pagination = ref({
 const handleChangePage = (pageNum: number, pageSize: number) => {
     currentPage.value = pageNum;
     currentPageSize.value = pageSize;
+    queryTestCase();
 };
 
 let chartInstanceR: echarts.ECharts | null = null;
 let chartInstanceL: echarts.ECharts | null = null;
 let resizeTimer: NodeJS.Timeout | null = null;
+
+const testCaseAvg = ref({
+    aveScore:0,
+    avePre:0,
+    aveRec:0,
+    aveFai:0,
+    aveRel:0,
+    aveLcs:0,
+    aveLeve:0,
+    aveJac:0,
+})
+const testCaseList = ref([
+    {
+        testCaseId: 'testCaseId',
+        question: 'question',
+        answer: 'answer',
+        llm_answer: 'llm_answer',
+        related_chunk: 'related_chunk',
+        doc_name: 'doc_name',
+        score: 'score',
+        pre: 'pre',
+        rec: 'rec',
+        fai: 'fai',
+        rel: 'rel',
+        lcs: 'lcs',
+        leve: 'leve',
+        jac: 'jac',
+        
+    }
+])
 
 // 防抖处理resize
 const debounceResize = () => {
@@ -221,7 +308,7 @@ const initChart = async () => {
                     },
                     data: [
                         {
-                            value: 82.5,
+                            value: props.rowData?.aveScore,
                         }
                     ]
                 }
@@ -236,7 +323,7 @@ const initChart = async () => {
                 color: 'rgb(141,152,170)'
             },
             grid: {
-                left: '1%',    // 左侧距离容器3%宽度（百分比更适配响应式）
+                left: '2%',    // 左侧距离容器3%宽度（百分比更适配响应式）
                 right: '1%',   // 右侧距离容器3%宽度
                 bottom: '1%',   // 底部距离容器3%宽度
                 top: '22%',    // 顶部距离容器3%宽度
@@ -249,7 +336,7 @@ const initChart = async () => {
                 }
             },
             xAxis: {
-                data: ['上下文相关性', '召回率', '忠实性', '答案的相关性', '最大公共子串', '编辑距离', '杰卡徳距离'],
+                data: ['平均精确率', '平均召回率', '平均忠实值', '平均可解释性', '平均最长公共子串得分', '平均编辑距离得分', '平均杰卡徳相似系数'],
                 axisTick: {
                     show: false
                 },
@@ -280,7 +367,7 @@ const initChart = async () => {
             series: [
                 {
                     type: 'bar',
-                    data: [76, 70, 78, 80, 74, 82, 77],
+                    data: Object.values(testCaseAvg.value),
                     barWidth: '10%',
                     itemStyle: {
                         color: 'rgb(0,98,220)',
@@ -304,9 +391,33 @@ onMounted(() => {
     window.addEventListener('resize', debounceResize);
 });
 
+const queryTestCase = ()=>{
+    let params={
+        page:currentPage.value,
+        pageSize:currentPageSize.value,
+        testingId: props.rowData?.testingId
+    }
+    EvaluateAPI.testingCase(params).then((res:any) => {
+            testCaseAvg.value = {
+                aveScore:res.aveScore<0?0:res.aveScore,
+                avePre:res.avePre<0?0:res.avePre,
+                aveRec:res.aveRec<0?0:res.aveRec,
+                aveFai:res.aveFai<0?0:res.aveFai,
+                aveRel:res.aveRel<0?0:res.aveRel,
+                aveLcs:res.aveLcs<0?0:res.aveLcs,
+                aveLeve:res.aveLeve<0?0:res.aveLeve,
+                aveJac:res.aveJac<0?0:res.aveJac,
+            };
+            testCaseList.value = res.testCases;
+            totalCount.value = res.total;
+        })
+}
+
 // 监听visible变化，处理图表清理
 watch(() => props.visible, (newVal) => {
     if (newVal) {
+        // drawer打开时初始化数据
+        queryTestCase()
         // 添加小延时确保DOM已经渲染
         setTimeout(async () => {
             await initChart();
@@ -342,6 +453,17 @@ onBeforeUnmount(() => {
 
 const handleClose = () => {
     props.close?.();
+}
+
+const handleDownloadReport = () => {
+    const url = `${window.origin}/witchaind/api/testing/download?testingId=${props.rowData?.testingId}`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'filename'; // 指定文件名
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 </script>
 
@@ -460,6 +582,14 @@ const handleClose = () => {
     .el-pagination .el-input__inner {
         height: var(--el-input-inner-height) !important;
     }
+
+    .dataChunkText{
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1; /* 控制显示行数 */
+        text-overflow: ellipsis;
+      }
 
 }
 
