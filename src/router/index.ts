@@ -6,7 +6,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/',
     name: '/',
-    redirect: '/login',
+    redirect: '/group',
   },
   {
     path: '/login',
@@ -14,8 +14,27 @@ export const constantRoutes: RouteRecordRaw[] = [
     meta: { hidden: true },
   },
   {
-    path: '/NotFoundPage',
-    component: () => import('@/views/notFoundPage/index.vue'),
+    path: '/group',
+    name: 'Group',
+    component: () => import('@/views/group/index.vue'),
+    meta: { hidden: true },
+  },
+  {
+    path: '/groupInfo',
+    name: 'GroupInfo',
+    component: () => import('@/views/group/groupInfo.vue'),
+    meta: { hidden: true },
+  },
+  {
+    path: '/libraryInfo',
+    name: 'libraryInfo',
+    component: () => import('@/views/knowledgeLibrary/libraryInfo.vue'),
+    meta: { hidden: true },
+  },
+  {
+    path: '/documentInfo',
+    name: 'documentInfo',
+    component: () => import('@/views/knowledgeFile/documentInfo.vue'),
     meta: { hidden: true },
   },
   {
@@ -31,6 +50,11 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/knowledge/fileSection',
     component: () => import('@/views/knowledgeFileSection/index.vue'),
+    meta: { hidden: true },
+  },
+  {
+    path: '/NotFoundPage',
+    component: () => import('@/views/notFoundPage/index.vue'),
     meta: { hidden: true },
   },
   {

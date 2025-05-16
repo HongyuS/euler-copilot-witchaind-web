@@ -9,6 +9,15 @@ export const enum StatusEnum {
   RUNNING = 'running',
 }
 
+export const enum DataSetStatusEnum {
+ PENDING = 'pending',
+RUNNING = 'running',
+SUCCESS ='success',
+FAILED = 'failed',
+CANCELED = 'canceled',
+ DELETED ='deleted'
+}
+
 export const enum MenuType {
   KL_FILE = 'klFile',
   KL_CONFIG = 'klConfig',

@@ -1,8 +1,14 @@
 <template>
-  <UserHeaderBar />
   <CustomLoading :loading="loading" />
-
-  <div class="knowledgeLibrary-container">
+  <div class="empty-content" v-if="!fileTableList.data.length && !isSearch">
+    <EmptyStatus
+      description="暂无资产"
+      buttonText="新建资产库"
+      buttonClass="group-btn"
+      @click="handleCreateKnowledge"
+    />
+  </div>
+  <div v-else class="knowledgeLibrary-container">
     <div
       v-if="showTaskExportNotify"
       class="o-export-progress-notify"
@@ -32,7 +38,7 @@
             v-for="(item, index) in taskExportList"
             :key="item.id"
             class="item">
-            <di class="item-box">
+            <div class="item-box">
               <div class="item-info">
                 <div class="item-name">
                   <h2 class="item-name-text">
@@ -47,7 +53,7 @@
               <div class="item-close">
                 <IconX @click="handleCloseSingleUpload(item.taskId)" />
               </div>
-            </di>
+            </div>
             <div class="taskStatusPer">
               <div
                 class="waitExport"
@@ -115,7 +121,7 @@
       class="knowledgeLibrary-box knowledgeLibrary-table-box"
       :class="{ knowledgeLibrayList: switchIcon === 'list' }">
       <div class="kl-tilte">
-        {{ $t('assetLibrary.assetLibrary') }}
+          {{ groupName }}
       </div>
       <div class="kl-ops">
         <div class="kl-left-btn">
@@ -127,9 +133,56 @@
           </el-button>
           <el-button
             @click="handleImportKnowledge"
-            class="ImportAsset cancelBtn">
+            class="ImportAsset">
             {{ $t('btnText.batchImport') }}
           </el-button>
+          <el-dropdown 
+            placement="bottom" 
+            popper-class="kf-ops-dowlon dropdown-container"
+            @visible-change="handleBatchDownBth"
+            :disabled="multipleSelection.length === 0"
+          >
+            <el-button 
+            :class="{
+              'upBtn': batchDownBth,
+              'downBtn': !batchDownBth,
+              'dropdown-disabled': multipleSelection.length === 0
+            }"
+            >
+              批量操作
+              <el-icon class="el-icon--right" v-if="!batchDownBth">
+                <IconCaretDown />
+              </el-icon>
+              <el-icon class="el-icon--right el-icon--caretup" v-if="batchDownBth">
+                <IconCaretUp />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleBatchDelete" >
+                  {{ $t('btnText.batchDelete') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click="handleBatchExport" >
+                  {{ $t('btnText.batchExport') }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <el-button v-if="switchIcon === 'thumb'" @click="handleMultipleSelect">
+            {{multiple?'取消多选' : '多选'}}
+          </el-button>
+          <span v-if="multiple && switchIcon === 'thumb'" class="multipleSelect" >
+            <el-checkbox 
+              label="全选" 
+              size="large" 
+              v-model="isAllChecked"
+              :indeterminate="isIndeterminate"
+              @change="handleSelectAll"
+            />
+          </span>
+          <span v-if="multipleSelection.length>0 " class="multipleSelectNum">
+            已选 <span>{{ multipleSelection.length }}</span> 项
+          </span>
         </div>
         <div class="kl-right-btn">
           <div class="kl-btn-search">
@@ -170,7 +223,6 @@
       </div>
       <div
         class="kl-card-box"
-        @scroll="handleScroll"
         ref="klCardBox"
         v-if="switchIcon === 'thumb'">
         <div
@@ -179,13 +231,16 @@
           <div
             class="kl-single-card"
             v-for="item in fileTableList.data"
-            @click="handleJumpAssets(item)"
-            :key="item.id">
+            :key="item.id"
+            :class="{'is-checked': item.checked}">
             <div class="kl-card-top">
-              <div class="kl-card-name">
+              <div class="kl-card-name"
+              @click="handleJumpAssets(item)"
+              >
                 <TextSingleTootip :content="item.name" />
               </div>
               <el-dropdown
+                v-if="!multiple"
                 placement="bottom-end"
                 popper-class="dropdown-container assetDro">
                 <div
@@ -209,16 +264,28 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
+              <el-checkbox 
+                v-else 
+                v-model="item.checked" 
+                @change="(val) => handleCheckboxChange(val, item)"
+              />
             </div>
             <div class="kl-card-desc">
               <TextMoreTootip
                 :value="item.description"
                 :row="6" />
             </div>
+            <div class="kl-card-id">
+              <span class="id-label">{{ `ID:${' '} ` }}</span>
+              <span class="id-value">{{ item.id }}</span>
+            </div>
             <div class="kl-card-footer">
+              <div>
+                @zhangsan
+              </div>
               <div class="kl-card-file-icon">
                 <img
-                  src="/src/assets/images/file.png"
+                  src="/src/assets/images/file_count.svg"
                   class="filePng" />
                 <div class="kl-card-file">
                   <span class="kl-file-num">{{ item.document_count }}</span>
@@ -228,18 +295,22 @@
                   </span>
                 </div>
               </div>
+              <div class="kl-card-file-icon">
+                <img
+                  src="/src/assets/images/file_size.svg"
+                  class="filePng" />
+                <div class="kl-card-file">
+                 {{ bytesToSize(item.document_size) }}
+                </div>
+              </div>
               <div class="kl-card-timer-icon">
                 <img
-                  src="/src/assets/images/timer.png"
+                  src="/src/assets/images/date_time.svg"
                   class="timePng" />
                 <div class="kl-card-timer">
                   <TextSingleTootip :content="convertUTCToLocalTime(item.created_time)" />
                 </div>
               </div>
-            </div>
-            <div class="kl-card-id">
-              <span class="id-label">{{ `ID:${' '} ` }}</span>
-              <span class="id-value">{{ item.id }}</span>
             </div>
           </div>
         </div>
@@ -249,6 +320,7 @@
           {{ $t('pageTipText.NoData') }}
         </div>
       </div>
+      <!-- 表格视图 -->
       <div
         class="kl-table-box"
         v-else>
@@ -258,11 +330,12 @@
           @sort-change="handleSortChange"
           @selection-change="handleSelectionChange"
           :class="fileTableList.data.length < currentPageSize ? 'showPagination' : ''">
+          <el-table-column type="selection"  width="55" />
           <el-table-column
             prop="name"
             :label="$t('assetLibrary.name')"
             :show-overflow-tooltip="true"
-            width="300"
+            width="130"
             :fixed="true"
             class-name="kl-name">
             <template #default="scope">
@@ -320,15 +393,55 @@
           <el-table-column
             prop="document_count"
             sortable
-            width="150"
+            width="100"
             :label="$t('assetLibrary.fileNum')" />
-
+            <el-table-column
+            prop="document_size"
+            sortable
+            width="100"
+            :label="$t('assetLibrary.fileSize')" >
+            <template #default="scope">
+              <span class="kf-name-row">
+                {{ bytesToSize(scope.row.document_size) }}
+              </span>
+            </template>
+          </el-table-column>
+            <el-table-column
+            prop="created_user"
+            sortable
+            width="100"
+            :label="$t('assetLibrary.creator')">
+            <template #header>
+                <span>{{ $t('assetLibrary.creator') }}</span>
+                <el-popover
+                  :visible="timeFilterVisible"
+                  popper-class="filterPopper timeFilterPo"
+                  placement="bottom-start"
+                  :show-arrow="false">
+                  <template #reference>
+                    <el-icon
+                      @click="handeDatePickerShow"
+                      @click.stop
+                      :class="
+                        sortFilter?.created_time_start?.length! > 0 || timeFilterVisible
+                          ? 'searchIconIsActive'
+                          : ''
+                      ">
+                      <IconFilter />
+                    </el-icon>
+                  </template>
+                </el-popover>
+            </template>
+            <template #default="scope">
+              <span>{{ scope.row.created_user }}</span>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="created_time"
             sortable
             class-name="asset-upload-time-cell"
             :label="$t('assetLibrary.uploadTime')"
-            width="200"
+            width="150"
             @header-click="() => {}"
             @click.stop>
             <template #header>
@@ -349,24 +462,6 @@
                   @change="handleTimeChange"
                   ref="tiemPick"
                   @visible-change="handleVisibleChange" />
-                <el-popover
-                  :visible="timeFilterVisible"
-                  popper-class="filterPopper timeFilterPo"
-                  placement="bottom-start"
-                  :show-arrow="false">
-                  <template #reference>
-                    <el-icon
-                      @click="handeDatePickerShow"
-                      @click.stop
-                      :class="
-                        sortFilter?.created_time_start?.length! > 0 || timeFilterVisible
-                          ? 'searchIconIsActive'
-                          : ''
-                      ">
-                      <IconFilter />
-                    </el-icon>
-                  </template>
-                </el-popover>
               </div>
             </template>
             <template #default="scope">
@@ -376,7 +471,7 @@
           <el-table-column
             prop="action"
             :label="$t('btnText.operation')"
-            width="180">
+            width="120">
             <template #default="scope">
               <el-button
                 text
@@ -396,17 +491,18 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          v-if="fileTableList.data?.length > 0"
-          v-model:current-page="currentPage"
-          v-model:page-size="currentPageSize"
-          :page-sizes="pagination.pageSizes"
-          :layout="pagination.layout"
-          :total="totalCount"
-          popper-class="kbLibraryPage"
-          @change="handleChangePage" />
       </div>
+      <el-pagination
+        v-if="fileTableList.data?.length > 0"
+        v-model:current-page="currentPage"
+        v-model:page-size="currentPageSize"
+        :page-sizes="pagination.pageSizes"
+        :layout="pagination.layout"
+        :total="totalCount"
+        popper-class="kbLibraryPage"
+        @change="handleChangePage" />
     </div>
+  </div>
     <el-dialog
       v-model="dialogImportVisible"
       class="upload-dialog"
@@ -504,7 +600,6 @@
         </el-button>
       </div>
     </el-dialog>
-  </div>
   <UploadProgress
     :showUploadNotify="uploadTaskListData.showUploadNotify"
     :uploadingList="uploadTaskListData.uploadingList"
@@ -518,7 +613,6 @@
     :taskListLoading="taskListLoading" />
 </template>
 <script lang="ts" setup>
-import UserHeaderBar from '@/components/UserHeaderBar/index.vue';
 import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import Upload from '@/components/Upload/index.vue';
@@ -535,17 +629,32 @@ import {
   IconError,
   IconFilter,
   IconSuccess,
+  IconCaretDown,
+  IconCaretUp,
 } from '@computing/opendesign-icons';
 import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 
-import { debounce } from 'lodash';
+import { debounce, filter } from 'lodash';
 import KbAppAPI from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import FilterContainr from '@/components/TableFilter/index.vue';
+import { defineProps } from 'vue';
+import router from '@/router';
+import { useGroupStore } from '@/store/modules/group';
+import EmptyStatus from '@/components/EmptyStatus/index.vue'
+import { CheckboxValueType } from 'element-plus';
+import { M } from 'vite/dist/node/types.d-aGj9QkWt';
+import { bytesToSize } from '@/utils/bytesToSize';
 
+defineProps({
+groupName: {
+  type: String
+},
+});
+const { navGroup } =  storeToRefs(useGroupStore());
 const { t } = useI18n();
 const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);
@@ -610,6 +719,52 @@ const fileTableList = reactive<{
   data: [],
 });
 const taskTimer = ref();
+const batchDownBth = ref(false);
+const multiple = ref(false)
+const multipleSelection = ref<any[]>([]);
+const isAllChecked = computed(() => {
+  if (!fileTableList.data.length) return false;
+  return fileTableList.data.every(item => item.checked);
+});
+const isIndeterminate = ref(false);
+
+const handleCheckboxChange = (checked: CheckboxValueType, item: any) => {
+  if (checked) {
+    if(!multipleSelection.value.includes(item)){
+      multipleSelection.value.push(item);
+    }
+  } else {
+    const index = multipleSelection.value.findIndex(i => i.id === item.id);
+    if (index !== -1) {
+      multipleSelection.value.splice(index, 1);
+    }
+  }
+  isIndeterminate.value = multipleSelection.value.length > 0 && multipleSelection.value.length < fileTableList.data.length;
+};
+
+const handleSelectAll = (checked:CheckboxValueType) => {
+  fileTableList.data.forEach(item => {
+    item.checked = checked;
+    handleCheckboxChange(checked, item);
+  });
+  isIndeterminate.value = false;
+};
+
+const handleBatchDownBth = (e: boolean) => {
+  batchDownBth.value = e;
+};
+
+const handleBatchDelete = () => {
+  console.log(multipleSelection.value);
+}
+
+const handleBatchExport = () => {
+}
+
+const handleMultipleSelect = () => {
+  multiple.value = !multiple.value;
+  handleSelectAll(false);
+};
 
 const handleScroll = (e: { target: any }) => {
   const klCardBox = e.target;
@@ -696,6 +851,9 @@ const handleSwitch = (switchType: string) => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   knoledgekeyWord.value = '';
+  multipleSelection.value = [];
+  isIndeterminate.value = false;
+
   handleQueryKbLibrary({
     page_number: currentPage.value,
     page_size: currentPageSize.value,
@@ -940,21 +1098,6 @@ const handleExportScroll = (e: { target: any }) => {
   }
 };
 
-// const handleQueryExportTaskList = () => {
-//   taskExportTimer.value = setInterval(() => {
-//     KbAppAPI.queryKbTaskList({
-//       type: "save_knowledge_base",
-//     }).then((res: any) => {
-//       taskExportList.value = res || [];
-//       taskListExportDate.value = Date.now();
-//       if (res?.every((item) => item.status !== "pending")) {
-//         clearInterval(taskExportTimer.value);
-//         taskExportTimer.value = null;
-//       }
-//     });
-//   }, 2500);
-// };
-
 watch(
   () => t(''),
   () => {
@@ -1025,7 +1168,6 @@ const handleTimeChange = (e: (string | undefined)[]) => {
   });
   handleCancelVisible();
 };
-
 const handleCreateKnowledge = () => {
   dialogCreateVisible.value = true;
 };
@@ -1035,8 +1177,16 @@ const handleCancelVisible = () => {
   dialogCreateVisible.value = false;
 };
 
-const handleJumpAssets = (kbItem: any) => {
-  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kbItem.id}`, '_self');
+const handleJumpAssets = async (kbItem: any) => {
+  await router.push({path:'/libraryInfo',query:{kb_id:kbItem.id}},);
+  let groupNav = navGroup.value;
+  groupNav[2]={
+      name:kbItem.name,
+      path:'/libraryInfo',
+      query:{
+        kb_id:kbItem.id
+      }}
+  
 };
 
 const handleAddFile = () => {
@@ -1048,7 +1198,9 @@ const handleCancelAddFile = () => {
   addTipVisible.value = false;
 };
 
-const handleSelectionChange = () => {};
+const handleSelectionChange = (val:any) => {
+  multipleSelection.value = val;
+}
 
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   currentPage.value = 1;
@@ -1078,8 +1230,10 @@ const handleDeleteKl = (row: any) => {
 const handleOpenDownload = (fileId: any) => {
   window.open(`${window.origin}/witchaind/api/kb/download?task_id=${fileId}`);
 };
+let isSearch = ref(false);
 
 const handleInputSearch = debounce((e) => {
+  isSearch.value = e?.length
   let payload: {
     page_number: number;
     page_size: number;

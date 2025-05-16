@@ -3,8 +3,7 @@
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  height: calc(100% - 48px);
-  padding: 16px 24px 24px;
+  height: calc(100vh - 220px);
   min-width: 1240px;
   .kf-container-top {
     display: flex;
@@ -75,7 +74,6 @@
     .kf-container-right {
       flex: 1;
       min-width: 700px;
-      padding: 16px 24px 24px 24px;
       background: rgb(254 254 254);
       border-radius: 4px;
 
@@ -85,6 +83,15 @@
 
         .importFileBtn {
           padding: 8px 15px;
+        }
+
+        .dataSetBtn{
+          margin-left: unset !important;
+        }
+
+        .dataSetBtn.is-disabled{
+          color: var(--o-button-color_disabled) !important;
+          background: #ebedf3;
         }
 
         .is-disabled {
@@ -445,6 +452,17 @@
   }
 }
 
+.el-dropdown.is-disabled{
+  .el-button{
+    color: var(--o-button-color_disabled) !important;
+  }
+  .el-button:hover{
+    color: var(--o-button-color_disabled) !important;
+    background-color: var(--o-button-bg-color_disabled) !important;
+    border-color: var(--o-button-border-color_disabled) !important;
+  }
+}
+
 .upload-dialog {
   width: 560px;
   padding: 0 !important;
@@ -461,12 +479,12 @@
   padding: 4px 8px;
 }
 
-.edit-dialog {
+.edit-dialog,.dataSet-edit-dialog {
   padding: 0 !important;
   .el-dialog__body {
     padding-bottom: 0 !important;
   }
-  .kf-ruleForm {
+  .kf-ruleForm,.dataSet-ruleForm {
     .el-form-item {
       gap: unset !important;
       margin-bottom: 24px;

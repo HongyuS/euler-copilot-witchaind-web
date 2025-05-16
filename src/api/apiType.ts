@@ -1,21 +1,21 @@
 export interface CreateKbRequest {
-  default_chunk_size: number;
-  default_parser_method: string;
+  defaultChunkSize: number;
+  defaultParseMethod: string;
   description: string;
-  document_type_list: string[];
-  embedding_model: string;
-  name: string;
+  docTypes: string[];
+  embeddingModel: string;
+  kbName: string;
   [property: string]: any;
 }
 
 export interface UpdateKbRequest {
-  default_chunk_size: number;
-  default_parser_method: string;
+  defaultChunkSize: number;
+  defaultParseMethod: string;
   description: string;
-  document_type_list: object[];
-  embedding_model: string;
-  id: string;
-  name: string;
+  docTypes: object[];
+  embeddingModel: string;
+  teamId?: string;
+  kbName: string;
   [property: string]: any;
 }
 

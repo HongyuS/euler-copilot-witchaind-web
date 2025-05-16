@@ -4,7 +4,7 @@
     v-loading="loading"
     :class="loading ? 'customLoading' : 'loadingNone'"
     :element-loading-text="loadingText || `${$t('pageTipText.Loading')}...`"
-    element-loading-background="rgba(122, 122, 122, 0.5)"></div>
+    :element-loading-background="dark?'rgba(122, 122, 122, 0.5)':'rgba(255, 255, 255, 0.7)'"></div>
 </template>
 <script lang="ts" setup>
 import { defineProps } from 'vue';
@@ -15,6 +15,11 @@ defineProps({
   },
   loadingText: {
     type: String
+  },
+  dark:{
+    type: Boolean,
+    default: true,
+    required: false,
   }
 });
 </script>
