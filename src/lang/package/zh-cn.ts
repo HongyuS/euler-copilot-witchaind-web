@@ -130,6 +130,9 @@ export default {
     parag: '段落',
     table: '表格',
     img: '图片',
+    link: '链接',
+    code: '代码',
+    qa: '问答对',
   },
   model: {
     pleasePlace: '请输入',

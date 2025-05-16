@@ -1,6 +1,6 @@
 export interface searchPaylodInterface {
   name?: string;
-  document_type_list?: string[];
+  docTypes?: string[];
   chunk_size_order?: string;
   created_time_order?: string;
   parse_status?: string[];
@@ -11,10 +11,10 @@ export interface searchPaylodInterface {
 }
 
 export interface FileForm {
-  chunk_size: number;
-  type_id: string;
-  id: string;
-  name: string;
+  chunkSize: number;
+  docTypeId: string;
+  docId: string;
+  docName: string;
   [property: string]: any;
 }
 

@@ -237,7 +237,7 @@
               <div class="kl-card-name"
               @click="handleJumpAssets(item)"
               >
-                <TextSingleTootip :content="item.name" />
+                <TextSingleTootip :content="item.kbName" />
               </div>
               <el-dropdown
                 v-if="!multiple"
@@ -277,18 +277,18 @@
             </div>
             <div class="kl-card-id">
               <span class="id-label">{{ `ID:${' '} ` }}</span>
-              <span class="id-value">{{ item.id }}</span>
+              <span class="id-value">{{ item.kbId }}</span>
             </div>
             <div class="kl-card-footer">
               <div>
-                @zhangsan
+                {{ item.authorName }}
               </div>
               <div class="kl-card-file-icon">
                 <img
                   src="/src/assets/images/file_count.svg"
                   class="filePng" />
                 <div class="kl-card-file">
-                  <span class="kl-file-num">{{ item.document_count }}</span>
+                  <span class="kl-file-num">{{ item.docCnt }}</span>
                   <span class="kl-file-text">
                     <TextSingleTootip
                       :content="`${$t('assetLibrary.piece')}${$t('assetLibrary.file')}`" />
@@ -300,7 +300,7 @@
                   src="/src/assets/images/file_size.svg"
                   class="filePng" />
                 <div class="kl-card-file">
-                 {{ bytesToSize(item.document_size) }}
+                 {{ bytesToSize(item.docSize) }}
                 </div>
               </div>
               <div class="kl-card-timer-icon">
@@ -308,7 +308,7 @@
                   src="/src/assets/images/date_time.svg"
                   class="timePng" />
                 <div class="kl-card-timer">
-                  <TextSingleTootip :content="convertUTCToLocalTime(item.created_time)" />
+                  <TextSingleTootip :content="convertUTCToLocalTime(item.createdTime)" />
                 </div>
               </div>
             </div>
@@ -332,7 +332,7 @@
           :class="fileTableList.data.length < currentPageSize ? 'showPagination' : ''">
           <el-table-column type="selection"  width="55" />
           <el-table-column
-            prop="name"
+            prop="kbName"
             :label="$t('assetLibrary.name')"
             :show-overflow-tooltip="true"
             width="130"
@@ -342,12 +342,12 @@
               <span
                 class="kl-name-row"
                 @click="handleJumpAssets(scope.row)">
-                {{ scope.row.name }}
+                {{ scope.row.kbName }}
               </span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="kbId"
             :label="$t('assetLibrary.assetId')"
             show-overflow-tooltip
             :fixed="true"
@@ -382,7 +382,7 @@
             </template>
             <template #default="scope">
               <span class="kf-name-row">
-                {{ scope.row.id }}
+                {{ scope.row.kbId }}
               </span>
             </template>
           </el-table-column>
@@ -391,23 +391,23 @@
             :label="$t('assetLibrary.desc')"
             :show-overflow-tooltip="true" />
           <el-table-column
-            prop="document_count"
+            prop="docCnt"
             sortable
             width="100"
             :label="$t('assetLibrary.fileNum')" />
             <el-table-column
-            prop="document_size"
+            prop="docSize"
             sortable
             width="100"
             :label="$t('assetLibrary.fileSize')" >
             <template #default="scope">
               <span class="kf-name-row">
-                {{ bytesToSize(scope.row.document_size) }}
+                {{ bytesToSize(scope.row.docSize) }}
               </span>
             </template>
           </el-table-column>
             <el-table-column
-            prop="created_user"
+            prop="authorName"
             sortable
             width="100"
             :label="$t('assetLibrary.creator')">
@@ -433,11 +433,11 @@
                 </el-popover>
             </template>
             <template #default="scope">
-              <span>{{ scope.row.created_user }}</span>
+              <span>{{ scope.row.authorName }}</span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="created_time"
+            prop="createdTime"
             sortable
             class-name="asset-upload-time-cell"
             :label="$t('assetLibrary.uploadTime')"
@@ -451,7 +451,7 @@
                   popper-class="datetimerangeClass"
                   placement="bottom"
                   class="timer-picker"
-                  v-model="created_time"
+                  v-model="createdTime"
                   type="datetimerange"
                   :teleported="true"
                   :shortcuts="shortcuts"
@@ -465,7 +465,7 @@
               </div>
             </template>
             <template #default="scope">
-              <span>{{ convertUTCToLocalTime(scope.row.created_time) }}</span>
+              <span>{{ convertUTCToLocalTime(scope.row.createdTime) }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -523,7 +523,8 @@
         :taskList="importTaskList"
         :toggleUploadNotify="toggleUploadNotify"
         :handleStopUploadFile="handleStopUploadFile"
-        :handleImportLoading="handleImportLoading" />
+        :handleImportLoading="handleImportLoading"
+        uploadType="kbfile" />
     </el-dialog>
     <el-dialog
       v-if="dialogCreateVisible"
@@ -533,7 +534,7 @@
       width="560"
       @close="handleCloseCreateKb"
       :title="
-        formData?.name?.length > 0
+        formData?.kbName?.length > 0
           ? $t('btnText.editAssetLibrary')
           : $t('btnText.createAssetLibrary')
       ">
@@ -579,7 +580,7 @@
           <span>
             【
             <span class="delToolTip">
-              <TextSingleTootip :content="opsItem.name" />
+              <TextSingleTootip :content="opsItem.kbName" />
             </span>
             】
             {{ userLanguage === 'zh' ? '吗？' : null }}
@@ -637,7 +638,7 @@ import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 
 import { debounce, filter } from 'lodash';
-import KbAppAPI from '@/api/kbApp';
+import KbAppAPI, { ITaskType } from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import FilterContainr from '@/components/TableFilter/index.vue';
@@ -646,15 +647,15 @@ import router from '@/router';
 import { useGroupStore } from '@/store/modules/group';
 import EmptyStatus from '@/components/EmptyStatus/index.vue'
 import { CheckboxValueType } from 'element-plus';
-import { M } from 'vite/dist/node/types.d-aGj9QkWt';
 import { bytesToSize } from '@/utils/bytesToSize';
+const route = useRoute();
 
 defineProps({
 groupName: {
   type: String
 },
 });
-const { navGroup } =  storeToRefs(useGroupStore());
+const { navGroup,curTeamInfo } =  storeToRefs(useGroupStore());
 const { t } = useI18n();
 const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);
@@ -669,13 +670,15 @@ const importTaskList = ref([]);
 const userLanguage = ref();
 
 const resetFormData = ref({
-  name: '',
-  language: '',
-  default_chunk_size: 1024,
-  embedding_model: '',
-  default_parser_method: '',
-  document_type_list: [],
+  kbName: '',
+  tokenizer: '',
+  defaultChunkSize: 512,
+  embeddingModel: '',
+  defaultParseMethod: '',
+  docTypes: [],
   description: '',
+  uploadSizeLimit:512,
+  uploadCountLimit:128,
 });
 const showTaskExportNotify = ref(false);
 const taskExportList = ref<any[]>([]);
@@ -711,7 +714,7 @@ const timeFilterVisible = ref(false);
 const fileFilterVisible = ref(false);
 const inputSearchRef = ref();
 const timePick = ref();
-const created_time = ref();
+const createdTime = ref();
 const shortcuts = ref();
 const fileTableList = reactive<{
   data: Array<any>;
@@ -754,11 +757,107 @@ const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 
+const handleDelete= async (ids:string[],successFn:Function)=>{
+  KbAppAPI.delKbLibrary(ids).then((res) => {
+    if (res) {
+      ElMessage({
+        showClose: true,
+        message: t('opsMessage.delSuccess'),
+        icon: IconSuccess,
+        customClass: 'o-message--success',
+        duration: 3000,
+      });
+      handleOpsKbConfirm();
+    }
+    successFn();
+  })
+  .finally(() => {
+    loading.value = false;
+  });
+}
 const handleBatchDelete = () => {
-  console.log(multipleSelection.value);
+  loading.value = true;
+  const ids = multipleSelection.value.map(item => item.kbId);
+  const successFn = ()=>{
+    multipleSelection.value = [];
+    handleQueryKbLibrary({
+      page_number: 1,
+      page_size: 10,
+    });
+  }
+  handleDelete(ids,successFn);
 }
 
 const handleBatchExport = () => {
+  dialogImportVisible.value = false;
+  uploadTaskListData.value.showUploadNotify = false;
+  loading.value = true;
+  handleInitExportTaskList().then((res) => {
+    showTaskExportNotify.value = true;
+    showTaskExportList.value = true;
+    exportTaskTotal.value = exportTaskTotal.value + 1;
+    let kbIds:string[] = [];
+    const arr = multipleSelection.value.map((row)=>{
+      kbIds.push(row.kbId);
+      let item = {
+        name: row.kbName,
+        id: row.kbId,
+        exportStatus: 'pending',
+        taskId: res?.data,
+      }
+      return item;
+    })
+    let taskOptions:any = []
+    arr?.map((item: any) => {
+      taskOptions.push({
+        taskDownUrl: '',
+        onProgress: (evt: any) => {
+          item.percent = evt;
+        },
+        onError: () => {
+          item.exportStatus = 'error';
+          item.percent = '0';
+          loading.value = false;
+        },
+      });
+      return item;
+    }),
+    taskExportList.value = [
+      ...arr,
+      ...res.map((item: any) => {
+        let reportDetail = item?.task?.reports?.[0];
+        return {
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
+          percent:
+            item?.taskStatus === 'success'
+              ? 100
+              : reportDetail
+                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
+                : 0,
+          exportStatus: item?.taskStatus,
+        };
+      }),
+    ];
+    KbAppAPI.savebLibrary(kbIds, taskOptions)
+        .then((taskRes:any) => {
+          arr?.map((item: any,index) => {
+            item.taskId = taskRes[index];
+
+          })
+          loading.value = false;
+          taskExportTimer.value = setInterval(() => {
+            handleInitExportTaskList();
+          }, 2500);
+        })
+        .catch(() => {
+          arr?.map((item: any,index) => {
+            taskOptions[index].onError();
+          })
+        }),
+    handleMultipleSelect()
+  })
 }
 
 const handleMultipleSelect = () => {
@@ -766,33 +865,12 @@ const handleMultipleSelect = () => {
   handleSelectAll(false);
 };
 
-const handleScroll = (e: { target: any }) => {
-  const klCardBox = e.target;
-  // 检查是否已经滚动到底部
-  if (klCardBox?.clientHeight + klCardBox.scrollTop + 10 >= klCardBox?.scrollHeight) {
-    if (currentPage.value * currentPageSize.value < totalCount.value) {
-      currentPage.value = currentPage.value + 1;
-      loading.value = true;
-
-      KbAppAPI.getKbLibrary({
-        page_number: currentPage.value,
-        page_size: currentPageSize.value,
-      })
-        .then((res: any) => {
-          fileTableList.data = [...fileTableList.data, ...res?.data_list];
-          totalCount.value = res?.total;
-        })
-        .finally(() => {
-          loading.value = false;
-        });
-    }
-  }
-};
 const handleQueryKbLibrary = (params: QueryKbRequest) => {
   loading.value = true;
-  KbAppAPI.getKbLibrary(params)
+  const id = route.query.id as string || curTeamInfo.value?.teamId;
+  KbAppAPI.getKbLibrary({teamId: id ,...params})
     .then((res: any) => {
-      fileTableList.data = res?.data_list;
+      fileTableList.data = res?.kbList;
       totalCount.value = res?.total;
     })
     .finally(() => {
@@ -869,28 +947,30 @@ const toggleUploadNotify = (uploadTaskPayload: {}) => {
 };
 
 const handInitTaskList = (selectedFiles: string | any[]) => {
-  return KbAppAPI.queryKbTaskList({
-    types: ['import_knowledge_base'],
-    page_number: 1,
-    page_size: importTaskPageSize.value,
+  return KbAppAPI.queryTaskList({
+    teamId:route.query.id as string,
+    taskType: 'kb_import',
+    page: 1,
+    pageSize: importTaskPageSize.value,
   }).then((res: any) => {
-    importTaskList.value = res.data_list || [];
+    importTaskList.value = res.tasks || [];
     importTaskTotal.value = selectedFiles ? res.total + selectedFiles.length : res.total;
-    return res.data_list || [];
+    return res.tasks || [];
   });
 };
 
 const handelTaskList = () => {
-  KbAppAPI.queryKbTaskList({
-    types: ['import_knowledge_base'],
-    page_number: 1,
-    page_size: importTaskPageSize.value,
+  KbAppAPI.queryTaskList({
+    teamId:route.query.id as string,
+    taskType: 'kb_import',
+    page: 1,
+    pageSize: importTaskPageSize.value,
   }).then((res: any) => {
-    importTaskList.value = res.data_list || [];
+    importTaskList.value = res.tasks || [];
     importTaskTotal.value = res.total;
     taskListImportDate.value = Date.now();
     taskListLoading.value = false;
-    if (res.data_list?.every((item: any) => !['pending', 'running'].includes(item.task.status))) {
+    if (res.tasks?.every((item: any) => !['pending', 'running'].includes(item.taskStatus))) {
       clearInterval(taskTimer.value);
       taskTimer.value = null;
       handleOpsKbConfirm();
@@ -925,26 +1005,22 @@ const handleImportLoading = (loadingStatus: boolean) => {
 };
 
 const handleStopUploadFile = (taskId: string) => {
-  taskListImportDate.value = Date.now();
-  taskListLoading.value = true;
-  let payload: any = {
-    task_id: taskId,
-  };
-  if (taskId === 'all') {
-    payload = { types: ['import_knowledge_base'] };
-  }
-  KbAppAPI.stopKbTaskList(payload).then(() => {
-    KbAppAPI.queryKbTaskList({
-      types: ['import_knowledge_base'],
-      page_number: 1,
-      page_size: importTaskPageSize.value,
-    }).then((res: any) => {
-      importTaskList.value = res.data_list || [];
+  if(taskId==='all'){
+    handleCloseAllTask('kb_import');
+  }else{
+    taskListImportDate.value = Date.now();
+    taskListLoading.value = true;
+    let payload: any = {
+      taskId
+    };
+    KbAppAPI.stopOneTaskList(payload).then((res:any) => {
+      handleInitExportTaskList();
+      importTaskList.value = res.tasks || [];
       taskListLoading.value = false;
       importTaskTotal.value = res.total || 0;
       taskListImportDate.value = Date.now();
-    });
-  });
+    })
+  }
 };
 
 const handleExportKl = async (row: any) => {
@@ -965,7 +1041,6 @@ const handleExportKl = async (row: any) => {
         },
       ]?.map((item: any) => {
         let taskOptions = {
-          taksInfo: row,
           taskDownUrl: '',
           onProgress: (evt: any) => {
             item.percent = evt;
@@ -973,9 +1048,10 @@ const handleExportKl = async (row: any) => {
           onError: () => {
             item.exportStatus = 'error';
             item.percent = '0';
+            loading.value = false;
           },
         };
-        KbAppAPI.savebLibrary(row.id, taskOptions)
+        KbAppAPI.savebLibrary([row.kbId], taskOptions)
           .then((taskRes) => {
             item.taskId = taskRes;
             loading.value = false;
@@ -992,16 +1068,16 @@ const handleExportKl = async (row: any) => {
       ...res.map((item: any) => {
         let reportDetail = item?.task?.reports?.[0];
         return {
-          id: item.id,
-          taskId: item.task.id,
-          name: item.name,
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
           percent:
-            item?.task?.status === 'success'
+            item?.taskStatus === 'success'
               ? 100
               : reportDetail
                 ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
                 : 0,
-          exportStatus: item?.task?.status,
+          exportStatus: item?.taskStatus,
         };
       }),
     ];
@@ -1012,7 +1088,6 @@ const handleUploadRestart = (task: { taskId: string }) => {
   taskExportList.value.forEach((item) => {
     if (task.taskId === item.taskId) {
       let taskOptions = {
-        taksInfo: task,
         taskDownUrl: '',
         onProgress: (evt: any) => {
           item.percent = evt;
@@ -1025,7 +1100,7 @@ const handleUploadRestart = (task: { taskId: string }) => {
           item.exportStatus = 'success';
         },
       };
-      KbAppAPI.savebLibrary(task.taskId, taskOptions)
+      KbAppAPI.savebLibrary([task.taskId], taskOptions)
         .then(() => {
           taskOptions.onSuccess();
         })
@@ -1037,47 +1112,63 @@ const handleUploadRestart = (task: { taskId: string }) => {
 };
 
 const handleCloseSingleUpload = (taskId: string) => {
-  taskExportLoading.value = true;
-  let payload: any = {
-    task_id: taskId,
-  };
-  if (taskId === 'all') {
-    payload = { types: ['export_knowledge_base'] };
+  if(taskId === 'all'){
+    handleCloseAllTask('kb_export');
+  }else{
+    taskExportLoading.value = true;
+    let payload: any = {
+      taskId
+    };
+    KbAppAPI.stopOneTaskList(payload).then(() => {
+      handleInitExportTaskList();
+    }).finally(()=>{
+      taskExportLoading.value = false;
+    })
   }
-  KbAppAPI.stopKbTaskList(payload).then(() => {
-    handleInitExportTaskList();
-  });
 };
 
+const handleCloseAllTask=(type: ITaskType)=>{
+  taskExportLoading.value = true;
+  KbAppAPI.stopAllTaskList({
+    teamId:route.query.id as string,
+    taskType:type
+  }).then(() => {
+    handleInitExportTaskList();
+  }).finally(()=>{
+    taskExportLoading.value = false;
+  })
+}
+
 const handleInitExportTaskList = () => {
-  return KbAppAPI.queryKbTaskList({
-    types: ['export_knowledge_base'],
-    page_number: 1,
-    page_size: exportTaskPageSize.value,
+  return KbAppAPI.queryTaskList({
+    teamId:route.query.id as string,
+    taskType: 'kb_export',
+    page: 1,
+    pageSize: exportTaskPageSize.value,
   }).then((res: any) => {
     exportTaskTotal.value = res?.total || 0;
     taskExportLoading.value = false;
     taskExportList.value =
-      res.data_list.map((item: any) => {
+      res.tasks.map((item: any) => {
         let reportDetail = item?.task?.reports?.[0];
         return {
-          id: item.id,
-          taskId: item.task.id,
-          name: item.name,
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
           percent:
-            item?.task?.status === 'success'
+            item?.taskStatus === 'success'
               ? 100
               : reportDetail
                 ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
                 : 0,
-          exportStatus: item?.task?.status,
+          exportStatus: item?.taskStatus,
         };
       }) || [];
-    if (res?.data_list.every((item: any) => !['pending', 'running'].includes(item?.task?.status))) {
+    if (res?.tasks.every((item: any) => !['pending', 'running'].includes(item?.taskStatus))) {
       clearInterval(taskExportTimer.value);
       taskExportTimer.value = null;
     }
-    return res?.data_list || [];
+    return res?.tasks || [];
   });
 };
 
@@ -1178,20 +1269,20 @@ const handleCancelVisible = () => {
 };
 
 const handleJumpAssets = async (kbItem: any) => {
-  await router.push({path:'/libraryInfo',query:{kb_id:kbItem.id}},);
+  await router.push({path:'/libraryInfo',query:{kb_id:kbItem.kbId}},);
   let groupNav = navGroup.value;
   groupNav[2]={
-      name:kbItem.name,
-      path:'/libraryInfo',
-      query:{
-        kb_id:kbItem.id
-      }}
-  
+    name:kbItem.kbName,
+    path:'/libraryInfo',
+    query:{
+      kb_id:kbItem.kbId
+    }
+  }
 };
 
 const handleAddFile = () => {
   const assetLibraryObj = fileTableList.data[0];
-  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${assetLibraryObj.id}`, '_self');
+  handleJumpAssets(assetLibraryObj)
 };
 
 const handleCancelAddFile = () => {
@@ -1206,7 +1297,7 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   currentPage.value = 1;
   sortFilter.value = data.order
     ? {
-        [data.prop === 'created_time' ? 'created_time_order' : 'document_count_order']:
+        [data.prop === 'createdTime' ? 'created_time_order' : 'document_count_order']:
           data.order === 'descending' ? 'desc' : 'asc',
       }
     : {};
@@ -1228,7 +1319,7 @@ const handleDeleteKl = (row: any) => {
 };
 
 const handleOpenDownload = (fileId: any) => {
-  window.open(`${window.origin}/witchaind/api/kb/download?task_id=${fileId}`);
+  window.open(`${window.origin}/witchaind/api/kb/download?taskId=${fileId}`);
 };
 let isSearch = ref(false);
 
@@ -1245,13 +1336,11 @@ const handleInputSearch = debounce((e) => {
   if (e) {
     payload = {
       ...payload,
-      name: e,
+      kbName: e,
     };
 
-    if (switchIcon.value === 'list') {
-      sortFilter.value.name = e;
-      payload = { ...payload, ...handleFilterData(sortFilter.value) };
-    }
+    sortFilter.value.kbName = e;
+    payload = { ...payload, ...handleFilterData(sortFilter.value) };
   }
   handleQueryKbLibrary(payload);
 }, 200);
@@ -1280,36 +1369,20 @@ const handleOpsKbConfirm = () => {
     page_size: currentPageSize.value,
   };
   if (knoledgekeyWord.value?.length > 0) {
-    payload.name = knoledgekeyWord.value;
+    payload.kbName = knoledgekeyWord.value;
   }
   handleQueryKbLibrary(payload);
 };
 
 const handleConfirmDelKb = (row: any) => {
-  loading.value = true;
   delTipVisible.value = false;
-  KbAppAPI.delKbLibrary({
-    id: row.id,
-    task_id: row.task_id,
-  })
-    .then((res) => {
-      if (res) {
-        ElMessage({
-          showClose: true,
-          message: t('opsMessage.delSuccess'),
-          icon: IconSuccess,
-          customClass: 'o-message--success',
-          duration: 3000,
-        });
-        if (switchIcon.value === 'thumb') {
-          klCardBox.value.scrollTop = 0;
-        }
-        handleOpsKbConfirm();
-      }
-    })
-    .finally(() => {
-      loading.value = false;
+  const successFn = ()=>{
+    handleQueryKbLibrary({
+      page_number: 1,
+      page_size: 10,
     });
+  }
+  handleDelete([row.kbId], successFn)
 };
 
 const handleCancelDelKb = () => {
@@ -1351,8 +1424,11 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
 const handleUploadMyFile = (options: any) => {
   KbAppAPI.importKbLibrary(
     {
+      params:{
+        teamId: route.query.id as string
+      },
       data: {
-        files: options.file.raw,
+        kb_packages: options.file?.raw,
       },
     },
     options

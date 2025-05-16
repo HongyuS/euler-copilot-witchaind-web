@@ -5,6 +5,7 @@
         class="kf-container-right"
         v-if="menuType === MenuType.KL_FILE">
         <div class="kf-container-table-ops">
+        <div class="kf-container-table-ops-left" >
           <el-button
             type="primary"
             style="margin-right: 8px"
@@ -64,12 +65,15 @@
             </template>
           </el-dropdown>
         </div>
+        <el-input placeholder="请输入文档名称" v-model="searchPayload.docName" class="kf-container-table-ops-right" 
+          @input="hanldeSearhNameFilter"  :suffix-icon="IconSearch" />
+        </div>
         <div class="kf-container-table-box">
           <el-table
             :data="fileTableList.data"
             class="fileTableContainer"
             cell-calss-name="tableCell"
-            :row-key="(row) => row.id"
+            :row-key="(row) => row.docId"
             @selection-change="handleSelectionChange"
             @sort-change="handleSortChange"
             ref="multipleTable"
@@ -83,51 +87,22 @@
               :reserve-selection="true"
               :selectable="checkSelecTable" />
             <el-table-column
-              prop="name"
+              prop="docName"
               :label="$t('assetFile.docName')"
               show-overflow-tooltip
               :fixed="true"
               class-name="kl-name"
               min-width="150">
-              <template #header>
-                <div class="custom-header">
-                  <span>{{ $t('assetFile.docName') }}</span>
-                  <el-icon
-                    ref="inputSearchRef"
-                    :class="
-                      searchPayload?.name?.length > 0 || fileFilterVisible
-                        ? 'searchIconIsActive'
-                        : ''
-                    ">
-                    <IconSearch />
-                  </el-icon>
-                  <el-popover
-                    ref="popoverRef"
-                    v-model:visible="fileFilterVisible"
-                    popper-class="inputSearchFilterPopper"
-                    placement="bottom-start"
-                    :virtual-ref="inputSearchRef"
-                    :show-arrow="false"
-                    trigger="click"
-                    virtual-triggering>
-                    <FilterContainr
-                      filterType="input"
-                      v-model:serachName="searchPayload.name"
-                      :hanldeSearhNameFilter="hanldeSearhNameFilter"
-                      :searchPayload="searchPayload" />
-                  </el-popover>
-                </div>
-              </template>
               <template #default="scope">
                 <span
                   class="kf-name-row"
                   @click="handleJumpFileSection(scope.row)">
-                  {{ scope.row.name }}
+                  {{ scope.row.docName }}
                 </span>
               </template>
             </el-table-column>
             <el-table-column
-              prop="document_type"
+              prop="docType"
               :label="$t('assetFile.category')"
               width="150"
               show-overflow-tooltip>
@@ -137,7 +112,7 @@
                   <el-icon
                     ref="buttonRef"
                     :class="
-                      searchPayload?.document_type_list?.length > 0 || categoryFilterVisible
+                      searchPayload?.docTypeId?.length > 0 || categoryFilterVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -161,16 +136,16 @@
                 </div>
               </template>
               <template #default="scope">
-                <span>{{ scope.row.document_type.type }}</span>
+                <span>{{ scope.row.docType.docTypeName }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              prop="chunk_size"
+              prop="chunkSize"
               :label="$t('assetFile.chunkSize')"
               sortable
               width="120" />
             <el-table-column
-              prop="created_time"
+              prop="createdTime"
               class-name="upload-time-cell"
               sortable
               :label="$t('assetFile.uploadTime')"
@@ -204,7 +179,7 @@
                         @click="handeDatePickerShow"
                         @click.stop
                         :class="
-                          searchPayload?.created_time_start?.length > 0 || timeFilterVisible
+                          searchPayload?.createdTimeStart?.length > 0 || timeFilterVisible
                             ? 'searchIconIsActive'
                             : ''
                         ">
@@ -215,11 +190,11 @@
                 </div>
               </template>
               <template #default="scope">
-                <span>{{ convertUTCToLocalTime(scope.row.created_time) }}</span>
+                <span>{{ convertUTCToLocalTime(scope.row.createdTime) }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              prop="status"
+              prop="taskStatus"
               :label="$t('assetFile.analyticStatus')"
               width="220">
               <template #header>
@@ -229,7 +204,7 @@
                     ref="statusRef"
                     @click.stop
                     :class="
-                      searchPayload?.status?.length > 0 || statusFilterVisible
+                      searchPayload?.parseStatus?.length > 0 || statusFilterVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -254,41 +229,31 @@
               </template>
               <template #default="scope">
                 <div
-                  v-if="scope.row.task.status === StatusEnum.FAIL"
+                  v-if="scope.row.docTask.taskStatus === StatusEnum.FAIL"
                   class="statusFail">
                   {{ $t('assetFile.status.analyticFail') }}
                 </div>
                 <div
-                  v-if="scope.row.task.status === StatusEnum.SUCCESS"
+                  v-if="scope.row.docTask.taskStatus === StatusEnum.SUCCESS"
                   class="statusSuccess">
                   {{ $t('assetFile.status.analyticSucces') }}
                 </div>
                 <div
-                  v-if="scope.row.task.status === StatusEnum.CANCEL"
+                  v-if="scope.row.docTask.taskStatus === StatusEnum.CANCEL"
                   class="statusCancel">
                   {{ $t('assetFile.status.cancelAnalytic') }}
                 </div>
                 <div
-                  v-if="scope.row.task.status === StatusEnum.ANALYSIS_ING"
+                  v-if="scope.row.docTask.taskStatus === StatusEnum.ANALYSIS_ING"
                   class="statusWaitIng">
-                  <div class="icon-box icon-loading"></div>
                   {{ $t('assetFile.status.analyticWaitIng') }}
                 </div>
                 <div
                   class="statusAnalysis"
-                  v-if="scope.row.task.status === StatusEnum.RUNNING">
+                  v-if="scope.row.docTask.taskStatus === StatusEnum.RUNNING">
                   <div class="percent-box">
                     <el-progress
-                      :percentage="
-                        scope.row.task?.reports?.[0]?.current_stage &&
-                        scope.row.task?.reports?.[0]?.stage_cnt
-                          ? Math.floor(
-                              ((scope.row.task?.reports?.[0]?.current_stage || 0) /
-                                (scope.row.task?.reports?.[0]?.stage_cnt || 0)) *
-                                100
-                            )
-                          : 0
-                      "
+                      :percentage=" scope.row.docTask?.taskCompleted ?? 0 "
                       :color="customColor"
                       striped
                       striped-flow />
@@ -300,7 +265,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="parser_method"
+              prop="parseMethod"
               :label="$t('assetFile.parsingMethod')"
               width="150"
               show-overflow-tooltip>
@@ -310,7 +275,7 @@
                   <el-icon
                     ref="parserMethodRef"
                     :class="
-                      searchPayload?.parser_method?.length > 0 || parserMethodVisible
+                      searchPayload?.parseMethod?.length > 0 || parserMethodVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -335,17 +300,12 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="status"
+              prop="finishedTime"
               :label="$t('assetFile.parsingComTime')"
               width="200">
               <template #default="scope">
                 <div>
-                  {{
-                    scope?.row?.task?.status === 'success' &&
-                    scope?.row?.task?.reports?.[0]?.create_time
-                      ? convertUTCToLocalTime(scope?.row?.task?.reports?.[0]?.create_time)
-                      : '--'
-                  }}
+                  {{scope.row.docTask?.finishedTime??'--'}}
                 </div>
               </template>
             </el-table-column>
@@ -397,20 +357,13 @@
               fixed="right">
               <template #default="scope">
                 <el-button
-                  v-if="scope.row.status === StatusEnum.RUNNING"
+                  v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) "
                   text
                   @click="handleRunKl(scope.row, 'cancel')">
                   {{ $t('btnText.cancel') }}
                 </el-button>
                 <el-button
-                  v-if="
-                    [
-                      StatusEnum.FAIL,
-                      StatusEnum.CANCEL,
-                      StatusEnum.ANALYSIS_ING,
-                      StatusEnum.SUCCESS,
-                    ].includes(scope.row.status)
-                  "
+                  v-if="scope.row.status==='idle'"
                   text
                   @click="handleRunKl(scope.row, 'run')">
                   {{ $t('btnText.analytic') }}
@@ -518,7 +471,7 @@
         <span>
           【
           <span class="delToolTip">
-            <TextSingleTootip :content="opsItem.name" />
+            <TextSingleTootip :content="opsItem.docName" />
           </span>
           】
           {{ userLanguage === 'zh' ? '吗？' : null }}
@@ -587,14 +540,14 @@
         prop="name"
         class="docName">
         <el-input
-          v-model="ruleForm.name"
+          v-model="ruleForm.docName"
           :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
       <el-form-item
         :label="$t('assetLibrary.analyticMethod')"
-        prop="parser_method">
+        prop="parseMethod">
         <el-select
-          v-model="ruleForm.parser_method"
+          v-model="ruleForm.parseMethod"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
           :teleported="false"
           :suffix-icon="IconCaretDown">
@@ -607,9 +560,9 @@
       </el-form-item>
       <el-form-item
         :label="$t('assetFile.category')"
-        prop="type_id">
+        prop="docTypeId">
         <el-select
-          v-model="ruleForm.type_id"
+          v-model="ruleForm.docTypeId"
           popper-class="docTypeClass"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
           :suffix-icon="IconCaretDown"
@@ -627,7 +580,7 @@
         class="fileChunkSize">
         <el-input-number
           class="config-size"
-          v-model="ruleForm.chunk_size"
+          v-model="ruleForm.chunkSize"
           :min="512"
           :max="1024" />
         <span class="form-right-tip">（512~1024）</span>
@@ -654,7 +607,7 @@
       </el-form-item>
     </el-form>
   </el-dialog>
-  <DataSetDialog :generateDialogVisible="generateDialogVisible" :handleGenerateDataSet="handleGenerateDataSet"/>
+  <DataSetDialog :selectionFileData="selectionFileData" :generateDialogVisible="generateDialogVisible" :handleGenerateDataSet="handleGenerateDataSet"/>
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -686,7 +639,6 @@ import KfAppAPI from '@/api/kfApp';
 import { DocListRequest } from '@/api/apiType';
 import KbAppAPI from '@/api/kbApp';
 import TextTooltip from '@/components/TextSingleTootip/index.vue';
-
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 
@@ -694,6 +646,7 @@ import { FileForm, DocumentType } from './fileConfig';
 import router from '@/router';
 import { useGroupStore } from '@/store/modules/group';
 import DataSetDialog from './dataSetDialog.vue';
+import { finished } from 'stream';
 
 const route = useRoute();
 const dialogImportVisible = ref(false);
@@ -721,18 +674,18 @@ const opsItem = ref();
 const multipleTable = ref();
 const selectionFileData = ref<any[]>([]);
 const importTaskTotal = ref(0);
-const checkTableSelecData = ref([]);
+const checkTableSelecData = ref<any[]>([]);
 const generateDialogVisible = ref(false);
 const searchPayload = ref<any>({
-  name: '',
-  document_type_list: [],
-  chunk_size_order: '',
-  created_time_order: '',
-  status: [],
-  created_time_start: '',
-  created_time_end: '',
+  docName: '',
+  docTypeId: [],
+  chunkSizeOrder: '',
+  createdTimeOrder: '',
+  parseStatus: [],
+  createdTimeStart: '',
+  createdTimeEnd: '',
   enabled: '',
-  parser_method: [],
+  parseMethod: [],
 });
 const kbInfo = ref<any>({});
 const checkedFilterList = ref([]);
@@ -764,14 +717,16 @@ const parserMethodOptions = ref<any>([]);
 const userLanguage = ref();
 const isSubmitDisabled = ref(true);
 const ruleForm = ref<FileForm>({
-  id: '',
-  name: '',
-  type_id: '',
-  parser_method: '',
-  chunk_size: 1024,
+  docId: '',
+  docName: '',
+  docTypeId: '',
+  parseMethod: '',
+  chunkSize: 1024,
 });
+const store = useGroupStore();
+const { knowledgeTabActive,curTeamInfo } = storeToRefs(store);
 const rules = reactive({
-  name: [
+  docName: [
     {
       required: true,
       message: t('assetFile.message.name'),
@@ -877,9 +832,9 @@ watch(
 );
 
 watch(
-  () => ruleForm.value.name,
+  () => ruleForm.value.docName,
   () => {
-    isSubmitDisabled.value = !ruleForm.value.name?.length;
+    isSubmitDisabled.value = !ruleForm.value.docName?.length;
   },
   {
     deep: true,
@@ -905,17 +860,13 @@ const handleSearchPayload = () => {
   return searchParams || {};
 };
 
-const handleJumpHome = () => {
-  window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
-};
-
 const handelCategoryFilterProper = (filterList: any) => {
-  searchPayload.value.document_type_list = filterList;
+  searchPayload.value.docTypeId = filterList;
   handleSearchData();
 };
 
 const handelStatusFilterProper = (filterList: any) => {
-  searchPayload.value.status = filterList;
+  searchPayload.value.parseStatus = filterList;
   handleSearchData();
 };
 const handelEnableFilterProper = (filterList: any) => {
@@ -924,7 +875,7 @@ const handelEnableFilterProper = (filterList: any) => {
 };
 
 const handelParserMethodFilterProper = (filterList: any) => {
-  searchPayload.value.parser_method = filterList;
+  searchPayload.value.parseMethod = filterList;
   handleSearchData();
 };
 
@@ -934,9 +885,8 @@ const handleRunKl = (row: any, type: string) => {
     opsItem.value = row;
   } else {
     KfAppAPI.runLibraryFile({
-      ids: [row.id],
-      run: type,
-    }).then(() => {
+      parse: true,
+    },[row.docId]).then(() => {
       ElMessage({
         showClose: true,
         message: t('opsMessage.opsAnalyticIng'),
@@ -951,9 +901,8 @@ const handleRunKl = (row: any, type: string) => {
 
 const handleConfirmFileAnalytic = () => {
   KfAppAPI.runLibraryFile({
-    ids: [opsItem.value.id],
-    run: 'cancel',
-  }).then(() => {
+    parse: false,
+  },[opsItem.value.docId]).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsCancel'),
@@ -966,10 +915,10 @@ const handleConfirmFileAnalytic = () => {
   });
 };
 
-const handCheckTableData = (tableList) => {
-  checkTableSelecData.value = tableList.filter((checkItem) => {
-    const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
-    return selecData && ['pending', 'running'].includes(selecData.task.status);
+const handCheckTableData = (tableList:any) => {
+  checkTableSelecData.value = tableList.filter((checkItem:any) => {
+    const selecData = tableList.find((notCheckItem:any) => notCheckItem?.docId === checkItem?.docId);
+    return selecData && ['pending', 'running'].includes(selecData.task?.taskStatus);
   });
 };
 
@@ -984,15 +933,15 @@ const handeAssetLibraryData = (
   loading.value = loadingStatus;
   KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
-      if (res.data_list?.length) {
-        handCheckTableData(res.data_list);
+      if (res.documents?.length) {
+        handCheckTableData(res.documents);
       }
-      if (!res?.data_list?.length && currentPage.value !== 1) {
+      if (!res?.documents?.length && currentPage.value && currentPage.value !== 1) {
         currentPage.value = 1;
         handleSearchOpsData(true, true);
         return;
       }
-      fileTableList.data = res?.data_list || [];
+      fileTableList.data = res?.documents || [];
       currentPage.value = res.page_number;
       currentPageSize.value = res.page_size;
       totalCount.value = res.total;
@@ -1007,26 +956,26 @@ const handeAssetLibraryData = (
 
 const handlePollAssetFileData = () => {
   KfAppAPI.getKbLibraryFile({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
-    kb_id: route.query.kb_id as string,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
+    kbId: route.query.kb_id as string,
     ...handleSearchPayload(),
     ...sortFilter.value,
   })
     .then((res: any) => {
       if (res.page_number === currentPage.value && fileTableList.data?.length) {
-        if (!res?.data_list?.length && currentPage.value !== 1) {
+        if (!res?.documents?.length && currentPage.value !== 1) {
           currentPage.value = 1;
           handleSearchOpsData(true, true);
           return;
         }
         fileTableList.data = fileTableList.data.map((item) => {
-          let fileData = res?.data_list?.filter((file: any) => file.id === item.id)?.[0];
+          let fileData = res?.documents?.filter((file: any) => file.docId === item.docId)?.[0];
           return fileData || item;
         });
       }
-      if (res.data_list?.length) {
-        handCheckTableData(res.data_list);
+      if (res.documents?.length) {
+        handCheckTableData(res.documents);
       }
     })
     .finally(() => {
@@ -1035,7 +984,7 @@ const handlePollAssetFileData = () => {
 };
 
 const hanldeSearhNameFilter = (filterName: string) => {
-  searchPayload.value.name = filterName;
+  searchPayload.value.docName = filterName;
   handleSearchData();
 };
 const groupStore = useGroupStore();
@@ -1045,16 +994,16 @@ const handleJumpFileSection = async (row: any) => {
     path: '/documentInfo',
     query: {
       kb_id: route.query.kb_id,
-      file_id: row.id,
+      file_id: row.docId,
     },
   });
   let groupNav = navGroup.value;
   groupNav[3] = {
-    name: row.name,
+    name: row.docName,
     path: '/documentInfo',
     query: {
       kb_id: route.query.kb_id,
-      file_id: row.id,
+      file_id:row.docId,
     },
   };
 };
@@ -1062,9 +1011,9 @@ const handleJumpFileSection = async (row: any) => {
 const handleSearchData = () => {
   handeAssetLibraryData(
     {
-      page_number: 1,
-      page_size: currentPageSize.value,
-      kb_id: route.query.kb_id as string,
+      page: 1,
+      pageSize: currentPageSize.value ?? 20,
+      kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
       ...sortFilter.value,
     },
@@ -1080,20 +1029,22 @@ const handleSearchData = () => {
 
 const handleQueryKbData = () => {
   const kbId = route.query.kb_id;
+  curTeamInfo
   KbAppAPI.getKbLibrary({
-    id: kbId,
+    teamId: curTeamInfo.value?.teamId,
+    kbId: kbId,
     page_number: 1,
     page_size: 10,
   }).then((res: any) => {
-    kbInfo.value = res.data_list?.[0] || {};
+    kbInfo.value = res.documents?.[0] || {};
     let categoryList = JSON.parse(
-      JSON.stringify(Array.from(new Set(res.data_list?.[0]?.document_type_list)) || '[]')
+      JSON.stringify(Array.from(new Set(res.documents?.[0]?.docTypeId)) || '[]')
     );
     filterCategoryList.value = [
-      ...categoryList.map((item: { type: string; id: string }) => {
+      ...categoryList.map((item: { type: string; docId: string }) => {
         return {
           label: item.type,
-          value: item.id,
+          value: item.docId,
         };
       }),
       {
@@ -1107,7 +1058,6 @@ const handleQueryKbData = () => {
 const handleStartPollTimer = () => {
   pollingKfTimer.value = setInterval(() => handlePollAssetFileData(), 15000);
 };
-
 // 添加postMessage监听器
 const handleMessage = (event: MessageEvent) => {
   if(event.data?.type!=='changeActive'){
@@ -1121,15 +1071,30 @@ const handleMessage = (event: MessageEvent) => {
     }
   }
 };
-
-onMounted(() => {
-  const kbId = route.query.kb_id;
-  if (kbId?.length) {
+watch(()=>knowledgeTabActive.value,()=>{
+  if(knowledgeTabActive.value === 'document'){
+    const kbId = route.query.kb_id;
     handeAssetLibraryData(
       {
-        kb_id: kbId as string,
-        page_number: 1,
-        page_size: 20,
+        kbId: kbId as string,
+        page: 1,
+        pageSize: 20,
+      },
+      true,
+      true
+    );
+  }else{
+    handleCleartTimer();
+  }
+})
+onMounted(() => {
+  const kbId = route.query.kb_id;
+  if (kbId?.length && knowledgeTabActive.value === 'document' ) {
+    handeAssetLibraryData(
+      {
+        kbId: kbId as string,
+        page: 1,
+        pageSize: 20,
       },
       true,
       true
@@ -1139,7 +1104,7 @@ onMounted(() => {
         return { label: item, value: item };
       });
     });
-    handleQueryKbData();
+    // handleQueryKbData();
   }
   document.addEventListener('click', () => handleDateTimerange);
   
@@ -1184,14 +1149,10 @@ const handleDateTimerange = (e: { target: Node | null }) => {
 };
 
 const handleTimeChange = (e: (string | undefined)[]) => {
-  searchPayload.value.created_time_start = e?.[0] ? uTCToLocalTime(e?.[0]) : '';
-  searchPayload.value.created_time_end = e?.[1] ? uTCToLocalTime(e?.[1]) : '';
+  searchPayload.value.createdTimeStart = e?.[0] ? uTCToLocalTime(e?.[0]) : '';
+  searchPayload.value.createdTimeEnd = e?.[1] ? uTCToLocalTime(e?.[1]) : '';
   handleSearchOpsData(true, true);
   handleCancelVisible();
-};
-
-const handleChangeMenu = (type: string) => {
-  menuType.value = type;
 };
 
 const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
@@ -1199,7 +1160,7 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
     {
       page_number: currentPage.value,
       page_size: currentPageSize.value,
-      kb_id: route.query.kb_id as string,
+      kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
       ...sortFilter.value,
     },
@@ -1210,7 +1171,7 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
 
 const handleSwitch = (row: any) => {
   KfAppAPI.switchLibraryFile({
-    id: row.id,
+    id: row.docId,
     enabled: row.enabled,
   }).then(() => {
     ElMessage({
@@ -1254,7 +1215,7 @@ const handleSelectRunKl = () => {
   checkTableSelecData.value = selectionFileData.value;
   KfAppAPI.runLibraryFile({
     ids: selectionFileData.value.map((item) => {
-      return item.id;
+      return item.docId;
     }),
     run: 'run',
   }).then(() => {
@@ -1272,9 +1233,7 @@ const handleSelectRunKl = () => {
 };
 
 const handleConfirmDleSingle = (row: any) => {
-  KfAppAPI.delLibraryFile({
-    ids: [row.id],
-  }).then(() => {
+  KfAppAPI.delLibraryFile([row.docId]).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.delSuccess'),
@@ -1284,11 +1243,11 @@ const handleConfirmDleSingle = (row: any) => {
     });
     let selectData = JSON.parse(JSON.stringify(selectionFileData.value));
     selectData = selectData
-      .filter((item: any) => item.id !== row.id)
-      .filter((item: { id: any }) => item?.id);
+      .filter((item: any) => item.docId !== row.docId)
+      .filter((item: { docId: any }) => item?.docId);
     if (selectData?.length > 0) {
-      selectData.forEach((item: { id: any }) => {
-        multipleTable.value.toggleRowSelection(item.id);
+      selectData.forEach((item: { docId: any }) => {
+        multipleTable.value.toggleRowSelection(item.docId);
       });
       selectionFileData.value = selectData;
     } else {
@@ -1304,11 +1263,10 @@ const handleConfirmDleSelected = () => {
   delSelectTipVisible.value = false;
   loading.value = true;
   handleCleartTimer();
-  KfAppAPI.delLibraryFile({
-    ids: selectionFileData.value.map((item) => {
-      return item.id;
-    }),
-  })
+  let ids=selectionFileData.value.map((item) => {
+      return item.docId;
+    })
+  KfAppAPI.delLibraryFile(ids)
     .then(() => {
       ElMessage({
         showClose: true,
@@ -1325,7 +1283,9 @@ const handleConfirmDleSelected = () => {
     })
     .catch(() => {
       handleStartPollTimer();
-    });
+    }).finally(()=>{
+      loading.value = false;
+    })
 };
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -1333,8 +1293,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid) => {
     if (valid) {
       KfAppAPI.updateLibraryFile({
+        docId: ruleForm.value.docId
+      },{
         ...ruleForm.value,
-        document_type: ruleForm.value.document_type,
+        docTypeId: ruleForm.value.docTypeId,
       }).then(() => {
         ElMessage({
           showClose: true,
@@ -1351,11 +1313,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 };
 
 const handleEditKl = (row: any) => {
-  ruleForm.value.id = row.id;
-  ruleForm.value.name = row.name;
-  ruleForm.value.chunk_size = row.chunk_size || 1024;
-  ruleForm.value.parser_method = row.parser_method;
-  ruleForm.value.type_id = JSON.parse(JSON.stringify(row.document_type.id));
+  ruleForm.value.docId = row.docId;
+  ruleForm.value.docName = row.docName;
+  ruleForm.value.chunkSize = row.chunkSize || 1024;
+  ruleForm.value.parseMethod = row.parseMethod;
+  ruleForm.value.docTypeId = JSON.parse(JSON.stringify(row.docType.docTypeId));
   dialogEditVisible.value = true;
 };
 
@@ -1367,7 +1329,7 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
 
 const sortFilter = ref({});
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
-  let sortKey = data.prop === 'chunk_size' ? 'chunk_size_order' : 'created_time_order';
+  let sortKey = data.prop === 'chunkSize' ? 'chunkSizeOrder' : 'createdTimeOrder';
   let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
   sortFilter.value = sortValue
     ? {
@@ -1398,10 +1360,10 @@ const handleUploadMyFile = (options: any) => {
   KfAppAPI.importKbLibraryFile(
     {
       data: {
-        files: options.file.raw,
+        docs: options.file.raw,
       },
       params: {
-        kb_id: route.query.kb_id,
+        kbId: route.query.kb_id,
       },
     },
     options
@@ -1416,7 +1378,7 @@ const handleUploadMyFile = (options: any) => {
 
 const handleDownloadFile = async (downloadData: any) => {
   for (const item of downloadData) {
-    const url = `${window.origin}/witchaind/api/doc/download?id=${item.id}`;
+    const url = `${window.origin}/witchaind/api/doc/download?docId=${item.docId}`;
     const a = document.createElement('a');
     a.href = url;
     a.download = 'filename'; // 指定文件名
@@ -1429,7 +1391,7 @@ const handleDownloadFile = async (downloadData: any) => {
 };
 
 const checkSelecTable = (row) => {
-  return checkTableSelecData.value.every((item) => item?.id !== row?.id);
+  return checkTableSelecData.value.every((item) => item?.docId !== row?.docId);
 };
 
 const handleGenerateDataSet = (visible) => {
