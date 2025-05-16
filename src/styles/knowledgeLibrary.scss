@@ -240,7 +240,9 @@
             }
 
             .kl-file-num {
-              font-family: 'HarmonyOS Sans SC Bold';
+              font-size: 14px;
+              font-family: 'HarmonyOS Sans SC Regular';
+              font-weight: 700;
             }
           }
 
@@ -265,7 +267,8 @@
           }
 
           .id-label {
-            font-family: 'HarmonyOS Sans SC Bold';
+            font-family: 'HarmonyOS Sans SC Regular';
+            font-weight: 700;
           }
         }
       }

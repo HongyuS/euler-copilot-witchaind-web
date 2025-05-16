@@ -1108,6 +1108,20 @@ const handleStartPollTimer = () => {
   pollingKfTimer.value = setInterval(() => handlePollAssetFileData(), 15000);
 };
 
+// 添加postMessage监听器
+const handleMessage = (event: MessageEvent) => {
+  if(event.data?.type!=='changeActive'){
+    return;
+  }
+  if (event.data && typeof event.data.StopActive !== 'undefined') {
+    if (event.data.StopActive) {
+      handleCleartTimer();
+    } else {
+      handleStartPollTimer();
+    }
+  }
+};
+
 onMounted(() => {
   const kbId = route.query.kb_id;
   if (kbId?.length) {
@@ -1128,6 +1142,9 @@ onMounted(() => {
     handleQueryKbData();
   }
   document.addEventListener('click', () => handleDateTimerange);
+  
+  // 添加postMessage事件监听
+  window.addEventListener('message', handleMessage);
 });
 
 const handleCleartTimer = () => {
@@ -1137,6 +1154,8 @@ const handleCleartTimer = () => {
 
 onUnmounted(() => {
   handleCleartTimer();
+  // 移除postMessage事件监听
+  window.removeEventListener('message', handleMessage);
 });
 
 const handleVisibleChange = (e: boolean) => {
