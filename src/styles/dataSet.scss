@@ -1,0 +1,137 @@
+.dataset-empty-content {
+  height: calc(100vh - 220px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dataSet-container {
+  .el-dropdown.is-disabled .el-button {
+    color: var(--o-button-color_disabled) !important;
+    background-color: var(--o-button-bg-color_disabled) !important;
+    border-color: var(--o-button-border-color_disabled) !important;
+  }
+
+  .el-table tbody tr td:not(:first-child) .cell {
+    padding: 0 8px !important;
+  }
+
+  .el-table tbody tr td:first-child .cell {
+    padding-left: 16px !important;
+  }
+
+  .el-table tbody .el-table__cell:not(.el-table__expanded-cell):first-child,
+  .el-table thead .cell,
+  .el-table tbody .el-table-column--selection + th.el-table__cell,
+  .el-table-column--selection + td.el-table__cell {
+    padding: unset !important;
+  }
+
+  .custom-header {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    .searchIconIsActive {
+      color: #0077ff !important;
+    }
+
+    .el-icon {
+      font-size: 16px;
+      color: #8d98aa;
+    }
+
+    .el-icon:hover {
+      color: #0077ff;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .statusFail,
+  .statusSuccess,
+  .statusCancel {
+    height: 24px;
+    width: fit-content;
+    padding: 0px 8px;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgb(255 255 255);
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  .statusFail {
+    background: rgb(227, 32, 32);
+  }
+
+  .statusSuccess {
+    background: rgb(36, 171, 54);
+  }
+
+  .statusCancel {
+    background: rgb(141, 152, 170);
+  }
+
+  .statusWaitIng {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  @keyframes rotate-img {
+    from {
+      transform: rotate(0);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .icon-loading {
+    height: 16px;
+    width: 16px;
+    background-repeat: no-repeat !important;
+    background-size: 100% !important;
+    display: inline-block;
+    background: url('/src/assets/icons/taskLoading.png');
+  }
+
+  .icon-box {
+    animation: rotate-img 0.8s infinite linear;
+  }
+
+  .statusGenerate {
+    display: flex;
+    align-items: center;
+
+    .percent-box {
+      .el-progress-bar {
+        width: 88px;
+      }
+      .el-progress__text {
+        width: fit-content;
+      }
+    }
+
+    .el-progress__text {
+      width: 24px;
+      min-width: 18px;
+      color: rgb(0 0 0);
+    }
+
+    .statusGenerateText {
+      font-size: 12px;
+      font-family: 'HarmonyOS Sans SC Medium';
+      margin-left: 2px;
+      color: rgb(0 0 0);
+    }
+  }
+
+  .dataSet-container-table-box{
+    margin-top: 16px;
+  }
+}

@@ -1,60 +1,34 @@
 <template>
-  <div class="page-platform-header">
-    <HeaderBar />
-  </div>
-  <CustomLoading :loading="loading" />
   <div class="kf-container">
-    <div class="kf-container-top">
-      <div class="kf-left-menu">
-        <el-link
-          @click="handleJumpHome"
-          type="primary"
-          target="_blank"
-          class="home-menu"
-          :underline="false">
-          {{ $t('btnText.homePage') }}
-        </el-link>
-        <div>/</div>
-        <div class="kf-name">
-          <TextTooltip :content="kbInfo.name" />
-        </div>
-      </div>
-      <div class="kf-right-title">
-        {{ menuType === MenuType.KL_FILE ? $t('btnText.assetDocList') : $t('btnText.configInfo') }}
-      </div>
-    </div>
     <div class="kf-container-action">
-      <div class="kf-container-left">
-        <div
-          class="kf-file-btn"
-          :class="menuType === MenuType.KL_FILE ? 'kf-ops-btn' : ''"
-          @click="handleChangeMenu(MenuType.KL_FILE)">
-          {{ $t('btnText.assetDocList') }}
-        </div>
-        <div
-          class="kf-file-config"
-          :class="menuType === MenuType.KL_CONFIG ? 'kf-ops-btn' : ''"
-          @click="handleChangeMenu(MenuType.KL_CONFIG)">
-          {{ $t('btnText.configInfo') }}
-        </div>
-      </div>
       <div
         class="kf-container-right"
         v-if="menuType === MenuType.KL_FILE">
         <div class="kf-container-table-ops">
           <el-button
             type="primary"
-            style="margin-right: 24px"
+            style="margin-right: 8px"
             @click="handleImportKnowledge"
             class="importFileBtn">
             {{ $t('btnText.importFile') }}
           </el-button>
+          <el-button
+            type="primary"
+            style="margin-right: 8px"
+            @click="handleGenerateDataSet"
+            :disabled="!(selectionFileData.length > 0)"
+            class="dataSetBtn">
+            {{ $t('生成数据集') }}
+          </el-button>
           <el-dropdown
             placement="bottom"
             popper-class="dropdown-container kf-ops-dowlon"
-            @visible-change="handleBatchDownBth">
-            <el-button :class="batchDownBth ? 'upBtn' : 'downBtn'">
-              {{ $t('btnText.batchDown') }}
+            @visible-change="handleBatchDownBth"
+            :disabled="!(selectionFileData.length > 0)">
+            <el-button
+              :class="batchDownBth ? 'upBtn' : 'downBtn'"
+              :disabled="!(selectionFileData.length > 0)">
+              {{ $t('btnText.batchOps') }}
               <el-icon
                 class="el-icon--right"
                 v-if="!batchDownBth">
@@ -76,21 +50,19 @@
                   @click="handleDownloadFile(selectionFileData)">
                   {{ $t('btnText.downloadChoose') }}
                 </el-dropdown-item>
+                <el-dropdown-item
+                  :disabled="!(selectionFileData.length > 0)"
+                  @click="handleSelectRunKl">
+                  {{ $t('btnText.batchAnalytic') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  :disabled="!(selectionFileData.length > 0)"
+                  @click="handleSelectDeleteKl">
+                  {{ $t('btnText.batchDelete') }}
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-button
-            class="delFileBtn"
-            :disabled="!(selectionFileData.length > 0)"
-            @click="handleSelectRunKl">
-            {{ $t('btnText.analytic') }}
-          </el-button>
-          <el-button
-            class="delFileBtn cancelBtn"
-            :disabled="!(selectionFileData.length > 0)"
-            @click="handleSelectDeleteKl">
-            {{ $t('btnText.delete') }}
-          </el-button>
         </div>
         <div class="kf-container-table-box">
           <el-table
@@ -101,13 +73,15 @@
             @selection-change="handleSelectionChange"
             @sort-change="handleSortChange"
             ref="multipleTable"
+            v-loading="loading"
             :border="true">
             <el-table-column
               type="selection"
               :fixed="true"
               class-name="kl-selection"
               width="35"
-              :reserve-selection="true" />
+              :reserve-selection="true"
+              :selectable="checkSelecTable" />
             <el-table-column
               prop="name"
               :label="$t('assetFile.docName')"
@@ -680,6 +654,7 @@
       </el-form-item>
     </el-form>
   </el-dialog>
+  <DataSetDialog :generateDialogVisible="generateDialogVisible" :handleGenerateDataSet="handleGenerateDataSet"/>
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -692,7 +667,6 @@
     :isShowAllClear="false" />
 </template>
 <script setup lang="ts">
-import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import '@/styles/knowledgeFile.scss';
 import {
@@ -717,6 +691,9 @@ import CustomLoading from '@/components/CustomLoading/index.vue';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 
 import { FileForm, DocumentType } from './fileConfig';
+import router from '@/router';
+import { useGroupStore } from '@/store/modules/group';
+import DataSetDialog from './dataSetDialog.vue';
 
 const route = useRoute();
 const dialogImportVisible = ref(false);
@@ -744,6 +721,8 @@ const opsItem = ref();
 const multipleTable = ref();
 const selectionFileData = ref<any[]>([]);
 const importTaskTotal = ref(0);
+const checkTableSelecData = ref([]);
+const generateDialogVisible = ref(false);
 const searchPayload = ref<any>({
   name: '',
   document_type_list: [],
@@ -987,6 +966,13 @@ const handleConfirmFileAnalytic = () => {
   });
 };
 
+const handCheckTableData = (tableList) => {
+  checkTableSelecData.value = tableList.filter((checkItem) => {
+    const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
+    return selecData && ['pending', 'running'].includes(selecData.task.status);
+  });
+};
+
 const handeAssetLibraryData = (
   payload: DocListRequest,
   loadingStatus: boolean,
@@ -998,6 +984,9 @@ const handeAssetLibraryData = (
   loading.value = loadingStatus;
   KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
+      if (res.data_list?.length) {
+        handCheckTableData(res.data_list);
+      }
       if (!res?.data_list?.length && currentPage.value !== 1) {
         currentPage.value = 1;
         handleSearchOpsData(true, true);
@@ -1036,6 +1025,9 @@ const handlePollAssetFileData = () => {
           return fileData || item;
         });
       }
+      if (res.data_list?.length) {
+        handCheckTableData(res.data_list);
+      }
     })
     .finally(() => {
       loading.value = false;
@@ -1046,12 +1038,25 @@ const hanldeSearhNameFilter = (filterName: string) => {
   searchPayload.value.name = filterName;
   handleSearchData();
 };
-
-const handleJumpFileSection = (row: any) => {
-  window.open(
-    `${window.origin}/witchaind/#/knowledge/fileSection?kb_id=${route.query.kb_id}&file_id=${row.id}`,
-    '_self'
-  );
+const groupStore = useGroupStore();
+const { navGroup } = storeToRefs(groupStore);
+const handleJumpFileSection = async (row: any) => {
+  await router.push({
+    path: '/documentInfo',
+    query: {
+      kb_id: route.query.kb_id,
+      file_id: row.id,
+    },
+  });
+  let groupNav = navGroup.value;
+  groupNav[3] = {
+    name: row.name,
+    path: '/documentInfo',
+    query: {
+      kb_id: route.query.kb_id,
+      file_id: row.id,
+    },
+  };
 };
 
 const handleSearchData = () => {
@@ -1246,6 +1251,7 @@ const handleSelectDeleteKl = () => {
 };
 
 const handleSelectRunKl = () => {
+  checkTableSelecData.value = selectionFileData.value;
   KfAppAPI.runLibraryFile({
     ids: selectionFileData.value.map((item) => {
       return item.id;
@@ -1418,7 +1424,15 @@ const handleDownloadFile = async (downloadData: any) => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    await new Promise(resolve => setTimeout(resolve, 333)); // 添加延迟
+    await new Promise((resolve) => setTimeout(resolve, 333)); // 添加延迟
   }
+};
+
+const checkSelecTable = (row) => {
+  return checkTableSelecData.value.every((item) => item?.id !== row?.id);
+};
+
+const handleGenerateDataSet = (visible) => {
+  generateDialogVisible.value = visible;
 };
 </script>

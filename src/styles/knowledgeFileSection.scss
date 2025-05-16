@@ -4,7 +4,6 @@
   gap: 16px;
   width: 100%;
   height: 100%;
-  padding: 16px 24px 24px;
   min-width: 1240px;
   .kf-section-container-top {
     display: flex;
@@ -40,14 +39,13 @@
     display: flex;
     gap: 2px;
     width: 100%;
-    height: calc(100% - 80px);
+    height: calc(100vh - 228px);
 
     .kf-section-container-left {
       display: flex;
       flex-direction: column;
       gap: 16px;
       width: 314px;
-      padding: 24px;
       background: rgb(254 254 254);
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
@@ -78,11 +76,20 @@
       flex: 1;
       min-width: 700px;
       height: 100%;
-      padding: 24px 0 24px 24px;
       overflow: hidden;
       background: rgb(254 254 254);
       border-top-right-radius: 4px;
       border-bottom-right-radius: 4px;
+
+      .el-empty{
+        display: flex;
+        align-items: center;
+        height: calc(100vh - 400px);
+      .el-empty__image{
+          width: 320px;
+          height: 130px;
+        }
+      }
 
       .kf-section-container-table-ops {
         display: flex;

@@ -13,8 +13,6 @@ export default {
     setupI18n(app);
     // Element-plus图标
     setupElIcons(app);
-    // 路由守卫
-    setupPermission();
     // 状态管理(store)
     setupStore(app);
   },

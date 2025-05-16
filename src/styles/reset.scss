@@ -99,7 +99,7 @@ h6 {
 }
 
 .el-button {
-  border-radius: 2px !important;
+  border-radius: 4px !important;
 }
 
 .el-button span {
@@ -125,17 +125,15 @@ $newHoverBg: linear-gradient(
  */
 .el-button {
   &:hover {
-    color: #5d7dffc0 !important;
-    border-color: #5d7dffc0 !important;
+    color: #5d7dffc0 ;
+    border-color: #5d7dffc0 ;
   }
 }
 .el-button--primary,
 .bgThumb {
-  background: $newbg !important;
   border-color: #c7d2fbc0 !important;
   &:hover {
     color: white !important;
-    background: $newHoverBg !important;
     border-color: #c7d2fbc0 !important;
   }
 }
@@ -199,7 +197,9 @@ div:focus {
     font-size: 12px;
   }
 }
-
+.el-dialog{
+  border-radius: 8px !important;
+}
 .el-dialog__header {
   .el-dialog__title {
     font-size: 16px;
@@ -215,6 +215,10 @@ div:focus {
     color: rgb(255 255 255);
     background: rgb(82 163 255);
   }
+}
+
+.el-table__header thead tr th {
+  background-color: #f4f6fa !important;
 }
 
 .el-button:focus-visible {
@@ -350,7 +354,8 @@ div:focus {
 
 .model-dialog,
 .create-dialog,
-.edit-dialog {
+.edit-dialog,
+.dataSet-edit-dialog {
   .el-form-item__content {
     button.is-disabled {
       background: #b8d9ff !important;
@@ -444,6 +449,18 @@ div:focus {
   margin-right: 24px;
   .el-dialog__close {
     color: #8d98aa !important;
+  }
+}
+
+.el-link--primary{
+  display: inline-block;
+    width: 100%;
+  span{
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 

@@ -46,24 +46,23 @@ service.interceptors.response.use(
     if (response.config.responseType === 'blob' || response.config.responseType === 'arraybuffer') {
       return response;
     }
-
-    const { retcode, data, retmsg } = response?.data;
-    if (retcode?.toString() === ResultEnum.SUCCESS) {
-      return data;
+    const { code, result, message } = response?.data;
+    if (code?.toString() === ResultEnum.SUCCESS) {
+      return result;
     }
     ElMessage({
       showClose: true,
-      message: retmsg || i18n.global.t('pageTipText.systemError'),
+      message: message || i18n.global.t('pageTipText.systemError'),
       icon: IconError,
       customClass: 'o-message--error',
       duration: 3000,
     });
-    return Promise.reject(new Error(retmsg || 'Error'));
+    return Promise.reject(new Error(message || 'Error'));
   },
   (error: any) => {
     // 异常处理
     if (error?.response?.data) {
-      const { retcode, retmsg } = error.response.data;
+      const { retcode, message } = error.response.data;
       if (retcode?.toString() === ResultEnum.TOKEN_INVALID) {
         if (error?.config?.url === '/user/login') {
           ElMessage({
@@ -88,7 +87,7 @@ service.interceptors.response.use(
       } else {
         ElMessage({
           showClose: true,
-          message: retmsg || error?.message,
+          message: message || error?.message,
           icon: IconError,
           customClass: 'o-message--error',
           duration: 3000,

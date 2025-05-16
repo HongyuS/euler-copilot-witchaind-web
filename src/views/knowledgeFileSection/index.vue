@@ -1,35 +1,7 @@
 <template>
-  <div class="page-platform-header">
-    <HeaderBar />
-  </div>
-  <CustomLoading :loading="loading" />
+  <CustomLoading :dark="false" :loading="loading" />
 
   <div class="kf-section-container">
-    <div class="kf-section-container-top">
-      <div class="kf-section-left-menu">
-        <el-link
-          type="primary"
-          target="_blank"
-          class="home-menu"
-          :underline="false"
-          @click="handleJumpHome">
-          {{ $t('btnText.homePage') }}
-        </el-link>
-        <div>/</div>
-        <el-link
-          @click="handleJumpFile"
-          type="primary"
-          target="_blank"
-          class="home-menu libraryName"
-          :underline="false">
-          <TextSingleTootip :content="libraryInfo?.name" />
-        </el-link>
-        <div>/</div>
-        <div class="kf-section-name">
-          <TextSingleTootip :content="fileInfo?.name" />
-        </div>
-      </div>
-    </div>
     <div class="kf-section-container-action">
       <div class="kf-section-container-left">
         <div class="kf-section-info-title">{{ $t('assetFile.baseInfo') }}</div>
@@ -73,7 +45,7 @@
       <div class="kf-section-container-right">
         <div class="kf-section-container-table-ops">
           <div class="kf-pre-title">{{ $t('assetFile.contentView') }}</div>
-          <div class="kf-btn-search">
+          <div v-if="fileInfo?.task?.status === 'success'"  class="kf-btn-search">
             <el-input
               ref="inputRef"
               v-model="textkeyWord"
@@ -160,6 +132,7 @@
             </el-input>
           </div>
           <el-dropdown
+            v-if="fileInfo?.task?.status === 'success'" 
             placement="bottom"
             popper-class="dropdown-container kf-section-ops-dowlon"
             @visible-change="handleBatchDownBth">
@@ -194,7 +167,7 @@
             </template>
           </el-dropdown>
         </div>
-        <div class="kf-section-container-table-box">
+        <div v-if="fileInfo?.task?.status === 'success'" class="kf-section-container-table-box">
           <el-table
             :data="fileTableList.data"
             ref="fileSectionTable"
@@ -239,6 +212,15 @@
             :total="totalCount"
             @change="handleChangePage"
             popper-class="kbLibraryPage" />
+        </div>
+        <div v-if="fileInfo?.task?.status === 'pending'">
+          <el-empty description="等待解析" image="src/assets/images/empty_pending.svg" />
+        </div>
+        <div v-if="fileInfo?.task?.status === 'running'">
+          <el-empty description="解析中" image="src/assets/images/empty_running.svg" />
+        </div>
+        <div v-if="fileInfo?.task?.status === 'error'">
+          <el-empty description="解析失败" image="src/assets/images/empty_failed.svg" />
         </div>
       </div>
     </div>

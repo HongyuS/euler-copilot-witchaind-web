@@ -23,7 +23,7 @@
   }
 }
 
-.kl-ruleForm {
+.kl-ruleForm,.dataSet-ruleForm {
   padding-bottom: 0;
 
   .el-select__popper {
@@ -240,13 +240,13 @@
 
 .create-dialog {
   width: 560px;
-  height: 600px;
+  height: 440px;
   position: relative;
   padding: 0 !important;
   overflow: hidden;
 
   .el-dialog__body {
-    height: 470px !important;
+    height: 320px !important;
     max-height: unset !important;
     min-height: unset !important;
     padding-left: 16px !important;
