@@ -11,76 +11,11 @@
   import { ref, onMounted, onBeforeUnmount } from 'vue'
   import * as monaco from 'monaco-editor'
   import { editor } from 'monaco-editor'
+  import KfAppAPI from '@/api/kfApp';
+
+  const route = useRoute();
   
-  let content = `2025-04-22T15:30:45.123Z | INFO  | 192.168.1.105 | GET /api/v1/products?category=electronics | Status:200 | Latency:82ms | UserAgent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36
-2025-04-22T15:30:46.845Z | ERROR | 10.20.35.207 | POST /payment/process | Status:500 | Error:PaymentGatewayTimeout | DeviceID:ANDROID-7X8S9 | SessionID:ZYA1B3C4D5
-2025-04-22T15:30:47.112Z | DEBUG | 172.16.0.34 | GET /user/profile/12345 | CacheHit:false | QueryTime:235ms | Location:{lat:31.2304, lng:121.4737}
-{
-  "timestamp": "2025-04-22T15:31:12.335Z",
-  "level": "WARN",
-  "ip": "203.119.84.15",
-  "event": "AD_CLICK",
-  "properties": {
-    "ad_id": "X9F3G7",
-    "user_id": "U12345678",
-    "campaign": "spring_sale",
-    "device": "iPhone14,3/iOS16.4.1",
-    "location": {"city": "Shanghai", "country": "CN"}
-  }
-}
-  {
-  "timestamp": "2025-04-22T15:31:12.335Z",
-  "level": "WARN",
-  "ip": "203.119.84.15",
-  "event": "AD_CLICK",
-  "properties": {
-    "ad_id": "X9F3G7",
-    "user_id": "U12345678",
-    "campaign": "spring_sale",
-    "device": "iPhone14,3/iOS16.4.1",
-    "location": {"city": "Shanghai", "country": "CN"}
-  }
-}
-  {
-  "timestamp": "2025-04-22T15:31:12.335Z",
-  "level": "WARN",
-  "ip": "203.119.84.15",
-  "event": "AD_CLICK",
-  "properties": {
-    "ad_id": "X9F3G7",
-    "user_id": "U12345678",
-    "campaign": "spring_sale",
-    "device": "iPhone14,3/iOS16.4.1",
-    "location": {"city": "Shanghai", "country": "CN"}
-  }
-}
-{
-  "timestamp": "2025-04-22T15:31:12.335Z",
-  "level": "WARN",
-  "ip": "203.119.84.15",
-  "event": "AD_CLICK",
-  "properties": {
-    "ad_id": "X9F3G7",
-    "user_id": "U12345678",
-    "campaign": "spring_sale",
-    "device": "iPhone14,3/iOS16.4.1",
-    "location": {"city": "Shanghai", "country": "CN"}
-  }
-}
-  {
-  "timestamp": "2025-04-22T15:31:12.335Z",
-  "level": "WARN",
-  "ip": "203.119.84.15",
-  "event": "AD_CLICK",
-  "properties": {
-    "ad_id": "X9F3G7",
-    "user_id": "U12345678",
-    "campaign": "spring_sale",
-    "device": "iPhone14,3/iOS16.4.1",
-    "location": {"city": "Shanghai", "country": "CN"}
-  }
-}
-`
+  let content = ref('');
   const codeEditBox = ref<HTMLElement | null>(null)
   let monacoEditor: editor.IStandaloneCodeEditor | null = null
   
@@ -89,7 +24,7 @@
     if (!codeEditBox.value) return
   
     monacoEditor = monaco.editor.create(codeEditBox.value, {
-      value: content,
+      value: content.value,
       language: 'javascript',
       theme: 'vs',
       readOnly: true,
@@ -120,10 +55,22 @@
     });
     monaco.editor.setTheme("myTheme");
   }
+
+  const getDocumentLog = () => {
+    const docId = route.query.file_id as string;
+    KfAppAPI.getDocumentLog({docId:docId}).then((res:any) => {
+      content.value = res;
+      // 更新Monaco编辑器的内容
+      if (monacoEditor) {
+        monacoEditor.setValue(res);
+      }
+    })
+  }
   
   // 生命周期钩子
   onMounted(() => {
-    initMonaco()
+    initMonaco();
+    getDocumentLog();
   })
   
   onBeforeUnmount(() => {
@@ -134,7 +81,14 @@
   })
 
   const downloadLogFn = () => {
-
+    const url = `${window.origin}/witchaind/api/doc/download?docId=1234567890`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'filename'; // 指定文件名
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   }
   </script>
   
