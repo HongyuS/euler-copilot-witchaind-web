@@ -79,39 +79,46 @@
 
       .kf-container-table-ops {
         display: flex;
-        margin-bottom: 8px;
+        justify-content: space-between;
+        .kf-container-table-ops-left{
+          display: flex;
+          margin-bottom: 8px;
 
-        .importFileBtn {
-          padding: 8px 15px;
-        }
+          .importFileBtn {
+            padding: 8px 15px;
+          }
 
-        .dataSetBtn{
-          margin-left: unset !important;
-        }
+          .dataSetBtn{
+            margin-left: unset !important;
+          }
 
-        .dataSetBtn.is-disabled{
-          color: var(--o-button-color_disabled) !important;
-          background: #ebedf3;
-        }
+          .dataSetBtn.is-disabled{
+            color: var(--o-button-color_disabled) !important;
+            background: #ebedf3;
+          }
 
-        .is-disabled {
-          background: #ebedf3;
-        }
+          .is-disabled {
+            background: #ebedf3;
+          }
 
-        .delFileBtn {
-          padding: 8px 27px;
-          margin-left: 8px;
+          .delFileBtn {
+            padding: 8px 27px;
+            margin-left: 8px;
 
-          span {
-            min-width: unset !important;
+            span {
+              min-width: unset !important;
+            }
+          }
+
+          .el-dropdown {
+            button {
+              min-width: 96px;
+              padding: 8px 13.2px;
+            }
           }
         }
-
-        .el-dropdown {
-          button {
-            min-width: 96px;
-            padding: 8px 13.2px;
-          }
+        .kf-container-table-ops-right{
+          width: 356px;
         }
       }
 
@@ -209,6 +216,7 @@
 
       .statusFail,
       .statusSuccess,
+      .statusWaitIng,
       .statusCancel {
         height: 24px;
         width: fit-content;
@@ -231,12 +239,9 @@
       .statusCancel {
         background: rgb(141, 152, 170);
       }
-
       .statusWaitIng {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-      }
+        background: rgb(250, 192, 84);
+    }
 
       @keyframes rotate-img {
         from {

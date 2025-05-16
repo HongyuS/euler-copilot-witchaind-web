@@ -201,7 +201,7 @@
       label="domain"
       class="domain-config">
       <el-input
-        v-model="ruleForm.docTypes[index].type"
+        v-model="ruleForm.docTypes[index].docTypeName"
         :placeholder="$t('assetLibrary.message.categoryInfo')" />
       <el-icon
         class="deleteConfig"
@@ -243,6 +243,7 @@ import TextTooltip from '@/components/TextSingleTootip/index.vue';
 import { v4 as uuidv4 } from 'uuid';
 import KbAppAPI from '@/api/kbApp';
 
+const route = useRoute()
 const { t } = useI18n();
 const loading = ElLoading.service({
   visible: false,
@@ -313,7 +314,7 @@ onMounted(() => {
         JSON.stringify({
           ...props.formData,
           docTypes: props.formData?.docTypes.filter(
-            (item: any) => item?.type?.length
+            (item: any) => item?.docTypeName?.length
           ),
           defaultChunkSize: props.formData.defaultChunkSize || 512,
           uploadSizeLimit: props.formData?.uploadSizeLimit || 512,
@@ -434,7 +435,6 @@ onMounted(() => {
     }
   });
 });
-
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
@@ -447,14 +447,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       defaultChunkSize: ruleForm.value.defaultChunkSize,
       uploadCountLimit: ruleForm.value.uploadCountLimit,
       uploadSizeLimit: ruleForm.value.uploadSizeLimit,
-      docTypes: ruleForm.value.docTypes.filter((item) => item.type.length > 0),
+      docTypes: ruleForm.value.docTypes.filter((item) => item.docTypeName.length > 0),
     };
     if (valid) {
       loading.visible.value = true;
       createLoading.value = true;
-      if (ruleForm.value?.id) {
+      if (ruleForm.value?.kbId) {
         KbAppAPI.updateKbLibrary({
-          teamId: ruleForm.value.id,
+          kbId: ruleForm.value.kbId,
         },payload)
           .then((res) => {
             props.handleOpsKbForm();
@@ -475,9 +475,16 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             createLoading.value = false;
           });
       } else {
-        KbAppAPI.createKbLibrary({teamId:ruleForm.value.teamId},{
+        let docArr:any = []
+        ruleForm.value.docTypes.map((item) => {
+          docArr.push({
+            docTypeId:item.docTypeId,
+            docTypeName:item.docTypeName
+          })
+        } )
+        KbAppAPI.createKbLibrary({teamId:route.query.id?.toString() ?? ''},{
           ...payload,
-          docTypes: ruleForm.value.docTypes.map((item) => item.type),
+          docTypes: docArr
         })
           .then(() => {
             props.handleOpsKbForm();
@@ -508,8 +515,8 @@ const handleRemoveAllDocType = () => {
 
 const handleAddDocType = () => {
   ruleForm.value.docTypes.push({
-    id: uuidv4(),
-    type: '',
+    docTypeId: uuidv4(),
+    docTypeName: '',
   });
 };
 </script>

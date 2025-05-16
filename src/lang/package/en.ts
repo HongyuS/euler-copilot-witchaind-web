@@ -122,6 +122,9 @@ export default {
     parag: 'Paragraph',
     table: 'table',
     img: 'Image',
+    link: 'link',
+    code: 'code',
+    qa: 'Q & A pairs',
   },
   model: {
     pleasePlace: 'Enter a value',

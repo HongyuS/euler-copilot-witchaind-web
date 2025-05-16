@@ -31,10 +31,8 @@
                 font-weight: 700;
                 display: flex;
                 line-height: 16px;
-                & div{
-                    margin-left: 4px;
-                }
                 .last-name{
+                    margin-left: 4px;
                     text-overflow: ellipsis;
                     max-width: 130px;
                     overflow: hidden;

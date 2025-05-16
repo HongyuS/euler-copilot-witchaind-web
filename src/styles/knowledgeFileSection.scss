@@ -267,7 +267,7 @@
           line-height: 16px;
           border-radius: 2px;
         }
-        .text-type-para {
+        .text-type-text {
           color: rgb(0, 119, 255);
           background-color: rgb(184, 217, 255);
         }
@@ -278,6 +278,18 @@
         .text-type-image {
           background-color: rgb(253, 217, 188);
           color: rgb(249, 118, 17);
+        }
+        .text-type-link {
+          background-color: rgba(61,182,252, 0.3);
+          color: rgb(61,182,252);
+        }
+        .text-type-code {
+          background-color: rgba(189,69,232,0.3);
+          color: rgb(189,69,232);
+        }
+        .text-type-qa {
+          background-color: rgb(249,236,184);
+          color: rgb(235,175,0);
         }
         .kf-file-content {
           margin-top: 20px;
