@@ -1,6 +1,6 @@
 <template>
   <CustomLoading :dark="false" :loading="loading" />
-  <div class="evaluate-empty-content" v-if="!searchParam.testingName && testList.length === 0">
+  <div class="evaluate-empty-content" v-if="!isSearch && testList.length === 0">
     <EmptyStatus description="暂无评测信息，去数据集管理生成一个吧！" buttonText="去生成评测" buttonClass="group-btn" @click="handleCreate" />
   </div>
   <div class="group-table-box" v-else>
@@ -31,12 +31,12 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-input v-model="searchParam.testingName" placeholder="请输入评测名称" class="search-input" 
+      <el-input v-model="searchPayload.testingName" placeholder="请输入评测名称" class="search-input" 
       @input="handleInput" :suffix-icon="IconSearch" />
     </div>
     <el-table ref="testingTableRef" :data="testList" style="width: 100%; 
       margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
-      @selection-change="handleSelectionChange" @sort-change="handleSortChange">
+      @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
       <el-table-column prop="datasetName" width="120" label="所用数据集" />
       <el-table-column prop="testingName" width="120" label="测试名称">
@@ -57,8 +57,8 @@
             </el-icon>
             <el-popover ref="popoverRef" v-model:visible="modelFilterVisible" popper-class="filterPopper"
               placement="bottom-start" :virtual-ref="modelRef" :show-arrow="false" trigger="click" virtual-triggering>
-              <FilterContainr :filterList="modelList" filterType="checkBox"
-                :handelSubFilterProper="handelStatusFilterProper" :checkedFilterList="[]" />
+              <FilterContainr :filterList="llmOptions" filterType="checkBox"
+                :handelSubFilterProper="handelModelFilterProper" :checkedFilterList="checkedFilterList" />
             </el-popover>
           </div>
         </template>
@@ -69,7 +69,29 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="searchMethod" width="150" label="检索方法"></el-table-column>
+      <el-table-column prop="searchMethod" width="150" label="检索方法">
+        <template #header>
+          <div class="custom-header">
+            <span>检索方法</span>
+            <el-icon ref="searchRef" @click.stop :class="searchFilterVisible
+              ? 'searchIconIsActive'
+              : ''
+              ">
+              <IconFilter />
+            </el-icon>
+            <el-popover ref="popoverRef" v-model:visible="searchFilterVisible" popper-class="filterPopper"
+              placement="bottom-start" :virtual-ref="searchRef" :show-arrow="false" trigger="click" virtual-triggering>
+              <FilterContainr :filterList="searchList" filterType="checkBox"
+                :handelSubFilterProper="handelSearchFilterProper" :checkedFilterList="checkedFilterList" />
+            </el-popover>
+          </div>
+        </template>
+        <template #default="scope">
+          <div v-if="scope.row.llm">
+            {{ scope.row.searchMethod}}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="topk" width="80" label="Top_k"></el-table-column>
       <el-table-column prop="status" width="200" label="状态">
         <template #header>
@@ -118,8 +140,8 @@
             <span>综合评分(0-100)</span>
             <div class="sort-icon-box">
               <span class="caret-wrapper">
-                <i class="sort-caret ascending" @click="handleSortChange('score', 'asc')"></i>
-                <i class="sort-caret descending" @click="handleSortChange('score', 'desc')"></i>
+                <i class="sort-caret ascending" :class="scoreActive === 'asc'?'sort-up-active':''" @click="handleSortChange('asc')"></i>
+                <i class="sort-caret descending" :class="scoreActive === 'desc'?'sort-down-active':''" @click="handleSortChange('desc')"></i>
               </span>
             </div>
           </div>
@@ -132,34 +154,34 @@
         <template #header>
           <div class="custom-header">
             <span>创建人</span>
-            <el-icon ref="creatorRef" @click.stop :class="creatorFilterVisible
-              ? 'searchIconIsActive'
-              : ''
+            <el-icon
+              ref="creatorRef"
+              :class="
+                searchPayload?.authorName?.length! > 0 || creatorVisible ? 'searchIconIsActive' : ''
               ">
-              <IconFilter />
+              <IconSearch />
             </el-icon>
-            <el-popover ref="popoverRef" v-model:visible="creatorFilterVisible" popper-class="filterPopper"
-              placement="bottom-start" :virtual-ref="creatorRef" :show-arrow="false" trigger="click" virtual-triggering>
-              <FilterContainr :filterList="[]" filterType="checkBox" :handelSubFilterProper="handelStatusFilterProper"
-                :checkedFilterList="[]" />
-            </el-popover>
+            <el-popover
+                  ref="popoverRef"
+                  v-model:visible="creatorVisible"
+                  popper-class="inputSearchFilterPopper"
+                  placement="bottom-start"
+                  :virtual-ref="creatorRef"
+                  :show-arrow="false"
+                  trigger="click"
+                  virtual-triggering>
+                  <FilterContainr
+                    filterType="input"
+                    v-model:serachName="searchPayload.authorName"
+                    :hanldeSearhNameFilter="hanldeSearhNameFilter"
+                    :searchPayload="searchPayload" />
+                </el-popover>
           </div>
         </template>
       </el-table-column>
       <el-table-column prop="createdTime" width="150" label="完成时间">
-        <template #header>
-          <div class="custom-header">
-            <span>完成时间</span>
-            <div class="sort-icon-box">
-              <span class="caret-wrapper">
-                <i class="sort-caret ascending" @click="handleSortChange('date', 'asc')"></i>
-                <i class="sort-caret descending" @click="handleSortChange('date', 'desc')"></i>
-              </span>
-            </div>
-          </div>
-        </template>
         <template #default="scope">
-          {{ scope.row.testingTask?.createdTime }}
+          {{ scope.row.testingTask?.finishedTime ?? '--' }}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
@@ -196,6 +218,8 @@ import FilterContainr from "@/components/TableFilter/index.vue";
 import EvaluateAPI from "@/api/evaluate";
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import { debounce } from "lodash";
+import dataSetAPI from "@/api/dataSet";
+import KbAppAPI from "@/api/kbApp";
 
 const route = useRoute();
 const testList:any = ref([]);
@@ -217,20 +241,13 @@ const testDataVisible = ref(false);
 let testRowData: any = ref({});
 const modelFilterVisible = ref(false);
 const statusFilterVisible = ref(false);
-const creatorFilterVisible = ref(false);
+const searchFilterVisible = ref(false);
+const creatorVisible = ref(false);
+const searchRef = ref();
 const modelRef = ref();
 const statusRef = ref();
 const creatorRef = ref();
-const modelList = ref([]);
-let searchParam = ref({
-  datasetId: "",
-  testingId: null,
-  testingName: "",
-  llmId: "",
-  runStatus: null,
-  scoresOrder: "asc",
-  authorName: "",
-})
+const searchList = ref([]);
 const statusList = [
   {
     value: StatusEnum.SUCCESS,
@@ -253,26 +270,65 @@ const statusList = [
     label: '取消测试',
   },
 ]
-const checkedFilterList = ref([
-  {
-    value: StatusEnum.SUCCESS,
-
-  }
-]);
+const checkedFilterList = ref([]);
 const pollingKfTimer = ref();
-const sortFilter = ref({});
-const searchPayload = ref<any>({
-  kbId:'',  
-  testingId: '',
-  testingName: '',
-  llmId: '',
-  runStatus: [],
-  scoresOrder: 'desc',
-  authorName: '',
-});
+const searchPayload = ref<{
+  kbId?: string,
+  testingId?: string,
+  testingName?: string,
+  llmId?: string[],
+  runStatus?: string[],
+  scoresOrder?: string | null,
+  topK?:string,
+  authorName?: string,
+  searchMethod?: string,
+}>({});
+const llmOptions = ref<Array<{
+    label: string,
+    value: string,
+    icon: string
+}>>([]);
 
-const handleSortChange = (column: string, order: string) => {
+const scoreActive =ref<string | null>(null)
+
+const isSearch = computed(()=>{
+  return Object.values(searchPayload.value).some(value => {
+    if (typeof value === 'string') return value.trim() !== '';
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'boolean') return true;
+    return value !== null && value !== undefined; // 其他类型需非空
+  });
+})
+
+const hanldeSearhNameFilter = (filterName: string) => {
+  searchPayload.value.authorName = filterName;
+  handleSearchData();
+};
+
+const handleSortChange = (order: string) => {
+  if(order === scoreActive.value){
+    scoreActive.value = null;
+  }else{
+    scoreActive.value = order;
+  }
+  searchPayload.value.scoresOrder = scoreActive.value;
+  handleSearchData();
 }
+const handleSearchData = () => {
+  handeAssetLibraryData(
+    {
+      page: 1,
+      pageSize: currentPageSize.value ?? 20,
+      kbId: route.query.kb_id as string,
+      ...handleSearchPayload(),
+      ...searchPayload.value,
+    },
+    true,
+    true
+  );
+  statusFilterVisible.value = false;
+  creatorVisible.value = false
+};
 const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
@@ -280,7 +336,7 @@ const handleBatchDownBth = (e: boolean) => {
 const handleInput = debounce(() => {
   currentPage.value = 1;
   let param = {
-    ...searchParam.value,
+    ...searchPayload.value,
     page: currentPage.value,
     pageSize: currentPageSize.value
   };
@@ -320,7 +376,7 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
   currentPage.value = pageNum;
   currentPageSize.value = pageSize;
   let param = {
-    ...searchParam.value,
+    ...searchPayload.value,
     page: pageNum,
     pageSize: pageSize,
   };
@@ -410,8 +466,17 @@ const handleBatchDelete = () => {
   handleDelete(selectedRow.value)
 }
 const handelStatusFilterProper = (filterList: any) => {
-  console.log(filterList);
+  searchPayload.value.runStatus = filterList;
+  handleSearchData();
 };
+const handelModelFilterProper = (filterList: any) => {
+  searchPayload.value.llmId = filterList;
+  handleSearchData();
+};
+const handelSearchFilterProper = (filterList: any) => {
+  searchPayload.value.searchMethod = filterList;
+  handleSearchData();
+}
 const closeFn = () => {
   testDataVisible.value = false;
 }
@@ -439,7 +504,6 @@ const handlePollAssetFileData = () => {
     pageSize: currentPageSize.value,
     kbId: route.query.kb_id as string,
     ...handleSearchPayload(),
-    ...sortFilter.value,
   })
     .then((res: any) => {
       if (!res?.datasetTestings?.length && currentPage.value && currentPage.value !== 1) {
@@ -468,9 +532,6 @@ const handleSearchPayload = () => {
   const searchParams = Object.keys(searchPayload.value || {}).reduce((pre: any, item) => {
     if (searchPayload.value?.[item]?.length > 0 && searchPayload.value?.[item] !== 'all') {
       pre[item] = searchPayload.value[item];
-      if (item === 'enabled') {
-        pre[item] = JSON.parse(searchPayload.value[item]);
-      }
     }
 
     return pre;
@@ -480,11 +541,10 @@ const handleSearchPayload = () => {
 const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
   handeAssetLibraryData(
     {
-      page_number: currentPage.value,
-      page_size: currentPageSize.value,
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
       kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...sortFilter.value,
     },
     loadingStatus,
     startPollTimer
@@ -514,9 +574,8 @@ const handeAssetLibraryData = (
         }
         return newItem;
       });
-      
-      currentPage.value = res.page_number;
-      currentPageSize.value = res.page_size;
+      currentPage.value = res.page;
+      currentPageSize.value = res.pageSize;
       totalCount.value = res.total;
       if (pollTimer) {
         handleStartPollTimer();
@@ -527,9 +586,8 @@ const handeAssetLibraryData = (
     });
 };
 
-watch(knowledgeTabActive, () => {
+watch(()=>knowledgeTabActive.value, () => {
   if (knowledgeTabActive.value === 'evaluation') {
-    console.log(knowledgeTabActive.value);
     handeAssetLibraryData(
       {
         kbId: route.query.kb_id as string,
@@ -539,13 +597,23 @@ watch(knowledgeTabActive, () => {
       true,
       true
     );
+    dataSetAPI.queryLlmData().then((res:any)=>{
+        llmOptions.value = res.llms?.map((item: any) => {
+            return { label: item.llmName, value: item.llmId,icon:item.llmIcon };
+        });
+    })
+    KbAppAPI.querySearchMethodList().then((res: any) => {
+        searchList.value = res?.map((item: any) => {
+            return { label: item, value: item };
+        });
+    });
   }else{
     handleCleartTimer();
   }
 })
 onMounted(() => {
   const kbId = route.query.kb_id;
-  if (kbId?.length && knowledgeTabActive.value === 'document' ) {
+  if (kbId?.length && knowledgeTabActive.value === 'evaluation' ) {
     handeAssetLibraryData(
       {
         kbId: kbId as string,
@@ -557,6 +625,9 @@ onMounted(() => {
     );
   }
 });
+onUnmounted(()=>{
+  handleCleartTimer();
+})
 
 const handleCleartTimer = () => {
   clearInterval(pollingKfTimer.value);
