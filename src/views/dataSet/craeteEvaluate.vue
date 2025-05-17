@@ -6,6 +6,7 @@
         width="544"
         v-if="props.dialogEvaluateVisible"
         @close="handleCancelVisible"
+        align-center
     >
         <el-form class="evaluate-form" ref="ruleFormRef" :model="form" labelPosition="left" :rules="rules" >
             <el-form-item label="所用数据集" :label-width="formLabelWidth">
@@ -21,6 +22,10 @@
             </el-form-item>
             <el-form-item label="模型类型" prop="type" :label-width="formLabelWidth">
                 <el-select v-model="form.type" :placeholder="t('model.pleasePlace')">
+                    <template #label="{ label, value }">
+                        <img v-if="form.type" :src="`data:image/svg+xml;base64,${llmOptions.find(item => item.value === form.type)?.icon}`" style="vertical-align: middle; margin-right: 8px;" />
+                        <span>{{ label }}</span>
+                    </template>
                     <el-option
                         v-for="item in llmOptions"
                         :key="item.value"
@@ -76,13 +81,11 @@ const isSubmitDisabled = ref(true);
 const ruleFormRef = ref<FormInstance>()
 const formLabelWidth = '100px';
 const parserMethodOptions = ref<any>([])
-const llmOptions = ref<any>([
-    {
-        label: 'deepSeek',
-        value: 'deepSeek',
-        icon:'src/assets/images/file_size.svg'
-    }
-])
+const llmOptions = ref<Array<{
+    label: string,
+    value: string,
+    icon: string
+}>>([]);
 
 const form = reactive({
   name: '',
@@ -104,6 +107,9 @@ const rules = reactive<FormRules>({
     { required: true, message: t('model.pleasePlace'), trigger: 'blur' },
   ],
   method: [
+    { required: true, message: t('model.pleasePlace'), trigger: 'change' },
+  ],
+  topk: [
     { required: true, message: t('model.pleasePlace'), trigger: 'change' },
   ],
 })

@@ -781,8 +781,8 @@ const handleBatchDelete = () => {
   const successFn = ()=>{
     multipleSelection.value = [];
     handleQueryKbLibrary({
-      page_number: 1,
-      page_size: 10,
+      page: 1,
+      pageSize: 10,
     });
   }
   handleDelete(ids,successFn);
@@ -821,7 +821,7 @@ const handleBatchExport = () => {
         },
       });
       return item;
-    }),
+    });
     taskExportList.value = [
       ...arr,
       ...res.map((item: any) => {
@@ -879,8 +879,8 @@ const handleQueryKbLibrary = (params: QueryKbRequest) => {
 };
 onMounted(() => {
   handleQueryKbLibrary({
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
   });
 });
 
@@ -916,8 +916,8 @@ const hanldeSearhNameFilter = (filterName: string) => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     ...handleFilterData(sortFilter.value),
   });
   fileFilterVisible.value = false;
@@ -933,8 +933,8 @@ const handleSwitch = (switchType: string) => {
   isIndeterminate.value = false;
 
   handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
   });
 };
 const handleImportKnowledge = () => {
@@ -1024,6 +1024,7 @@ const handleStopUploadFile = (taskId: string) => {
 };
 
 const handleExportKl = async (row: any) => {
+  console.log(row)
   dialogImportVisible.value = false;
   uploadTaskListData.value.showUploadNotify = false;
   loading.value = true;
@@ -1034,8 +1035,8 @@ const handleExportKl = async (row: any) => {
     taskExportList.value = [
       ...[
         {
-          name: row.name,
-          id: row.id,
+          name: row.kbName,
+          id: row.kbId,
           exportStatus: 'pending',
           taskId: res.data,
         },
@@ -1253,8 +1254,8 @@ const handleTimeChange = (e: (string | undefined)[]) => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   handleQueryKbLibrary({
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
     ...handleFilterData(sortFilter.value),
   });
   handleCancelVisible();
@@ -1302,8 +1303,8 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
       }
     : {};
   handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     ...handleFilterData(sortFilter.value),
   });
 };
@@ -1326,12 +1327,12 @@ let isSearch = ref(false);
 const handleInputSearch = debounce((e) => {
   isSearch.value = e?.length
   let payload: {
-    page_number: number;
-    page_size: number;
+    page: number;
+    pageSize: number;
     [property: string]: any;
   } = {
-    page_number: 1,
-    page_size: currentPageSize.value,
+    page: 1,
+    pageSize: currentPageSize.value,
   };
   if (e) {
     payload = {
@@ -1347,12 +1348,12 @@ const handleInputSearch = debounce((e) => {
 
 const handleOpsKbConfirm = () => {
   let payload: {
-    page_number: number;
-    page_size: number;
+    page: number;
+    pageSize: number;
     [property: string]: any;
   } = {
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
   };
   if (switchIcon.value === 'thumb') {
     currentPage.value = 1;
@@ -1365,8 +1366,8 @@ const handleOpsKbConfirm = () => {
   }
   payload = {
     ...payload,
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
   };
   if (knoledgekeyWord.value?.length > 0) {
     payload.kbName = knoledgekeyWord.value;
@@ -1378,8 +1379,8 @@ const handleConfirmDelKb = (row: any) => {
   delTipVisible.value = false;
   const successFn = ()=>{
     handleQueryKbLibrary({
-      page_number: 1,
-      page_size: 10,
+      page: 1,
+      pageSize: 10,
     });
   }
   handleDelete([row.kbId], successFn)
@@ -1405,8 +1406,8 @@ const handleOpsKbForm = () => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   handleQueryKbLibrary({
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
     ...handleFilterData(sortFilter.value),
   });
 };
@@ -1415,8 +1416,8 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
   currentPage.value = pageNum;
   currentPageSize.value = pageSize;
   handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     ...handleFilterData(sortFilter.value),
   });
 };

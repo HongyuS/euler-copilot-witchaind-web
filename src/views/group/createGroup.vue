@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="evaluate-dialog" v-model="props.createGroupVisible"
+    <el-dialog class="evaluate-dialog" v-model="props.createGroupVisible" align-center
         :title="props.dialogueType === 'edit' ? '编辑团队' : '新建团队'" width="544" v-if="props.createGroupVisible"
         @close="handleCancelVisible">
         <el-form ref="ruleFormRef" class="evaluate-form" :model="form" labelPosition="left" :rules="rules">

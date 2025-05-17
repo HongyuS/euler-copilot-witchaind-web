@@ -119,6 +119,7 @@
         }
         .kf-container-table-ops-right{
           width: 356px;
+          font-size: 12px;
         }
       }
 
@@ -353,7 +354,6 @@
 
         .el-select-dropdown__item.is-hovering {
           color: #fff;
-          background: #07f !important;
           width: 399px;
         }
 
@@ -573,7 +573,6 @@
 
   .el-select-dropdown__item.is-hovering {
     color: #fff !important;
-    background: #07f;
     width: 319px;
   }
 }
