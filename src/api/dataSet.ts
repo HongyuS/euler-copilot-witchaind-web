@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import qs from 'qs';
 
 class dataSetAPI {
   // 获取数据集管理数据
@@ -6,7 +7,7 @@ class dataSetAPI {
     return request({
       url: `/dataset/list`,
       method: 'post',
-      data: data,
+      data,
     });
   }
 
@@ -15,7 +16,7 @@ class dataSetAPI {
     return request({
       url: `/dataset`,
       method: 'post',
-      data: data,
+      data,
     });
   }
 
@@ -46,7 +47,16 @@ class dataSetAPI {
     return request({
       url: `/dataset/data`,
       method: 'post',
-      data: data,
+      data,
+    });
+  }
+  /**更新数据集内的详情数据 */
+  static updateDataSetInfo(params: { dataId: string }, data: { answer: string; question: string }) {
+    return request({
+      url: `/dataset/data`,
+      method: 'put',
+      params,
+      data,
     });
   }
   /**删除数据集内的问答数据 */
@@ -54,7 +64,7 @@ class dataSetAPI {
     return request({
       url: `/dataset/data`,
       method: 'delete',
-      data: data,
+      data,
     });
   }
 
@@ -103,11 +113,18 @@ class dataSetAPI {
   }
 
   /** 导出数据集*/
-  static exportDataSet(datasetIds: string[]) {
+  static saveDataSet(datasetIds: string[], options: any) {
     return request({
       url: `/dataset/export`,
       method: 'post',
-      params: datasetIds,
+      params: { datasetIds },
+      paramsSerializer: (params) => qs.stringify(params, { indices: false }),
+      onUploadProgress(e) {
+        const rate = Math.floor((e.loaded / (e.total as number)) * 100);
+        if (rate < 100) {
+          options.onProgress(rate);
+        }
+      },
     });
   }
 

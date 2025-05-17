@@ -308,7 +308,8 @@ const initChart = async () => {
                     },
                     data: [
                         {
-                            value: props.rowData?.aveScore,
+                            value: props.rowData?.aveScore >= 0 ? props.rowData?.aveScore : 0,
+   
                         }
                     ]
                 }

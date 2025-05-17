@@ -1,7 +1,8 @@
 <template>
+  <CustomLoading :dark="false" :loading="loading" />
   <div
     class="dataset-empty-content"
-    v-if="!dataSetTableList.length">
+    v-if="!isSearch && !fileTableList.data.length">
     <EmptyStatus
       button-text="去生成数据集"
       description="暂无数据集信息，去文档管理生成一个吧！"
@@ -10,15 +11,123 @@
   <div
     v-else
     class="dataSet-container">
-    <div>
-      <div>
+    <div
+      v-if="showTaskExportNotify"
+      class="o-export-progress-notify"
+      v-loading="taskExportLoading"
+      element-loading-background="rgba(122, 122, 122, 0.3)">
+      <div class="o-export-notify__head">
+        <div class="task-list">
+          <span>{{ $t('assetLibrary.exportTaskList') }}</span>
+          <span>{{ `(${exportTaskTotal})` }}</span>
+        </div>
+        <div class="nofity-show">
+          <el-icon
+            class="o-export-notify__close"
+            @click="showTaskExportList = !showTaskExportList">
+            <IconChevronDown v-if="showTaskExportList" />
+            <IconChevronUp v-else />
+          </el-icon>
+        </div>
+      </div>
+      <div
+        class="o-export-notify__body"
+        v-if="showTaskExportList">
+        <div
+          class="o-export-notify__list"
+          @scroll="handleExportScroll">
+          <div
+            v-for="(item, index) in taskExportList"
+            :key="item.id"
+            class="item">
+            <div class="item-box">
+              <div class="item-info">
+                <div class="item-name">
+                  <h2 class="item-name-text">
+                    <TextSingleTootip :content="item.name" />
+                  </h2>
+                </div>
+                <div>
+                  <span>_</span>
+                  <span>{{ $t('exportTask.export') }}</span>
+                </div>
+              </div>
+              <div class="item-close">
+                <IconX @click="handleCloseSingleUpload(item.taskId)" />
+              </div>
+            </div>
+            <div class="taskStatusPer">
+              <div
+                class="waitExport"
+                v-if="['pending', 'running'].includes(item.exportStatus)">
+                <div class="icon-box icon-loading"></div>
+                <span>
+                  {{ $t('exportTask.pendingExport') }}
+                </span>
+              </div>
+              <div
+                class="packData"
+                v-if="['success', 'error', 'canceled', 'failed'].includes(item.exportStatus)">
+                <IconError
+                  v-if="['error', 'canceled', 'failed'].includes(item.exportStatus)"
+                  class="errorIcon" />
+                <el-icon
+                  v-if="item.percent === 100"
+                  class="successIcon">
+                  <CircleCheckFilled />
+                </el-icon>
+                <span v-if="item.exportStatus === 'success'">
+                  {{ $t('exportTask.exportSuccess') }}
+                </span>
+                <span v-if="['error', 'failed'].includes(item.exportStatus)">
+                  {{ $t('exportTask.exportFailed') }}
+                </span>
+                <span v-if="item.exportStatus === 'canceled'">
+                  {{ $t('exportTask.canceled') }}
+                </span>
+              </div>
+              <div
+                class="opsExportTask"
+                v-if="['success', 'error', 'failed'].includes(item.exportStatus)">
+                <div
+                  v-if="['error', 'failed'].includes(item.exportStatus)"
+                  class="errorTask">
+                  <div class="errorReson">{{ $t('exportTask.reason') }}</div>
+                  <div
+                    class="errorRestart"
+                    @click="handleUploadRestart(item)">
+                    {{ $t('btnText.retry') }}
+                  </div>
+                </div>
+
+                <div
+                  v-if="item.exportStatus === 'success'"
+                  class="successTask"
+                  @click="handleOpenDownload(item.taskId)">
+                  {{ $t('exportTask.downloadTask') }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="item-all-close">
+          <div
+            v-if="taskExportList.length > 0"
+            @click="handleCloseSingleUpload('all')">
+            {{ $t('btnText.clearAll') }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dataSet-container-header">
+      <div class="dataSet-container-left" >
         <el-button
-            type="primary"
-            style="margin-right: 8px"
-            @click="handleImportDataSet"
-            class="importFileBtn">
-            {{ $t('导入数据集') }}
-          </el-button>
+          type="primary"
+          style="margin-right: 8px"
+          @click="handleImportDataSet"
+          class="importFileBtn">
+          导入数据集
+        </el-button>
         <el-dropdown
           placement="bottom"
           popper-class="dropdown-container dataSet-ops-dowlon"
@@ -42,7 +151,7 @@
             <el-dropdown-menu>
               <el-dropdown-item
                 :disabled="!selectionDataSetList.length"
-                @click="handleSelectExportDataSet">
+                @click="handleBatchExport">
                 {{ $t('btnText.batchExport') }}
               </el-dropdown-item>
               <el-dropdown-item
@@ -54,16 +163,18 @@
           </template>
         </el-dropdown>
       </div>
+      <el-input placeholder="请输入数据集名称" v-model="searchPayload.datasetName" class="dataSet-container-right" 
+          @input="handleInputSearch"  :suffix-icon="IconSearch" />
+      </div>
       <div class="dataSet-container-table-box">
         <el-table
-          :data="dataSetTableList"
+          :data="fileTableList.data"
           class="dataSetTableContainer"
           cell-calss-name="tableCell"
-          :row-key="(row) => row.id"
+          :row-key="(row) => row.datasetId"
           @selection-change="handleSelectionChange"
           @sort-change="handleSortChange"
           ref="multipleTable"
-          v-loading="loading"
           :border="false">
           <el-table-column
             type="selection"
@@ -73,17 +184,17 @@
             :reserve-selection="true"
             :selectable="checkSelecTable" />
           <el-table-column
-            prop="dataSetName"
+            prop="datasetName"
             :label="$t('数据集名称')"
             show-overflow-tooltip
             :fixed="true"
-            class-name="dataSetName"
+            class-name="datasetName"
             width="200">
             <template #default="scope">
               <span
                 class="dataSet-name-row"
                 @click="handleJumpFileSection(scope.row)">
-                {{ scope.row.dataSetName }}
+                {{ scope.row.datasetName }}
               </span>
             </template>
           </el-table-column>
@@ -97,19 +208,23 @@
           </el-table-column>
           <el-table-column
             prop="dataCnt"
-            :label="$t('数据集条目')"
+            :label="$t('数据条目限制')"
             sortable />
+          <el-table-column
+          prop="dataCntExisted"
+          :label="$t('现有数据条目')"
+          sortable />
           <el-table-column
             prop="isDataCleared"
             :label="$t('是否进行数据清洗')">
             <template #header>
               <div class="custom-header">
-                <span>{{ $t('是否进行数据清洗') }}</span>
+                <span>是否进行数据清洗</span>
                 <el-icon
                   ref="enableRef"
                   @click.stop
                   :class="
-                    searchPayload?.enabled?.length || enableFilterVisible
+                    searchPayload?.isDataCleared?.length || enableFilterVisible
                       ? 'searchIconIsActive'
                       : ''
                   ">
@@ -127,30 +242,68 @@
                   <FilterContainr
                     :filterList="filterEnableList"
                     filterType="checkBox"
-                    :handelSubFilterProper="handelEnableFilterProper"
+                    :handelSubFilterProper="handelClearFilterProper"
                     :checkedFilterList="checkedFilterList" />
                 </el-popover>
               </div>
             </template>
             <template #default="scope">
               <el-switch
-                v-model:model-value="scope.row.enabled"
-                @change="handleSwitch(scope.row)"
+                v-model:model-value="scope.row.isDataCleared" :disabled="true"
                 style="--el-switch-on-color: #24ab36; --el-switch-off-color: #c3cedf" />
             </template>
           </el-table-column>
           <el-table-column
-            prop="generateStatus"
-            :label="$t('状态')"
-            width="220">
+            prop="isChunkRelated"
+            :label="$t('是否补全上下文')">
             <template #header>
               <div class="custom-header">
-                <span>{{ $t('状态') }}</span>
+                <span>是否补全上下文</span>
+                <el-icon
+                  ref="enableRef"
+                  @click.stop
+                  :class="
+                    searchPayload?.isChunkRelated?.toString()?.length || enableFilterVisible
+                      ? 'searchIconIsActive'
+                      : ''
+                  ">
+                  <IconFilter />
+                </el-icon>
+                <el-popover
+                  ref="popoverRef"
+                  v-model:visible="enableFilterVisible"
+                  popper-class="filterPopper"
+                  placement="bottom-start"
+                  :virtual-ref="enableRef"
+                  :show-arrow="false"
+                  trigger="click"
+                  virtual-triggering>
+                  <FilterContainr
+                    :filterList="filterEnableList"
+                    filterType="checkBox"
+                    :handelSubFilterProper="handeRelatedFilterProper"
+                    :checkedFilterList="checkedFilterList" />
+                </el-popover>
+              </div>
+            </template>
+            <template #default="scope">
+              <el-switch
+                v-model:model-value="scope.row.isChunkRelated" :disabled="true"
+                style="--el-switch-on-color: #24ab36; --el-switch-off-color: #c3cedf" />
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="taskStatus"
+            :label="$t('状态')"
+            width="120">
+            <template #header>
+              <div class="custom-header">
+                <span>状态</span>
                 <el-icon
                   ref="statusRef"
                   @click.stop
                   :class="
-                    searchPayload?.status?.length || statusFilterVisible
+                    searchPayload?.generateStatus?.length || statusFilterVisible
                       ? 'searchIconIsActive'
                       : ''
                   ">
@@ -175,29 +328,29 @@
             </template>
             <template #default="scope">
               <div
-                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.FAILED"
+                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.FAILED"
                 class="statusFail">
-                {{ $t('生成失败') }}
+                生成失败
               </div>
               <div
-                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.SUCCESS"
+                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.SUCCESS"
                 class="statusSuccess">
-                {{ $t('生成完毕') }}
+                生成完毕
               </div>
               <div
-                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.CANCELED"
+                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.CANCELED"
                 class="statusCancel">
-                {{ $t('取消生成') }}
+                取消生成
               </div>
               <div
-                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.PENDING"
+                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.PENDING"
                 class="statusWaitIng">
-                <div class="icon-box icon-loading"></div>
-                {{ $t('等待生成') }}
+                <div class="icon-box"></div>
+                等待生成
               </div>
               <div
                 class="statusGenerate"
-                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING">
+                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING">
                 <div class="percent-box">
                   <el-progress
                     :percentage="
@@ -215,7 +368,7 @@
                     striped-flow />
                 </div>
                 <div class="statusGenerateText">
-                  {{ $t('生成中') }}
+                  生成中
                 </div>
               </div>
             </template>
@@ -223,39 +376,42 @@
           <el-table-column
             prop="score"
             :label="`${$t('数据集质量分数')}(1~100)`"
-            width="240"
+            width="175"
             show-overflow-tooltip
-            sortable=""></el-table-column>
-          <el-table-column
-            prop="dataSetCreator"
-            :label="$t('创建人')"
-            show-overflow-tooltip>
-            <template #header>
-              <div class="custom-header">
-                <span>
-                  {{ $t('创建人') }}
-                </span>
+            sortable
+          >
+          <template #default="scope">
+              {{ scope.row.score?.toFixed(2)?scope.row.score?.toFixed(2)>0?scope.row.score:0:'--'  }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="authorName"
+          :label="$t('创建人')"
+          show-overflow-tooltip>
+          <template #header>
+              <div class="asset-id-custom-header">
+                <span>创建人</span>
                 <el-icon
-                  ref="creatorRef"
+                  ref="inputSearchRef"
                   :class="
-                    searchPayload?.creator?.length || creatorVisible ? 'searchIconIsActive' : ''
+                    searchPayload?.authorName?.length! > 0 || creatorVisible ? 'searchIconIsActive' : ''
                   ">
-                  <IconFilter />
+                  <IconSearch />
                 </el-icon>
                 <el-popover
                   ref="popoverRef"
                   v-model:visible="creatorVisible"
-                  popper-class="filterPopper"
+                  popper-class="inputSearchFilterPopper"
                   placement="bottom-start"
-                  :virtual-ref="creatorRef"
+                  :virtual-ref="inputSearchRef"
                   :show-arrow="false"
                   trigger="click"
                   virtual-triggering>
                   <FilterContainr
-                    filterType="checkBox"
-                    :handelSubFilterProper="handelParserMethodFilterProper"
-                    :filterList="parserMethodOptions"
-                    :checkedFilterList="checkedFilterList" />
+                    filterType="input"
+                    v-model:serachName="searchPayload.authorName"
+                    :hanldeSearhNameFilter="hanldeSearhNameFilter"
+                    :searchPayload="searchPayload" />
                 </el-popover>
               </div>
             </template>
@@ -264,10 +420,9 @@
             prop="dataSetCreatime"
             class-name="upload-time-cell"
             :label="$t('完成时间')"
-            sortable
             @click.stop>
             <template #default="scope">
-               {{ scope.row.generateTask.createdTime }}
+                {{ scope.row.generateTask?.createdTime }}
             </template>
           </el-table-column>
 
@@ -278,41 +433,41 @@
             fixed="right">
             <template #default="scope">
               <el-button
-                v-if="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING"
+                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
                 text
-                @click="handlePauseDataSet(scope.row, 'cancel')">
-                {{ $t('暂停') }}
+                @click="handleRunDataSet(scope.row,false)">
+                暂停
               </el-button>
               <el-button
-                v-if="
-                  [
+                v-else
+                text
+                :disabled="![
                     DataSetStatusEnum.FAILED,
                     DataSetStatusEnum.CANCELED,
-                  ].includes(scope.row.generateTask.generateStatus)
-                "
-                text
-                @click="handleRunDataSet(scope.row, 'run')">
-                {{ $t('生成') }}
+                  ].includes(scope.row.generateTask?.taskStatus)"
+                @click="handleRunDataSet(scope.row, true)">
+                生成
               </el-button>
               <el-button
                 text
-                :disabled="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING"
-                @click="handleEditDataSet(scope.row)">
+                :disabled="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
+                @click="handleJumpFileSection(scope.row)">
                 {{ $t('btnText.edit') }}
               </el-button>
               <el-button
                 text
-                :disabled="scope.row.generateTask.generateStatus === DataSetStatusEnum.SUCCESS"
+                :disabled="scope.row.generateTask?.taskStatus !== DataSetStatusEnum.SUCCESS"
                 @click="handleDataSetEval(scope.row)">
-                {{ $t('评测') }}
+                评测
               </el-button>
               <el-button
                 text
-                @click="handleExportDataSet([scope.row])">
-                {{ $t('导出') }}
+                :disabled="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
+                @click="handleExportDataSet(scope.row)">
+                导出
               </el-button>
               <el-button
-                :disabled="scope.row.generateTask.generateStatus === DataSetStatusEnum.RUNNING"
+                :disabled="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
                 text
                 @click="handleDeleteDataSet(scope.row)">
                 {{ $t('btnText.delete') }}
@@ -329,7 +484,6 @@
           :total="totalCount"
           popper-class="kbLibraryPage"
           @change="handleChangePage" />
-      </div>
     </div>
   </div>
   <CreateEvaluate :dialogEvaluateVisible="dialogEvaluateVisible" :rowData="rowData" :close="handleCloseDialogue" />
@@ -338,41 +492,69 @@
     :dataSetDrawerVisible="dataSetDrawerVisible"
     :dataSetRow="dataSetRow"
     :handleDataSetProps="handleDataSetProps" />
+  <el-dialog
+    v-model="dialogImportVisible"
+    class="upload-dialog"
+    align-center
+    :title="$t('导入数据集')">
+    <Upload
+      :tipText="$t('文件支持xlsx、yaml和json格式导入，最多支持上传10个文件，每个文件包含的数据量不超过512条')"
+      accept=".xlsx,.yaml,.json"
+      :maxFileNum="10"
+      :maxSize="0.488"
+      :handleUploadMyFile="handleUploadMyFile"
+      :handleQueryTaskList="handleQueryTaskList"
+      :handleCancelVisible="handleCancelVisible"
+      :taskList="taskList"
+      :taskListImportDate="taskListImportDate"
+      :toggleUploadNotify="toggleUploadNotify"
+      :handleImportLoading="handleImportLoading"
+      uploadType="dataset" />
+  </el-dialog>
+  <UploadProgress
+    :isKnowledgeFileUpload="true"
+    :showUploadNotify="uploadTaskListData.showUploadNotify"
+    :uploadingList="uploadTaskListData.uploadingList"
+    :showTaskList="uploadTaskListData.showTaskList"
+    :handleShowTaskList="uploadTaskListData.handleShowTaskList"
+    :handleUploadRestart="uploadTaskListData.handleUploadRestart"
+    :taskListImportDate="taskListImportDate"
+    :importTaskTotal="importTaskTotal"
+    :isShowAllClear="false" />
 </template>
 
 <script setup lang="ts">
 import EmptyStatus from '@/components/EmptyStatus/index.vue';
 import { useGroupStore } from '@/store/modules/group';
-import { IconCaretDown, IconFilter, IconCaretUp } from '@computing/opendesign-icons';
+import { IconCaretDown, IconFilter, IconCaretUp, IconSearch, IconAlarm, IconChevronUp, IconChevronDown, IconX } from '@computing/opendesign-icons';
 import { DataSetStatusEnum } from '@/enums/KnowledgeEnum';
 import FilterContainr from '@/components/TableFilter/index.vue';
 import DataSetDrawer from './dataSetDrawer.vue';
 import CreateEvaluate from '@/views/dataSet/craeteEvaluate.vue';
 import dataSetAPI from '@/api/dataSet';
-import router from '@/router';
+import CustomLoading from '@/components/CustomLoading/index.vue';
 const route = useRoute();
 const { t } = useI18n();
 
 import { ref } from 'vue';
 import '@/styles/dataSet.scss';
+import UploadProgress from '@/components/Upload/uploadProgress.vue';
+import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
+import KbAppAPI, { ITaskType } from '@/api/kbApp';
+import { debounce } from 'lodash';
 const store = useGroupStore();
+const inputSearchRef = ref();
+const multipleTable = ref();
 const selectionDataSetList = ref<any>([]);
 const batchDownBth = ref(false);
-const dataSetTableList = ref([
-     {dataSetName:'数据集06',description:'数据集06描述',dataCnt:10,
-     isDataCleared:true,generateTask:{generateStatus:DataSetStatusEnum.FAILED,createdTime:'2022-03-22 12:22:22'},dataSetCreator:'admin',
-     score:99},
-]);
 const loading = ref(false);
 const checkedFilterList = ref([]);
 const filterStatusList = ref();
 const customColor = ref('#0077FF');
 const filterEnableList = ref();
-const parserMethodOptions = ref<any>([]);
 const totalCount = ref(0);
 const statusRef = ref();
 const enableRef = ref();
-const creatorRef = ref();
 const statusFilterVisible = ref(false);
 const creatorVisible = ref(false);
 const enableFilterVisible = ref(false);
@@ -382,7 +564,24 @@ const dialogEvaluateVisible = ref(false);
 const rowData = ref({});
 const checkTableSelecData = ref([]);
 const pollingKfTimer = ref();
-const sortFilter = ref({});
+const dialogImportVisible = ref(false);
+const taskList = ref<any>([]);
+const taskListImportDate = ref();
+const importTaskTotal = ref(0);
+const uploadTaskListData = ref<{
+  showUploadNotify?: boolean;
+  uploadingList?: Array<any>;
+  showTaskList?: boolean;
+  handleShowTaskList?: Function;
+  handleUploadRestart?: Function;
+}>({});
+const taskExportLoading = ref(false);
+const taskExportList = ref<any[]>([]);
+const taskExportTimer = ref();
+const exportTaskTotal = ref(0);
+const exportTaskPageNumber = ref(1);
+const showTaskExportNotify = ref(false);
+const showTaskExportList = ref(false);
 
 const handleCloseDialogue = () => {
   dialogEvaluateVisible.value = false;
@@ -399,38 +598,63 @@ const pagination = ref({
   pageSizes: [10, 20, 30, 40, 50],
   layout: 'total,sizes,prev,pager,next,jumper',
 });
-const searchPayload = ref<any>({
-  name: '',
-  docTypes: [],
-  chunk_size_order: '',
-  created_time_order: '',
-  status: [],
-  created_time_start: '',
-  created_time_end: '',
-  enabled: '',
-  parser_method: [],
-  isDataCleared: [],
-});
+const searchPayload = ref<{
+  datasetName?: string;
+  generateStatus?: string[];
+  isDataCleared?: boolean;
+  isChunkRelated?: boolean;
+  authorName?: string;
+}>({});
+
+const isSearch = computed(()=>{
+  return Object.values(searchPayload.value).some(value => {
+    if (typeof value === 'string') return value.trim() !== '';
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'boolean') return true;
+    return value !== null && value !== undefined; // 其他类型需非空
+  });
+})
+
 const { handleKnowledgeTab } = store;
+const {knowledgeTabActive,curTeamInfo} = storeToRefs(store);
 
-const handleSearchPayload = () => {
-  const searchParams = Object.keys(searchPayload.value || {}).reduce((pre: any, item) => {
-    if (searchPayload.value?.[item]?.length && searchPayload.value?.[item] !== 'all') {
-      pre[item] = searchPayload.value[item];
-      if (item === 'enabled') {
-        pre[item] = JSON.parse(searchPayload.value[item]);
-      }
-    }
+watch(()=>knowledgeTabActive.value,()=>{
+  if(knowledgeTabActive.value === 'dataset'){
+    const kbId = route.query.kb_id;
+    handleQueryDataSetList(
+      {
+        kbId: String(kbId),
+        page: 1,
+        pageSize: 20,
+      },
+      true,
+      true
+    );
+  }else{
+    handleCleartTimer();
+  }
+})
 
-    return pre;
-  }, {});
-  return searchParams || {};
+const handleInputSearch = debounce((value: string) => {
+  searchPayload.value.datasetName = value.trim();
+  handleSearchData();
+}, 300);
+
+const handleSearchPayload = (): Record<string, unknown> => {
+  return Object.entries(searchPayload.value).reduce((acc, [key, value]) => {
+    if (value === undefined || value === null || value === 'all') return acc;
+    // 处理特殊字段类型转换
+    acc[key] = typeof value === 'string' 
+        ? value.trim() 
+        : value;
+    return acc;
+  }, {} as Record<string, unknown>);
 };
 
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
   let sortKey = data.prop === 'score' ? 'scoreOrder' : null;
   let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
-  sortFilter.value = sortValue
+  searchPayload.value = sortValue
     ? {
         [sortKey || data.prop]: sortValue,
       }
@@ -440,26 +664,26 @@ const handleSortChange = (data: { column: any; prop: string; order: any }) => {
 
 const handlePollFileDataSet = () => {
   dataSetAPI.queryDataSetList({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     kbId: route.query.kb_id as string,
     ...handleSearchPayload(),
-    ...sortFilter.value,
+    ...searchPayload.value,
   })
     .then((res: any) => {
-      if (res.page_number === currentPage.value && fileTableList.data?.length) {
-        if (!res?.data_list?.length && currentPage.value !== 1) {
+      if (res.page === currentPage.value && fileTableList.data?.length) {
+        if (!res?.datasets?.length && currentPage.value !== 1) {
           currentPage.value = 1;
           handleSearchOpsData(true, true);
           return;
         }
         fileTableList.data = fileTableList.data.map((item) => {
-          let fileData = res?.data_list?.filter((file: any) => file.id === item.id)?.[0];
+          let fileData = res?.datasets?.filter((file: any) => file.id === item.id)?.[0];
           return fileData || item;
         });
       }
-      if (res.data_list?.length) {
-        handCheckTableData(res.data_list);
+      if (res.datasets?.length) {
+        handCheckTableData(res.datasets);
       }
     })
     .finally(() => {
@@ -474,18 +698,18 @@ const handleStartPollTimer = () => {
 const handCheckTableData = (tableList: { filter: (arg0: (checkItem: any) => any) => never[]; find: (arg0: (notCheckItem: any) => boolean) => any; }) => {
   checkTableSelecData.value = tableList.filter((checkItem) => {
     const selecData = tableList.find((notCheckItem) => notCheckItem?.id === checkItem?.id);
-    return selecData && ['pending', 'running'].includes(selecData.task.status);
+    return selecData && ['pending', 'running'].includes(selecData.generateTask?.taskStatus);
   });
 };
 
 const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
   handleQueryDataSetList(
     {
-      page_number: currentPage.value,
-      page_size: currentPageSize.value,
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
       kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...sortFilter.value,
+      ...searchPayload.value,
     },
     loadingStatus,
     startPollTimer
@@ -503,17 +727,15 @@ const handleQueryDataSetList = (
   loading.value = loadingStatus;
   dataSetAPI.queryDataSetList(payload)
     .then((res: any) => {
-      if (res.data_list?.length) {
-        handCheckTableData(res.data_list);
+      if (res.datasets?.length) {
+        handCheckTableData(res.datasets);
       }
-      if (!res?.data_list?.length && currentPage.value !== 1) {
+      if (!res?.datasets?.length && currentPage.value && currentPage.value !== 1) {
         currentPage.value = 1;
         handleSearchOpsData(true, true);
         return;
       }
-      fileTableList.data = res?.data_list || [];
-      currentPage.value = res.page_number;
-      currentPageSize.value = res.page_size;
+      fileTableList.data = res?.datasets || [];
       totalCount.value = res.total;
       if (pollTimer) {
         handleStartPollTimer();
@@ -532,11 +754,11 @@ const handleCleartTimer = () => {
 const handleSearchData = () => {
   handleQueryDataSetList(
     {
-      page_number: 1,
-      page_size: currentPageSize.value,
+      page: 1,
+      pageSize: currentPageSize.value ?? 20,
       kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...sortFilter.value,
+      ...searchPayload.value,
     },
     true,
     true
@@ -548,32 +770,55 @@ const handleSearchData = () => {
 
 onMounted(() => {
   const kbId = route.query.kb_id;
-  if (kbId?.length) {
+  if (kbId?.length && knowledgeTabActive.value ==='dataset' ) {
     handleQueryDataSetList(
       {
-        kbId: kbId as string,
-        page_number: 1,
-        page_size: 20,
+        kbId: String(kbId),
+        page: 1,
+        pageSize: 20,
       },
       true,
       true
     );
   }
 });
+onUnmounted(()=>{
+  handleCleartTimer();
+})
 
 const handleToCreate = () => {
   handleKnowledgeTab('document');
 };
-const handelEnableFilterProper = (filterList: any) => {
-  searchPayload.value.isDataCleared = filterList.length === 2 ? 'all' : filterList[0];
+const handelClearFilterProper = (filterList: any) => {
+  searchPayload.value.isDataCleared = filterList.length === 2 ? null : filterList[0];
   handleSearchData();
 };
 
-const handleBatchDownBth = () => {};
+const handeRelatedFilterProper = (filterList: any) => {
+  searchPayload.value.isChunkRelated = filterList.length === 2 ? null : filterList[0];
+  handleSearchData();
+};
 
-const handleSelectExportDataSet = () => {};
+const hanldeSearhNameFilter = (filterName: string) => {
+  searchPayload.value.authorName = filterName;
+  handleSearchData();
+  creatorVisible.value = false;
+};
+const handleBatchDownBth = (e: boolean) => {
+  batchDownBth.value = e;
 
-const handleSelectDeleteDataSet = () => {};
+};
+
+const handleSelectDeleteDataSet = () => {
+  loading.value = true;
+  const params = selectionDataSetList.value.map((row: any)=>row.datasetId)
+  dataSetAPI.delDataSet(params).then(()=>{
+    handleSearchData();
+  }).finally(()=>{
+    loading.value = false;
+    selectionDataSetList.value = [];
+  })
+};
 
 const handleSelectionChange = (newSelection: any[]) => {
   selectionDataSetList.value = newSelection;
@@ -582,41 +827,74 @@ const handleSelectionChange = (newSelection: any[]) => {
 const checkSelecTable = (row: any) => {
   return true;
 };
-const handleJumpFileSection = (row: any) => {};
+const handleJumpFileSection = (row: any) => {
+  dataSetRow.value = row;
+  dataSetDrawerVisible.value = true;
+};
 
 const handelStatusFilterProper = (filterList: any) => {
   searchPayload.value.generateStatus = filterList;
   handleSearchData();
 };
 
-const handleDeleteDataSet = (row: any) => {};
-
-const handleExportDataSet = async (downloadData: any) => {};
-
-const handleEditDataSet = (row: any) => {
-  dataSetRow.value = row;
-  dataSetDrawerVisible.value = true;
+const handleDeleteDataSet = (row: any) => {
+  loading.value = true;
+  const params = [row.datasetId];
+  dataSetAPI.delDataSet(params).then(()=>{
+    handleSearchData();
+  }).finally(()=>{
+    loading.value = false;
+  })
 };
 
-const handleRunDataSet = (row: any, type: string) => {
-  dialogEvaluateVisible.value = true;
-  rowData.value = row;
+const handleRunDataSet = (row: any, type: boolean) => {
+  let params = {
+    datasetId: row.datasetId,
+    generate: type,
+  }
+  dataSetAPI.generateDataSet(params)
 };
 
-const handleSwitch = (row: any) => {};
-
-const handelParserMethodFilterProper = (filterList: any) => {};
-
-const handleChangePage = (pageNum: number, pageSize: number) => {};
+const handleChangePage = (pageNum: number, pageSize: number) => {
+  currentPage.value = pageNum;
+  currentPageSize.value = pageSize;
+  handleQueryDataSetList(
+      {
+        kbId: route.query.kb_id as string,
+        page: pageNum,
+        pageSize: pageSize,
+      },
+      true,
+      true
+    );
+};
 
 const handleDataSetEval = (row: any) =>{
-    
-}
-
-const handlePauseDataSet = (row: any, p0: string) =>{}
-
-const handleImportDataSet = () =>{
-
+  loading.value = true;
+  dataSetAPI.isHaveTesting({datasetId: row.datasetId}).then((res: any) => {
+    if (res) {
+      ElMessageBox.confirm(
+        '当前数据集已有关联评测任务，是否新建一个评测任务？', 
+        '提示', 
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          cancelButtonClass: 'el-button--primary',
+          confirmButtonClass: 'el-button-confirm',
+          type: 'warning',
+          icon:markRaw(IconAlarm),
+        }
+      ).then(() => {
+        dialogEvaluateVisible.value = true;
+        rowData.value = row;
+      })
+    } else {
+      dialogEvaluateVisible.value = true;
+      rowData.value = row;
+    }
+  }).finally(() => {
+    loading.value = false;
+  })
 }
 
 watch(
@@ -658,4 +936,285 @@ watch(
 const handleDataSetProps = () => {
   dataSetDrawerVisible.value = false;
 };
+
+const handleImportDataSet = () =>{
+  dialogImportVisible.value = true;
+}
+const handleUploadMyFile = (options: any) => {
+  dataSetAPI.importDataSet(
+    {
+      data: {
+        dataset_packages: options.file.raw,
+      },
+      params: {
+        kbId: route.query.kb_id,
+      },
+    },
+    options
+  )
+  .then(() => {
+    options.onSuccess({ ...options.fileInfo, success: 'success' });
+  })
+  .catch((err) => {
+    options.onError({ ...options.fileInfo, error: err });
+  });
+};
+const handleQueryTaskList = () => {
+  handleSearchOpsData(true, false);
+};
+
+const handleCancelVisible = () => {
+  dialogImportVisible.value = false;
+};
+const toggleUploadNotify = (uploadTaskPayload: any) => {
+  importTaskTotal.value = uploadTaskPayload.uploadingList.length;
+  uploadTaskListData.value = uploadTaskPayload;
+};
+const handleImportLoading = (loadingStatus: boolean) => {
+  loading.value = loadingStatus;
+};
+
+const handleInitExportTaskList = () => {
+  return KbAppAPI.queryTaskList({
+    teamId:curTeamInfo.value.teamId,
+    taskType: 'dataset_export',
+    page: 1,
+    pageSize: currentPageSize.value,
+  }).then((res: any) => {
+    exportTaskTotal.value = res?.total || 0;
+    taskExportLoading.value = false;
+    taskExportList.value =
+      res.tasks.map((item: any) => {
+        let reportDetail = item?.task?.reports?.[0];
+        return {
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
+          percent:
+            item?.taskStatus === 'success'
+              ? 100
+              : reportDetail
+                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
+                : 0,
+          exportStatus: item?.taskStatus,
+        };
+      }) || [];
+    if (res?.tasks.every((item: any) => !['pending', 'running'].includes(item?.taskStatus))) {
+      clearInterval(taskExportTimer.value);
+      taskExportTimer.value = null;
+    }
+    return res?.tasks || [];
+  });
+};
+
+const handleExportDataSet = async (row: any) => {
+  dialogImportVisible.value = false;
+  uploadTaskListData.value.showUploadNotify = false;
+  loading.value = true;
+  handleInitExportTaskList().then((res) => {
+    showTaskExportNotify.value = true;
+    showTaskExportList.value = true;
+    exportTaskTotal.value = exportTaskTotal.value + 1;
+    taskExportList.value = [
+      ...[
+        {
+          name: row.datasetName,
+          id: row.datasetId,
+          exportStatus: 'pending',
+          taskId: res.data,
+        },
+      ]?.map((item: any) => {
+        let taskOptions = {
+          taskDownUrl: '',
+          onProgress: (evt: any) => {
+            item.percent = evt;
+          },
+          onError: () => {
+            item.exportStatus = 'error';
+            item.percent = '0';
+            loading.value = false;
+          },
+        };
+        dataSetAPI.saveDataSet([row.datasetId], taskOptions)
+          .then((taskRes) => {
+            item.taskId = taskRes;
+            loading.value = false;
+            taskExportTimer.value = setInterval(() => {
+              handleInitExportTaskList();
+            }, 2500);
+          })
+          .catch(() => {
+            taskOptions.onError();
+          });
+
+        return item;
+      }),
+      ...res.map((item: any) => {
+        let reportDetail = item?.task?.reports?.[0];
+        return {
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
+          percent:
+            item?.taskStatus === 'success'
+              ? 100
+              : reportDetail
+                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
+                : 0,
+          exportStatus: item?.taskStatus,
+        };
+      }),
+    ];
+  });
+};
+const handleBatchExport = () => {
+  dialogImportVisible.value = false;
+  uploadTaskListData.value.showUploadNotify = false;
+  loading.value = true;
+  handleInitExportTaskList().then((res) => {
+    showTaskExportNotify.value = true;
+    showTaskExportList.value = true;
+    exportTaskTotal.value = exportTaskTotal.value + 1;
+    let datasetId:string[] = [];
+    const arr = selectionDataSetList.value.map((row:any)=>{
+      datasetId.push(row.datasetId);
+      let item = {
+        name: row.datasetName,
+        id: row.datasetId,
+        exportStatus: 'pending',
+        taskId: res.data,
+      }
+      return item;
+    })
+    let taskOptions:any = []
+    taskExportList.value = [
+      arr?.map((item: any) => {
+        taskOptions.push({
+          taskDownUrl: '',
+          onProgress: (evt: any) => {
+            item.percent = evt;
+          },
+          onError: () => {
+            item.exportStatus = 'error';
+            item.percent = '0';
+            loading.value = false;
+          },
+        });
+        return item;
+      }),
+      dataSetAPI.saveDataSet(datasetId, taskOptions)
+        .then((taskRes:any) => {
+          arr?.map((item: any,index: number) => {
+            item.taskId = taskRes[index];
+
+          })
+          loading.value = false;
+          taskExportTimer.value = setInterval(() => {
+            handleInitExportTaskList();
+          }, 2500);
+          selectionDataSetList.value = [];
+          multipleTable.value.clearSelection();
+        })
+        .catch(() => {
+          arr?.map((item: any,index: number) => {
+            taskOptions[index].onError();
+          })
+        }),
+      ...res.map((item: any) => {
+        let reportDetail = item?.task?.reports?.[0];
+        return {
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
+          percent:
+            item?.taskStatus === 'success'
+              ? 100
+              : reportDetail
+                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
+                : 0,
+          exportStatus: item?.taskStatus,
+        };
+      }),
+    ];
+  });
+}
+
+const exportTaskPageSize = ref(10);
+
+const handleCloseAllTask=(type: ITaskType)=>{
+  taskExportLoading.value = true;
+  KbAppAPI.stopAllTaskList({
+    teamId:curTeamInfo.value.teamId,
+    taskType:type
+  }).then(() => {
+    handleInitExportTaskList();
+  }).finally(()=>{
+    taskExportLoading.value = false;
+  })
+}
+
+const handleExportScroll = (e: { target: any }) => {
+  const taskBox = e.target;
+  // 检查是否已经滚动到底部
+  if (taskBox?.clientHeight + taskBox.scrollTop + 10 >= taskBox?.scrollHeight) {
+    if (exportTaskPageSize.value < exportTaskTotal.value) {
+      taskExportLoading.value = true;
+      clearInterval(taskExportTimer.value);
+      taskExportTimer.value = null;
+      exportTaskPageNumber.value = exportTaskPageNumber.value + 1;
+      exportTaskPageSize.value = exportTaskPageNumber.value * 10;
+      taskExportTimer.value = setInterval(() => {
+        handleInitExportTaskList();
+      }, 2500);
+    }
+  }
+};
+
+const handleCloseSingleUpload = (taskId: string) => {
+  if(taskId === 'all'){
+    handleCloseAllTask('dataset_export');
+  }else{
+    taskExportLoading.value = true;
+    let payload: any = {
+      taskId
+    };
+    KbAppAPI.stopOneTaskList(payload).then(() => {
+      handleInitExportTaskList();
+    }).finally(()=>{
+      taskExportLoading.value = false;
+    })
+  }
+};
+
+const handleUploadRestart = (task: { taskId: string }) => {
+  taskExportList.value.forEach((item) => {
+    if (task.taskId === item.taskId) {
+      let taskOptions = {
+        taskDownUrl: '',
+        onProgress: (evt: any) => {
+          item.percent = evt;
+        },
+        onError: () => {
+          item.exportStatus = 'error';
+          item.percent = '0';
+        },
+        onSuccess: () => {
+          item.exportStatus = 'success';
+        },
+      };
+      dataSetAPI.saveDataSet([task.taskId], taskOptions)
+        .then(() => {
+          taskOptions.onSuccess();
+        })
+        .catch(() => {
+          taskOptions.onError();
+        });
+    }
+  });
+};
+
+const handleOpenDownload = (fileId: any) => {
+  window.open(`${window.origin}/witchaind/api/dataset/download?taskId=${fileId}`);
+};
+
 </script>

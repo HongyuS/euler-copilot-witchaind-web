@@ -399,14 +399,6 @@
             @change="handleChangePage" />
         </div>
       </div>
-      <div
-        class="kf-container-right kf-container-form"
-        v-if="menuType === MenuType.KL_CONFIG">
-        <KnowledgeForm
-          :configInfo="true"
-          :formData="kbInfo"
-          :handleQueryKbData="handleQueryKbData" />
-      </div>
     </div>
   </div>
   <el-dialog
@@ -562,7 +554,7 @@
         :label="$t('assetFile.category')"
         prop="docTypeId">
         <el-select
-          v-model="ruleForm.docTypeId"
+          v-model="ruleForm.docTypeName"
           popper-class="docTypeClass"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
           :suffix-icon="IconCaretDown"
@@ -571,7 +563,9 @@
             v-for="item in filterCategoryList"
             :key="item.value"
             :label="item.label"
-            :value="item.value" />
+            :value="item.label" >
+            {{ item.label }}
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item
@@ -942,8 +936,8 @@ const handeAssetLibraryData = (
         return;
       }
       fileTableList.data = res?.documents || [];
-      currentPage.value = res.page_number;
-      currentPageSize.value = res.page_size;
+      currentPage.value = res.page;
+      currentPageSize.value = res.pageSize;
       totalCount.value = res.total;
       if (pollTimer) {
         handleStartPollTimer();
@@ -963,7 +957,7 @@ const handlePollAssetFileData = () => {
     ...sortFilter.value,
   })
     .then((res: any) => {
-      if (res.page_number === currentPage.value && fileTableList.data?.length) {
+      if (res.page === currentPage.value && fileTableList.data?.length) {
         if (!res?.documents?.length && currentPage.value !== 1) {
           currentPage.value = 1;
           handleSearchOpsData(true, true);
@@ -1033,12 +1027,12 @@ const handleQueryKbData = () => {
   KbAppAPI.getKbLibrary({
     teamId: curTeamInfo.value?.teamId,
     kbId: kbId,
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
   }).then((res: any) => {
-    kbInfo.value = res.documents?.[0] || {};
+    kbInfo.value = res.kbList?.[0] || {};
     let categoryList = JSON.parse(
-      JSON.stringify(Array.from(new Set(res.documents?.[0]?.docTypeId)) || '[]')
+      JSON.stringify(Array.from(new Set(res.kbList?.[0]?.docTypes)) || '[]')
     );
     filterCategoryList.value = [
       ...categoryList.map((item: { type: string; docId: string }) => {
@@ -1048,7 +1042,7 @@ const handleQueryKbData = () => {
         };
       }),
       {
-        label: 'default type',
+        label: 'default',
         value: '00000000-0000-0000-0000-000000000000',
       },
     ].filter((item) => item?.label?.length > 0);
@@ -1090,7 +1084,8 @@ watch(()=>knowledgeTabActive.value,()=>{
 onMounted(() => {
   const kbId = route.query.kb_id;
   if (kbId?.length && knowledgeTabActive.value === 'document' ) {
-    handeAssetLibraryData(
+  handleQueryKbData();
+  handeAssetLibraryData(
       {
         kbId: kbId as string,
         page: 1,
@@ -1104,7 +1099,6 @@ onMounted(() => {
         return { label: item, value: item };
       });
     });
-    // handleQueryKbData();
   }
   document.addEventListener('click', () => handleDateTimerange);
   
@@ -1158,8 +1152,8 @@ const handleTimeChange = (e: (string | undefined)[]) => {
 const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
   handeAssetLibraryData(
     {
-      page_number: currentPage.value,
-      page_size: currentPageSize.value,
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
       kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
       ...sortFilter.value,
@@ -1170,8 +1164,7 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
 };
 
 const handleSwitch = (row: any) => {
-  KfAppAPI.switchLibraryFile({
-    id: row.docId,
+  KfAppAPI.updateLibraryFile({docId: row.docId},{
     enabled: row.enabled,
   }).then(() => {
     ElMessage({
@@ -1213,12 +1206,8 @@ const handleSelectDeleteKl = () => {
 
 const handleSelectRunKl = () => {
   checkTableSelecData.value = selectionFileData.value;
-  KfAppAPI.runLibraryFile({
-    ids: selectionFileData.value.map((item) => {
-      return item.docId;
-    }),
-    run: 'run',
-  }).then(() => {
+  const ids = selectionFileData.value.map((item) => item.docId);
+  KfAppAPI.runLibraryFile({parse:true},ids).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsAnalyticIng'),
@@ -1297,6 +1286,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       },{
         ...ruleForm.value,
         docTypeId: ruleForm.value.docTypeId,
+        docTypeName: ruleForm.value.docTypeName,
       }).then(() => {
         ElMessage({
           showClose: true,
@@ -1318,6 +1308,7 @@ const handleEditKl = (row: any) => {
   ruleForm.value.chunkSize = row.chunkSize || 1024;
   ruleForm.value.parseMethod = row.parseMethod;
   ruleForm.value.docTypeId = JSON.parse(JSON.stringify(row.docType.docTypeId));
+  ruleForm.value.docTypeName = JSON.parse(JSON.stringify(row.docType.docTypeName));
   dialogEditVisible.value = true;
 };
 
@@ -1394,7 +1385,7 @@ const checkSelecTable = (row) => {
   return checkTableSelecData.value.every((item) => item?.docId !== row?.docId);
 };
 
-const handleGenerateDataSet = (visible) => {
+const handleGenerateDataSet = (visible: boolean) => {
   generateDialogVisible.value = visible;
 };
 </script>

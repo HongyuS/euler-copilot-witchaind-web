@@ -20,15 +20,6 @@ class KfAppAPI {
     });
   }
 
-  /** 是否启用文件*/
-  static switchLibraryFile(data: { enabled: boolean; id: string }) {
-    return request({
-      url: `/doc/switch`,
-      method: 'post',
-      data: data,
-    });
-  }
-
   /** 是否删除文件*/
   static delLibraryFile(data: string[]) {
     return request({

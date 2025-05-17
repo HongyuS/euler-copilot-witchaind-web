@@ -44,4 +44,8 @@ const { handleKnowledgeTab } = store;
 const handleTabClick = (tab: any) => {
   handleKnowledgeTab(tab.name);
 };
+
+onUnmounted(()=>{
+  handleKnowledgeTab('document');
+})
 </script>

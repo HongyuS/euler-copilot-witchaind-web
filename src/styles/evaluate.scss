@@ -18,7 +18,7 @@
         justify-content: space-between;
 
         .search-input {
-            width: 300px;
+            width: 356px;
             font-size: 12px;
         }
 
@@ -239,8 +239,26 @@
         }
     }
 }
-.el-select__popper .el-select-dropdown__list{                   
+.el-select__popper .el-select-dropdown__list{    
+    background-color: white;               
+    .el-select-dropdown__item{
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        & span{
+            max-width: 330px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
     .is-hovering{
+        background-color: rgb(122,165,225);
+    }
+    .is-selected{
         background-color: rgb(99,149,253);
+        span{
+            color: white !important;
+        }
     }
 }

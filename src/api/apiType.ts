@@ -23,8 +23,8 @@ export interface QueryKbRequest {
   created_time_order?: string;
   document_count_order?: string;
   name?: string;
-  page_number: number;
-  page_size: number;
+  page: number;
+  pageSize: number;
   [property: string]: any;
 }
 
@@ -43,8 +43,8 @@ export interface DocListRequest {
 export interface DocRenameRequest {
   chunkSize?: number;
   docTypeId?: string;
-  docId: string;
-  docName: string;
+  docId?: string;
+  docName?: string;
   [property: string]: any;
 }
 

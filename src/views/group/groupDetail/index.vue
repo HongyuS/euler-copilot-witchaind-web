@@ -17,10 +17,6 @@
                     <el-form-item prop="teamMember" label="团队人数">
                        {{ form.teamMember }}人
                     </el-form-item>
-                    <!-- <el-form-item prop="transferTeam" label="移交团队">
-                        <el-button>移交</el-button>
-                        <span class="btn-tips">将团队的所有者权限移交给其他成员</span>
-                    </el-form-item> -->
                     <el-form-item prop="deleteTeam" label="解散团队">
                         <el-button @click="handleDeleteTeam" >解散</el-button>
                         <span class="btn-tips">解散团队后相关资源都会被释放，请谨慎操作</span>
@@ -60,7 +56,7 @@ const form = ref({
     teamMember: '',
 })
 
-watch(curTeamInfo, (newVal) => {
+watch(()=>curTeamInfo.value, (newVal) => {
     form.value.teamName = newVal.teamName;
     form.value.description = newVal.description;
     form.value.isPublic = newVal.isPublic;
@@ -80,6 +76,9 @@ const onSubmit = () => {
             message: '团队更新成功',
             type: 'success',
         })
+        delNav(1);
+        router.push('/group');
+        handleSwitchMenu('knowledge')
     })
 }
 

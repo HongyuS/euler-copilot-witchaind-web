@@ -377,6 +377,12 @@ div:focus {
 .caret-wrapper {
   margin-left: 0 !important;
   transform: translateX(-3px);
+  .sort-up-active{
+    border-bottom-color:var(--el-color-primary) !important ;
+  }
+  .sort-down-active{
+    border-top-color:var(--el-color-primary) !important ;
+  }
 }
 
 .removeIsTrans {

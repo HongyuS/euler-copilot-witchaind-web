@@ -31,7 +31,6 @@
     box-sizing: border-box;
     width: 100% !important;
     background: #fefefe !important;
-    border: 1px solid #07f !important;
 
     .el-select-dropdown {
       width: 100% !important;
@@ -113,7 +112,6 @@
 
   .el-select-dropdown__item.is-hovering {
     color: #fff !important;
-    background: #07f;
   }
 
   .el-form-item__content {
@@ -234,7 +232,6 @@
 
   .el-select-dropdown__item.is-hovering {
     color: #fff;
-    background: #07f !important;
   }
 }
 
@@ -279,7 +276,6 @@
 
   .el-select-dropdown__item.is-hovering {
     color: #fff !important;
-    background: #07f;
     width: 319px;
   }
 
