@@ -30,20 +30,20 @@ class EvaluateAPI {
   }
 
   /** 删除评测接口*/
-  static deleteTesting(data: { teamId: string }) {
+  static deleteTesting(data: string[]) {
     return request({
       url: `/testing`,
       method: 'delete',
-      params: data,
+      data: data,
     });
   }
 
   /** 评测用例详情接口*/
-  static testingCase(data: { testingId: string }) {
+  static testingCase(data: { testingId: string; page: number; pageSize: number }) {
     return request({
       url: `/testing/testcase`,
       method: 'post',
-      params: data,
+      data,
     });
   }
 

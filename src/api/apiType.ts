@@ -2,7 +2,7 @@ export interface CreateKbRequest {
   defaultChunkSize: number;
   defaultParseMethod: string;
   description: string;
-  docTypes: string[];
+  docTypes: any[];
   embeddingModel: string;
   kbName: string;
   [property: string]: any;
@@ -32,19 +32,19 @@ export interface DocListRequest {
   chunk_size_order?: string;
   created_time_order?: string;
   document_type?: string;
-  kb_id: string;
+  kbId: string;
   name?: string;
-  page_number: number;
-  page_size: number;
+  page: number;
+  pageSize: number;
   parse_status?: string;
   [property: string]: any;
 }
 
 export interface DocRenameRequest {
-  chunk_size: number;
-  document_type: object;
-  id: string;
-  name: string;
+  chunkSize?: number;
+  docTypeId?: string;
+  docId: string;
+  docName: string;
   [property: string]: any;
 }
 
@@ -54,9 +54,10 @@ export interface DocDownload {
 }
 
 export interface ChunkRequest {
-  document_id: string;
-  page_number: number;
-  page_size: number;
+  docId: string;
+  page: number;
+  pageSize: number;
   text?: string;
+  type?: string;
   [property: string]: any;
 }

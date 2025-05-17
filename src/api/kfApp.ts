@@ -103,7 +103,10 @@ class KfAppAPI {
   }
 
   /**  更新文本块内容 */
-  static updateFileSection(params: { chunkId: string }, data: { enabled?: boolean; text: string }) {
+  static updateFileSection(
+    params: { chunkId: string },
+    data: { enabled?: boolean; text?: string }
+  ) {
     return request({
       url: `/chunk`,
       method: 'put',
