@@ -91,11 +91,6 @@
                   v-if="['error', 'failed'].includes(item.exportStatus)"
                   class="errorTask">
                   <div class="errorReson">{{ $t('exportTask.reason') }}</div>
-                  <div
-                    class="errorRestart"
-                    @click="handleUploadRestart(item)">
-                    {{ $t('btnText.retry') }}
-                  </div>
                 </div>
 
                 <div
@@ -1025,7 +1020,6 @@ const handleStopUploadFile = (taskId: string) => {
 };
 
 const handleExportKl = async (row: any) => {
-  console.log(row)
   dialogImportVisible.value = false;
   uploadTaskListData.value.showUploadNotify = false;
   loading.value = true;

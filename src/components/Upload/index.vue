@@ -324,7 +324,6 @@ const handlsSuccess = () => {
 };
 
 const handleUploadRestart = (item: any) => {
-  console.log(item,uploadingList.value)
   uploadingList.value = uploadingList.value.map((up) => {
     if (up.id === item.id) {
       return { ...item, error: false, uploadStatus: 'error' };
@@ -466,7 +465,6 @@ const uploadFiles = () => {
     uploadingList.value = [
       ...uploadingList.value,
       ...res?.map((item: any) => {
-        console.log(item)
         let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,

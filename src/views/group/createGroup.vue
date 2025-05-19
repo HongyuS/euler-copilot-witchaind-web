@@ -96,7 +96,6 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid,) => {
         if (valid) {
-            console.log('submit!', form.value)
             if (props.dialogueType && props.dialogueType === 'edit') {
                 GroupAPI.updateTeam(
                     { teamId: form.value.teamId },
@@ -123,7 +122,6 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
                 })
             } else {
                 GroupAPI.createTeam(form.value).then((res) => {
-                    console.log(res)
                     ElMessage({
                         message: '团队创建成功',
                         type: 'success',

@@ -59,19 +59,23 @@ const form = ref({
     memberCount: '',
 })
 
-watch(()=>groupMenu.value , (newVal) => {
-    if(newVal=== 'detail'){
-        loading.value = true;
-        let param = {
-            teamId: localStorage.getItem('teamId') ?? '',
-            page: 1,
-            pageSize: 10,
-        };
-        GroupAPI.teamList(param).then((res: any) => {
+const queryGroupDetail = () => {
+    loading.value = true;
+    let param = {
+        teamId: localStorage.getItem('teamId') ?? '',
+        page: 1,
+        pageSize: 10,
+    };
+    GroupAPI.teamList(param).then((res: any) => {
         form.value = res.teams[0];
     }).finally(() => {
         loading.value = false;
     })
+}
+
+watch(()=>groupMenu.value , (newVal) => {
+    if(newVal=== 'detail'){
+        queryGroupDetail();
     } 
 })
 
@@ -89,16 +93,12 @@ const onSubmit = () => {
             message: '团队更新成功',
             type: 'success',
         })
-        delNav(1);
-        router.push('/group');
-        handleSwitchMenu('knowledge')
+        queryGroupDetail();
     })
 }
 
 
-const handleClick = (tab: any, event: any) => {
-    console.log(tab, event);
-};
+const handleClick = (tab: any, event: any) => { };
 
 const handleDeleteTeam=() => {
     ElMessageBox.confirm(
@@ -124,6 +124,12 @@ const handleDeleteTeam=() => {
         })
     })
 }
+
+onMounted(()=>{
+    if(groupMenu.value=== 'detail'){
+        queryGroupDetail();
+    } 
+})
 
 </script>
 
