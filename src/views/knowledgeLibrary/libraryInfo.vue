@@ -45,7 +45,24 @@ const handleTabClick = (tab: any) => {
   handleKnowledgeTab(tab.name);
 };
 
-onUnmounted(()=>{
-  handleKnowledgeTab('document');
-})
+import { onBeforeUnmount, onMounted } from 'vue';
+
+// 在组件挂载时保存初始状态
+onMounted(() => {
+  if (groupMenu.value === 'knowledge') {
+    handleKnowledgeTab('document');
+  }
+});
+
+// 在组件即将卸载前重置状态
+onBeforeUnmount(() => {
+  try {
+    // 只有当前是knowledge状态时才需要重置
+    if (groupMenu.value === 'knowledge') {
+      handleKnowledgeTab('document');
+    }
+  } catch (error) {
+    console.warn('Failed to reset knowledge tab state:', error);
+  }
+});
 </script>

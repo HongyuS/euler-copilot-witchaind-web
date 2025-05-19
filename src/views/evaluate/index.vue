@@ -181,7 +181,7 @@
       </el-table-column>
       <el-table-column prop="createdTime" width="150" label="完成时间">
         <template #default="scope">
-          {{ scope.row.testingTask?.finishedTime ?? '--' }}
+          {{ convertUTCToLocalTime(scope.row.testingTask?.finishedTime)}}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
@@ -220,6 +220,8 @@ import CustomLoading from '@/components/CustomLoading/index.vue';
 import { debounce } from "lodash";
 import dataSetAPI from "@/api/dataSet";
 import KbAppAPI from "@/api/kbApp";
+import { convertUTCToLocalTime } from "@/utils/convertUTCToLocalTime";
+import { downloadFun } from "@/utils/downloadFun";
 
 const route = useRoute();
 const testList:any = ref([]);
@@ -419,13 +421,7 @@ const handleStopTesting = (row: any) => {
 }
 const handleDownload = (row: any) => {
   const url = `${window.origin}/witchaind/api/testing/download?testingId=${row.testingId}`;
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'filename'; // 指定文件名
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  downloadFun(url);
 }
 const handleBatchDownload = () => {
   let flag = true;
@@ -625,9 +621,6 @@ onMounted(() => {
     );
   }
 });
-onUnmounted(()=>{
-  handleCleartTimer();
-})
 
 const handleCleartTimer = () => {
   clearInterval(pollingKfTimer.value);

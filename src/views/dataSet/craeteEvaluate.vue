@@ -128,7 +128,6 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
                 topK: form.topk
             }
             EvaluateAPI.createTesting(params).then(()=>{
-                ruleFormRef.value?.resetFields();
                 handleCancelVisible();
                 handleKnowledgeTab('evaluation')
             })
@@ -138,6 +137,7 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
 
 const handleCancelVisible = () => {
     props.close?.();
+    ruleFormRef.value?.resetFields();
 }
 
 onMounted(() => {

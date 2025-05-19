@@ -9,13 +9,13 @@
         </template>
         <template #default>
             <div class="empty-container" v-if="props.rowData?.status === 'pending'">
-                <el-empty description="等待测试" image="src/assets/images/empty_pending.svg" />
+                <el-empty description="等待测试" :image="empty_pending" />
             </div>
             <div class="empty-container" v-else-if="props.rowData?.status === 'failed'">
-                <el-empty description="测试失败" image="src/assets/images/empty_failed.svg" />
+                <el-empty description="测试失败" :image="empty_failed" />
             </div>
             <div class="empty-container" v-else-if="props.rowData?.status === 'running'">
-                <el-empty description="测试中..." image="src/assets/images/empty_running.svg" />
+                <el-empty description="测试中..." :image="empty_running" />
             </div>
             <div v-else>
                 <div class="chart-container">
@@ -108,6 +108,10 @@
 import EvaluateAPI from '@/api/evaluate';
 import * as echarts from 'echarts';
 import { onMounted, onBeforeUnmount, watch, nextTick, ref } from 'vue';
+import empty_pending from '@/assets/images/empty_pending.svg'
+import empty_failed from '@/assets/images/empty_failed.svg'
+import empty_running from '@/assets/images/empty_running.svg'
+import { downloadFun } from '@/utils/downloadFun';
 
 const props = defineProps({
     visible: Boolean,
@@ -458,13 +462,7 @@ const handleClose = () => {
 
 const handleDownloadReport = () => {
     const url = `${window.origin}/witchaind/api/testing/download?testingId=${props.rowData?.testingId}`;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'filename'; // 指定文件名
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    downloadFun(url);
 }
 </script>
 

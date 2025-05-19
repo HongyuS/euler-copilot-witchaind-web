@@ -1,5 +1,6 @@
 <template>
   <div class="kf-container">
+    <CustomLoading :dark="false" :loading="loading" />
     <div class="kf-container-action">
       <div
         class="kf-container-right"
@@ -16,7 +17,7 @@
           <el-button
             type="primary"
             style="margin-right: 8px"
-            @click="handleGenerateDataSet"
+            @click="handleGenerateDataSet(true)"
             :disabled="!(selectionFileData.length > 0)"
             class="dataSetBtn">
             {{ $t('生成数据集') }}
@@ -601,7 +602,12 @@
       </el-form-item>
     </el-form>
   </el-dialog>
-  <DataSetDialog :selectionFileData="selectionFileData" :generateDialogVisible="generateDialogVisible" :handleGenerateDataSet="handleGenerateDataSet"/>
+  <DataSetDialog 
+    :selectionFileData="selectionFileData" 
+    :generateDialogVisible="generateDialogVisible" 
+    :handleGenerateDataSet="handleGenerateDataSet"
+    :handleClearSelected="handleClearSelected"s
+    />
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -625,14 +631,12 @@ import {
   IconSuccess,
 } from '@computing/opendesign-icons';
 import { StatusEnum, MenuType } from '@/enums/KnowledgeEnum';
-import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
 import FilterContainr from '@/components/TableFilter/index.vue';
 const { t } = useI18n();
 import { type FormInstance } from 'element-plus';
 import KfAppAPI from '@/api/kfApp';
 import { DocListRequest } from '@/api/apiType';
 import KbAppAPI from '@/api/kbApp';
-import TextTooltip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 
@@ -640,7 +644,7 @@ import { FileForm, DocumentType } from './fileConfig';
 import router from '@/router';
 import { useGroupStore } from '@/store/modules/group';
 import DataSetDialog from './dataSetDialog.vue';
-import { finished } from 'stream';
+import { downloadFun } from '@/utils/downloadFun';
 
 const route = useRoute();
 const dialogImportVisible = ref(false);
@@ -1024,8 +1028,9 @@ const handleSearchData = () => {
 const handleQueryKbData = () => {
   const kbId = route.query.kb_id;
   curTeamInfo
+  const teamId = localStorage.getItem('teamId') ?? '';
   KbAppAPI.getKbLibrary({
-    teamId: curTeamInfo.value?.teamId,
+    teamId,
     kbId: kbId,
     page: 1,
     pageSize: 10,
@@ -1115,6 +1120,7 @@ onUnmounted(() => {
   handleCleartTimer();
   // 移除postMessage事件监听
   window.removeEventListener('message', handleMessage);
+  taskTimer.value = null;
 });
 
 const handleVisibleChange = (e: boolean) => {
@@ -1343,10 +1349,6 @@ const toggleUploadNotify = (uploadTaskPayload: any) => {
   uploadTaskListData.value = uploadTaskPayload;
 };
 
-onUnmounted(() => {
-  taskTimer.value = null;
-});
-
 const handleUploadMyFile = (options: any) => {
   KfAppAPI.importKbLibraryFile(
     {
@@ -1370,13 +1372,7 @@ const handleUploadMyFile = (options: any) => {
 const handleDownloadFile = async (downloadData: any) => {
   for (const item of downloadData) {
     const url = `${window.origin}/witchaind/api/doc/download?docId=${item.docId}`;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'filename'; // 指定文件名
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    downloadFun(url);
     await new Promise((resolve) => setTimeout(resolve, 333)); // 添加延迟
   }
 };
@@ -1388,4 +1384,9 @@ const checkSelecTable = (row) => {
 const handleGenerateDataSet = (visible: boolean) => {
   generateDialogVisible.value = visible;
 };
+
+const handleClearSelected = ()=>{
+  checkTableSelecData.value = [];
+  multipleTable.value.clearSelection();
+}
 </script>

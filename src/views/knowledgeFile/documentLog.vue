@@ -12,6 +12,7 @@
   import * as monaco from 'monaco-editor'
   import { editor } from 'monaco-editor'
   import KfAppAPI from '@/api/kfApp';
+import { downloadFun } from '@/utils/downloadFun';
 
   const route = useRoute();
   
@@ -82,13 +83,8 @@
 
   const downloadLogFn = () => {
     const url = `${window.origin}/witchaind/api/doc/report/download?docId=${route.query.file_id as string}`;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'filename'; // 指定文件名
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const name = `log_${route.query.file_id as string}`;
+    downloadFun(url);
   }
   </script>
   

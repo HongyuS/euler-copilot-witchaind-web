@@ -1,4 +1,5 @@
 <template>
+    <CustomLoading :loading="loading" />
     <div class="group-detial-container">
         <div class="group-name">{{ groupName }}</div>
         <el-tabs v-model="activeName" class="group-detail-tabs" @tab-click="handleClick">
@@ -14,8 +15,8 @@
                     <el-form-item prop="isPublic" label="是否公开">
                         <el-switch v-model="form.isPublic" style="--el-switch-on-color: rgb(36,171,54); " />
                     </el-form-item>
-                    <el-form-item prop="teamMember" label="团队人数">
-                       {{ form.teamMember }}人
+                    <el-form-item prop="memberCount" label="团队人数">
+                       {{ form.memberCount }}人
                     </el-form-item>
                     <el-form-item prop="deleteTeam" label="解散团队">
                         <el-button @click="handleDeleteTeam" >解散</el-button>
@@ -33,13 +34,15 @@
 import GroupAPI from '@/api/group';
 import { useGroupStore } from '@/store/modules/group';
 import { IconAlarm } from '@computing/opendesign-icons';
+import CustomLoading from '@/components/CustomLoading/index.vue';
 
 const groupStore = useGroupStore();
-const { curTeamInfo } = storeToRefs(groupStore);
-const { handleSwitchMenu, delNav,setCurTeamInfo } = groupStore;
+const { curTeamInfo,groupMenu } = storeToRefs(groupStore);
+const { handleSwitchMenu, delNav } = groupStore;
 
 const route = useRoute();
 const router = useRouter();
+const loading = ref(false);
 
 const isSubmitDisabled = computed(()=>{
     let oldData = JSON.stringify({teamName:curTeamInfo.value.teamName,description:curTeamInfo.value.description,isPublic:curTeamInfo.value.isPublic})
@@ -53,19 +56,29 @@ const form = ref({
     teamName: '',
     description: '',
     isPublic: false,
-    teamMember: '',
+    memberCount: '',
 })
 
-watch(()=>curTeamInfo.value, (newVal) => {
-    form.value.teamName = newVal.teamName;
-    form.value.description = newVal.description;
-    form.value.isPublic = newVal.isPublic;
-    form.value.teamMember = newVal.memberCount;
+watch(()=>groupMenu.value , (newVal) => {
+    if(newVal=== 'detail'){
+        loading.value = true;
+        let param = {
+            teamId: localStorage.getItem('teamId') ?? '',
+            page: 1,
+            pageSize: 10,
+        };
+        GroupAPI.teamList(param).then((res: any) => {
+        form.value = res.teams[0];
+    }).finally(() => {
+        loading.value = false;
+    })
+    } 
 })
 
 const onSubmit = () => {
-    GroupAPI.updateTeam(
-        { teamId: curTeamInfo.value.teamId },
+  const teamId = localStorage.getItem('teamId') ?? '';
+  GroupAPI.updateTeam(
+        { teamId },
         {
             teamName: form.value.teamName,
             description: form.value.description,
@@ -100,8 +113,9 @@ const handleDeleteTeam=() => {
             icon:markRaw(IconAlarm)
         }
     ).then(()=>{
-        GroupAPI.deleteTeam({
-            teamId: curTeamInfo.value.teamId
+    const teamId = localStorage.getItem('teamId') ?? '';
+    GroupAPI.deleteTeam({
+            teamId
         }).then((res) => {
             delNav(1);
             router.push('/group');

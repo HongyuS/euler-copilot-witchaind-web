@@ -217,13 +217,13 @@
             popper-class="kbLibraryPage" />
         </div>
         <div v-if="fileInfo?.docTask?.taskStatus === 'pending'">
-          <el-empty description="等待解析" image="src/assets/images/empty_pending.svg" />
+          <el-empty description="等待解析" :image="empty_pending" />
         </div>
         <div v-if="fileInfo?.docTask?.taskStatus === 'running'">
-          <el-empty description="解析中" image="src/assets/images/empty_running.svg" />
+          <el-empty description="解析中" :image="empty_running" />
         </div>
         <div v-if="fileInfo?.tdocTask?.taskStatus === 'error'">
-          <el-empty description="解析失败" image="src/assets/images/empty_failed.svg" />
+          <el-empty description="解析失败" :image="empty_failed" />
         </div>
       </div>
     </div>
@@ -263,6 +263,9 @@ import { ChunkRequest } from '@/api/apiType';
 import { debounce } from 'lodash';
 import { CheckboxValueType } from 'element-plus';
 import { useGroupStore } from '@/store/modules/group';
+import empty_pending from '@/assets/images/empty_pending.svg'
+import empty_failed from '@/assets/images/empty_failed.svg'
+import empty_running from '@/assets/images/empty_running.svg'
 const { t } = useI18n();
 
 const route = useRoute();
