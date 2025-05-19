@@ -378,10 +378,9 @@
   .el-table__body-wrapper {
     flex: unset !important;
   }
-
-  .el-checkbox__inner::before {
+  .el-checkbox__input.is-indeterminate .el-checkbox__inner:before {
+    transform: scaleY(0.5) translateX(3px);
     top: 4.5px !important;
-    width: 13px;
   }
 
   .el-table__header {

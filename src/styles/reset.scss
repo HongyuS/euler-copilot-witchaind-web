@@ -812,12 +812,13 @@ div:focus {
 }
 
 .el-select-dropdown__item.is-selected {
-  color: #0077ff;
-  span {
-    color: #0077ff;
-  }
+  background-color: rgb(99,149,253) !important;
+    span{
+      color: white !important;
+    }
 }
 .el-select-dropdown__item.is-hovering {
+  background-color: rgb(122,165,225);
   span {
     color: #fff !important;
   }

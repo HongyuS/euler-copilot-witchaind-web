@@ -63,7 +63,7 @@
                                             {{ item.memberCount }}人
                                         </span>
                                     </div>
-                                    <el-button text @click="handleEditKl(item)">
+                                    <el-button v-if="tab.name === 'mycreated'" text @click="handleEditKl(item)">
                                         编辑
                                     </el-button>
                                 </div>
@@ -198,7 +198,7 @@ const groupTabs = [
     },
     {
         label: '全部团队',
-        name: 'all',
+        name: 'public',
     },
 ]
 const switchIcon = ref('thumb');

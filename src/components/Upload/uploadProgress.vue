@@ -72,11 +72,6 @@
               <el-icon class="icon-tip"><WarningFilled /></el-icon>
             </span>
             <span>{{ $t('uploadText.uploadFailed') }}</span>
-            <span
-              class="upload-restart"
-              @click="handleUploadRestart(item)">
-              {{ $t('btnText.retry') }}
-            </span>
           </div>
           <div
             v-if="item.uploadStatus === 'canceled'"
@@ -154,7 +149,6 @@ const handleScroll = (e: any) => {
 watch(
   () => props.uploadingList,
   () => {
-    console.log('props.uploadingList---',props.uploadingList)
     if (props.isKnowledgeFileUpload) {
       taskStatusList.value = props.uploadingList.filter((item) => item.uploadStatus !== 'success');
     } else {
@@ -174,15 +168,7 @@ watch(
     deep: true,
   }
 );
-watch(
-  ()=>taskStatusList.value,
-  (newVal)=>{
-    // console.log('taskStatusList----',newVal)
-  },
-  {
-    deep: true,
-  }
-)
+
 onMounted(() => {
   if (props.isKnowledgeFileUpload) {
     taskStatusList.value = props.uploadingList.filter((item) => item?.uploadStatus !== 'success');

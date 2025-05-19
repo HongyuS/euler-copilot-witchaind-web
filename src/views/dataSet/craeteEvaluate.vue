@@ -118,7 +118,6 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid) => {
         if (valid) {
-            console.log('submit!',form)
             let params = {
                 testingName: form.name,
                 description: form.desc,

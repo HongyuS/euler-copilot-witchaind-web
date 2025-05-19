@@ -85,7 +85,7 @@
             <img src="/src/assets/svg/taskScore.svg" />
           </span>
           <span class="dataSetScoreText">数据集质量分数</span>
-          <span class="dataSetScoreNumber">{{ props.dataSetRow.score?.toFixed(2) }}</span>
+          <span class="dataSetScoreNumber">{{ props.dataSetRow.score>0?props.dataSetRow.score?.toFixed(2):'--' }}</span>
         </div>
       </div>
     </div>

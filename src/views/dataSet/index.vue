@@ -93,11 +93,6 @@
                   v-if="['error', 'failed'].includes(item.exportStatus)"
                   class="errorTask">
                   <div class="errorReson">{{ $t('exportTask.reason') }}</div>
-                  <div
-                    class="errorRestart"
-                    @click="handleUploadRestart(item)">
-                    {{ $t('btnText.retry') }}
-                  </div>
                 </div>
 
                 <div
@@ -224,7 +219,7 @@
                   ref="enableRef"
                   @click.stop
                   :class="
-                    searchPayload?.isDataCleared?.length || enableFilterVisible
+                    searchPayload?.isDataCleared?.toString()?.length || enableFilterVisible
                       ? 'searchIconIsActive'
                       : ''
                   ">
@@ -260,10 +255,10 @@
               <div class="custom-header">
                 <span>是否补全上下文</span>
                 <el-icon
-                  ref="enableRef"
+                  ref="enableTextRef"
                   @click.stop
                   :class="
-                    searchPayload?.isChunkRelated?.toString()?.length || enableFilterVisible
+                    searchPayload?.isChunkRelated?.toString()?.length || enableTextFilterVisible
                       ? 'searchIconIsActive'
                       : ''
                   ">
@@ -271,10 +266,10 @@
                 </el-icon>
                 <el-popover
                   ref="popoverRef"
-                  v-model:visible="enableFilterVisible"
+                  v-model:visible="enableTextFilterVisible"
                   popper-class="filterPopper"
                   placement="bottom-start"
-                  :virtual-ref="enableRef"
+                  :virtual-ref="enableTextRef"
                   :show-arrow="false"
                   trigger="click"
                   virtual-triggering>
@@ -557,9 +552,11 @@ const filterEnableList = ref();
 const totalCount = ref(0);
 const statusRef = ref();
 const enableRef = ref();
+const enableTextRef = ref();
 const statusFilterVisible = ref(false);
 const creatorVisible = ref(false);
 const enableFilterVisible = ref(false);
+const enableTextFilterVisible = ref(false);
 const dataSetDrawerVisible = ref(false);
 const dataSetRow = ref({});
 const dialogEvaluateVisible = ref(false);
@@ -768,6 +765,7 @@ const handleSearchData = () => {
   enableFilterVisible.value = false;
   statusFilterVisible.value = false;
   creatorVisible.value = false
+  enableTextFilterVisible.value = false;
 };
 
 onMounted(() => {

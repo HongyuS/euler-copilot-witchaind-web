@@ -12,7 +12,7 @@
   import * as monaco from 'monaco-editor'
   import { editor } from 'monaco-editor'
   import KfAppAPI from '@/api/kfApp';
-import { downloadFun } from '@/utils/downloadFun';
+  import { downloadFun } from '@/utils/downloadFun';
 
   const route = useRoute();
   
@@ -20,14 +20,46 @@ import { downloadFun } from '@/utils/downloadFun';
   const codeEditBox = ref<HTMLElement | null>(null)
   let monacoEditor: editor.IStandaloneCodeEditor | null = null
   
+  // 注册自定义语言和主题
+  const registerCustomLanguage = () => {
+    // 注册自定义语言
+    monaco.languages.register({ id: 'customLog' });
+    
+    // 定义语言的标记器规则
+    monaco.languages.setMonarchTokensProvider('customLog', {
+      tokenizer: {
+        root: [
+          // 匹配UUID格式
+          [/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/, 'uuid'],
+          // 匹配时间戳格式: 2025-05-19 08:19:22.862548+00:00
+          [/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}\.\d+\+\d{2}:\d{2}/, 'timestamp'],
+        ]
+      }
+    });
+    
+    // 定义主题规则
+    monaco.editor.defineTheme('customLogTheme', {
+      base: 'vs',
+      inherit: true,
+      rules: [
+        { token: 'uuid', foreground: '#808080' }, // 灰色
+        { token: 'timestamp', foreground: '#CE9178' }, // 紫色
+      ],
+      colors: {}
+    });
+  }
+  
   // 初始化编辑器
   const initMonaco = () => {
     if (!codeEditBox.value) return
+    
+    // 注册自定义语言和主题
+    registerCustomLanguage();
   
     monacoEditor = monaco.editor.create(codeEditBox.value, {
       value: content.value,
-      language: 'javascript',
-      theme: 'vs',
+      language: 'customLog',
+      theme: 'customLogTheme',
       readOnly: true,
       minimap: {
         enabled: true,
@@ -42,19 +74,6 @@ import { downloadFun } from '@/utils/downloadFun';
       },
       wordWrap: 'on'
     })
-    monaco.editor.defineTheme("myTheme", {
-      base: "vs",
-      inherit: true,
-      rules: [],
-      colors: {
-        "editor.foreground": "#000000",
-        "editor.background": "#FFFFFF",
-        "editorCursor.foreground": "#8B0000",
-        "editor.selectionBackground": "#88000030",
-        "editor.inactiveSelectionBackground": "#88000015",
-      },
-    });
-    monaco.editor.setTheme("myTheme");
   }
 
   const getDocumentLog = () => {
@@ -83,7 +102,6 @@ import { downloadFun } from '@/utils/downloadFun';
 
   const downloadLogFn = () => {
     const url = `${window.origin}/witchaind/api/doc/report/download?docId=${route.query.file_id as string}`;
-    const name = `log_${route.query.file_id as string}`;
     downloadFun(url);
   }
   </script>
