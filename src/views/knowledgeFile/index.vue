@@ -78,7 +78,6 @@
             @selection-change="handleSelectionChange"
             @sort-change="handleSortChange"
             ref="multipleTable"
-            v-loading="loading"
             :border="true">
             <el-table-column
               type="selection"

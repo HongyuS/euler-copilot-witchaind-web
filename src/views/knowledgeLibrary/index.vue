@@ -322,7 +322,6 @@
         <el-table
           :data="fileTableList.data"
           :border="true"
-          @sort-change="handleSortChange"
           @selection-change="handleSelectionChange"
           :class="fileTableList.data.length < currentPageSize ? 'showPagination' : ''">
           <el-table-column type="selection"  width="55" />
@@ -354,7 +353,7 @@
                 <el-icon
                   ref="inputSearchRef"
                   :class="
-                    sortFilter?.id?.length! > 0 || fileFilterVisible ? 'searchIconIsActive' : ''
+                    sortFilter?.kbId?.length! > 0 || fileFilterVisible ? 'searchIconIsActive' : ''
                   ">
                   <IconSearch />
                 </el-icon>
@@ -369,7 +368,7 @@
                   virtual-triggering>
                   <FilterContainr
                     filterType="input"
-                    v-model:serachName="sortFilter.id"
+                    v-model:serachName="sortFilter.kbId"
                     :hanldeSearhNameFilter="hanldeSearhNameFilter"
                     :searchPayload="sortFilter" />
                 </el-popover>
@@ -403,29 +402,34 @@
           </el-table-column>
             <el-table-column
             prop="authorName"
-            sortable
             width="100"
             :label="$t('assetLibrary.creator')">
             <template #header>
-                <span>{{ $t('assetLibrary.creator') }}</span>
+              <div class="asset-id-custom-header">
+                <span>创建人</span>
+                <el-icon
+                  ref="authorNameSearchRef"
+                  :class="
+                    sortFilter?.authorName?.length! > 0 || authorNameFilterVisible ? 'searchIconIsActive' : ''
+                  ">
+                  <IconSearch />
+                </el-icon>
                 <el-popover
-                  :visible="timeFilterVisible"
-                  popper-class="filterPopper timeFilterPo"
+                  ref="popoverRef"
+                  v-model:visible="authorNameFilterVisible"
+                  popper-class="inputSearchFilterPopper"
                   placement="bottom-start"
-                  :show-arrow="false">
-                  <template #reference>
-                    <el-icon
-                      @click="handeDatePickerShow"
-                      @click.stop
-                      :class="
-                        sortFilter?.created_time_start?.length! > 0 || timeFilterVisible
-                          ? 'searchIconIsActive'
-                          : ''
-                      ">
-                      <IconFilter />
-                    </el-icon>
-                  </template>
+                  :virtual-ref="authorNameSearchRef"
+                  :show-arrow="false"
+                  trigger="click"
+                  virtual-triggering>
+                  <FilterContainr
+                    filterType="input"
+                    v-model:serachName="sortFilter.authorName"
+                    :hanldeSearhNameFilter="hanldeSearhAuthorNameFilter"
+                    :searchPayload="sortFilter" />
                 </el-popover>
+              </div>
             </template>
             <template #default="scope">
               <span>{{ scope.row.authorName }}</span>
@@ -439,26 +443,6 @@
             width="150"
             @header-click="() => {}"
             @click.stop>
-            <template #header>
-              <div class="asset-custom-header custom-header">
-                <span>{{ $t('assetLibrary.uploadTime') }}</span>
-                <el-date-picker
-                  popper-class="datetimerangeClass"
-                  placement="bottom"
-                  class="timer-picker"
-                  v-model="createdTime"
-                  type="datetimerange"
-                  :teleported="true"
-                  :shortcuts="shortcuts"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  :unlink-panels="true"
-                  time-format="HH:mm"
-                  @change="handleTimeChange"
-                  ref="tiemPick"
-                  @visible-change="handleVisibleChange" />
-              </div>
-            </template>
             <template #default="scope">
               <span>{{ convertUTCToLocalTime(scope.row.createdTime) }}</span>
             </template>
@@ -623,7 +607,6 @@ import {
   IconChevronDown,
   IconX,
   IconError,
-  IconFilter,
   IconSuccess,
   IconCaretDown,
   IconCaretUp,
@@ -632,7 +615,7 @@ import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 
-import { debounce, filter } from 'lodash';
+import { debounce } from 'lodash';
 import KbAppAPI, { ITaskType } from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
@@ -644,6 +627,7 @@ import EmptyStatus from '@/components/EmptyStatus/index.vue'
 import { CheckboxValueType } from 'element-plus';
 import { bytesToSize } from '@/utils/bytesToSize';
 import { downloadFun } from '@/utils/downloadFun';
+import { validate } from 'uuid';
 const route = useRoute();
 
 defineProps({
@@ -706,11 +690,10 @@ const importTaskTotal = ref(0);
 const importTaskPage = ref(1);
 const importTaskPageSize = ref(10);
 const taskListLoading = ref(false);
-const timeFilterVisible = ref(false);
+const authorNameFilterVisible = ref(false);
 const fileFilterVisible = ref(false);
 const inputSearchRef = ref();
-const timePick = ref();
-const createdTime = ref();
+const authorNameSearchRef = ref();
 const shortcuts = ref();
 const fileTableList = reactive<{
   data: Array<any>;
@@ -880,21 +863,6 @@ onMounted(() => {
   });
 });
 
-const handleVisibleChange = (e: boolean) => {
-  timeFilterVisible.value = e;
-};
-
-const handeDatePickerShow = (e: { pageX: string; pageY: string }) => {
-  timeFilterVisible.value = true;
-  timePick.value.handleOpen();
-  let dateTimerContainer = document.querySelector('.datetimerangeClass') as HTMLElement;
-  if (dateTimerContainer) {
-    dateTimerContainer.style.position = 'absolute';
-    dateTimerContainer.style.left = e.pageX + 'px';
-    dateTimerContainer.style.top = e.pageY + 'px';
-  }
-};
-
 const handleFilterData = (params: sortFilterType) => {
   let filterPaylod: sortFilterType = {};
   Object.keys(params || {}).forEach((item: string | number) => {
@@ -908,7 +876,11 @@ const handleFilterData = (params: sortFilterType) => {
 };
 
 const hanldeSearhNameFilter = (filterName: string) => {
-  sortFilter.value.id = filterName;
+  if(!validate(filterName)){
+    ElMessage.error('资产ID必须是一个正确的uuid格式.')
+    return;
+  }
+  sortFilter.value.kbId = filterName;
   currentPage.value = 1;
   currentPageSize.value = 10;
   handleQueryKbLibrary({
@@ -917,6 +889,17 @@ const hanldeSearhNameFilter = (filterName: string) => {
     ...handleFilterData(sortFilter.value),
   });
   fileFilterVisible.value = false;
+};
+const hanldeSearhAuthorNameFilter = (filterName: string) => {
+  sortFilter.value.authorName = filterName;
+  currentPage.value = 1;
+  currentPageSize.value = 10;
+  handleQueryKbLibrary({
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
+    ...handleFilterData(sortFilter.value),
+  });
+  authorNameFilterVisible.value = false;
 };
 
 const handleSwitch = (switchType: string) => {
@@ -1243,18 +1226,6 @@ watch(
   }
 );
 
-const handleTimeChange = (e: (string | undefined)[]) => {
-  sortFilter.value.created_time_start = e?.[0] ? uTCToLocalTime(e?.[0]) : '';
-  sortFilter.value.created_time_end = e?.[1] ? uTCToLocalTime(e?.[1]) : '';
-  currentPage.value = 1;
-  currentPageSize.value = 10;
-  handleQueryKbLibrary({
-    page: 1,
-    pageSize: 10,
-    ...handleFilterData(sortFilter.value),
-  });
-  handleCancelVisible();
-};
 const handleCreateKnowledge = () => {
   dialogCreateVisible.value = true;
 };
@@ -1289,21 +1260,6 @@ const handleSelectionChange = (val:any) => {
   multipleSelection.value = val;
 }
 
-const handleSortChange = (data: { column: any; prop: string; order: any }) => {
-  currentPage.value = 1;
-  sortFilter.value = data.order
-    ? {
-        [data.prop === 'createdTime' ? 'created_time_order' : 'document_count_order']:
-          data.order === 'descending' ? 'desc' : 'asc',
-      }
-    : {};
-  handleQueryKbLibrary({
-    page: currentPage.value,
-    pageSize: currentPageSize.value,
-    ...handleFilterData(sortFilter.value),
-  });
-};
-
 const handleEditKl = (row: any) => {
   formData.value = row;
   dialogCreateVisible.value = true;
@@ -1318,10 +1274,14 @@ const handleOpenDownload = (fileId: string) => {
   const url = `${window.origin}/witchaind/api/kb/download?taskId=${fileId}`;
   downloadFun(url);
 };
-let isSearch = ref(false);
+const isSearch = computed(()=>{
+  return Object.values(sortFilter.value).some(value => {
+    if (typeof value === 'string') return value.trim() !== '';
+    return value !== null && value !== undefined; // 其他类型需非空
+  });
+})
 
 const handleInputSearch = debounce((e) => {
-  isSearch.value = e?.length
   let payload: {
     page: number;
     pageSize: number;
@@ -1330,15 +1290,12 @@ const handleInputSearch = debounce((e) => {
     page: 1,
     pageSize: currentPageSize.value,
   };
-  if (e) {
     payload = {
       ...payload,
       kbName: e,
     };
-
     sortFilter.value.kbName = e;
     payload = { ...payload, ...handleFilterData(sortFilter.value) };
-  }
   handleQueryKbLibrary(payload);
 }, 200);
 
