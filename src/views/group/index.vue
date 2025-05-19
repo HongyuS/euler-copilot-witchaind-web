@@ -89,7 +89,11 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="authorName" width="150" label="创建人" />
-                                <el-table-column prop="createdtime" width="150" label="创建时间" />
+                                <el-table-column prop="createdtime" width="150" label="创建时间" >
+                                    <template #default="scope">
+                                        {{ convertUTCToLocalTime(scope.row.createdtime)}}
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="action" :label="$t('btnText.operation')" width="100">
                                     <template #default="scope">
                                         <el-button text @click="handleEditKl(scope.row)">
@@ -127,6 +131,7 @@ import { useGroupStore } from '@/store/modules/group.js';
 import CreateGroup from './createGroup.vue';
 import GroupAPI from '@/api/group';
 import { TabPaneName } from 'element-plus';
+import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 
 const groupStore = useGroupStore();
 const { setCurTeamInfo } = groupStore;
@@ -238,6 +243,7 @@ const handleToGroup = async (row: any) => {
         }
     }
     setCurTeamInfo(row);
+    localStorage.setItem('teamId', row.teamId);
 }
 
 const handlequeryTeamList = (param: { teamType: string, page: number, pageSize: number, teamName?: string }) => {

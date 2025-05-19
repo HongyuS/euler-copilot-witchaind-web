@@ -2,7 +2,7 @@
   <el-dialog
     v-if="props.generateDialogVisible"
     v-model="props.generateDialogVisible"
-    @close="handleGenerateDialogVisible"
+    @close="handleCancelVisible"
     class="dataSet-edit-dialog"
     align-center
     width="550"
@@ -31,7 +31,7 @@
           :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
       <el-form-item :label="$t('文档数量')" prop="documentIds">
-        <span>{{ ruleForm.documentIds.length }}</span>
+        <span>{{ props.selectionFileData.length }}</span>
       </el-form-item>
 
       <el-form-item :label="$t('数据集条目')" prop="dataCnt" class="dataSetNumber">
@@ -131,12 +131,16 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  handleClearSelected: {
+    type: Function,
+    default: () => { },
+  },
 });
 
 watch(
   () => props.selectionFileData,
   () => {
-    ruleForm.documentIds = props.selectionFileData.map((item) => item.id);
+    ruleForm.documentIds = props.selectionFileData.map((item) => item.docId);
   },
   {
     deep: true,
@@ -157,10 +161,6 @@ watch(
   }
 );
 
-const handleGenerateDialogVisible = () => {
-  props.handleGenerateDataSet(false);
-};
-
 const handleResetDataSet = () => {
   ruleForm.value = {
     datasetName: '',
@@ -171,6 +171,7 @@ const handleResetDataSet = () => {
     isDataCleared: false,
     isChunkRelated: false,
   };
+  ruleFormRef.value.resetFields();
 };
 
 const submitForm = () => {
@@ -180,7 +181,8 @@ const submitForm = () => {
     ...ruleForm.value
   }
   dataSetAPI.createDataSet(param).then(res => {
-    handleCancelVisible()
+    handleCancelVisible();
+    props.handleClearSelected();
   }).finally(()=>{
     loading.value = false;
     handleKnowledgeTab('dataset')

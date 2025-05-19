@@ -422,7 +422,7 @@
             :label="$t('完成时间')"
             @click.stop>
             <template #default="scope">
-                {{ scope.row.generateTask?.createdTime }}
+                {{ convertUTCToLocalTime(scope.row.generateTask?.createdTime) }}
             </template>
           </el-table-column>
 
@@ -542,6 +542,8 @@ import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import KbAppAPI, { ITaskType } from '@/api/kbApp';
 import { debounce } from 'lodash';
+import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+import { downloadFun } from '@/utils/downloadFun';
 const store = useGroupStore();
 const inputSearchRef = ref();
 const multipleTable = ref();
@@ -975,8 +977,9 @@ const handleImportLoading = (loadingStatus: boolean) => {
 };
 
 const handleInitExportTaskList = () => {
+  const teamId = localStorage.getItem('teamId') ?? '';
   return KbAppAPI.queryTaskList({
-    teamId:curTeamInfo.value.teamId,
+    teamId,
     taskType: 'dataset_export',
     page: 1,
     pageSize: currentPageSize.value,
@@ -1143,8 +1146,9 @@ const exportTaskPageSize = ref(10);
 
 const handleCloseAllTask=(type: ITaskType)=>{
   taskExportLoading.value = true;
+  const teamId = localStorage.getItem('teamId') ?? '';
   KbAppAPI.stopAllTaskList({
-    teamId:curTeamInfo.value.teamId,
+    teamId,
     taskType:type
   }).then(() => {
     handleInitExportTaskList();
@@ -1213,8 +1217,9 @@ const handleUploadRestart = (task: { taskId: string }) => {
   });
 };
 
-const handleOpenDownload = (fileId: any) => {
-  window.open(`${window.origin}/witchaind/api/dataset/download?taskId=${fileId}`);
+const handleOpenDownload = (fileId: string) => {
+  const url = `${window.origin}/witchaind/api/dataset/download?taskId=${fileId}`;
+  downloadFun(url)
 };
 
 </script>

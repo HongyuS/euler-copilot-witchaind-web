@@ -19,7 +19,7 @@
                         <el-link class="home-menu" @click="() => router.push('/group')" type="primary" target="_blank"
                             :underline="false">
                             /
-                            {{ navGroup[1].name }}
+                            {{ navGroup[1]?.name }}
                         </el-link>
                     </div>
                 </div>

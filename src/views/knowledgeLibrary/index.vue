@@ -648,6 +648,7 @@ import { useGroupStore } from '@/store/modules/group';
 import EmptyStatus from '@/components/EmptyStatus/index.vue'
 import { CheckboxValueType } from 'element-plus';
 import { bytesToSize } from '@/utils/bytesToSize';
+import { downloadFun } from '@/utils/downloadFun';
 const route = useRoute();
 
 defineProps({
@@ -1319,8 +1320,9 @@ const handleDeleteKl = (row: any) => {
   delTipVisible.value = true;
 };
 
-const handleOpenDownload = (fileId: any) => {
-  window.open(`${window.origin}/witchaind/api/kb/download?taskId=${fileId}`);
+const handleOpenDownload = (fileId: string) => {
+  const url = `${window.origin}/witchaind/api/kb/download?taskId=${fileId}`;
+  downloadFun(url);
 };
 let isSearch = ref(false);
 

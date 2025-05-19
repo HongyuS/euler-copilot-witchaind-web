@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     onMouseOver(str) {
-      let parentWidth = this.$refs[str].parentNode.offsetWidth;
+      let parentWidth = this.$refs[str]?.parentNode.offsetWidth;
       let contentWidth = this.$refs[str].offsetWidth;
       if (contentWidth > parentWidth) {
         this.isShowToolTip = false;
