@@ -181,7 +181,7 @@
       </el-table-column>
       <el-table-column prop="createdTime" width="150" label="完成时间">
         <template #default="scope">
-          {{ convertUTCToLocalTime(scope.row.testingTask?.finishedTime)}}
+          {{ scope.row.testingTask?.finishedTime?convertUTCToLocalTime(scope.row.testingTask?.finishedTime):''}}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150">
