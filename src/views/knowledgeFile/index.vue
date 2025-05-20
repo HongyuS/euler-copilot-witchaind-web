@@ -305,7 +305,7 @@
               width="200">
               <template #default="scope">
                 <div>
-                  {{scope.row.docTask?.finishedTime??'--'}}
+                  {{convertUTCToLocalTime(scope.row.docTask?.finishedTime)}}
                 </div>
               </template>
             </el-table-column>

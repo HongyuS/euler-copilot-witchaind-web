@@ -3,7 +3,7 @@
     class="dataSetDrawerContainer"
     v-model="dataSetDrawerVisible"
     @close="handleCloseDrawerVisible">
-    <template #header="{ close, titleId, titleClass }">
+    <template #header="{ titleId, titleClass }">
       <h4
         :id="titleId"
         :class="titleClass">
@@ -103,7 +103,7 @@
       <el-table
         :data="tableData.data"
         style="width: 100%"
-        :height="dataSetInfoEdit?'705':'643'"
+        height="662px"
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
@@ -403,7 +403,9 @@ const handleDelete=(ids:any)=>{
   })
 }
 
-const cancelClick = () => {};
+const cancelClick = () => {
+  handleCloseDrawerVisible();
+};
 
 const handleDataSetInfoEdit = (opsType: boolean) => {
   if(!opsType){

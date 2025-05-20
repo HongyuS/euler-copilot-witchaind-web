@@ -290,7 +290,7 @@
           <el-table-column
             prop="taskStatus"
             :label="$t('状态')"
-            width="120">
+            width="180">
             <template #header>
               <div class="custom-header">
                 <span>状态</span>
@@ -1219,5 +1219,11 @@ const handleOpenDownload = (fileId: string) => {
   const url = `${window.origin}/witchaind/api/dataset/download?taskId=${fileId}`;
   downloadFun(url)
 };
+
+watch(()=>dataSetDrawerVisible.value,()=>{
+  if(!dataSetDrawerVisible.value){
+    handleSearchData();
+  }
+})
 
 </script>
