@@ -3,7 +3,6 @@ import { setupRouter } from '@/router';
 import { setupStore } from '@/store';
 import type { App } from 'vue';
 import { setupElIcons } from './icons';
-import { setupPermission } from './permission';
 
 export default {
   install(app: App<Element>) {

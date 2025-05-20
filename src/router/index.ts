@@ -9,11 +9,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     redirect: '/group',
   },
   {
-    path: '/login',
-    component: () => import('@/views/login/index.vue'),
-    meta: { hidden: true },
-  },
-  {
     path: '/group',
     name: 'Group',
     component: () => import('@/views/group/index.vue'),
@@ -75,13 +70,6 @@ const router = createRouter({
 // 全局注册 router
 export function setupRouter(app: App<Element>) {
   app.use(router);
-}
-
-/**
- * 重置路由
- */
-export function resetRouter() {
-  window.open(`${window.origin}/witchaind/#/login`, '_self');
 }
 
 router.beforeEach((to, from, next) => {

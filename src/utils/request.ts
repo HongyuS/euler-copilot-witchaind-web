@@ -1,5 +1,4 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
-import { useUserStoreHook } from '@/store/modules/user';
 import { ResultEnum } from '@/enums/ResultEnum';
 import { TOKEN_KEY } from '@/enums/CacheEnum';
 import qs from 'qs';
@@ -64,26 +63,11 @@ service.interceptors.response.use(
     if (error?.response?.data) {
       const { retcode, message } = error.response.data;
       if (retcode?.toString() === ResultEnum.TOKEN_INVALID) {
-        if (error?.config?.url === '/user/login') {
-          ElMessage({
-            showClose: true,
-            message: i18n.global.t('login.message.loginTip'),
-            icon: IconError,
-            customClass: 'o-message--error',
-            duration: 3000,
-          });
-        } else {
-          ElNotification({
-            title: i18n.global.t('dialogTipText.tipsText'),
-            message: i18n.global.t('login.message.loginToken'),
-            type: 'info',
-          });
-          useUserStoreHook()
-            .resetToken()
-            .then(() => {
-              location.reload();
-            });
-        }
+        ElNotification({
+          title: i18n.global.t('dialogTipText.tipsText'),
+          message: i18n.global.t('login.message.loginToken'),
+          type: 'info',
+        });
       } else {
         ElMessage({
           showClose: true,
