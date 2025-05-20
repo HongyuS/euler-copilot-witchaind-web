@@ -225,12 +225,12 @@
           :class="5 < fileTableList.data.length ? 'kl-card-display' : 'kl-card-show'">
           <div
             class="kl-single-card"
+            @click="handleJumpAssets(item)"
             v-for="item in fileTableList.data"
             :key="item.id"
             :class="{'is-checked': item.checked}">
             <div class="kl-card-top">
               <div class="kl-card-name"
-              @click="handleJumpAssets(item)"
               >
                 <TextSingleTootip :content="item.kbName" />
               </div>
@@ -846,8 +846,8 @@ const handleMultipleSelect = () => {
 
 const handleQueryKbLibrary = (params: QueryKbRequest) => {
   loading.value = true;
-  const id = route.query.id as string || curTeamInfo.value?.teamId;
-  KbAppAPI.getKbLibrary({teamId: id ,...params})
+  const teamId = localStorage.getItem('teamId') ?? '';
+  KbAppAPI.getKbLibrary({teamId ,...params})
     .then((res: any) => {
       fileTableList.data = res?.kbList;
       totalCount.value = res?.total;

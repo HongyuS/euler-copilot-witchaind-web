@@ -43,8 +43,8 @@
                     <div class="group-content-container">
                         <!-- 卡片布局 -->
                         <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
-                            <div class="group-card-item" v-for="item in groupList" :key="item.teamId">
-                                <div class="group-card-title" @click="handleToGroup(item)">
+                            <div class="group-card-item" v-for="item in groupList" :key="item.teamId" @click="handleToGroup(item)">
+                                <div class="group-card-title">
                                     <span class="group-card-title-name">{{ item.teamName }}</span>
                                     <span v-if="item.isPublic" class="card-type card-type-public">公开</span>
                                     <span v-else class="card-type card-type-privacy">私密</span>
@@ -63,7 +63,7 @@
                                             {{ item.memberCount }}人
                                         </span>
                                     </div>
-                                    <el-button v-if="tab.name === 'mycreated'" text @click="handleEditKl(item)">
+                                    <el-button v-if="tab.name === 'mycreated'" text @click.stop="handleEditKl(item)">
                                         编辑
                                     </el-button>
                                 </div>
