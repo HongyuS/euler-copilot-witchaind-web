@@ -591,6 +591,18 @@
     }
   }
 }
+.cancel-analytic-dialog{
+  padding: 0px;
+  .tip-ops-btn{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    & button{
+      height: 24px;
+    }
+  }
+
+}
 
 .delTipText {
   display: inline-block;

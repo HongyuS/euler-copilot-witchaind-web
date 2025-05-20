@@ -275,7 +275,7 @@
                   <el-icon
                     ref="parserMethodRef"
                     :class="
-                      searchPayload?.parseMethod?.length > 0 || parserMethodVisible
+                      searchPayload?.parseMethods?.length > 0 || parserMethodVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -425,7 +425,7 @@
   <el-dialog
     align-center
     v-model="cancelTipVisible"
-    class="tip-dialog"
+    class="tip-dialog cancel-analytic-dialog"
     width="432"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
@@ -682,7 +682,7 @@ const searchPayload = ref<any>({
   createdTimeStart: '',
   createdTimeEnd: '',
   enabled: '',
-  parseMethod: [],
+  parseMethods: [],
 });
 const kbInfo = ref<any>({});
 const checkedFilterList = ref([]);
@@ -872,7 +872,7 @@ const handelEnableFilterProper = (filterList: any) => {
 };
 
 const handelParserMethodFilterProper = (filterList: any) => {
-  searchPayload.value.parseMethod = filterList;
+  searchPayload.value.parseMethods = filterList;
   handleSearchData();
 };
 
