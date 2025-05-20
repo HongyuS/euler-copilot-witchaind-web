@@ -196,10 +196,6 @@ const groupTabs = [
         label: '我加入的',
         name: 'myjoined',
     },
-    {
-        label: '全部团队',
-        name: 'public',
-    },
 ]
 const switchIcon = ref('thumb');
 const teamSearchName = ref();
