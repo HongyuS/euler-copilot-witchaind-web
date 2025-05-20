@@ -8,7 +8,6 @@
 import { useAppStore } from '@/store/modules/app';
 import { useI18n } from 'vue-i18n';
 import { computed, ref } from 'vue';
-import AuthAPI from '@/api/auth';
 import '@/styles/app.scss';
 import router from './router';
 
@@ -22,8 +21,8 @@ const isManualNavigation = ref(false);
 const handleMessage = (e: MessageEvent) => {
   if(e.data?.type === 'changeLanguage') {
     const langObj = {
-      CN: 'zh',
-      EN: 'en',
+      'zh_cn': 'zh',
+      'en': 'en',
     };
     let lang = langObj[e.data.lang as keyof typeof langObj] ?? 'zh';
 
@@ -33,15 +32,6 @@ const handleMessage = (e: MessageEvent) => {
     // 更新 store 中的语言设置
     appStore.changeLanguage(lang);
 
-    // 更新用户信息
-    const userInfoStr = localStorage.getItem('userInfo');
-    if (userInfoStr) {
-      const userInfo = JSON.parse(userInfoStr);
-      localStorage.setItem('userInfo', JSON.stringify({ ...userInfo, language: lang }));
-      AuthAPI.userUpdate({
-        language: lang,
-      });
-    }
     // 保存语言设置
     localStorage.setItem('language', lang);
   }else if(e.data?.type === 'parentToken') {
@@ -60,7 +50,7 @@ const handleMessage = (e: MessageEvent) => {
 onMounted(() => {
   // 监听手动导航
   router.beforeEach((to, from, next) => {
-    if (from.name === undefined && to.name !== 'root') {
+    if (from.name === undefined && to.name) {
       isManualNavigation.value = true;
     }
     next();
