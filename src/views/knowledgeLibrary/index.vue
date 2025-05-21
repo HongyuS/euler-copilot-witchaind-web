@@ -1108,7 +1108,7 @@ const handleCloseSingleUpload = (taskId: string) => {
 const handleCloseAllTask=(type: ITaskType)=>{
   taskExportLoading.value = true;
   KbAppAPI.stopAllTaskList({
-    teamId: teamId.value, // 使用 computed 的 teamId
+    teamId: route.query.id as string,
     taskType:type
   }).then(() => {
     handleInitExportTaskList();
@@ -1119,7 +1119,7 @@ const handleCloseAllTask=(type: ITaskType)=>{
 
 const handleInitExportTaskList = () => {
   return KbAppAPI.queryTaskList({
-    teamId: teamId.value, // 使用 computed 的 teamId
+    teamId: route.query.id as string,
     taskType: 'kb_export',
     page: 1,
     pageSize: exportTaskPageSize.value,
