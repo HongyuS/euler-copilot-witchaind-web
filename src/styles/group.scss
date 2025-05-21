@@ -98,6 +98,13 @@
                     gap: 16px;
                     max-height: 690px;
                     overflow-y: auto;
+                    .group-card-empty{
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      width: 90vw;
+                      height: 650px;
+                    }
                     .group-card-item {
 
                           width: 339px;

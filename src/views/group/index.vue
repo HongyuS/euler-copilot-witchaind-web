@@ -43,6 +43,9 @@
                     <div class="group-content-container">
                         <!-- 卡片布局 -->
                         <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
+                            <div v-if="groupList.length === 0" class="group-card-empty">
+                                <el-empty description="暂无数据"></el-empty>
+                            </div>
                             <div class="group-card-item" v-for="item in groupList" :key="item.teamId" @click="handleToGroup(item)">
                                 <div class="group-card-title">
                                     <span class="group-card-title-name">{{ item.teamName }}</span>
