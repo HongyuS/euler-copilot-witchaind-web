@@ -554,10 +554,8 @@ const uploadKnowledgeFile = () => {
       handleToggleUploadNotify();
     }
 
-    // 所有成功后的回调
-    if (errorCount === 0) {
-      props.handleQueryTaskList(fileTableList.data); // 统一更新列表
-    }
+    // 所有上传完成后的回调
+    props.handleQueryTaskList(fileTableList.data); // 统一更新列表
   });
 
   uploadingList.value.length && handleToggleUploadNotify();
@@ -620,10 +618,8 @@ const uploadDatasetFile = () => {
       handleToggleUploadNotify();
     }
 
-    // 所有成功后的回调
-    if (errorCount === 0) {
-      props.handleQueryTaskList(fileTableList.data); // 统一更新列表
-    }
+    // 所有上传完成后的回调
+    props.handleQueryTaskList(fileTableList.data); // 统一更新列表
   });
 
   uploadingList.value.length && handleToggleUploadNotify();

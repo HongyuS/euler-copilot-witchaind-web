@@ -229,28 +229,28 @@
               </template>
               <template #default="scope">
                 <div
-                  v-if="scope.row.docTask.taskStatus === StatusEnum.FAIL"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.FAIL"
                   class="statusFail">
                   {{ $t('assetFile.status.analyticFail') }}
                 </div>
                 <div
-                  v-if="scope.row.docTask.taskStatus === StatusEnum.SUCCESS"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.SUCCESS"
                   class="statusSuccess">
                   {{ $t('assetFile.status.analyticSucces') }}
                 </div>
                 <div
-                  v-if="scope.row.docTask.taskStatus === StatusEnum.CANCEL"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.CANCEL"
                   class="statusCancel">
                   {{ $t('assetFile.status.cancelAnalytic') }}
                 </div>
                 <div
-                  v-if="scope.row.docTask.taskStatus === StatusEnum.ANALYSIS_ING"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.ANALYSIS_ING"
                   class="statusWaitIng">
                   {{ $t('assetFile.status.analyticWaitIng') }}
                 </div>
                 <div
                   class="statusAnalysis"
-                  v-if="scope.row.docTask.taskStatus === StatusEnum.RUNNING">
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.RUNNING">
                   <div class="percent-box">
                     <el-progress
                       :percentage=" scope.row.docTask?.taskCompleted ?? 0 "
@@ -275,7 +275,7 @@
                   <el-icon
                     ref="parserMethodRef"
                     :class="
-                      searchPayload?.parseMethod?.length > 0 || parserMethodVisible
+                      searchPayload?.parseMethods?.length > 0 || parserMethodVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -305,7 +305,7 @@
               width="200">
               <template #default="scope">
                 <div>
-                  {{scope.row.docTask?.finishedTime??'--'}}
+                  {{convertUTCToLocalTime(scope.row.docTask?.finishedTime)}}
                 </div>
               </template>
             </el-table-column>
@@ -425,7 +425,7 @@
   <el-dialog
     align-center
     v-model="cancelTipVisible"
-    class="tip-dialog"
+    class="tip-dialog cancel-analytic-dialog"
     width="432"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
@@ -682,7 +682,7 @@ const searchPayload = ref<any>({
   createdTimeStart: '',
   createdTimeEnd: '',
   enabled: '',
-  parseMethod: [],
+  parseMethods: [],
 });
 const kbInfo = ref<any>({});
 const checkedFilterList = ref([]);
@@ -872,7 +872,7 @@ const handelEnableFilterProper = (filterList: any) => {
 };
 
 const handelParserMethodFilterProper = (filterList: any) => {
-  searchPayload.value.parseMethod = filterList;
+  searchPayload.value.parseMethods = filterList;
   handleSearchData();
 };
 

@@ -1,4 +1,7 @@
 export function convertUTCToLocalTime(utcDateString: string | number | Date) {
+  if (!utcDateString) {
+    return '';
+  }
   const date = new Date(utcDateString);
   date.setMinutes(date.getMinutes() + 8 * 60);
 

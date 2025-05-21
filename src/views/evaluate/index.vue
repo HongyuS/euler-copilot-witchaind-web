@@ -179,9 +179,9 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="createdTime" width="150" label="完成时间">
+      <el-table-column prop="finishedTime" width="150" label="完成时间">
         <template #default="scope">
-          {{ scope.row.testingTask?.finishedTime?convertUTCToLocalTime(scope.row.testingTask?.finishedTime):''}}
+          {{ convertUTCToLocalTime(scope.row.testingTask?.finishedTime)}}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150">

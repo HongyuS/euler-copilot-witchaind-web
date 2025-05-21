@@ -290,7 +290,7 @@
           <el-table-column
             prop="taskStatus"
             :label="$t('状态')"
-            width="120">
+            width="180">
             <template #header>
               <div class="custom-header">
                 <span>状态</span>
@@ -598,11 +598,11 @@ const pagination = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
 });
 const searchPayload = ref<{
-  datasetName?: string;
-  generateStatus?: string[];
-  isDataCleared?: boolean;
-  isChunkRelated?: boolean;
-  authorName?: string;
+  datasetName?: string | null;
+  generateStatus?: string[] | null;
+  isDataCleared?: boolean | null;
+  isChunkRelated?: boolean | null;
+  authorName?: string | null;
 }>({});
 
 const isSearch = computed(()=>{
@@ -790,12 +790,20 @@ const handleToCreate = () => {
   handleKnowledgeTab('document');
 };
 const handelClearFilterProper = (filterList: any) => {
-  searchPayload.value.isDataCleared = filterList.length === 2 ? null : filterList[0];
+  if(filterList.length === 1){
+    searchPayload.value.isDataCleared = filterList[0]==='true'?true:false;
+  }else{
+    searchPayload.value.isDataCleared = null;
+  }
   handleSearchData();
 };
 
 const handeRelatedFilterProper = (filterList: any) => {
-  searchPayload.value.isChunkRelated = filterList.length === 2 ? null : filterList[0];
+  if(filterList.length === 1){
+    searchPayload.value.isChunkRelated = filterList[0]==='true'?true:false;
+  }else{
+    searchPayload.value.isChunkRelated = null;
+  }
   handleSearchData();
 };
 
@@ -833,7 +841,7 @@ const handleJumpFileSection = (row: any) => {
 };
 
 const handelStatusFilterProper = (filterList: any) => {
-  searchPayload.value.generateStatus = filterList;
+  searchPayload.value.generateStatus = filterList.length ? filterList : null;
   handleSearchData();
 };
 
@@ -848,11 +856,16 @@ const handleDeleteDataSet = (row: any) => {
 };
 
 const handleRunDataSet = (row: any, type: boolean) => {
+  loading.value = true;
   let params = {
     datasetId: row.datasetId,
     generate: type,
   }
-  dataSetAPI.generateDataSet(params)
+  dataSetAPI.generateDataSet(params).then(()=>{
+    handleSearchData();
+  }).finally(()=>{
+    loading.value = false;
+  })
 };
 
 const handleChangePage = (pageNum: number, pageSize: number) => {
@@ -1219,5 +1232,11 @@ const handleOpenDownload = (fileId: string) => {
   const url = `${window.origin}/witchaind/api/dataset/download?taskId=${fileId}`;
   downloadFun(url)
 };
+
+watch(()=>dataSetDrawerVisible.value,()=>{
+  if(!dataSetDrawerVisible.value){
+    handleSearchData();
+  }
+})
 
 </script>

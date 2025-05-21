@@ -3,7 +3,7 @@
     class="dataSetDrawerContainer"
     v-model="dataSetDrawerVisible"
     @close="handleCloseDrawerVisible">
-    <template #header="{ close, titleId, titleClass }">
+    <template #header="{ titleId, titleClass }">
       <h4
         :id="titleId"
         :class="titleClass">
@@ -11,6 +11,16 @@
       </h4>
     </template>
     <CustomLoading :dark="false" :loading="loading" />
+    <div class="empty-container" v-if="props.dataSetRow?.status === 'pending'">
+        <el-empty description="等待生成" :image="empty_pending" />
+    </div>
+    <div class="empty-container" v-else-if="props.dataSetRow?.status === 'failed'">
+        <el-empty description="测试生成" :image="empty_failed" />
+    </div>
+    <div class="empty-container" v-else-if="props.dataSetRow?.status === 'running'">
+        <el-empty description="测试中..." :image="empty_running" />
+    </div>
+    <div v-else>
     <div class="dataSetInfoContainer">
       <div class="dataSetInfoBox">
         <div class="dataSetInfoTitle">基本信息</div>
@@ -93,7 +103,7 @@
       <el-table
         :data="tableData.data"
         style="width: 100%"
-        :height="dataSetInfoEdit?'705':'643'"
+        height="662px"
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
@@ -237,6 +247,7 @@
         popper-class="kbLibraryPage"
         @change="handleChangePage" />
     </div>
+  </div>
     <template #footer>
       <div style="flex: auto">
         <el-button @click="cancelClick">关闭</el-button>
@@ -245,10 +256,13 @@
   </el-drawer>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, onUnmounted } from 'vue';
 import '@/styles/dataSetDrawer.scss';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import dataSetAPI from '@/api/dataSet';
+import empty_pending from '@/assets/images/empty_pending.svg'
+import empty_failed from '@/assets/images/empty_failed.svg'
+import empty_running from '@/assets/images/empty_running.svg'
 
 const loading = ref(false);
 const dataSetDrawerVisible = ref(false);
@@ -389,7 +403,9 @@ const handleDelete=(ids:any)=>{
   })
 }
 
-const cancelClick = () => {};
+const cancelClick = () => {
+  handleCloseDrawerVisible();
+};
 
 const handleDataSetInfoEdit = (opsType: boolean) => {
   if(!opsType){
@@ -445,6 +461,38 @@ const queryTableData=(params: any)=>{
     loading.value = false;
   })
 }
+
+let pollingTimer: any = null;
+
+const startPolling = () => {
+  stopPolling(); // 确保之前的轮询已停止
+  pollingTimer = setInterval(() => {
+    let param = {
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
+    };
+    queryTableData(param);
+  }, 10000);
+};
+
+const stopPolling = () => {
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+    pollingTimer = null;
+  }
+};
+
+watch(dataSetDrawerVisible, (newVal) => {
+  if (newVal) {
+    startPolling();
+  } else {
+    stopPolling();
+  }
+});
+
+onUnmounted(() => {
+  stopPolling(); // 确保组件卸载时停止轮询
+});
 
 onMounted(() => {
   dataSetDrawerVisible.value = props.dataSetDrawerVisible;
