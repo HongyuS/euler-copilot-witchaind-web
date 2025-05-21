@@ -426,7 +426,7 @@ const handleDownload = (row: any) => {
 const handleBatchDownload = () => {
   let flag = true;
   selectedRow.value.forEach((item: any) => {
-    if (item.runStatus !== 'idle') {
+    if (item?.testingTask?.taskStatus !== 'success') {
       flag = false;
     }
   })

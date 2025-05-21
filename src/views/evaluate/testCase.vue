@@ -521,7 +521,11 @@ const handleDownloadReport = () => {
 
 .table-container {
     margin-top: 16px;
+    overflow-x: auto; // 添加横向滚动支持
 
+    .el-table {
+        min-width: 1200px; // 设置表格的最小宽度，确保中间列在小屏幕上不会被隐藏
+    }
 
     .el-table.is-scrolling-left.el-table--border .el-table-fixed-column--left.is-last-column.el-table__cell {
         border-right: unset !important;
