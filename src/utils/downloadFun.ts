@@ -1,20 +1,27 @@
-import { useAppStore } from '@/store';
+import { useAppStore, useAppStoreHook } from '@/store';
+import { storeToRefs } from 'pinia';
 
 export function downloadFun(url: string) {
   const appStore = useAppStore();
   const { parentToken } = storeToRefs(appStore);
+  const token = parentToken.value || localStorage.getItem('ECSESSION');
+  if (!token) {
+    console.error('Token is not available yet');
+    return;
+  }
+  useAppStoreHook().changeDownLoading(true);
   fetch(url, {
     headers: {
-      Authorization: parentToken.value
-        ? `Bearer ${parentToken.value}`
-        : `Bearer 99db1ba8eb0c9bb67e3e45dccfac8e60`, // 添加 Authorization 头
+      Authorization: `Bearer ${token}`,
     },
   })
     .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       // 提取 Content-Disposition 头部
       const contentDisposition = response.headers.get('Content-Disposition');
       let fileName = 'default-filename';
-
       // 解析文件名（处理编码及格式）
       if (contentDisposition) {
         const fileNameMatch = contentDisposition.match(/filename\*?=(?:UTF-8'')?"?([^";]+)"?/i);
@@ -32,5 +39,8 @@ export function downloadFun(url: string) {
       a.click();
       URL.revokeObjectURL(a.href);
     })
-    .catch((error) => console.error('下载失败:', error));
+    .catch((error) => console.error('下载失败:', error))
+    .finally(() => {
+      useAppStoreHook().changeDownLoading(false);
+    });
 }

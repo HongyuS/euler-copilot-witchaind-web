@@ -1,6 +1,7 @@
 <template>
   <el-config-provider :locale="locales">
     <router-view />
+    <CustomLoading loadingText="下载中" :dark="false" :loading="downLoading" />
   </el-config-provider>
 </template>
 
@@ -10,10 +11,13 @@ import { useI18n } from 'vue-i18n';
 import { computed, ref } from 'vue';
 import '@/styles/app.scss';
 import router from './router';
+import CustomLoading from '@/components/CustomLoading/index.vue';
 
-const appStore = useAppStore();
+
 const { locale } = useI18n();
 const locales = computed(() => appStore.locale);
+const appStore = useAppStore();
+const {downLoading}  = storeToRefs(appStore);
 const { changeParentToken } = appStore;
 // 新增路由状态标记
 const isManualNavigation = ref(false);

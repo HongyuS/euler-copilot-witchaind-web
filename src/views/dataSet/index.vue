@@ -168,7 +168,6 @@
           cell-calss-name="tableCell"
           :row-key="(row) => row.datasetId"
           @selection-change="handleSelectionChange"
-          @sort-change="handleSortChange"
           ref="multipleTable"
           :border="false">
           <el-table-column
@@ -615,7 +614,7 @@ const isSearch = computed(()=>{
 })
 
 const { handleKnowledgeTab } = store;
-const {knowledgeTabActive,curTeamInfo} = storeToRefs(store);
+const {knowledgeTabActive} = storeToRefs(store);
 
 watch(()=>knowledgeTabActive.value,()=>{
   if(knowledgeTabActive.value === 'dataset'){
@@ -641,7 +640,9 @@ const handleInputSearch = debounce((value: string) => {
 
 const handleSearchPayload = (): Record<string, unknown> => {
   return Object.entries(searchPayload.value).reduce((acc, [key, value]) => {
-    if (value === undefined || value === null || value === 'all') return acc;
+    if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+      return acc; // 移除空值或空数组的字段
+    }
     // 处理特殊字段类型转换
     acc[key] = typeof value === 'string' 
         ? value.trim() 
@@ -650,24 +651,12 @@ const handleSearchPayload = (): Record<string, unknown> => {
   }, {} as Record<string, unknown>);
 };
 
-const handleSortChange = (data: { column: any; prop: string; order: any }) => {
-  let sortKey = data.prop === 'score' ? 'scoreOrder' : null;
-  let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
-  searchPayload.value = sortValue
-    ? {
-        [sortKey || data.prop]: sortValue,
-      }
-    : {};
-  handleSearchOpsData(true, true);
-};
-
 const handlePollFileDataSet = () => {
   dataSetAPI.queryDataSetList({
     page: currentPage.value,
     pageSize: currentPageSize.value,
     kbId: route.query.kb_id as string,
     ...handleSearchPayload(),
-    ...searchPayload.value,
   })
     .then((res: any) => {
       if (res.page === currentPage.value && fileTableList.data?.length) {
@@ -708,7 +697,6 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
       pageSize: currentPageSize.value,
       kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...searchPayload.value,
     },
     loadingStatus,
     startPollTimer
@@ -757,7 +745,6 @@ const handleSearchData = () => {
       pageSize: currentPageSize.value ?? 20,
       kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...searchPayload.value,
     },
     true,
     true
@@ -841,7 +828,7 @@ const handleJumpFileSection = (row: any) => {
 };
 
 const handelStatusFilterProper = (filterList: any) => {
-  searchPayload.value.generateStatus = filterList.length ? filterList : null;
+  searchPayload.value.generateStatus = filterList;
   handleSearchData();
 };
 
