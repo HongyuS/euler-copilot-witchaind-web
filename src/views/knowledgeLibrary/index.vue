@@ -846,7 +846,8 @@ const handleMultipleSelect = () => {
 
 const handleQueryKbLibrary = (params: QueryKbRequest) => {
   loading.value = true;
-  KbAppAPI.getKbLibrary({ teamId: route.query.id as string, ...params }) // 使用 computed 的 teamId
+  let teamId = route.query.id as string ?? localStorage.getItem('teamId');
+  KbAppAPI.getKbLibrary({ teamId: teamId , ...params })
     .then((res: any) => {
       fileTableList.data = res?.kbList;
       totalCount.value = res?.total;
