@@ -49,7 +49,7 @@
         <template #header>
           <div class="custom-header">
             <span>模型类型</span>
-            <el-icon ref="modelRef" @click.stop :class="modelFilterVisible
+            <el-icon ref="modelRef" @click.stop :class="modelFilterVisible || searchPayload?.llmId?.length! > 0
               ? 'searchIconIsActive'
               : ''
               ">
@@ -73,7 +73,7 @@
         <template #header>
           <div class="custom-header">
             <span>检索方法</span>
-            <el-icon ref="searchRef" @click.stop :class="searchFilterVisible
+            <el-icon ref="searchRef" @click.stop :class="searchPayload?.searchMethod?.length || searchFilterVisible
               ? 'searchIconIsActive'
               : ''
               ">
@@ -97,7 +97,7 @@
         <template #header>
           <div class="custom-header">
             <span>状态</span>
-            <el-icon ref="statusRef" @click.stop :class="statusFilterVisible
+            <el-icon ref="statusRef" @click.stop :class="searchPayload?.runStatus?.length || statusFilterVisible
               ? 'searchIconIsActive'
               : ''
               ">
@@ -135,17 +135,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="aveScore" width="150" label="综合评分(0-100)">
-        <template #header>
-          <div class="custom-header">
-            <span>综合评分(0-100)</span>
-            <div class="sort-icon-box">
-              <span class="caret-wrapper">
-                <i class="sort-caret ascending" :class="scoreActive === 'asc'?'sort-up-active':''" @click="handleSortChange('asc')"></i>
-                <i class="sort-caret descending" :class="scoreActive === 'desc'?'sort-down-active':''" @click="handleSortChange('desc')"></i>
-              </span>
-            </div>
-          </div>
-        </template>
         <template #default="scope">
           {{ scope.row.aveScore<0 ?'--':scope.row.aveScore}}
         </template>
@@ -323,12 +312,13 @@ const handleSearchData = () => {
       pageSize: currentPageSize.value ?? 20,
       kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
-      ...searchPayload.value,
     },
     true,
     true
   );
   statusFilterVisible.value = false;
+  modelFilterVisible.value = false;
+  searchFilterVisible.value = false;
   creatorVisible.value = false
 };
 const handleBatchDownBth = (e: boolean) => {
@@ -525,14 +515,16 @@ const handleStartPollTimer = () => {
   pollingKfTimer.value = setInterval(() => handlePollAssetFileData(), 15000);
 };
 const handleSearchPayload = () => {
-  const searchParams = Object.keys(searchPayload.value || {}).reduce((pre: any, item) => {
-    if (searchPayload.value?.[item]?.length > 0 && searchPayload.value?.[item] !== 'all') {
-      pre[item] = searchPayload.value[item];
+  return Object.entries(searchPayload.value).reduce((acc, [key, value]) => {
+    if (value === undefined || value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+      return acc; // 移除空值或空数组的字段
     }
-
-    return pre;
-  }, {});
-  return searchParams || {};
+    // 处理特殊字段类型转换
+    acc[key] = typeof value === 'string' 
+        ? value.trim() 
+        : value;
+    return acc;
+  }, {} as Record<string, unknown>);
 };
 const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
   handeAssetLibraryData(
