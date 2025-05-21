@@ -846,8 +846,7 @@ const handleMultipleSelect = () => {
 
 const handleQueryKbLibrary = (params: QueryKbRequest) => {
   loading.value = true;
-  const teamId = localStorage.getItem('teamId') ?? '';
-  KbAppAPI.getKbLibrary({teamId ,...params})
+  KbAppAPI.getKbLibrary({ teamId: route.query.id as string, ...params }) // 使用 computed 的 teamId
     .then((res: any) => {
       fileTableList.data = res?.kbList;
       totalCount.value = res?.total;
@@ -1109,7 +1108,7 @@ const handleCloseSingleUpload = (taskId: string) => {
 const handleCloseAllTask=(type: ITaskType)=>{
   taskExportLoading.value = true;
   KbAppAPI.stopAllTaskList({
-    teamId:route.query.id as string,
+    teamId: teamId.value, // 使用 computed 的 teamId
     taskType:type
   }).then(() => {
     handleInitExportTaskList();
@@ -1120,7 +1119,7 @@ const handleCloseAllTask=(type: ITaskType)=>{
 
 const handleInitExportTaskList = () => {
   return KbAppAPI.queryTaskList({
-    teamId:route.query.id as string,
+    teamId: teamId.value, // 使用 computed 的 teamId
     taskType: 'kb_export',
     page: 1,
     pageSize: exportTaskPageSize.value,
@@ -1278,7 +1277,7 @@ const isSearch = computed(()=>{
   return Object.values(sortFilter.value).some(value => {
     if (typeof value === 'string') return value.trim() !== '';
     return value !== null && value !== undefined; // 其他类型需非空
-  });
+  })
 })
 
 const handleInputSearch = debounce((e) => {
@@ -1379,8 +1378,7 @@ const handleUploadMyFile = (options: any) => {
   KbAppAPI.importKbLibrary(
     {
       params:{
-        teamId: route.query.id as string
-      },
+        teamId: route.query.id as string      },
       data: {
         kb_packages: options.file?.raw,
       },
