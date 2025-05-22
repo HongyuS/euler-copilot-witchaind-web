@@ -90,6 +90,9 @@ const handleHomeClick = () => {
     handleSwitchMenu('knowledge');
 };
 const handleGroupClick = ( number: number, currentNav:{ path:string,query:any }) => {
+    if(groupMenu.value === 'detail'){
+        handleSwitchMenu('knowledge');
+    }
     delNav(number+1);
     router.push({ path: currentNav.path, query:currentNav.query });
 }

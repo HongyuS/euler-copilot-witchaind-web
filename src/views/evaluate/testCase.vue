@@ -403,30 +403,29 @@ const queryTestCase = ()=>{
         testingId: props.rowData?.testingId
     }
     EvaluateAPI.testingCase(params).then((res:any) => {
-            testCaseAvg.value = {
-                aveScore:res.aveScore<0?0:res.aveScore,
-                avePre:res.avePre<0?0:res.avePre,
-                aveRec:res.aveRec<0?0:res.aveRec,
-                aveFai:res.aveFai<0?0:res.aveFai,
-                aveRel:res.aveRel<0?0:res.aveRel,
-                aveLcs:res.aveLcs<0?0:res.aveLcs,
-                aveLeve:res.aveLeve<0?0:res.aveLeve,
-                aveJac:res.aveJac<0?0:res.aveJac,
-            };
-            testCaseList.value = res.testCases;
-            totalCount.value = res.total;
-        })
+        testCaseAvg.value = {
+            aveScore:res.aveScore<0?0:res.aveScore,
+            avePre:res.avePre<0?0:res.avePre,
+            aveRec:res.aveRec<0?0:res.aveRec,
+            aveFai:res.aveFai<0?0:res.aveFai,
+            aveRel:res.aveRel<0?0:res.aveRel,
+            aveLcs:res.aveLcs<0?0:res.aveLcs,
+            aveLeve:res.aveLeve<0?0:res.aveLeve,
+            aveJac:res.aveJac<0?0:res.aveJac,
+        };
+        testCaseList.value = res.testCases;
+        totalCount.value = res.total;
+    }).finally(() => {
+        // 初始化图表
+        initChart();
+    })
 }
 
 // 监听visible变化，处理图表清理
 watch(() => props.visible, (newVal) => {
     if (newVal) {
         // drawer打开时初始化数据
-        queryTestCase()
-        // 添加小延时确保DOM已经渲染
-        setTimeout(async () => {
-            await initChart();
-        }, 100);
+        queryTestCase();
     } else {
         // drawer关闭时清理图表实例
         if (chartInstanceR) {
