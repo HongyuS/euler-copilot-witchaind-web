@@ -18,7 +18,7 @@
             type="primary"
             style="margin-right: 8px"
             @click="handleGenerateDataSet(true)"
-            :disabled="!(selectionFileData.length > 0)"
+            :disabled="!isGenerateDataSet"
             class="dataSetBtn">
             {{ $t('生成数据集') }}
           </el-button>
@@ -713,6 +713,12 @@ const uploadTaskListData = ref<{
 const parserMethodOptions = ref<any>([]);
 const userLanguage = ref();
 const isSubmitDisabled = ref(true);
+const isGenerateDataSet = computed(()=>{
+  const arr = selectionFileData.value.filter((item:any) => {
+    return item.docTask?.taskStatus === 'success';
+  })
+  return arr.length > 0;
+})
 const ruleForm = ref<FileForm>({
   docId: '',
   docName: '',
@@ -1170,6 +1176,10 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
 
 const handleSwitch = (row: any) => {
   KfAppAPI.updateLibraryFile({docId: row.docId},{
+    docName: row.docName,
+    docTypeId: row.docTypeId,
+    chunkSize: row.chunkSize,
+    parseMethod: row.parseMethod,
     enabled: row.enabled,
   }).then(() => {
     ElMessage({
@@ -1381,6 +1391,16 @@ const checkSelecTable = (row) => {
 };
 
 const handleGenerateDataSet = (visible: boolean) => {
+  let flag = true;
+  selectionFileData.value.forEach((item) => {
+    if (item.docTask?.taskStatus !== 'success') {
+      flag = false;
+    }
+  });
+  if (!flag) {
+    ElMessage.error('只有【解析成功】状态的文档可以生成数据集！');
+    return;
+  }
   generateDialogVisible.value = visible;
 };
 
