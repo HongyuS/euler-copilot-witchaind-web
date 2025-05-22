@@ -427,7 +427,7 @@
             fixed="right">
             <template #default="scope">
               <el-button
-                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
+                v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) "
                 text
                 @click="handleRunDataSet(scope.row,false)">
                 暂停
@@ -435,10 +435,7 @@
               <el-button
                 v-else
                 text
-                :disabled="![
-                    DataSetStatusEnum.FAILED,
-                    DataSetStatusEnum.CANCELED,
-                  ].includes(scope.row.generateTask?.taskStatus)"
+                :disabled="scope.row.generateTask?.taskStatus === StatusEnum.SUCCESS"
                 @click="handleRunDataSet(scope.row, true)">
                 生成
               </el-button>
@@ -521,7 +518,7 @@
 import EmptyStatus from '@/components/EmptyStatus/index.vue';
 import { useGroupStore } from '@/store/modules/group';
 import { IconCaretDown, IconFilter, IconCaretUp, IconSearch, IconAlarm, IconChevronUp, IconChevronDown, IconX } from '@computing/opendesign-icons';
-import { DataSetStatusEnum } from '@/enums/KnowledgeEnum';
+import { DataSetStatusEnum, StatusEnum } from '@/enums/KnowledgeEnum';
 import FilterContainr from '@/components/TableFilter/index.vue';
 import DataSetDrawer from './dataSetDrawer.vue';
 import CreateEvaluate from '@/views/dataSet/craeteEvaluate.vue';

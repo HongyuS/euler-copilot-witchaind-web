@@ -178,11 +178,11 @@
           <div v-if="!scope.row.datasetId">
             <el-button v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) " type="text"
               @click="handleStopTesting(scope.row)">暂停</el-button>
-            <el-button :disabled="scope.row.status === StatusEnum.SUCCESS" v-else type="text"
+            <el-button v-else :disabled="scope.row.testingTask?.taskStatus === StatusEnum.SUCCESS" type="text"
               @click="handleRunTesting(true, scope.row)">重启</el-button>
-            <el-button :disabled="scope.row.status !== 'idle'" type="text"
+            <el-button :disabled="scope.row.testingTask?.taskStatus !== StatusEnum.SUCCESS" type="text"
               @click="handleDownload(scope.row)">下载</el-button>
-            <el-button :disabled="scope.row.status === StatusEnum.RUNNING" type="text"
+            <el-button :disabled="scope.row.testingTask?.taskStatus === StatusEnum.RUNNING" type="text"
               @click="handleDelete([scope.row])">删除</el-button>
           </div>
         </template>
