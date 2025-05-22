@@ -462,6 +462,20 @@ const queryTableData=(params: any)=>{
   })
 }
 
+const handleDataPolling = (params: any) => {
+  const param={
+    datasetId:props.dataSetRow.datasetId,
+    ...params,
+  }
+  dataSetAPI.querySingleDataSetInfo(param).then((res:any)=>{
+    tableData.value.data = res.datas;
+    totalCount.value = res.total;
+    if(res.datas.length && res.total){
+      stopPolling();
+    }
+  })
+};
+
 let pollingTimer: any = null;
 
 const startPolling = () => {
@@ -471,8 +485,8 @@ const startPolling = () => {
       page: currentPage.value,
       pageSize: currentPageSize.value,
     };
-    queryTableData(param);
-  }, 10000);
+    handleDataPolling(param);
+  }, 15000);
 };
 
 const stopPolling = () => {
