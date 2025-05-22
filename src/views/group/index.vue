@@ -231,6 +231,7 @@ const handleSwitch = (switchType: string) => {
     switchIcon.value = switchType;
 };
 const handleToGroup = async (row: any) => {
+    localStorage.setItem('teamId', row.teamId);
     await router.push({ path: `/groupInfo`, query: { name: row.teamName, id: row.teamId } });
     let groupNav = navGroup.value;
     groupNav[1] = {
@@ -242,7 +243,6 @@ const handleToGroup = async (row: any) => {
         }
     }
     setCurTeamInfo(row);
-    localStorage.setItem('teamId', row.teamId);
 }
 
 const handlequeryTeamList = (param: { teamType: string, page: number, pageSize: number, teamName?: string }) => {
