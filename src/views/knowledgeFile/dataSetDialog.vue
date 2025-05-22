@@ -13,7 +13,7 @@
       style="max-width: 600px"
       :model="ruleForm"
       :rules="rules"
-      label-width="116"
+      label-width="135px"
       class="dataSet-ruleForm"
       label-position="left">
       <el-form-item
@@ -38,11 +38,21 @@
         <el-input-number class="config-size" v-model="ruleForm.dataCnt" :min="1" :max="512" />
       </el-form-item>
       <el-form-item :label="$t('模型类型')" prop="llmId">
-        <el-select v-model="ruleForm.llmId" :placeholder="$t('assetLibrary.message.pleaseChoose')"
-          :class="ruleForm.llmId.length ? 'selectedType' : 'notSelectedType'" :suffix-icon="IconCaretDown"
-          :teleported="false">
-          <el-option v-for="item in llmList" :key="item?.llmId" :label="item?.llmName" :value="item?.llmId" />
-        </el-select>
+        <el-select v-model="ruleForm.llmId" :placeholder="t('assetLibrary.message.pleaseChoose')">
+          <template #label="{ label, value }">
+              <img v-if="ruleForm.llmId" :src="`data:image/svg+xml;base64,${llmList.find(item => item.llmId === ruleForm.llmId)?.llmIcon}`" style="vertical-align: middle; margin-right: 8px;" />
+              <span>{{ label }}</span>
+          </template>
+          <el-option
+              v-for="item in llmList"
+              :key="item.llmId"
+              :label="item.llmName"
+              :value="item.llmId" 
+          >
+              <img :src="`data:image/svg+xml;base64,${item.llmIcon}`"/>
+              <span>{{ item.llmName }}</span>
+          </el-option>
+      </el-select>
       </el-form-item>
       <el-form-item :label="$t('是否进行数据清洗')" prop="isDataCleared" class="isDataClean">
         <el-switch v-model="ruleForm.isDataCleared" class="ml-2" style="--el-switch-on-color: #13ce66" />
@@ -196,6 +206,7 @@ const handleCancelVisible = () => {
 
 onMounted(() => {
   dataSetAPI.queryLlmData().then(res => {
+    console.log('llmList', res)
     llmList.value = res.llms || [];
   })
 })
