@@ -34,7 +34,7 @@
       <el-input v-model="searchPayload.testingName" placeholder="请输入评测名称" class="search-input" 
       @input="handleInput" :suffix-icon="IconSearch" />
     </div>
-    <el-table ref="testingTableRef" :data="testList" style="width: 100%; 
+    <el-table ref="testingTableRef" :data="testList" max-height="770" style="width: 100%; 
       margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
@@ -178,12 +178,12 @@
           <div v-if="!scope.row.datasetId">
             <el-button v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) " type="text"
               @click="handleStopTesting(scope.row)">暂停</el-button>
-            <el-button :disabled="scope.row.status === StatusEnum.SUCCESS" v-else type="text"
+            <el-button v-else :disabled="scope.row.testingTask?.taskStatus === StatusEnum.SUCCESS" type="text"
               @click="handleRunTesting(true, scope.row)">重启</el-button>
-            <el-button :disabled="scope.row.status !== 'idle'" type="text"
+            <el-button :disabled="scope.row.testingTask?.taskStatus !== StatusEnum.SUCCESS" type="text"
               @click="handleDownload(scope.row)">下载</el-button>
-            <el-button :disabled="scope.row.status === StatusEnum.RUNNING" type="text"
-              @click="handleDelete([scope.row])">删除</el-button>
+            <el-button :disabled="scope.row.testingTask?.taskStatus === StatusEnum.RUNNING" type="text"
+              @click="handleSingleDelete(scope.row)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -448,8 +448,38 @@ const handleDelete = (arr: any) => {
   })
 }
 
+const handleSingleDelete = (row: any) => {
+  ElMessageBox.confirm(
+    `确定删除测试数据【${row.testingName}】吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    handleDelete([row]);
+  })
+}
+
 const handleBatchDelete = () => {
-  handleDelete(selectedRow.value)
+  ElMessageBox.confirm(
+    `确定删除选择的测试数据吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    handleDelete(selectedRow.value);
+  })
 }
 const handelStatusFilterProper = (filterList: any) => {
   searchPayload.value.runStatus = filterList;

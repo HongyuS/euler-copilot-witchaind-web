@@ -344,7 +344,6 @@ const handleUploadRestart = (item: any) => {
       });
     },
     onSuccess: () => {
-      item.percent = 100;
       props.handInitTaskList();
     },
     fileInfo: item,
@@ -389,7 +388,7 @@ watch(
         newUploadTask: false,
         taskId: item.taskId,
         name: item.opName,
-        percent: item?.taskStatus && item?.taskStatus !== 'pending' ? 100 : 99,
+        percent: item?.taskStatus && item?.taskStatus === 'success' ? 100 : (item?.taskStatus === 'failed'? 0 : 99),
         uploadStatus: item?.taskStatus,
       };
     });
@@ -465,7 +464,6 @@ const uploadFiles = () => {
     uploadingList.value = [
       ...uploadingList.value,
       ...res?.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -473,9 +471,7 @@ const uploadFiles = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail?.current_stage
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           uploadStatus: item?.taskStatus,
         };
       }),
@@ -534,7 +530,6 @@ const uploadKnowledgeFile = () => {
         },
         onSuccess: () => {
           uploadFileNumber += 1;
-          item.percent = 100;
           item.uploadStatus = 'success';
           resolve(true); // 标记成功
         },
@@ -598,7 +593,6 @@ const uploadDatasetFile = () => {
         },
         onSuccess: () => {
           uploadFileNumber += 1;
-          item.percent = 100;
           item.uploadStatus = 'success';
           resolve(true); // 标记成功
         },

@@ -349,8 +349,10 @@ const initChart = async () => {
                     lineStyle: {
                         color: 'rgb(141,152,170)',
                     }
+                },
+                axisLabel: {
+                    interval: 0 // 确保所有标签都显示
                 }
-
             },
             yAxis: {
                 interval: 50,

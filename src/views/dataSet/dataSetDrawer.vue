@@ -208,7 +208,7 @@
             </el-button>
             <el-button
               v-if="!scope.row.onEdit"
-              @click="handleDelete([scope.row.dataId])"
+              @click="handleSingleDelete([scope.row.dataId])"
               text>
               删除
             </el-button>
@@ -263,6 +263,7 @@ import dataSetAPI from '@/api/dataSet';
 import empty_pending from '@/assets/images/empty_pending.svg'
 import empty_failed from '@/assets/images/empty_failed.svg'
 import empty_running from '@/assets/images/empty_running.svg'
+import { IconAlarm } from '@computing/opendesign-icons';
 
 const loading = ref(false);
 const dataSetDrawerVisible = ref(false);
@@ -387,7 +388,37 @@ const handleEditRow = (dataId: any,property: string | number,value: any)=>{
 
 const handleBatchDelete =()=>{
   let ids = selectionDataSetList.value.map((item:any)=>item.dataId)
-  handleDelete(ids);
+  ElMessageBox.confirm(
+    `确定删除选择的数据吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    handleDelete(ids)
+  })
+}
+const handleSingleDelete=(ids:any)=>{
+  ElMessageBox.confirm(
+    `确定删除此条数据吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    handleDelete(ids)
+  })
+
 }
 
 const handleDelete=(ids:any)=>{
@@ -462,6 +493,20 @@ const queryTableData=(params: any)=>{
   })
 }
 
+const handleDataPolling = (params: any) => {
+  const param={
+    datasetId:props.dataSetRow.datasetId,
+    ...params,
+  }
+  dataSetAPI.querySingleDataSetInfo(param).then((res:any)=>{
+    tableData.value.data = res.datas;
+    totalCount.value = res.total;
+    if(res.datas.length && res.total){
+      stopPolling();
+    }
+  })
+};
+
 let pollingTimer: any = null;
 
 const startPolling = () => {
@@ -471,8 +516,8 @@ const startPolling = () => {
       page: currentPage.value,
       pageSize: currentPageSize.value,
     };
-    queryTableData(param);
-  }, 10000);
+    handleDataPolling(param);
+  }, 15000);
 };
 
 const stopPolling = () => {

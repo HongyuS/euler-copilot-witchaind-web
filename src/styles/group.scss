@@ -86,8 +86,9 @@
                     }
                 }
                 .group-content-container{
-                  min-height: calc(100vh - 454px);
+                  min-height: calc(100vh - 464px);
                   margin-top: 16px;
+                  margin-bottom: 10px;
                   
                 .group-tabs-content {
                     margin-top: 16px;
@@ -96,7 +97,7 @@
                     display: grid;
                     grid-template-columns: repeat(auto-fill, 339px);
                     gap: 16px;
-                    max-height: 690px;
+                    max-height: 660px;
                     overflow-y: auto;
                     .group-card-empty{
                       display: flex;

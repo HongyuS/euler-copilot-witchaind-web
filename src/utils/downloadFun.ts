@@ -6,7 +6,7 @@ export function downloadFun(url: string) {
   const { parentToken } = storeToRefs(appStore);
   const token = parentToken.value || localStorage.getItem('ECSESSION');
   if (!token) {
-    console.error('Token is not available yet');
+    ElMessage.error(`Token is not available yet`);
     return;
   }
   useAppStoreHook().changeDownLoading(true);
@@ -39,7 +39,9 @@ export function downloadFun(url: string) {
       a.click();
       URL.revokeObjectURL(a.href);
     })
-    .catch((error) => console.error('下载失败:', error))
+    .catch((error) => {
+      ElMessage.error(`下载失败: ${error}`);
+    })
     .finally(() => {
       useAppStoreHook().changeDownLoading(false);
     });

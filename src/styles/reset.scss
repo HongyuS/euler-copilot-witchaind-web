@@ -818,7 +818,7 @@ div:focus {
     }
 }
 .el-select-dropdown__item.is-hovering {
-  background-color: rgb(122,165,225);
+  background-color: rgb(122,165,225) !important;
   span {
     color: #fff !important;
   }

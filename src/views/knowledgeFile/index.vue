@@ -395,6 +395,7 @@
             :page-sizes="pagination.pageSizes"
             :layout="pagination.layout"
             :total="totalCount"
+            :default-page-size="20"
             popper-class="kbLibraryPage"
             @change="handleChangePage" />
         </div>
@@ -410,7 +411,7 @@
       :singleFileLimit="true"
       :singleFileSize="0.05"
       :tipText="$t('dialogTipText.fileAllFormat')"
-      accept=".md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html"
+      accept=".xlsx,.pdf,.doc,.docx,.txt,.pptx,.html,.md,.json,.yaml,.md,.zip"
       :maxFileNum="128"
       :maxSize="0.488"
       :handleUploadMyFile="handleUploadMyFile"
@@ -1038,7 +1039,7 @@ const handleQueryKbData = () => {
     teamId,
     kbId: kbId,
     page: 1,
-    pageSize: 10,
+    pageSize: 20,
   }).then((res: any) => {
     kbInfo.value = res.kbList?.[0] || {};
     let categoryList = JSON.parse(

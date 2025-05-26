@@ -227,8 +227,8 @@
             class="kl-single-card"
             @click="handleJumpAssets(item)"
             v-for="item in fileTableList.data"
-            :key="item.id"
-            :class="{'is-checked': item.checked}">
+            :key="item?.kbId"
+            :class="{'is-checked': item?.checked}">
             <div class="kl-card-top">
               <div class="kl-card-name"
               >
@@ -262,6 +262,7 @@
               <el-checkbox 
                 v-else 
                 v-model="item.checked" 
+                @click.stop
                 @change="(val) => handleCheckboxChange(val, item)"
               />
             </div>
@@ -320,6 +321,7 @@
         class="kl-table-box"
         v-else>
         <el-table
+          ref="tableListRef"
           :data="fileTableList.data"
           :border="true"
           @selection-change="handleSelectionChange"
@@ -610,6 +612,7 @@ import {
   IconSuccess,
   IconCaretDown,
   IconCaretUp,
+  IconAlarm,
 } from '@computing/opendesign-icons';
 import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
@@ -700,13 +703,14 @@ const fileTableList = reactive<{
 }>({
   data: [],
 });
+const tableListRef = ref();
 const taskTimer = ref();
 const batchDownBth = ref(false);
 const multiple = ref(false)
 const multipleSelection = ref<any[]>([]);
 const isAllChecked = computed(() => {
   if (!fileTableList.data.length) return false;
-  return fileTableList.data.every(item => item.checked);
+  return fileTableList.data.every(item => item?.checked);
 });
 const isIndeterminate = ref(false);
 
@@ -732,11 +736,21 @@ const handleSelectAll = (checked:CheckboxValueType) => {
   isIndeterminate.value = false;
 };
 
+const handleClearSelection = () => {
+  tableListRef.value?.clearSelection();
+  fileTableList.data.forEach(item => {
+    item.checked = false;
+  });
+  multipleSelection.value = [];
+  isIndeterminate.value = false;
+};
+
 const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
 
 const handleDelete= async (ids:string[],successFn:Function)=>{
+  loading.value = true;
   KbAppAPI.delKbLibrary(ids).then((res) => {
     if (res) {
       ElMessage({
@@ -755,16 +769,28 @@ const handleDelete= async (ids:string[],successFn:Function)=>{
   });
 }
 const handleBatchDelete = () => {
-  loading.value = true;
-  const ids = multipleSelection.value.map(item => item.kbId);
-  const successFn = ()=>{
-    multipleSelection.value = [];
-    handleQueryKbLibrary({
-      page: 1,
-      pageSize: 10,
-    });
-  }
-  handleDelete(ids,successFn);
+  ElMessageBox.confirm(
+    `确定删除选择的资产库吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    const ids = multipleSelection.value.map(item => item.kbId);
+    const successFn = ()=>{
+      handleClearSelection();
+      handleQueryKbLibrary({
+        page: 1,
+        pageSize: 10,
+      });
+    }
+    handleDelete(ids,successFn);
+  })
 }
 
 const handleBatchExport = () => {
@@ -804,7 +830,6 @@ const handleBatchExport = () => {
     taskExportList.value = [
       ...arr,
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -812,9 +837,7 @@ const handleBatchExport = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),
@@ -908,7 +931,7 @@ const handleSwitch = (switchType: string) => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   knoledgekeyWord.value = '';
-  multipleSelection.value = [];
+  handleClearSelection();
   isIndeterminate.value = false;
 
   handleQueryKbLibrary({
@@ -993,12 +1016,13 @@ const handleStopUploadFile = (taskId: string) => {
       taskId
     };
     KbAppAPI.stopOneTaskList(payload).then((res:any) => {
-      handleInitExportTaskList();
+      handelTaskList();
       importTaskList.value = res.tasks || [];
-      taskListLoading.value = false;
       importTaskTotal.value = res.total || 0;
       taskListImportDate.value = Date.now();
-    })
+    }).finally(()=>{
+      taskListLoading.value = false;
+    });
   }
 };
 
@@ -1045,7 +1069,6 @@ const handleExportKl = async (row: any) => {
         return item;
       }),
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1053,9 +1076,7 @@ const handleExportKl = async (row: any) => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),
@@ -1112,7 +1133,11 @@ const handleCloseAllTask=(type: ITaskType)=>{
     teamId: route.query.id as string,
     taskType:type
   }).then(() => {
-    handleInitExportTaskList();
+    if(type === 'kb_export'){
+      handleInitExportTaskList();
+    }else{
+      handelTaskList();
+    }
   }).finally(()=>{
     taskExportLoading.value = false;
   })
@@ -1129,7 +1154,6 @@ const handleInitExportTaskList = () => {
     taskExportLoading.value = false;
     taskExportList.value =
       res.tasks.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1137,9 +1161,7 @@ const handleInitExportTaskList = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }) || [];

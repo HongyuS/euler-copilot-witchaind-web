@@ -169,6 +169,7 @@
           :row-key="(row) => row.datasetId"
           @selection-change="handleSelectionChange"
           ref="multipleTable"
+          max-height="782"
           :border="false">
           <el-table-column
             type="selection"
@@ -427,7 +428,7 @@
             fixed="right">
             <template #default="scope">
               <el-button
-                v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
+                v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) "
                 text
                 @click="handleRunDataSet(scope.row,false)">
                 暂停
@@ -435,10 +436,7 @@
               <el-button
                 v-else
                 text
-                :disabled="![
-                    DataSetStatusEnum.FAILED,
-                    DataSetStatusEnum.CANCELED,
-                  ].includes(scope.row.generateTask?.taskStatus)"
+                :disabled="scope.row.generateTask?.taskStatus === StatusEnum.SUCCESS"
                 @click="handleRunDataSet(scope.row, true)">
                 生成
               </el-button>
@@ -521,7 +519,7 @@
 import EmptyStatus from '@/components/EmptyStatus/index.vue';
 import { useGroupStore } from '@/store/modules/group';
 import { IconCaretDown, IconFilter, IconCaretUp, IconSearch, IconAlarm, IconChevronUp, IconChevronDown, IconX } from '@computing/opendesign-icons';
-import { DataSetStatusEnum } from '@/enums/KnowledgeEnum';
+import { DataSetStatusEnum, StatusEnum } from '@/enums/KnowledgeEnum';
 import FilterContainr from '@/components/TableFilter/index.vue';
 import DataSetDrawer from './dataSetDrawer.vue';
 import CreateEvaluate from '@/views/dataSet/craeteEvaluate.vue';
@@ -805,13 +803,26 @@ const handleBatchDownBth = (e: boolean) => {
 };
 
 const handleSelectDeleteDataSet = () => {
-  loading.value = true;
-  const params = selectionDataSetList.value.map((row: any)=>row.datasetId)
-  dataSetAPI.delDataSet(params).then(()=>{
-    handleSearchData();
-  }).finally(()=>{
-    loading.value = false;
-    selectionDataSetList.value = [];
+  ElMessageBox.confirm(
+    `确定删除选择的数据集吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(() => {
+    loading.value = true;
+    const params = selectionDataSetList.value.map((row: any)=>row.datasetId)
+    dataSetAPI.delDataSet(params).then(()=>{
+      handleSearchData();
+    }).finally(()=>{
+      loading.value = false;
+      selectionDataSetList.value = [];
+    })
   })
 };
 
@@ -833,12 +844,25 @@ const handelStatusFilterProper = (filterList: any) => {
 };
 
 const handleDeleteDataSet = (row: any) => {
-  loading.value = true;
-  const params = [row.datasetId];
-  dataSetAPI.delDataSet(params).then(()=>{
-    handleSearchData();
-  }).finally(()=>{
-    loading.value = false;
+  ElMessageBox.confirm(
+    `确定删除数据集【${row.datasetName}】 吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    loading.value = true;
+    const params = [row.datasetId];
+    dataSetAPI.delDataSet(params).then(()=>{
+      handleSearchData();
+    }).finally(()=>{
+      loading.value = false;
+    })
   })
 };
 
@@ -986,7 +1010,6 @@ const handleInitExportTaskList = () => {
     taskExportLoading.value = false;
     taskExportList.value =
       res.tasks.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -994,9 +1017,7 @@ const handleInitExportTaskList = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }) || [];
@@ -1051,7 +1072,6 @@ const handleExportDataSet = async (row: any) => {
         return item;
       }),
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1059,9 +1079,7 @@ const handleExportDataSet = async (row: any) => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),
@@ -1122,7 +1140,6 @@ const handleBatchExport = () => {
           })
         }),
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1130,9 +1147,7 @@ const handleBatchExport = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),
