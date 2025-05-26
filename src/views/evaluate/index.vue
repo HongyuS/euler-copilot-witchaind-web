@@ -183,7 +183,7 @@
             <el-button :disabled="scope.row.testingTask?.taskStatus !== StatusEnum.SUCCESS" type="text"
               @click="handleDownload(scope.row)">下载</el-button>
             <el-button :disabled="scope.row.testingTask?.taskStatus === StatusEnum.RUNNING" type="text"
-              @click="handleDelete([scope.row])">删除</el-button>
+              @click="handleSingleDelete(scope.row)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -448,8 +448,38 @@ const handleDelete = (arr: any) => {
   })
 }
 
+const handleSingleDelete = (row: any) => {
+  ElMessageBox.confirm(
+    `确定删除测试数据【${row.testingName}】吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    handleDelete([row]);
+  })
+}
+
 const handleBatchDelete = () => {
-  handleDelete(selectedRow.value)
+  ElMessageBox.confirm(
+    `确定删除选择的测试数据吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    handleDelete(selectedRow.value);
+  })
 }
 const handelStatusFilterProper = (filterList: any) => {
   searchPayload.value.runStatus = filterList;

@@ -803,13 +803,26 @@ const handleBatchDownBth = (e: boolean) => {
 };
 
 const handleSelectDeleteDataSet = () => {
-  loading.value = true;
-  const params = selectionDataSetList.value.map((row: any)=>row.datasetId)
-  dataSetAPI.delDataSet(params).then(()=>{
-    handleSearchData();
-  }).finally(()=>{
-    loading.value = false;
-    selectionDataSetList.value = [];
+  ElMessageBox.confirm(
+    `确定删除选择的数据集吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(() => {
+    loading.value = true;
+    const params = selectionDataSetList.value.map((row: any)=>row.datasetId)
+    dataSetAPI.delDataSet(params).then(()=>{
+      handleSearchData();
+    }).finally(()=>{
+      loading.value = false;
+      selectionDataSetList.value = [];
+    })
   })
 };
 
@@ -831,12 +844,25 @@ const handelStatusFilterProper = (filterList: any) => {
 };
 
 const handleDeleteDataSet = (row: any) => {
-  loading.value = true;
-  const params = [row.datasetId];
-  dataSetAPI.delDataSet(params).then(()=>{
-    handleSearchData();
-  }).finally(()=>{
-    loading.value = false;
+  ElMessageBox.confirm(
+    `确定删除数据集【${row.datasetName}】 吗？`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    loading.value = true;
+    const params = [row.datasetId];
+    dataSetAPI.delDataSet(params).then(()=>{
+      handleSearchData();
+    }).finally(()=>{
+      loading.value = false;
+    })
   })
 };
 

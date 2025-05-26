@@ -102,7 +102,7 @@ const handleClick = (tab: any, event: any) => { };
 
 const handleDeleteTeam=() => {
     ElMessageBox.confirm(
-        `解散【${curTeamInfo.value.teamName}】团队后，该团队下的所有项目都将被同步删除，且不可恢复！请谨慎操作。`,
+        `解散【${form.value.teamName}】团队后，该团队下的所有项目都将被同步删除，且不可恢复！请谨慎操作。`,
         '提示',
         {
             confirmButtonText: '确定',
@@ -120,7 +120,7 @@ const handleDeleteTeam=() => {
             delNav(1);
             router.push('/group');
             handleSwitchMenu('knowledge')
-            ElMessage.success(`团队【${curTeamInfo.value.teamName}】解散成功`);
+            ElMessage.success(`团队【${form.value.teamName}】解散成功`);
         })
     })
 }
@@ -181,6 +181,10 @@ onMounted(()=>{
             background-color: white;
             color: rgba(78,88,101,0.8) !important;
         }
+    }
+    .el-button{
+        width: 64px;
+        height: 24px;
     }
   }
 }
