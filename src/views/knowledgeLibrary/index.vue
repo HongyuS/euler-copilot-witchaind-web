@@ -804,7 +804,6 @@ const handleBatchExport = () => {
     taskExportList.value = [
       ...arr,
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -812,9 +811,7 @@ const handleBatchExport = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),
@@ -993,12 +990,13 @@ const handleStopUploadFile = (taskId: string) => {
       taskId
     };
     KbAppAPI.stopOneTaskList(payload).then((res:any) => {
-      handleInitExportTaskList();
+      handelTaskList();
       importTaskList.value = res.tasks || [];
-      taskListLoading.value = false;
       importTaskTotal.value = res.total || 0;
       taskListImportDate.value = Date.now();
-    })
+    }).finally(()=>{
+      taskListLoading.value = false;
+    });
   }
 };
 
@@ -1045,7 +1043,6 @@ const handleExportKl = async (row: any) => {
         return item;
       }),
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1053,9 +1050,7 @@ const handleExportKl = async (row: any) => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),
@@ -1112,7 +1107,11 @@ const handleCloseAllTask=(type: ITaskType)=>{
     teamId: route.query.id as string,
     taskType:type
   }).then(() => {
-    handleInitExportTaskList();
+    if(type === 'kb_export'){
+      handleInitExportTaskList();
+    }else{
+      handelTaskList();
+    }
   }).finally(()=>{
     taskExportLoading.value = false;
   })
@@ -1129,7 +1128,6 @@ const handleInitExportTaskList = () => {
     taskExportLoading.value = false;
     taskExportList.value =
       res.tasks.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1137,9 +1135,7 @@ const handleInitExportTaskList = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }) || [];

@@ -28,7 +28,7 @@ import '@/styles/headerBar.scss';
 
   .knowledge-show-text {
     font-size: 16px;
-    line-height: 24px;
+    line-height: 21px;
     color: rgb(78 88 101);
   }
 }

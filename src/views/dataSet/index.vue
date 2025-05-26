@@ -169,6 +169,7 @@
           :row-key="(row) => row.datasetId"
           @selection-change="handleSelectionChange"
           ref="multipleTable"
+          max-height="782"
           :border="false">
           <el-table-column
             type="selection"
@@ -983,7 +984,6 @@ const handleInitExportTaskList = () => {
     taskExportLoading.value = false;
     taskExportList.value =
       res.tasks.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -991,9 +991,7 @@ const handleInitExportTaskList = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }) || [];
@@ -1048,7 +1046,6 @@ const handleExportDataSet = async (row: any) => {
         return item;
       }),
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1056,9 +1053,7 @@ const handleExportDataSet = async (row: any) => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),
@@ -1119,7 +1114,6 @@ const handleBatchExport = () => {
           })
         }),
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1127,9 +1121,7 @@ const handleBatchExport = () => {
           percent:
             item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
+              : item.taskCompleted,
           exportStatus: item?.taskStatus,
         };
       }),

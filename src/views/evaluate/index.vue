@@ -34,7 +34,7 @@
       <el-input v-model="searchPayload.testingName" placeholder="请输入评测名称" class="search-input" 
       @input="handleInput" :suffix-icon="IconSearch" />
     </div>
-    <el-table ref="testingTableRef" :data="testList" style="width: 100%; 
+    <el-table ref="testingTableRef" :data="testList" max-height="770" style="width: 100%; 
       margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />

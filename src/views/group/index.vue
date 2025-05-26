@@ -74,7 +74,7 @@
                         </div>
                         <!-- 列表布局 -->
                         <div class="group-table-box" v-else>
-                            <el-table :data="groupList" :border="true">
+                            <el-table :data="groupList" :border="true" max-height="640" >
                                 <el-table-column prop="teamName" label="团队名称" :show-overflow-tooltip="true" width="200"
                                     class-name="group-name">
                                     <template #default="scope">
