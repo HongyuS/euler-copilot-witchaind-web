@@ -720,12 +720,12 @@ const handleCheckboxChange = (checked: CheckboxValueType, item: any) => {
       multipleSelection.value.push(item);
     }
   } else {
-    const index = multipleSelection.value.findIndex(i => i.id === item.id);
+    const index = multipleSelection.value.findIndex(i => i.kbId === item.kbId);
     if (index !== -1) {
       multipleSelection.value.splice(index, 1);
     }
   }
-  isIndeterminate.value = multipleSelection.value.length > 0 && multipleSelection.value.length < fileTableList.data.length;
+    isIndeterminate.value = multipleSelection.value.length > 0 && multipleSelection.value.length < fileTableList.data.length;
 };
 
 const handleSelectAll = (checked:CheckboxValueType) => {
