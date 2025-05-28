@@ -516,10 +516,27 @@
 }
 
 .kf-section-edit-dialog{
-  .el-dialog__header{
-
-  }
+  .el-dialog__header {
+    padding: 0 0 16px 8px !important;
+}
   .el-textarea__inner{
     max-height: 500px;
   }
+  .el-dialog__body {
+    padding-left: 8px;
+    padding-right: 4px;
+    padding-bottom: 0px;
+  }
+  .el-dialog__footer {
+    padding-bottom: 8px;
+
+    .dialog-footer {
+        display: flex;
+        justify-content: center;
+        & button{
+            height: 24px;
+            width: 64px;
+        }
+    }
+}
 }

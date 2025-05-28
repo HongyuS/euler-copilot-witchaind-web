@@ -946,8 +946,6 @@ const handeAssetLibraryData = (
         return;
       }
       fileTableList.data = res?.documents || [];
-      currentPage.value = res.page;
-      currentPageSize.value = res.pageSize;
       totalCount.value = res.total;
       if (pollTimer) {
         handleStartPollTimer();

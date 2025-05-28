@@ -3,6 +3,7 @@
     <el-button
       v-if="showButton"
       type="primary"
+      class="empty-button-common"
       :class="buttonClass"
       @click="handleButtonClick"
     >
