@@ -1,7 +1,7 @@
 <template>
   <CustomLoading :dark="false" :loading="loading" />
   <div class="evaluate-empty-content" v-if="!isSearch && testList.length === 0">
-    <EmptyStatus description="暂无评测信息，去数据集管理生成一个吧！" buttonText="去生成评测" buttonClass="group-btn" @click="handleCreate" />
+    <EmptyStatus :description="$t('testing.testEmptyDesc')" :buttonText="$t('testing.testEmptyText')" buttonClass="group-btn" @click="handleCreate" />
   </div>
   <div class="group-table-box" v-else>
     <div class="test-manage-header">
@@ -12,7 +12,7 @@
           'downBtn': !batchDownBth,
           'dropdown-disabled': !selectedRow.length
         }">
-          批量操作
+          {{ $t('btnText.batchOps') }}
           <el-icon class="el-icon--right" v-if="!batchDownBth">
             <IconCaretDown />
           </el-icon>
@@ -23,7 +23,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="handleBatchDownload" >
-              批量下载
+              {{ $t('btnText.batchDownload') }}
             </el-dropdown-item>
             <el-dropdown-item @click="handleBatchDelete" >
               {{ $t('btnText.batchDelete') }}
@@ -31,24 +31,24 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-input v-model="searchPayload.testingName" placeholder="请输入评测名称" class="search-input" 
+      <el-input v-model="searchPayload.testingName" :placeholder="$t('testing.placeholderTest')" class="search-input" 
       @input="handleInput" :suffix-icon="IconSearch" />
     </div>
     <el-table ref="testingTableRef" :data="testList" max-height="770" style="width: 100%; 
       margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="datasetName" width="120" label="所用数据集" />
-      <el-table-column prop="testingName" width="120" label="测试名称">
+      <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" />
+      <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')">
         <template #default="scope">
           <div class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </div>
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="简介" />
-      <el-table-column prop="modelType" width="250" label="模型类型">
+      <el-table-column prop="description" :label="$t('testing.testingDesc')" />
+      <el-table-column prop="modelType" width="250" :label="'testing.type'">
         <template #header>
           <div class="custom-header">
-            <span>模型类型</span>
+            <span>{{ $t('testing.type') }}</span>
             <el-icon ref="modelRef" @click.stop :class="modelFilterVisible || searchPayload?.llmId?.length! > 0
               ? 'searchIconIsActive'
               : ''
@@ -69,10 +69,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="searchMethod" width="150" label="检索方法">
+      <el-table-column prop="searchMethod" width="150" :label="$t('testing.method')">
         <template #header>
           <div class="custom-header">
-            <span>检索方法</span>
+            <span>{{ $t('testing.method') }}</span>
             <el-icon ref="searchRef" @click.stop :class="searchPayload?.searchMethod?.length || searchFilterVisible
               ? 'searchIconIsActive'
               : ''
@@ -96,7 +96,7 @@
       <el-table-column prop="status" width="200" label="状态">
         <template #header>
           <div class="custom-header">
-            <span>状态</span>
+            <span>{{ $t('dataset.status') }}</span>
             <el-icon ref="statusRef" @click.stop :class="searchPayload?.runStatus?.length || statusFilterVisible
               ? 'searchIconIsActive'
               : ''
@@ -112,37 +112,37 @@
         </template>
         <template #default="scope">
           <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.FAIL" class="statusFail">
-            测试失败
+            {{ $t('testing.testingStatus.failed') }}
           </div>
           <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.SUCCESS" class="statusSuccess">
-            测试成功
+            {{ $t('testing.testingStatus.success') }}
           </div>
           <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.CANCEL" class="statusCancel">
-            取消测试
+            {{ $t('testing.testingStatus.canceled') }}
           </div>
           <div v-if="scope.row.testingTask?.taskStatus === StatusEnum.ANALYSIS_ING" class="statusWaitIng">
             <div class="icon-box icon-loading"></div>
-            等待测试
+            {{ $t('testing.testingStatus.pending') }}
           </div>
           <div class="statusAnalysis" v-if="scope.row.testingTask?.taskStatus === StatusEnum.RUNNING">
             <div class="percent-box">
               <el-progress :percentage="scope.row?.testingTask?.taskCompleted ?? 0" color="#0077FF" striped striped-flow />
             </div>
             <div class="statusAnalysisText">
-              测试中
+              {{ $t('testing.testingStatus.running') }}
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="aveScore" width="150" label="综合评分(0-100)">
+      <el-table-column prop="aveScore" width="150" :label= "`${$t('testing.testingScore')}(0-100)`">
         <template #default="scope">
           {{ scope.row.aveScore<0 ?'--':scope.row.aveScore}}
         </template>
       </el-table-column>
-      <el-table-column prop="authorName" width="100" label="创建人">
+      <el-table-column prop="authorName" width="100" :label="$t('group.creator')">
         <template #header>
           <div class="custom-header">
-            <span>创建人</span>
+            <span>{{ $t('group.creator') }}</span>
             <el-icon
               ref="creatorRef"
               :class="
@@ -168,22 +168,22 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="finishedTime" width="150" label="完成时间">
+      <el-table-column prop="finishedTime" width="150" :label="$t('dataset.finishedTime')">
         <template #default="scope">
           {{ convertUTCToLocalTime(scope.row.testingTask?.finishedTime)}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column :label="$t('btnText.operation')" width="150">
         <template #default="scope">
           <div v-if="!scope.row.datasetId">
             <el-button v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) " type="text"
-              @click="handleStopTesting(scope.row)">暂停</el-button>
+              @click="handleStopTesting(scope.row)">{{ $t('dataset.stop') }}</el-button>
             <el-button v-else :disabled="scope.row.testingTask?.taskStatus === StatusEnum.SUCCESS" type="text"
-              @click="handleRunTesting(true, scope.row)">重启</el-button>
+              @click="handleRunTesting(true, scope.row)">{{ $t('btnText.restart') }}</el-button>
             <el-button :disabled="scope.row.testingTask?.taskStatus !== StatusEnum.SUCCESS" type="text"
-              @click="handleDownload(scope.row)">下载</el-button>
+              @click="handleDownload(scope.row)">{{ $t('btnText.download') }}</el-button>
             <el-button :disabled="scope.row.testingTask?.taskStatus === StatusEnum.RUNNING" type="text"
-              @click="handleSingleDelete(scope.row)">删除</el-button>
+              @click="handleSingleDelete(scope.row)">{{ $t('btnText.delete') }}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -212,6 +212,7 @@ import KbAppAPI from "@/api/kbApp";
 import { convertUTCToLocalTime } from "@/utils/convertUTCToLocalTime";
 import { downloadFun } from "@/utils/downloadFun";
 
+const {t} = useI18n();
 const route = useRoute();
 const testList:any = ref([]);
 const store = useGroupStore();
@@ -242,23 +243,23 @@ const searchList = ref([]);
 const statusList = [
   {
     value: StatusEnum.SUCCESS,
-    label: '测试成功',
+    label: t('testing.testingStatus.success'),
   },
   {
     value: StatusEnum.FAIL,
-    label: '测试失败',
+    label: t('testing.testingStatus.failed'),
   },
   {
     value: StatusEnum.ANALYSIS_ING,
-    label: '等待测试',
+    label: t('testing.testingStatus.pending'),
   },
   {
     value: StatusEnum.RUNNING,
-    label: '测试中',
+    label: t('testing.testingStatus.running'),
   },
   {
     value: StatusEnum.CANCEL,
-    label: '取消测试',
+    label: t('testing.testingStatus.canceled'),
   },
 ]
 const checkedFilterList = ref([]);
@@ -398,9 +399,11 @@ const handleRunTesting = (isRun: boolean, row: any) => {
   })
 }
 const handleStopTesting = (row: any) => {
-  ElMessageBox.confirm('确定暂停测试？点击确定后将停止测试，请谨慎操作。', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+  ElMessageBox.confirm(t('dialogTipText.stopTesting'), 
+    t('dialogTipText.tipsText'), 
+    {
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
@@ -421,7 +424,7 @@ const handleBatchDownload = () => {
     }
   })
   if(!flag){
-    ElMessage.error('只有【测试成功】的评测信息才可以下载！')
+    ElMessage.error(t('dialogTipText.testDownloadTips'));
     return;
   }
   selectedRow.value.forEach((item: any) => {
@@ -450,11 +453,11 @@ const handleDelete = (arr: any) => {
 
 const handleSingleDelete = (row: any) => {
   ElMessageBox.confirm(
-    `确定删除测试数据【${row.testingName}】吗？`,
-    '提示',
+    `${t('dialogTipText.confirmDelSingleTesting')}【${row.testingName}】？`,
+    t('dialogTipText.tipsText'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
@@ -467,11 +470,11 @@ const handleSingleDelete = (row: any) => {
 
 const handleBatchDelete = () => {
   ElMessageBox.confirm(
-    `确定删除选择的测试数据吗？`,
-    '提示',
+    t('dialogTipText.consfirmDelTesting'),
+    t('dialogTipText.tipsText'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
@@ -592,8 +595,6 @@ const handeAssetLibraryData = (
         }
         return newItem;
       });
-      currentPage.value = res.page;
-      currentPageSize.value = res.pageSize;
       totalCount.value = res.total;
       if (pollTimer) {
         handleStartPollTimer();

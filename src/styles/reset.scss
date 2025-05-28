@@ -138,6 +138,28 @@ $newHoverBg: linear-gradient(
   }
 }
 
+.el-button--primary {
+  background: rgb(99 149 253) !important;
+}
+.el-button--primary.is-disabled{
+  background-color: rgb(179 203 255) !important;
+  color: rgb(255 255 255) !important;
+}
+
+  .el-button.is-disabled, .el-button.is-disabled:hover {
+    background-color: #ebedf3 !important;
+    background-image: none;
+    border-color: unset !important;
+    color: var(--o-button-color_disabled) !important;
+    cursor: not-allowed;
+  }
+
+.el-dropdown.is-disabled .el-button {
+  color: var(--o-button-color_disabled) !important;
+  background-color: var(--o-button-bg-color_disabled) !important;
+  border-color: var(--o-button-border-color_disabled) !important;
+}
+
 *,
 *::before,
 *::after {
@@ -210,10 +232,11 @@ div:focus {
 
 .dropdown-container {
   margin-top: -10px;
+  border-color: rgb(99 149 253) !important;
 
   .el-dropdown-menu__item:not(.is-disabled):hover {
     color: rgb(255 255 255);
-    background: rgb(82 163 255);
+    background: rgb(122 165 255);
   }
 }
 
@@ -255,8 +278,8 @@ div:focus {
   }
 
   .el-checkbox__inner::before {
-    top: 4.5px !important;
-    width: 13px !important;
+    // top: 4.5px !important;
+    // width: 13px !important;
   }
 
   .el-checkbox__label {
@@ -797,29 +820,48 @@ div:focus {
   }
 }
 
-.el-select__popper {
-  .el-select-dropdown__list {
+/**
+ * 重置el-select下拉框样式
+ */
+.el-select__popper {  .el-select-dropdown__list {
     padding: 4px 0 !important;
     li {
       height: 32px !important;
       line-height: 30px !important;
     }
-  }
-
-  .el-select-dropdown__item {
-    padding: 0 16px;
-  }
-}
-
-.el-select-dropdown__item.is-selected {
-  background-color: rgb(99,149,253) !important;
-    span{
-      color: white !important;
+    .el-select-dropdown__item {
+      padding: 0 16px;
     }
-}
-.el-select-dropdown__item.is-hovering {
-  background-color: rgb(122,165,225) !important;
-  span {
-    color: #fff !important;
+    .is-selected{
+      background-color: rgb(99,149,253) !important;
+      span {
+        color: white !important;
+      }
+    }
+    .is-hovering {
+      background-color: rgb(122,165,225) !important;
+      span {
+        color: #fff !important;
+      }
+    }
   }
+}
+
+/**
+ * 重置el-checkbox样式
+ */
+.el-checkbox__inner{
+  width: 12px !important;
+  height: 12px !important;
+}
+.el-checkbox__input.is-disabled .el-checkbox__inner:after{
+  border-color: none !important;
+}
+.el-checkbox__input.is-indeterminate .el-checkbox__inner:before{
+  top: 4px !important;
+  transform: scaleY(0.5) translateX(2px) !important;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner:after {
+  border-color: var(--el-checkbox-checked-icon-color) !important;
+  transform: rotate(45deg) scaleY(1) translate(-1.5px, -1px) !important;
 }

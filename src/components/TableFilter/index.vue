@@ -51,7 +51,7 @@
     <el-input
       ref="inputRef"
       class="o-style-serch"
-      placeholder="搜索"
+      :placeholder="$t('btnText.search')"
       width="240"
       clearable
       @clear="hanldeSearhNameFilter"
@@ -210,24 +210,6 @@ const hanldeSearhNameFilter = () => {
   max-height: 500px;
   padding: 0 16px;
   overflow: hidden auto;
-
-  :not(.isChcekHover) .is-checked {
-    border: unset !important;
-
-    .el-checkbox__inner {
-      border: unset !important;
-    }
-  }
-
-  .el-checkbox__inner::after {
-    left: 5px;
-    top: 2px;
-  }
-
-  .isChcekHover .el-checkbox__inner::after {
-    left: 4px;
-    top: 1px;
-  }
 }
 
 .filterPopper {

@@ -6,7 +6,7 @@
     class="dataSet-edit-dialog"
     align-center
     width="550"
-    :title="$t('生成数据集')">
+    :title="$t('assetFile.generateDataset')">
     <CustomLoading :loading="loading" />
     <el-form
       ref="ruleFormRef"
@@ -17,27 +17,27 @@
       class="dataSet-ruleForm"
       label-position="left">
       <el-form-item
-        :label="$t('数据集名称')"
+        :label="$t('dataset.datasetName')"
         prop="datasetName"
         class="dataSetName">
         <el-input
-          maxlength="150"
+          maxlength="30"
           minlength="1"
           v-model="ruleForm.datasetName"
           :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
-      <el-form-item :label="$t('数据集简介')" prop="description">
+      <el-form-item :label="$t('dataset.datasetDesc')" prop="description">
         <el-input :rows="4" show-word-limit type="textarea" v-model="ruleForm.description" maxlength="200"
           :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
-      <el-form-item :label="$t('文档数量')" prop="documentIds">
+      <el-form-item :label="$t('assetLibrary.fileNum')" prop="documentIds">
         <span>{{ props.selectionFileData.length }}</span>
       </el-form-item>
 
-      <el-form-item :label="$t('数据集条目')" prop="dataCnt" class="dataSetNumber">
+      <el-form-item :label="$t('dataset.datasetNum')" prop="dataCnt" class="dataSetNumber">
         <el-input-number class="config-size" v-model="ruleForm.dataCnt" :min="1" :max="512" />
       </el-form-item>
-      <el-form-item :label="$t('模型类型')" prop="llmId">
+      <el-form-item :label="$t('testing.type')" prop="llmId">
         <el-select v-model="ruleForm.llmId" :placeholder="t('assetLibrary.message.pleaseChoose')">
           <template #label="{ label, value }">
               <img v-if="ruleForm.llmId" :src="`data:image/svg+xml;base64,${llmList.find(item => item.llmId === ruleForm.llmId)?.llmIcon}`" style="vertical-align: middle; margin-right: 8px;" />
@@ -54,10 +54,10 @@
           </el-option>
       </el-select>
       </el-form-item>
-      <el-form-item :label="$t('是否进行数据清洗')" prop="isDataCleared" class="isDataClean">
+      <el-form-item :label="$t('dataset.isDataCleared')" prop="isDataCleared" class="isDataClean">
         <el-switch v-model="ruleForm.isDataCleared" class="ml-2" style="--el-switch-on-color: #13ce66" />
       </el-form-item>
-      <el-form-item :label="$t('是否补全上下文')" prop="isChunkRelated" class="isComContext">
+      <el-form-item :label="$t('dataset.isChunkRelated')" prop="isChunkRelated" class="isComContext">
         <el-switch v-model="ruleForm.isChunkRelated" class="ml-2" style="--el-switch-on-color: #13ce66" />
       </el-form-item>
       <el-form-item class="kl-ops-btn">
@@ -72,7 +72,6 @@
   </el-dialog>
 </template>
 <script setup>
-import { IconCaretDown } from '@computing/opendesign-icons';
 import '@/styles/dataSetDialog.scss';
 import dataSetAPI from '@/api/dataSet'
 import { ref } from 'vue';

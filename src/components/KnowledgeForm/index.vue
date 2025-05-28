@@ -1,7 +1,6 @@
 <template>
   <el-form
     ref="ruleFormRef"
-    style="max-width: 600px"
     :model="ruleForm"
     :rules="rules"
     label-width="auto"
@@ -33,7 +32,7 @@
       <el-input
         v-model="ruleForm.kbName"
         minlength="1"
-        maxlength="50"
+        maxlength="20"
         :placeholder="$t('assetLibrary.message.pleasePlace')" />
     </el-form-item>
     <el-form-item
@@ -42,7 +41,7 @@
       class="config-size-desc">
       <el-input
         v-model="ruleForm.description"
-        maxlength="200"
+        maxlength="150"
         show-word-limit
         type="textarea"
         :placeholder="$t('assetLibrary.message.pleasePlace')" />
@@ -128,7 +127,7 @@
         v-model="ruleForm.defaultChunkSize"
         :min="128"
         :max="1024" />
-      <span class="form-right-tip">128~1024）</span>
+      <span class="form-right-tip">（128~1024）</span>
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.fileChunkSize')"
@@ -202,6 +201,7 @@
       class="domain-config">
       <el-input
         v-model="ruleForm.docTypes[index].docTypeName"
+        maxlength="20"
         :placeholder="$t('assetLibrary.message.categoryInfo')" />
       <el-icon
         class="deleteConfig"

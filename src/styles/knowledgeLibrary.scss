@@ -51,7 +51,7 @@
         }
 
         .el-button--primary {
-          background: rgb(0 119 255);
+          background: rgb(99 149 253);
         }
         .el-dropdown{
           margin-right: 8px;
@@ -84,9 +84,6 @@
           .el-checkbox.el-checkbox--large{
             height: 20px;
           }
-          .el-checkbox__input.is-indeterminate .el-checkbox__inner:before {
-            transform: scaleY(0.5) translateX(3px);
-          }
           & span{
             font-size: 12px;
           }
@@ -99,7 +96,7 @@
         gap: 8px;
 
         .kl-btn-search {
-          width: 400px;
+          width: 356px;
           height: 32px;
 
           .el-input__icon {
@@ -123,7 +120,8 @@
           width: 64px;
           height: 32px;
           border: 1px solid rgb(195 206 223);
-          border-radius: 2px;
+          border-radius: 4px;
+          overflow: hidden;
 
           .kl-btn-switch-icon {
             display: flex;
@@ -194,6 +192,16 @@
           }
           .el-checkbox{
             height: 20px;
+            .el-checkbox__inner{
+              width: 18px !important;
+              height: 18px !important;
+            }
+
+            .el-checkbox__input.is-checked .el-checkbox__inner:after {
+              border-color: var(--el-checkbox-checked-icon-color) !important;
+              transform: rotate(45deg) scaleY(1) translate(3px) !important;
+              border-width: 2px !important;
+            }
           }
 
           .kl-card-more-icon {
@@ -232,18 +240,13 @@
             .kl-card-file {
               display: flex;
               width: 90%;
-              align-items: center;
+              align-items: center;;
+              font-weight: 500;
 
               .kl-file-text {
                 width: 95%;
                 display: inline-block;
               }
-            }
-
-            .kl-file-num {
-              font-size: 14px;
-              font-family: 'HarmonyOS Sans SC Regular';
-              font-weight: 700;
             }
           }
 
@@ -312,11 +315,6 @@
     flex-direction: column;
     gap: 24px;
     min-height: 200px;
-
-    .el-checkbox__inner::before {
-      top: 4.5px !important;
-      width: 13px;
-    }
 
     tbody {
       td {

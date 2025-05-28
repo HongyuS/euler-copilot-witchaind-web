@@ -1,7 +1,7 @@
 <template>
     <div class="editor-container">
       <div class="code-edit-tools">
-        <el-button @click="downloadLogFn">下载</el-button>
+        <el-button @click="downloadLogFn">{{ $t('btnText.download') }}</el-button>
       </div>
       <div ref="codeEditBox" class="code-edit-box"></div>
     </div>

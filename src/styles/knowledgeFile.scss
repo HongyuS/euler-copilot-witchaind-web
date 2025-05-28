@@ -92,15 +92,6 @@
             margin-left: unset !important;
           }
 
-          .dataSetBtn.is-disabled{
-            color: var(--o-button-color_disabled) !important;
-            background: #ebedf3;
-          }
-
-          .is-disabled {
-            background: #ebedf3;
-          }
-
           .delFileBtn {
             padding: 8px 27px;
             margin-left: 8px;
@@ -155,11 +146,6 @@
 
       .el-table__body-wrapper {
         flex: unset !important;
-      }
-
-      .el-checkbox__inner::before {
-        top: 4.5px !important;
-        width: 13px;
       }
 
       .upload-time-cell {
@@ -218,14 +204,15 @@
       .statusSuccess,
       .statusWaitIng,
       .statusCancel {
-        height: 24px;
+        height: 16px;
         width: fit-content;
         padding: 0px 8px;
         font-size: 12px;
-        line-height: 24px;
+        line-height: 16px;
         color: rgb(255 255 255);
         text-align: center;
-        border-radius: 4px;
+        border-radius: 2px;
+        font-weight: 500;
       }
 
       .statusFail {
@@ -336,7 +323,7 @@
       }
 
       .kl-ruleForm {
-        max-width: 1000px !important;
+        max-width: 544px !important;
 
         .el-select__popper {
           top: 44px !important;
@@ -453,17 +440,6 @@
   }
   .el-dropdown-menu__item {
     font-size: 12px;
-  }
-}
-
-.el-dropdown.is-disabled{
-  .el-button{
-    color: var(--o-button-color_disabled) !important;
-  }
-  .el-button:hover{
-    color: var(--o-button-color_disabled) !important;
-    background-color: var(--o-button-bg-color_disabled) !important;
-    border-color: var(--o-button-border-color_disabled) !important;
   }
 }
 

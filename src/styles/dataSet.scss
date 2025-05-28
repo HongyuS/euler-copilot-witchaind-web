@@ -247,22 +247,11 @@
     }
   }
 
-  .el-dropdown.is-disabled .el-button {
-    color: var(--o-button-color_disabled) !important;
-    background-color: var(--o-button-bg-color_disabled) !important;
-    border-color: var(--o-button-border-color_disabled) !important;
-  }
-
   .el-table tbody tr td:not(:first-child) .cell {
     padding: 0 8px !important;
   }
 
-  .el-table tbody tr td:first-child .cell {
-    padding-left: 16px !important;
-  }
-
   .el-table thead .el-table__cell .cell {
-    // padding: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
@@ -298,14 +287,15 @@
   .statusSuccess,
   .statusWaitIng,
   .statusCancel {
-    height: 24px;
+    height: 16px;
     width: fit-content;
     padding: 0px 8px;
     font-size: 12px;
-    line-height: 24px;
+    line-height: 16px;
     color: rgb(255 255 255);
     text-align: center;
-    border-radius: 4px;
+    border-radius: 2px;
+    font-weight: 500;
   }
 
   .statusFail {
@@ -377,10 +367,6 @@
   }
   .el-table__body-wrapper {
     flex: unset !important;
-  }
-  .el-checkbox__input.is-indeterminate .el-checkbox__inner:before {
-    transform: scaleY(0.5) translateX(3px);
-    top: 4.5px !important;
   }
 
   .el-table__header {

@@ -3,27 +3,27 @@
     <div class="group-detial-container">
         <div class="group-name">{{ groupName }}</div>
         <el-tabs v-model="activeName" class="group-detail-tabs" @tab-click="handleClick">
-            <el-tab-pane label="团队设置" name="teamSet">
+            <el-tab-pane :label="$t('groupDetail.teamSet')" name="teamSet">
                 <el-form :model="form" label-width="auto" style="max-width: 500px">
-                    <el-form-item prop="name" label="团队名称">
+                    <el-form-item prop="name" :label="$t('group.teamName')">
                         <el-input v-model="form.teamName" maxlength="100" />
                     </el-form-item>
-                    <el-form-item prop="description" label="团队简介">
+                    <el-form-item prop="description" :label="$t('group.teamDesc')">
                         <el-input v-model="form.description" type="textarea" :rows="4" maxlength="200"
                             show-word-limit />
                     </el-form-item>
-                    <el-form-item prop="isPublic" label="是否公开">
+                    <el-form-item prop="isPublic" :label="$t('group.isPublic')">
                         <el-switch v-model="form.isPublic" style="--el-switch-on-color: rgb(36,171,54); " />
                     </el-form-item>
-                    <el-form-item prop="memberCount" label="团队人数">
-                       {{ form.memberCount }}人
+                    <el-form-item prop="memberCount" :label="$t('group.teamSize')">
+                       {{ form.memberCount }}{{ $t('group.people') }}
                     </el-form-item>
-                    <el-form-item prop="deleteTeam" label="解散团队">
-                        <el-button @click="handleDeleteTeam" >解散</el-button>
-                        <span class="btn-tips">解散团队后相关资源都会被释放，请谨慎操作</span>
+                    <el-form-item prop="deleteTeam" :label="$t('groupDetail.dissolveTeam')">
+                        <el-button @click="handleDeleteTeam" >{{ $t('groupDetail.dissolve') }}</el-button>
+                        <span class="btn-tips">{{ $t('groupDetail.dissolveTip') }}</span>
                     </el-form-item>
                     <el-form-item class="save-btn">
-                        <el-button type="primary" :disabled="isSubmitDisabled" @click="onSubmit">保存</el-button>
+                        <el-button type="primary" :disabled="isSubmitDisabled" @click="onSubmit">{{ $t('btnText.save') }}</el-button>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
@@ -40,6 +40,7 @@ const groupStore = useGroupStore();
 const { curTeamInfo,groupMenu } = storeToRefs(groupStore);
 const { handleSwitchMenu, delNav } = groupStore;
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const loading = ref(false);
@@ -90,7 +91,7 @@ const onSubmit = () => {
         }
     ).then((res) => {
         ElMessage({
-            message: '团队更新成功',
+            message: t('groupDetail.updateTeamTip'),
             type: 'success',
         })
         queryGroupDetail();
@@ -102,11 +103,11 @@ const handleClick = (tab: any, event: any) => { };
 
 const handleDeleteTeam=() => {
     ElMessageBox.confirm(
-        `解散【${form.value.teamName}】团队后，该团队下的所有项目都将被同步删除，且不可恢复！请谨慎操作。`,
-        '提示',
+        `${t('groupDetail.confirmDissolve',{name:form.value.teamName})}`,
+        t('dialogTipText.tipsText'),
         {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
+            confirmButtonText: t('btnText.confirm'),
+            cancelButtonText: t('btnText.cancel'),
             cancelButtonClass: 'el-button--primary',
             confirmButtonClass: 'el-button-confirm',
             type: 'warning',
@@ -120,7 +121,7 @@ const handleDeleteTeam=() => {
             delNav(1);
             router.push('/group');
             handleSwitchMenu('knowledge')
-            ElMessage.success(`团队【${form.value.teamName}】解散成功`);
+            ElMessage.success(`${t('groupDetail.team')}【${form.value.teamName}】${t('groupDetail.dissolveSuccess')}`);
         })
     })
 }
