@@ -5,7 +5,7 @@
             <div class="group-left-menu">
                 <div class="group-menu-item">
                     <el-link @click="handleHomeClick" type="primary" class="home-menu" :underline="false">
-                    {{ navGroup[0]?.name }}
+                    {{ $t('group.witchaind') }}
                 </el-link>
                 </div>
                 <div v-if="navGroup.length > 1" class="group-menu-item">
@@ -51,11 +51,11 @@
             <div class="group-mid-menu">
                 <div class="section" :class="{ 'section-active': groupMenu === 'knowledge' }"
                     @click="handleSwitchMenu('knowledge')">
-                    资产库
+                    {{ $t('assetLibrary.assetLibrary') }}
                 </div>
                 <div class="section" :class="{ 'section-active': groupMenu === 'detail' }"
                     @click="handleSwitchMenu('detail')">
-                    团队详情
+                    {{ $t('group.teamDetail') }}
                 </div>
             </div>
         </div>

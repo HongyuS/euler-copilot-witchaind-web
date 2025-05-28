@@ -20,7 +20,7 @@
             @click="handleGenerateDataSet(true)"
             :disabled="!isGenerateDataSet"
             class="dataSetBtn">
-            {{ $t('生成数据集') }}
+            {{ $t('assetFile.generateDataset') }}
           </el-button>
           <el-dropdown
             placement="bottom"
@@ -66,8 +66,8 @@
             </template>
           </el-dropdown>
         </div>
-        <el-input placeholder="请输入文档名称" v-model="searchPayload.docName" class="kf-container-table-ops-right" 
-          @input="hanldeSearhNameFilter"  :suffix-icon="IconSearch" />
+        <el-input :placeholder="$t('assetFile.placeholderFile')" v-model="searchPayload.docName" class="kf-container-table-ops-right" 
+          maxlength="150"  @input="hanldeSearhNameFilter"  :suffix-icon="IconSearch" />
         </div>
         <div class="kf-container-table-box">
           <el-table
@@ -1387,7 +1387,7 @@ const handleDownloadFile = async (downloadData: any) => {
   }
 };
 
-const checkSelecTable = (row) => {
+const checkSelecTable = (row: { docId: any; }) => {
   return checkTableSelecData.value.every((item) => item?.docId !== row?.docId);
 };
 
@@ -1399,7 +1399,7 @@ const handleGenerateDataSet = (visible: boolean) => {
     }
   });
   if (!flag) {
-    ElMessage.error('只有【解析成功】状态的文档可以生成数据集！');
+    ElMessage.error(t('assetFile.generateTip'));
     return;
   }
   generateDialogVisible.value = visible;

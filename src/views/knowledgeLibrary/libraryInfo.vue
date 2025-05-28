@@ -9,17 +9,17 @@
           class="library-info-tabs"
           @tab-click="handleTabClick">
           <el-tab-pane
-            label="文档管理"
+            :label="$t('group.documentMnagement')"
             name="document">
             <knowledgeFile />
           </el-tab-pane>
           <el-tab-pane
-            label="数据集管理"
+            :label="$t('group.datasetManagement')"
             name="dataset">
             <DataSet />
           </el-tab-pane>
           <el-tab-pane
-            label="评测管理"
+            :label="$t('group.testingManagement')"
             name="evaluation">
             <Evaluate />
           </el-tab-pane>
@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
       handleKnowledgeTab('document');
     }
   } catch (error) {
-    console.warn('Failed to reset knowledge tab state:', error);
+    console.warn(error);
   }
 });
 </script>

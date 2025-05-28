@@ -1,24 +1,24 @@
 <template>
     <el-dialog class="evaluate-dialog" v-model="props.createGroupVisible" align-center
-        :title="props.dialogueType === 'edit' ? '编辑团队' : '新建团队'" width="544" v-if="props.createGroupVisible"
+        :title="props.dialogueType === 'edit' ? $t('group.editTeam') : $t('group.createTeam')" width="544" v-if="props.createGroupVisible"
         @close="handleCancelVisible">
         <el-form ref="ruleFormRef" class="evaluate-form" :model="form" labelPosition="left" :rules="rules">
-            <el-form-item label="团队名称" prop="teamName" :label-width="formLabelWidth">
+            <el-form-item :label="$t('group.teamName')" prop="teamName" :label-width="formLabelWidth">
                 <el-input maxlength="100" v-model="form.teamName" autocomplete="off" :placeholder="t('model.pleasePlace')" />
             </el-form-item>
-            <el-form-item label="团队简介" prop="description" :label-width="formLabelWidth">
+            <el-form-item :label="$t('group.teamDesc')" prop="description" :label-width="formLabelWidth">
                 <el-input v-model="form.description" :rows="4" show-word-limit type="textarea" maxlength="200"
                     :placeholder="$t('assetLibrary.message.pleasePlace')" />
             </el-form-item>
-            <el-form-item label="是否公开" prop="isPublic" :label-width="formLabelWidth">
+            <el-form-item :label="$t('group.isPublic')" prop="isPublic" :label-width="formLabelWidth">
                 <el-switch v-model="form.isPublic" style="--el-switch-on-color: rgb(36,171,54); " />
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button type="primary" :disabled="props.dialogueType === 'edit' ?(isSubmitDisabled || isEditSubmitDisabled):isSubmitDisabled" @click="handleSubmit(ruleFormRef)">确定</el-button>
+                <el-button type="primary" :disabled="props.dialogueType === 'edit' ?(isSubmitDisabled || isEditSubmitDisabled):isSubmitDisabled" @click="handleSubmit(ruleFormRef)">{{ $t('btnText.confirm') }}</el-button>
                 <el-button @click="handleCancelVisible">
-                    取消
+                    {{ $t('btnText.cancel') }}
                 </el-button>
             </div>
         </template>
@@ -60,7 +60,6 @@ watch(() => props.createGroupVisible, () => {
 const rules = reactive<FormRules>({
     teamName: [
         { required: true, message: t('model.pleasePlace'), trigger: 'blur' },
-        { max: 100, message: 'Length should be 0 to 100', trigger: 'blur' },
     ],
     description: [
         { message: t('model.pleasePlace'), trigger: 'blur' },
@@ -106,7 +105,7 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
                     }
                 ).then(() => {
                     ElMessage({
-                        message: '团队更新成功',
+                        message: t('groupDetail.updateTeamSuccess'),
                         type: 'success',
                     })
                 }).finally(() => {
@@ -123,7 +122,7 @@ const handleSubmit = async (formEl: FormInstance | undefined) => {
             } else {
                 GroupAPI.createTeam(form.value).then((res) => {
                     ElMessage({
-                        message: '团队创建成功',
+                        message: t('groupDetail.createTeamSuccess'),
                         type: 'success',
                     })
                 }).finally(() => {

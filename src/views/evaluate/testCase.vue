@@ -4,18 +4,18 @@
         <template #header>
             <h4 class="drawer-title">{{ props.rowData?.testingName }}</h4>
             <el-button v-if="props.rowData?.testingTask?.taskStatus === 'success'" @click="handleDownloadReport" >
-                下载报告
+                {{ $t('btnText.downloadReport') }}
             </el-button>
         </template>
         <template #default>
             <div class="empty-container" v-if="props.rowData?.status === 'pending'">
-                <el-empty description="等待测试" :image="empty_pending" />
+                <el-empty :description="$t('testing.testingStatus.pending')" :image="empty_pending" />
             </div>
             <div class="empty-container" v-else-if="props.rowData?.status === 'failed'">
-                <el-empty description="测试失败" :image="empty_failed" />
+                <el-empty :description="$t('testing.testingStatus.failed')" :image="empty_failed" />
             </div>
             <div class="empty-container" v-else-if="props.rowData?.status === 'running'">
-                <el-empty description="测试中..." :image="empty_running" />
+                <el-empty :description="$t('testing.testingStatus.running')+'...'" :image="empty_running" />
             </div>
             <div v-else>
                 <div class="chart-container">
@@ -23,8 +23,8 @@
                     <div id="leftChart"></div>
                 </div>
                 <div class="table-container">
-                    <el-table :data="testCaseList" row-key="id" bordered>
-                        <el-table-column prop="question" width="150" label="问题" fixed>
+                    <el-table :data="testCaseList" row-key="id" max-height="620" bordered>
+                        <el-table-column prop="question" width="150" :label="$t('dataset.question')" fixed>
                             <template #default="scope">
                                 <el-tooltip
                                     class="box-item"
@@ -36,7 +36,7 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="answer" width="300" label="标准答案" fixed >
+                        <el-table-column prop="answer" width="300" :label="$t('dataset.standardAnswer')" fixed >
                             <template #default="scope">
                                 <el-tooltip
                                     class="box-item"
@@ -48,7 +48,7 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="llmAnswer" width="300" label="大模型的回答" >
+                        <el-table-column prop="llmAnswer" width="300" :label="$t('testing.modelAnswer')" >
                             <template #default="scope">
                                 <el-tooltip
                                     class="box-item"
@@ -60,7 +60,7 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="relatedChunk" width="300" label="检索到的片段" >
+                        <el-table-column prop="relatedChunk" width="300" :label="$t('testing.retrievedSegments')" >
                             <template #default="scope">
                                 <el-tooltip
                                     class="box-item"
@@ -72,7 +72,7 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="docName" width="150" label="来源文档" >
+                        <el-table-column prop="docName" width="150" :label="$t('dataset.sourceDoc')" >
                             <template #default="scope">
                                 <el-tooltip
                                     class="box-item"
@@ -84,14 +84,14 @@
                                 </el-tooltip>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="score" width="150" label="综合得分" />
-                        <el-table-column prop="pre" width="60" label="精确率" fixed="right" />
-                        <el-table-column prop="rec" width="60" label="召回率" fixed="right" />
-                        <el-table-column prop="fai" width="60" label="忠实值" fixed="right" />
-                        <el-table-column prop="rel" width="90" label="可解释性" fixed="right" />
-                        <el-table-column prop="lcs" width="120" label="最长公共子串得分" fixed="right" />
-                        <el-table-column prop="leve" width="100" label="编辑距离得分" fixed="right" />
-                        <el-table-column prop="jac" width="120" label="杰卡徳相似系数" fixed="right" />
+                        <el-table-column prop="score" width="150" :label="$t('testing.testingScore')" />
+                        <el-table-column prop="pre" width="60" :label="$t('testing.accurateRate')" fixed="right" />
+                        <el-table-column prop="rec" width="60" :label="$t('testing.recallRate')" fixed="right" />
+                        <el-table-column prop="fai" width="60" :label="$t('testing.fidelity')" fixed="right" />
+                        <el-table-column prop="rel" width="90" :label="$t('testing.interpretability')" fixed="right" />
+                        <el-table-column prop="lcs" width="120" :label="$t('testing.longestScore')" fixed="right" />
+                        <el-table-column prop="leve" width="100" :label="$t('testing.editDistanceScore')" fixed="right" />
+                        <el-table-column prop="jac" width="120" :label="$t('testing.Jaccard')" fixed="right" />
                     </el-table>
                     <el-pagination v-model:current-page="currentPage" v-model:page-size="currentPageSize"
                         :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
@@ -100,7 +100,7 @@
             </div>
         </template>
         <template #footer>
-            <el-button @click="handleClose">关闭</el-button>
+            <el-button @click="handleClose">{{ $t('btnText.close') }}</el-button>
         </template>
     </el-drawer>
 </template>
@@ -113,6 +113,7 @@ import empty_failed from '@/assets/images/empty_failed.svg'
 import empty_running from '@/assets/images/empty_running.svg'
 import { downloadFun } from '@/utils/downloadFun';
 
+const { t } = useI18n();
 const props = defineProps({
     visible: Boolean,
     rowData: Object,
@@ -147,25 +148,7 @@ const testCaseAvg = ref({
     aveLeve:0,
     aveJac:0,
 })
-const testCaseList = ref([
-    {
-        testCaseId: 'testCaseId',
-        question: 'question',
-        answer: 'answer',
-        llm_answer: 'llm_answer',
-        related_chunk: 'related_chunk',
-        doc_name: 'doc_name',
-        score: 'score',
-        pre: 'pre',
-        rec: 'rec',
-        fai: 'fai',
-        rel: 'rel',
-        lcs: 'lcs',
-        leve: 'leve',
-        jac: 'jac',
-        
-    }
-])
+const testCaseList = ref([]);
 
 // 防抖处理resize
 const debounceResize = () => {
@@ -189,7 +172,7 @@ const initChart = async () => {
         const chartDom = document.getElementById('rightChart');
         const chartDomL = document.getElementById('leftChart');
         if (!chartDom || !chartDomL) {
-            console.error('Chart DOM element not found');
+            console.error(t('testing.chartDomNotFound'));
             return;
         }
 
@@ -206,7 +189,7 @@ const initChart = async () => {
 
         chartInstanceR.setOption({
             title: {
-                text: '综合评分',
+                text: t('testing.testingScore'),
                 left: 'left',
                 textStyle: {
                     fontSize: 14,
@@ -335,13 +318,21 @@ const initChart = async () => {
                 containLabel: true // 确保坐标轴标签不被截断[3,5](@ref)
             },
             title: {
-                text: '评估质量',
+                text: t('testing.evaluationQuality'),
                 textStyle: {
                     fontSize: 14,
                 }
             },
             xAxis: {
-                data: ['平均精确率', '平均召回率', '平均忠实值', '平均可解释性', '平均最长公共子串得分', '平均编辑距离得分', '平均杰卡徳相似系数'],
+                data: [
+                    t('testing.avg')+t('testing.accurateRate'), 
+                    t('testing.avg')+t('testing.recallRate'), 
+                    t('testing.avg')+t('testing.fidelity'), 
+                    t('testing.avg')+t('testing.interpretability'), 
+                    t('testing.avg')+t('testing.longestScore'), 
+                    t('testing.avg')+t('testing.editDistanceScore'), 
+                    t('testing.avg')+t('testing.Jaccard'), 
+                ],
                 axisTick: {
                     show: false
                 },
@@ -357,7 +348,7 @@ const initChart = async () => {
             yAxis: {
                 interval: 50,
                 type: 'value',
-                name: '分数（分）',
+                name: t('testing.scoreY'),
                 textStyle: {
                     color: 'black',
                 },
@@ -393,10 +384,17 @@ const initChart = async () => {
     }
 }
 
+const handleMessage = (event: MessageEvent) => {
+    if(event.data.type === 'changeLanguage'){
+        initChart();
+    }
+}
 // 监听窗口大小变化
 onMounted(() => {
     window.addEventListener('resize', debounceResize);
+    window.addEventListener('message',handleMessage );
 });
+onUnmounted(() => window.removeEventListener('message', handleMessage));
 
 const queryTestCase = ()=>{
     let params={

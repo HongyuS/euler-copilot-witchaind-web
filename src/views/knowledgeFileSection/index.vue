@@ -196,7 +196,7 @@
                   </div>
                   <div class="kf-file-content-ops">
                     <el-button text @click="handleEditContent(scope.row)">
-                        编辑
+                        {{ $t('btnText.edit') }}
                     </el-button>
                     <el-switch
                       v-model:model-value="scope.row.enabled"
@@ -217,13 +217,13 @@
             popper-class="kbLibraryPage" />
         </div>
         <div v-if="fileInfo?.docTask?.taskStatus === 'pending'">
-          <el-empty description="等待解析" :image="empty_pending" />
+          <el-empty :description="$t('assetFile.status.analyticWaitIng')" :image="empty_pending" />
         </div>
         <div v-if="fileInfo?.docTask?.taskStatus === 'running'">
-          <el-empty description="解析中" :image="empty_running" />
+          <el-empty :description="$t('assetFile.status.analyticIng')" :image="empty_running" />
         </div>
         <div v-if="fileInfo?.tdocTask?.taskStatus === 'error'">
-          <el-empty description="解析失败" :image="empty_failed" />
+          <el-empty :description="$t('assetFile.status.analyticFail')" :image="empty_failed" />
         </div>
       </div>
     </div>
@@ -231,7 +231,7 @@
   <el-dialog
     class="kf-section-edit-dialog"
     v-model="contentDialogVisible"
-    title="编辑"
+    :title="$t('btnText.edit')"
     width="500"
     align-center
   >
@@ -239,14 +239,14 @@
     v-model="sectionText"
     type="textarea"
     autosize
-    placeholder="请输入内容"
+    :placeholder="$t('assetFile.contentPlaceholder')"
     maxlength="1000"
   />
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="contentDialogVisible = false">取消</el-button>
+        <el-button @click="contentDialogVisible = false">{{ $t('btnText.cancel') }}</el-button>
         <el-button type="primary" @click="handleSaveContent">
-          确定
+          {{ $t('btnText.confirm') }}
         </el-button>
       </div>
     </template>

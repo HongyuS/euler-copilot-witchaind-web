@@ -9,10 +9,10 @@
           </div>
         </div>
         <el-tabs v-model="activeName" class="library-info-tabs" @tab-click="handleTabClick">
-          <el-tab-pane label="文档信息" name="documentInfo">
+          <el-tab-pane :label="$t('assetFile.documentInfo')" name="documentInfo">
             <knowledgeFileSection />
           </el-tab-pane>
-          <el-tab-pane label="日志" name="log">
+          <el-tab-pane :label="$t('assetFile.log')" name="log">
             <documentLog />
           </el-tab-pane>
         </el-tabs>

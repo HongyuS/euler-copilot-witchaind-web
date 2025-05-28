@@ -10,12 +10,12 @@
                     <div class="group-tab-header">
                         <div>
                             <el-button v-if="tab.name === 'mycreated'" type="primary" class="group-btn"
-                                @click="handleCreateGroup(true)">新建团队</el-button>
+                                @click="handleCreateGroup(true)">{{ $t('group.createTeam') }}</el-button>
                         </div>
                         <div class="group-right-btn">
                             <div class="group-btn-search">
                                 <el-input ref="inputRef" v-model="teamSearchName" @input="handleInputSearch"
-                                    class="o-style-serch" placeholder="请输入团队名称" clearable>
+                                    class="o-style-serch" :placeholder="$t('group.pleaseInput')" clearable>
                                     <template #suffix>
                                         <el-icon class="el-input__icon">
                                             <IconSearch />
@@ -44,13 +44,13 @@
                         <!-- 卡片布局 -->
                         <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
                             <div v-if="groupList.length === 0" class="group-card-empty">
-                                <el-empty description="暂无数据"></el-empty>
+                                <el-empty :description="$t('group.noData')"></el-empty>
                             </div>
                             <div class="group-card-item" v-for="item in groupList" :key="item.teamId" @click="handleToGroup(item)">
                                 <div class="group-card-title">
                                     <span class="group-card-title-name">{{ item.teamName }}</span>
-                                    <span v-if="item.isPublic" class="card-type card-type-public">公开</span>
-                                    <span v-else class="card-type card-type-privacy">私密</span>
+                                    <span v-if="item.isPublic" class="card-type card-type-public">{{ $t('group.public') }}</span>
+                                    <span v-else class="card-type card-type-privacy">{{ $t('group.private') }}</span>
                                 </div>
                                 <div class="group-card-desc">
                                     <el-tooltip popper-class="desc-popper" effect="dark" :content="item.description"
@@ -63,11 +63,11 @@
                                         @{{ item.authorName }}
                                         <span class="member-count">
                                             <img src="@/assets/images/member_count.svg" />
-                                            {{ item.memberCount }}人
+                                            {{ item.memberCount }}{{ $t('group.people') }}
                                         </span>
                                     </div>
                                     <el-button v-if="tab.name === 'mycreated'" text @click.stop="handleEditKl(item)">
-                                        编辑
+                                        {{ $t('btnText.edit') }}
                                     </el-button>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                         <!-- 列表布局 -->
                         <div class="group-table-box" v-else>
                             <el-table :data="groupList" :border="true" max-height="640" >
-                                <el-table-column prop="teamName" label="团队名称" :show-overflow-tooltip="true" width="200"
+                                <el-table-column prop="teamName" :label="$t('group.teamName')" :show-overflow-tooltip="true" width="200"
                                     class-name="group-name">
                                     <template #default="scope">
                                         <span class="group-name-row" @click="handleToGroup(scope.row)">
@@ -83,18 +83,18 @@
                                         </span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="description" label="团队简介" width="200" :show-overflow-tooltip="true" />
-                                <el-table-column prop="memberCount" width="150" label="团队人数" />
-                                <el-table-column prop="isPublic" width="150" label="团队权限">
+                                <el-table-column prop="description" :label="$t('group.teamDesc')" width="200" :show-overflow-tooltip="true" />
+                                <el-table-column prop="memberCount" width="150" :label="$t('group.teamSize')" />
+                                <el-table-column prop="isPublic" width="150" :label="$t('group.teamAuth')">
                                     <template #default="scope">
-                                        <span v-if="scope.row.isPublic" class="card-type card-type-public">公开</span>
-                                        <span v-else class="card-type card-type-privacy">私密</span>
+                                        <span v-if="scope.row.isPublic" class="card-type card-type-public">{{ $t('group.public') }}</span>
+                                        <span v-else class="card-type card-type-privacy">{{ $t('group.private') }}</span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="authorName" width="150" label="创建人" />
-                                <el-table-column prop="createdtime" width="150" label="创建时间" >
+                                <el-table-column prop="authorName" width="150" :label="$t('group.creator')" />
+                                <el-table-column prop="createdTime" width="150" :label="$t('group.createTime')" >
                                     <template #default="scope">
-                                        {{ convertUTCToLocalTime(scope.row.createdtime)}}
+                                        {{ convertUTCToLocalTime(scope.row.createdTime)}}
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="action" :label="$t('btnText.operation')" width="100">
@@ -135,6 +135,7 @@ import CreateGroup from './createGroup.vue';
 import GroupAPI from '@/api/group';
 import { TabPaneName } from 'element-plus';
 import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+const { t } = useI18n();
 
 const groupStore = useGroupStore();
 const { setCurTeamInfo } = groupStore;
@@ -192,11 +193,11 @@ const { navGroup } = storeToRefs(useGroupStore());
 
 const groupTabs = [
     {
-        label: '我创建的',
+        label: t('group.myCreate'),
         name: 'mycreated',
     },
     {
-        label: '我加入的',
+        label: t('group.myJoin'),
         name: 'myjoined',
     },
 ]

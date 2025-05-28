@@ -4,8 +4,8 @@
     class="dataset-empty-content"
     v-if="!isSearch && !fileTableList.data.length">
     <EmptyStatus
-      button-text="去生成数据集"
-      description="暂无数据集信息，去文档管理生成一个吧！"
+      :button-text="$t('dataset.emptyText')"
+      :description="$t('dataset.emptyDesc')"
       @click="handleToCreate" />
   </div>
   <div
@@ -121,7 +121,7 @@
           style="margin-right: 8px"
           @click="handleImportDataSet"
           class="importFileBtn">
-          导入数据集
+          {{ $t('dataset.importDataset') }}
         </el-button>
         <el-dropdown
           placement="bottom"
@@ -158,7 +158,7 @@
           </template>
         </el-dropdown>
       </div>
-      <el-input placeholder="请输入数据集名称" v-model="searchPayload.datasetName" class="dataSet-container-right" 
+      <el-input :placeholder="$t('dataset.placeholderDataset')" v-model="searchPayload.datasetName" class="dataSet-container-right" 
           @input="handleInputSearch"  :suffix-icon="IconSearch" />
       </div>
       <div class="dataSet-container-table-box">
@@ -180,7 +180,7 @@
             :selectable="checkSelecTable" />
           <el-table-column
             prop="datasetName"
-            :label="$t('数据集名称')"
+            :label="$t('dataset.datasetName')"
             show-overflow-tooltip
             :fixed="true"
             class-name="datasetName"
@@ -195,7 +195,7 @@
           </el-table-column>
           <el-table-column
             prop="description"
-            :label="$t('数据集简介')"
+            :label="$t('dataset.datasetDesc')"
             show-overflow-tooltip>
             <template #default="scope">
               <span>{{ scope.row.description }}</span>
@@ -203,18 +203,18 @@
           </el-table-column>
           <el-table-column
             prop="dataCnt"
-            :label="$t('数据条目限制')"
+            :label="$t('dataset.dataCountLimit')"
             sortable />
           <el-table-column
           prop="dataCntExisted"
-          :label="$t('现有数据条目')"
+          :label="$t('dataset.currentDataCount')"
           sortable />
           <el-table-column
             prop="isDataCleared"
-            :label="$t('是否进行数据清洗')">
+            :label="$t('dataset.isDataCleared')">
             <template #header>
               <div class="custom-header">
-                <span>是否进行数据清洗</span>
+                <span>{{ $t('dataset.isDataCleared') }}</span>
                 <el-icon
                   ref="enableRef"
                   @click.stop
@@ -250,10 +250,10 @@
           </el-table-column>
           <el-table-column
             prop="isChunkRelated"
-            :label="$t('是否补全上下文')">
+            :label="$t('dataset.isChunkRelated')">
             <template #header>
               <div class="custom-header">
-                <span>是否补全上下文</span>
+                <span>{{ $t('dataset.isChunkRelated') }}</span>
                 <el-icon
                   ref="enableTextRef"
                   @click.stop
@@ -289,11 +289,11 @@
           </el-table-column>
           <el-table-column
             prop="taskStatus"
-            :label="$t('状态')"
+            :label="$t('dataset.status')"
             width="180">
             <template #header>
               <div class="custom-header">
-                <span>状态</span>
+                <span>{{ $t('dataset.status') }}</span>
                 <el-icon
                   ref="statusRef"
                   @click.stop
@@ -325,23 +325,23 @@
               <div
                 v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.FAILED"
                 class="statusFail">
-                生成失败
+                {{ $t('dataset.taskStatus.failed') }}
               </div>
               <div
                 v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.SUCCESS"
                 class="statusSuccess">
-                生成完毕
+                {{ $t('dataset.taskStatus.success') }}
               </div>
               <div
                 v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.CANCELED"
                 class="statusCancel">
-                取消生成
+                {{ $t('dataset.taskStatus.canceled') }}
               </div>
               <div
                 v-if="scope.row.generateTask?.taskStatus === DataSetStatusEnum.PENDING"
                 class="statusWaitIng">
                 <div class="icon-box"></div>
-                等待生成
+                {{ $t('dataset.taskStatus.pending') }}
               </div>
               <div
                 class="statusGenerate"
@@ -363,14 +363,14 @@
                     striped-flow />
                 </div>
                 <div class="statusGenerateText">
-                  生成中
+                  {{ $t('dataset.taskStatus.running') }}
                 </div>
               </div>
             </template>
           </el-table-column>
           <el-table-column
             prop="score"
-            :label="`${$t('数据集质量分数')}(1~100)`"
+            :label="`${$t('dataset.score')}(1~100)`"
             width="175"
             show-overflow-tooltip
             sortable
@@ -381,11 +381,11 @@
         </el-table-column>
         <el-table-column
           prop="authorName"
-          :label="$t('创建人')"
+          :label="$t('dataset.creator')"
           show-overflow-tooltip>
           <template #header>
               <div class="asset-id-custom-header">
-                <span>创建人</span>
+                <span>{{ $t('dataset.creator') }}</span>
                 <el-icon
                   ref="inputSearchRef"
                   :class="
@@ -414,7 +414,7 @@
           <el-table-column
             prop="dataSetCreatime"
             class-name="upload-time-cell"
-            :label="$t('完成时间')"
+            :label="$t('dataset.finishedTime')"
             @click.stop>
             <template #default="scope">
                 {{ convertUTCToLocalTime(scope.row.generateTask?.createdTime) }}
@@ -424,21 +424,21 @@
           <el-table-column
             prop="action"
             :label="$t('btnText.operation')"
-            width="240"
+            width="250"
             fixed="right">
             <template #default="scope">
               <el-button
                 v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) "
                 text
                 @click="handleRunDataSet(scope.row,false)">
-                暂停
+                {{ $t('dataset.stop') }}
               </el-button>
               <el-button
                 v-else
                 text
                 :disabled="scope.row.generateTask?.taskStatus === StatusEnum.SUCCESS"
                 @click="handleRunDataSet(scope.row, true)">
-                生成
+                {{ $t('dataset.generate') }}
               </el-button>
               <el-button
                 text
@@ -450,13 +450,13 @@
                 text
                 :disabled="scope.row.generateTask?.taskStatus !== DataSetStatusEnum.SUCCESS"
                 @click="handleDataSetEval(scope.row)">
-                评测
+                {{ $t('dataset.testing') }}
               </el-button>
               <el-button
                 text
                 :disabled="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
                 @click="handleExportDataSet(scope.row)">
-                导出
+                {{ $t('btnText.export') }}
               </el-button>
               <el-button
                 :disabled="scope.row.generateTask?.taskStatus === DataSetStatusEnum.RUNNING"
@@ -488,9 +488,9 @@
     v-model="dialogImportVisible"
     class="upload-dialog"
     align-center
-    :title="$t('导入数据集')">
+    :title="$t('dataset.importDataset')">
     <Upload
-      :tipText="$t('文件支持xlsx、yaml和json格式导入，最多支持上传10个文件，每个文件包含的数据量不超过512条')"
+      :tipText="$t('dialogTipText.fileDataSetFormat')"
       accept=".xlsx,.yaml,.json"
       :maxFileNum="10"
       :maxSize="0.488"
@@ -804,11 +804,11 @@ const handleBatchDownBth = (e: boolean) => {
 
 const handleSelectDeleteDataSet = () => {
   ElMessageBox.confirm(
-    `确定删除选择的数据集吗？`,
-    '提示',
+    t('dialogTipText.confirmDelDataset'),
+    t('dialogTipText.tipsText'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
@@ -845,11 +845,11 @@ const handelStatusFilterProper = (filterList: any) => {
 
 const handleDeleteDataSet = (row: any) => {
   ElMessageBox.confirm(
-    `确定删除数据集【${row.datasetName}】 吗？`,
-    '提示',
+    `${t('dialogTipText.delDataset')}【${row.datasetName}】 ？`,
+    t('dialogTipText.tipsText'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
@@ -898,11 +898,11 @@ const handleDataSetEval = (row: any) =>{
   dataSetAPI.isHaveTesting({datasetId: row.datasetId}).then((res: any) => {
     if (res) {
       ElMessageBox.confirm(
-        '当前数据集已有关联评测任务，是否新建一个评测任务？', 
-        '提示', 
+        t('dialogTipText.existConfirm'), 
+        t('dialogTipText.tipsText'), 
         {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          confirmButtonText: t('btnText.confirm'),
+          cancelButtonText: t('btnText.cancel'),
           cancelButtonClass: 'el-button--primary',
           confirmButtonClass: 'el-button-confirm',
           type: 'warning',
@@ -926,29 +926,29 @@ watch(
   () => {
     filterStatusList.value = [
       {
-        label: t('生成失败'),
+        label: t('dataset.failed'),
         value: DataSetStatusEnum.FAILED,
       },
       {
-        label: t('生成完毕'),
+        label: t('dataset.success'),
         value: DataSetStatusEnum.SUCCESS,
       },
       {
-        label: t('取消生成'),
+        label: t('dataset.canceled'),
         value: DataSetStatusEnum.CANCELED,
       },
       {
-        label: t('等待生成'),
+        label: t('dataset.pending'),
         value: DataSetStatusEnum.PENDING,
       },
       {
-        label: t('生成中'),
+        label: t('dataset.running'),
         value: DataSetStatusEnum.RUNNING,
       },
     ];
     filterEnableList.value = [
-      { label: t('是'), value: 'true' },
-      { label: t('否'), value: 'false' },
+      { label: t('dataset.yes'), value: 'true' },
+      { label: t('dataset.no'), value: 'false' },
     ];
   },
   {

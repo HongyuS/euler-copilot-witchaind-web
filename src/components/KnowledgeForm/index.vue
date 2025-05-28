@@ -33,7 +33,7 @@
       <el-input
         v-model="ruleForm.kbName"
         minlength="1"
-        maxlength="50"
+        maxlength="20"
         :placeholder="$t('assetLibrary.message.pleasePlace')" />
     </el-form-item>
     <el-form-item
@@ -42,7 +42,7 @@
       class="config-size-desc">
       <el-input
         v-model="ruleForm.description"
-        maxlength="200"
+        maxlength="150"
         show-word-limit
         type="textarea"
         :placeholder="$t('assetLibrary.message.pleasePlace')" />
@@ -202,6 +202,7 @@
       class="domain-config">
       <el-input
         v-model="ruleForm.docTypes[index].docTypeName"
+        maxlength="20"
         :placeholder="$t('assetLibrary.message.categoryInfo')" />
       <el-icon
         class="deleteConfig"

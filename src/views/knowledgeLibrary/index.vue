@@ -2,8 +2,8 @@
   <CustomLoading :loading="loading" />
   <div class="empty-content" v-if="!fileTableList.data.length && !isSearch">
     <EmptyStatus
-      description="暂无资产"
-      buttonText="新建资产库"
+      :description="$t('assetLibrary.assetEmptyDesc')"
+      :buttonText="$t('assetLibrary.assetEmptyText')"
       buttonClass="group-btn"
       @click="handleCreateKnowledge"
     />
@@ -144,7 +144,7 @@
               'dropdown-disabled': multipleSelection.length === 0
             }"
             >
-              批量操作
+              {{ $t('btnText.batchOps') }}
               <el-icon class="el-icon--right" v-if="!batchDownBth">
                 <IconCaretDown />
               </el-icon>
@@ -164,11 +164,11 @@
             </template>
           </el-dropdown>
           <el-button v-if="switchIcon === 'thumb'" @click="handleMultipleSelect">
-            {{multiple?'取消多选' : '多选'}}
+            {{multiple? $t('btnText.cancelMultiple') : $t('btnText.multiple')}}
           </el-button>
           <span v-if="multiple && switchIcon === 'thumb'" class="multipleSelect" >
             <el-checkbox 
-              label="全选" 
+              :label="$t('btnText.checkAll')" 
               size="large" 
               v-model="isAllChecked"
               :indeterminate="isIndeterminate"
@@ -176,7 +176,7 @@
             />
           </span>
           <span v-if="multipleSelection.length>0 " class="multipleSelectNum">
-            已选 <span>{{ multipleSelection.length }}</span> 项
+            {{ $t('btnText.selected1') }} <span>{{ multipleSelection.length }}</span> {{ $t('btnText.selected2') }}
           </span>
         </div>
         <div class="kl-right-btn">
@@ -408,7 +408,7 @@
             :label="$t('assetLibrary.creator')">
             <template #header>
               <div class="asset-id-custom-header">
-                <span>创建人</span>
+                <span>{{ $t('assetLibrary.creator') }}</span>
                 <el-icon
                   ref="authorNameSearchRef"
                   :class="
@@ -452,7 +452,7 @@
           <el-table-column
             prop="action"
             :label="$t('btnText.operation')"
-            width="120">
+            width="150">
             <template #default="scope">
               <el-button
                 text
@@ -770,11 +770,11 @@ const handleDelete= async (ids:string[],successFn:Function)=>{
 }
 const handleBatchDelete = () => {
   ElMessageBox.confirm(
-    `确定删除选择的资产库吗？`,
-    '提示',
+    t('dialogTipText.confirmDelKL'),
+    t('dialogTipText.tipsText'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
@@ -900,7 +900,7 @@ const handleFilterData = (params: sortFilterType) => {
 
 const hanldeSearhNameFilter = (filterName: string) => {
   if(!validate(filterName)){
-    ElMessage.error('资产ID必须是一个正确的uuid格式.')
+    ElMessage.error(t('assetLibrary.assetFormat'));
     return;
   }
   sortFilter.value.kbId = filterName;

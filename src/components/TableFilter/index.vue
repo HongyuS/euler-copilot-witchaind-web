@@ -51,7 +51,7 @@
     <el-input
       ref="inputRef"
       class="o-style-serch"
-      placeholder="搜索"
+      :placeholder="$t('btnText.search')"
       width="240"
       clearable
       @clear="hanldeSearhNameFilter"

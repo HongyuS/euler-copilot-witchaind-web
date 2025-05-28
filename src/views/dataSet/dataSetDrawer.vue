@@ -12,23 +12,23 @@
     </template>
     <CustomLoading :dark="false" :loading="loading" />
     <div class="empty-container" v-if="props.dataSetRow?.status === 'pending'">
-        <el-empty description="等待生成" :image="empty_pending" />
+        <el-empty :description="$t('dataset.taskStatus.pending')" :image="empty_pending" />
     </div>
     <div class="empty-container" v-else-if="props.dataSetRow?.status === 'failed'">
-        <el-empty description="测试生成" :image="empty_failed" />
+        <el-empty :description="$t('dataset.taskStatus.failed')" :image="empty_failed" />
     </div>
     <div class="empty-container" v-else-if="props.dataSetRow?.status === 'running'">
-        <el-empty description="测试中..." :image="empty_running" />
+        <el-empty :description="$t('dataset.taskStatus.running')+'...'" :image="empty_running" />
     </div>
     <div v-else>
     <div class="dataSetInfoContainer">
       <div class="dataSetInfoBox">
-        <div class="dataSetInfoTitle">基本信息</div>
+        <div class="dataSetInfoTitle">{{ $t('dataset.baseInfo') }}</div>
         <div
           v-if="dataSetInfoEdit"
           class="dataSetInfoEdit"
           @click="handleDataSetInfoEdit(true)">
-          编辑
+          {{ $t('btnText.edit') }}
         </div>
         <div
           v-else
@@ -36,17 +36,17 @@
           <div
             class="dataSetInfoSave"
             @click="handleDataSetInfoSave">
-            保存
+            {{ $t('btnText.save') }}
           </div>
           <div
             class="dataSEtInfoCancel"
             @click="handleDataSetInfoEdit(false)">
-            取消
+            {{ $t('btnText.cancel') }}
           </div>
         </div>
       </div>
       <div class="dataSetInfoNameBox">
-        <div class="dataSetInfoLabel">数据集名称</div>
+        <div class="dataSetInfoLabel">{{ $t('dataset.datasetName') }}</div>
         <div
           class="dataSetInfoContent"
           v-if="!dataSetInfoEditVisible">
@@ -57,11 +57,11 @@
           v-else>
           <el-input
             v-model="dataSetInfoInput.datasetName"
-            placeholder="Please input" />
+            :placeholder="$t('dataset.placeInput')" />
         </div>
       </div>
       <div class="dataSetInfoDescBox">
-        <div class="dataSetInfoLabel">数据集简介</div>
+        <div class="dataSetInfoLabel">{{ $t('dataset.datasetDesc') }}</div>
         <div
           class="dataSetInfoContent"
           v-if="!dataSetInfoEditVisible">
@@ -74,27 +74,28 @@
             v-model="dataSetInfoInput.description"
             show-word-limit
             type="textarea"
+            :placeholder="$t('dataset.placeInput')"
             maxlength="200" />
         </div>
       </div>
     </div>
     <div class="dataSetInfoCenterBox">
       <div class="dataSetTableInfoOps">
-        <el-button @click="handleBatchDelete" :disabled="!selectionDataSetList.length">批量删除</el-button>
+        <el-button @click="handleBatchDelete" :disabled="!selectionDataSetList.length">{{ $t('btnText.batchDelete') }}</el-button>
       </div>
       <div class="dataSetInfoRight">
         <div class="dataSetListBox">
           <span class="dataSetListIcon">
             <img src="/src/assets/svg/taskList.svg" />
           </span>
-          <span class="dataSetListText">数据条目限制</span>
+          <span class="dataSetListText">{{ $t('dataset.dataCountLimit') }}</span>
           <span class="dataSetListNumber">{{  props.dataSetRow.dataCnt }}</span>
         </div>
         <div class="dataSetScoreBox">
           <span class="dataSetScoreIcon">
             <img src="/src/assets/svg/taskScore.svg" />
           </span>
-          <span class="dataSetScoreText">数据集质量分数</span>
+          <span class="dataSetScoreText">{{ $t('dataset.score') }}</span>
           <span class="dataSetScoreNumber">{{ props.dataSetRow.score>0?props.dataSetRow.score?.toFixed(2):'--' }}</span>
         </div>
       </div>
@@ -110,7 +111,7 @@
           width="30" />
         <el-table-column
           prop="question"
-          label="问题"
+          :label="$t('dataset.question')"
           fixed
           width="180"
           class-name="editable-column">
@@ -140,7 +141,7 @@
         <el-table-column
           prop="answer"
           fixed
-          label="标准答案" 
+          :label="$t('dataset.standardAnswer')"
           width="380"
           >
           <template #default="scope">
@@ -168,7 +169,7 @@
 
         <el-table-column
           prop="chunk"
-          label="原始片段上下文" 
+          :label="$t('dataset.chunk')"
           width="300"
         >
         <template #default="scope">
@@ -185,14 +186,14 @@
           <el-table-column
           prop="chunkType"
           width="150"
-          label="片段类型" />
+          :label="$t('dataset.chunkType')" />
           <el-table-column
           prop="docName"
           width="250"
-          label="来源文档" />
+          :label="$t('dataset.sourceDoc')" />
         <el-table-column
           fixed="right"
-          label="操作"
+          :label="$t('btnText.operation')"
           width="120">
           <template #default="scope">
             <el-button
@@ -204,13 +205,13 @@
                 })
               "
               text>
-              编辑
+              {{ $t('btnText.edit') }}
             </el-button>
             <el-button
               v-if="!scope.row.onEdit"
               @click="handleSingleDelete([scope.row.dataId])"
               text>
-              删除
+              {{ $t('btnText.delete') }}
             </el-button>
             <el-button
               v-if="scope.row.onEdit"
@@ -221,7 +222,7 @@
                 })
               "
               text>
-              保存
+              {{ $t('btnText.save') }}
             </el-button>
             <el-button
               v-if="scope.row.onEdit"
@@ -232,7 +233,7 @@
                 })
               "
               text>
-              取消
+              {{ $t('btnText.cancel') }}
             </el-button>
           </template>
         </el-table-column>
@@ -250,7 +251,7 @@
   </div>
     <template #footer>
       <div style="flex: auto">
-        <el-button @click="cancelClick">关闭</el-button>
+        <el-button @click="cancelClick">{{ $t('btnText.close') }}</el-button>
       </div>
     </template>
   </el-drawer>
@@ -265,6 +266,7 @@ import empty_failed from '@/assets/images/empty_failed.svg'
 import empty_running from '@/assets/images/empty_running.svg'
 import { IconAlarm } from '@computing/opendesign-icons';
 
+const {t} = useI18n();
 const loading = ref(false);
 const dataSetDrawerVisible = ref(false);
 const dataSetInfoEdit = ref(true);
@@ -389,11 +391,11 @@ const handleEditRow = (dataId: any,property: string | number,value: any)=>{
 const handleBatchDelete =()=>{
   let ids = selectionDataSetList.value.map((item:any)=>item.dataId)
   ElMessageBox.confirm(
-    `确定删除选择的数据吗？`,
-    '提示',
+    t('dialogTipText.confirmDelData'),
+    t('dialogTipText.tipsText'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
@@ -405,11 +407,11 @@ const handleBatchDelete =()=>{
 }
 const handleSingleDelete=(ids:any)=>{
   ElMessageBox.confirm(
-    `确定删除此条数据吗？`,
-    '提示',
+    t('dialogTipText.confirmDelSingleData'),
+    t('dialogTipText.tipsText'),
     {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
       cancelButtonClass: 'el-button--primary',
       confirmButtonClass: 'el-button-confirm',
       type: 'warning',
