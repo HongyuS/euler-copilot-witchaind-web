@@ -82,6 +82,7 @@ export default {
     documentMnagement: '文档管理',
     datasetManagement: '数据集管理',
     testingManagement: '评测管理',
+    create: '创建',
   },
   groupDetail: {
     teamSet: '团队设置',

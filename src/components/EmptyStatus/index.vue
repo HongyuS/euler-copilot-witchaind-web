@@ -13,6 +13,8 @@
 </template>
 
 <script setup lang="ts">
+import i18n from '@/lang'; // 引入国际化模块
+
 interface Props {
   // 空状态描述文本
   description?: string;
@@ -26,9 +28,9 @@ interface Props {
 
 // 定义默认值
 const props = withDefaults(defineProps<Props>(), {
-  description: '暂无数据',
+  description: i18n.global.t('pageTipText.NoData'),
   showButton: true,
-  buttonText: '新建',
+  buttonText: i18n.global.t('group.create'),
   buttonClass: ''
 });
 

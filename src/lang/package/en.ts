@@ -76,6 +76,7 @@ export default {
     documentMnagement: 'Document',
     datasetManagement: 'Dataset',
     testingManagement: 'Testing',
+    create: 'Create',
   },
   groupDetail: {
     teamSet: 'Team Settings',
