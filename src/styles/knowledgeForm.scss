@@ -236,14 +236,13 @@
 }
 
 .create-dialog {
-  width: 560px;
-  height: 440px;
+  height: 600px;
   position: relative;
   padding: 0 !important;
   overflow: hidden;
 
   .el-dialog__body {
-    height: 320px !important;
+    height: 460px !important;
     max-height: unset !important;
     min-height: unset !important;
     padding-left: 16px !important;

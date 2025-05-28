@@ -16,7 +16,7 @@
                         <el-switch v-model="form.isPublic" style="--el-switch-on-color: rgb(36,171,54); " />
                     </el-form-item>
                     <el-form-item prop="memberCount" :label="$t('group.teamSize')">
-                       {{ form.memberCount }}人
+                       {{ form.memberCount }}{{ $t('group.people') }}
                     </el-form-item>
                     <el-form-item prop="deleteTeam" :label="$t('groupDetail.dissolveTeam')">
                         <el-button @click="handleDeleteTeam" >{{ $t('groupDetail.dissolve') }}</el-button>

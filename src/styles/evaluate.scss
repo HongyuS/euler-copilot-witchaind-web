@@ -126,14 +126,15 @@
     .statusWaitIng,
     .statusSuccess,
     .statusCancel {
-        height: 24px;
+        height: 16px;
         width: fit-content;
         padding: 0px 8px;
         font-size: 12px;
-        line-height: 24px;
+        line-height: 16px;
         color: rgb(255 255 255);
         text-align: center;
-        border-radius: 4px;
+        border-radius: 2px;
+        font-weight: 500;
     }
 
     .statusFail {
@@ -196,12 +197,6 @@
     left: -50px;
     top: 16px;
 }
-
-.group-table-box .el-table__header-wrapper .el-table-column--selection .el-checkbox .is-indeterminate.el-checkbox__input .el-checkbox__inner::before {
-    top: 5px;
-    transform: scaleY(0.5) translateX(3px);
-}
-
 
 .evaluate-dialog {
     .el-dialog__header {

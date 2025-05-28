@@ -277,7 +277,7 @@
             </div>
             <div class="kl-card-footer">
               <div>
-                {{ item.authorName }}
+                @{{ item.authorName }}
               </div>
               <div class="kl-card-file-icon">
                 <img
@@ -287,7 +287,7 @@
                   <span class="kl-file-num">{{ item.docCnt }}</span>
                   <span class="kl-file-text">
                     <TextSingleTootip
-                      :content="`${$t('assetLibrary.piece')}${$t('assetLibrary.file')}`" />
+                      :content="`${$t('assetLibrary.piece')}`" />
                   </span>
                 </div>
               </div>

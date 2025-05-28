@@ -1,7 +1,6 @@
 <template>
   <el-form
     ref="ruleFormRef"
-    style="max-width: 600px"
     :model="ruleForm"
     :rules="rules"
     label-width="auto"
@@ -128,7 +127,7 @@
         v-model="ruleForm.defaultChunkSize"
         :min="128"
         :max="1024" />
-      <span class="form-right-tip">128~1024）</span>
+      <span class="form-right-tip">（128~1024）</span>
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.fileChunkSize')"

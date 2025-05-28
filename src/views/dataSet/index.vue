@@ -926,23 +926,23 @@ watch(
   () => {
     filterStatusList.value = [
       {
-        label: t('dataset.failed'),
+        label: t('dataset.taskStatus.failed'),
         value: DataSetStatusEnum.FAILED,
       },
       {
-        label: t('dataset.success'),
+        label: t('dataset.taskStatus.success'),
         value: DataSetStatusEnum.SUCCESS,
       },
       {
-        label: t('dataset.canceled'),
+        label: t('dataset.taskStatus.canceled'),
         value: DataSetStatusEnum.CANCELED,
       },
       {
-        label: t('dataset.pending'),
+        label: t('dataset.taskStatus.pending'),
         value: DataSetStatusEnum.PENDING,
       },
       {
-        label: t('dataset.running'),
+        label: t('dataset.taskStatus.running'),
         value: DataSetStatusEnum.RUNNING,
       },
     ];

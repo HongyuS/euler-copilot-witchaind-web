@@ -164,12 +164,6 @@
           background-clip: content-box;
           border-radius: 4px;
         }
-        tbody {
-          .el-checkbox__inner::after {
-            top: 0;
-            left: 3px;
-          }
-        }
       }
 
       .el-table {
@@ -180,11 +174,6 @@
 
       .showPagination {
         max-height: 100% !important;
-      }
-
-      .el-checkbox__inner::before {
-        top: 4.5px !important;
-        width: 13px;
       }
 
       .el-table__header {
@@ -251,10 +240,6 @@
             position: absolute !important;
             top: 13px !important;
             padding-left: 18px;
-          }
-          .el-checkbox__inner {
-            width: 12px;
-            height: 12px;
           }
         }
 
@@ -437,9 +422,6 @@
   background: white !important;
   border: 1px solid #0077ff !important;
   padding: 4px 16px !important;
-  .el-checkbox__input.is-indeterminate .el-checkbox__inner:before {
-    transform: translateX(3px);
-  }
   .el-checkbox {
     position: relative;
   }
@@ -450,11 +432,6 @@
   .isFileTypeChcekHover {
     .el-checkbox__label {
       color: rgb(255 255 255) !important;
-    }
-
-    .el-checkbox__inner {
-      box-sizing: border-box;
-      border-color: rgb(208 212 220) !important;
     }
   }
 

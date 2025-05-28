@@ -57,7 +57,8 @@
                         width: 64px;
                         height: 32px;
                         border: 1px solid rgb(195 206 223);
-                        border-radius: 2px;
+                        border-radius: 4px;
+                        overflow: hidden;
     
                         .group-btn-switch-icon {
                             display: flex;
@@ -187,11 +188,6 @@
                     gap: 24px;
                     min-height: 200px;
                 
-                    .el-checkbox__inner::before {
-                      top: 4.5px !important;
-                      width: 13px;
-                    }
-                
                     tbody {
                       td {
                         border-right: unset !important;
@@ -288,6 +284,7 @@
             }
             .el-tabs__content{
               padding: 16px 24px 0 !important;
+              background-color: var(--o-bg-color-base);
             }
         }
     }
