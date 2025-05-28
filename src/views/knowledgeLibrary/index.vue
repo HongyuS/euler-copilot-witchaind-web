@@ -176,7 +176,7 @@
             />
           </span>
           <span v-if="multipleSelection.length>0 " class="multipleSelectNum">
-            {{ $t('btnText.selected1') }} <span>{{ multipleSelection.length }}</span> {{ $t('btnText.selected2') }}
+            {{ $t('btnText.selected',{count: multipleSelection.length }) }} 
           </span>
         </div>
         <div class="kl-right-btn">

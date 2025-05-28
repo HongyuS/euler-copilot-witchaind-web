@@ -103,7 +103,7 @@ const handleClick = (tab: any, event: any) => { };
 
 const handleDeleteTeam=() => {
     ElMessageBox.confirm(
-        `${t('groupDetail.confirmDissolve1')}【${form.value.teamName}】${t('groupDetail.confirmDissolve2')}`,
+        `${t('groupDetail.confirmDissolve',{name:form.value.teamName})}`,
         t('dialogTipText.tipsText'),
         {
             confirmButtonText: t('btnText.confirm'),

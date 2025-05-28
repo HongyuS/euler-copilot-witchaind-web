@@ -88,9 +88,8 @@ export default {
     dissolveTip:
       'After the team is disbanded, all related resources will be released. Please operate with caution.',
     updateTeamTip: 'The team update was successful.',
-    confirmDissolve1: 'After disbanding the ',
-    confirmDissolve2:
-      ' team, all the projects under the team will be deleted synchronously and cannot be recovered! Please operate with caution.',
+    confirmDissolve:
+      'After disbanding the 【{name}】 team, all the projects under the team will be deleted synchronously and cannot be recovered! Please operate with caution.',
     team: 'Team ',
     dissolveSuccess: ' dissolved successfully.',
     createTeamSuccess: 'Team created successfully.',
@@ -298,8 +297,7 @@ export default {
     multiple: 'Multiple Selection',
     cancelMultiple: 'Cancel Multiple Selection',
     checkAll: 'Check All',
-    selected1: '',
-    selected2: ' have been selected',
+    selected: '{count} have been selected',
     search: 'Search',
   },
   dialogTipText: {

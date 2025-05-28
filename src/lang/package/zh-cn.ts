@@ -93,8 +93,8 @@ export default {
     dissolve: '解散',
     dissolveTip: '解散团队后相关资源都会被释放，请谨慎操作',
     updateTeamTip: '团队更新成功',
-    confirmDissolve1: '解散',
-    confirmDissolve2: '团队后，该团队下的所有项目都将被同步删除，且不可恢复！请谨慎操作。',
+    confirmDissolve:
+      '解散【{name}】团队后，该团队下的所有项目都将被同步删除，且不可恢复！请谨慎操作。',
     team: '团队',
     dissolveSuccess: '解散成功',
     createTeamSuccess: '团队创建成功',
@@ -303,8 +303,7 @@ export default {
     multiple: '多选',
     cancelMultiple: '取消多选',
     checkAll: '全选',
-    selected1: '已选',
-    selected2: '项',
+    selected: '已选{count}项',
     search: '搜索',
   },
   dialogTipText: {
