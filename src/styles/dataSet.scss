@@ -60,7 +60,7 @@
         max-height: 112px;
         padding: 16px;
         padding-bottom: 12px;
-        background: rgb(253 254 255);
+        background: var(--o-bg-color-base);
         border-radius: 2px;
 
         .el-progress__text {
@@ -115,6 +115,7 @@
         font-family: 'HarmonyOS Sans SC Regular', sans-serif !important;
         font-size: 12px;
         font-weight: 600;
+        color: var(--o-text-color-primary);
 
         .el-icon {
           font-size: 14px;
@@ -165,7 +166,7 @@
       .successTask {
         margin-left: 18px;
         font-size: 12px;
-        color: rgb(0 119 255);
+        color: rgb(99,149,253);
         cursor: pointer;
       }
 
@@ -175,7 +176,7 @@
 
       .errorRestart {
         font-size: 12px;
-        color: rgb(0 119 255);
+        color: rgb(99,149,253);
         cursor: pointer;
       }
 
@@ -209,7 +210,7 @@
       }
 
       .upload-restart {
-        color: rgb(0 119 255);
+        color: rgb(99,149,253);
         cursor: pointer;
       }
     }
@@ -220,7 +221,7 @@
       margin-bottom: 8px;
       font-size: 12px;
       font-weight: 700;
-      color: rgb(0 119 255);
+      color: rgb(99,149,253);
       text-align: right;
       cursor: pointer;
     }
@@ -399,7 +400,6 @@
   }
 
   .el-pagination {
-    margin-top: 0;
     margin-top: 24px !important;
   }
 
@@ -427,7 +427,7 @@
 
   .dataSet-container-table-box {
     margin-top: 16px;
-    height: calc(100vh - 266px);
+    height: calc(100vh - 256px);
     display: flex;
     flex-direction: column;
 

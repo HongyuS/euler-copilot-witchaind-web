@@ -246,7 +246,7 @@ const hanldeSearhNameFilter = () => {
   }
 
   .el-input__icon:hover {
-    color: rgb(0 119 255);
+    color: rgb(99,149,253);
   }
 }
 

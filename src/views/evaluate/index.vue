@@ -1,6 +1,6 @@
 <template>
   <CustomLoading :loading="loading" />
-  <div class="evaluate-empty-content" v-if="!isSearch && testList.length === 0">
+  <div class="evaluate-empty-content" v-if="!isSearch && testList.length === 0 && currentPage === 1">
     <EmptyStatus :description="$t('testing.testEmptyDesc')" :buttonText="$t('testing.testEmptyText')" buttonClass="group-btn" @click="handleCreate" />
   </div>
   <div class="group-table-box" v-else>
@@ -34,18 +34,17 @@
       <el-input v-model="searchPayload.testingName" :placeholder="$t('testing.placeholderTest')" class="search-input" 
       @input="handleInput" :suffix-icon="IconSearch" />
     </div>
-    <el-table ref="testingTableRef" :data="testList" max-height="770" style="width: 100%; 
-      margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
+    <el-table class="test-table" ref="testingTableRef" :data="testList" style="margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" />
-      <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')">
+      <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" :show-overflow-tooltip="true" />
+      <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')" :show-overflow-tooltip="true">
         <template #default="scope">
           <div class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </div>
         </template>
       </el-table-column>
-      <el-table-column prop="description" :label="$t('testing.testingDesc')" />
-      <el-table-column prop="modelType" width="250" :label="'testing.type'">
+      <el-table-column prop="description" :label="$t('testing.testingDesc')" :show-overflow-tooltip="true" />
+      <el-table-column prop="modelType" width="250" :label="'testing.type'" :show-overflow-tooltip="true">
         <template #header>
           <div class="custom-header">
             <span>{{ $t('testing.type') }}</span>
@@ -63,7 +62,7 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="scope.row.llm">
+          <div v-if="scope.row.llm" class="testing-model-type">
             <img :src="`data:image/svg+xml;base64,${scope.row.llm?.llmIcon}`"/>
             {{ scope.row.llm?.llmName}}
           </div>
@@ -188,9 +187,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination v-if="testList.length > 0" v-model:current-page="currentPage" v-model:page-size="currentPageSize"
+    <el-pagination v-if="totalCount" v-model:current-page="currentPage" v-model:page-size="currentPageSize"
       :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount" popper-class="kbLibraryPage"
-       @change="handleChangePage" />
+      @current-change="handleCurrentChange" @size-change="handleSizeChange" />
   </div>
   <testCase :visible="testDataVisible" :rowData="testRowData" :close="closeFn" />
 </template>
@@ -364,16 +363,24 @@ const handleSelectionChange = (val: any) => {
   })
   selectedRow.value = selectArr;
 };
-
-const handleChangePage = (pageNum: number, pageSize: number) => {
-  currentPage.value = pageNum;
+const handleSizeChange = (pageSize: number) => {
+  console.log(pageSize);
   currentPageSize.value = pageSize;
   let param = {
     ...searchPayload.value,
-    page: pageNum,
+    page: currentPage.value,
     pageSize: pageSize,
   };
-
+  queryTestList(param);
+};
+const handleCurrentChange = (pageNum: number) => {
+  console.log(pageNum);
+  currentPage.value = pageNum;
+  let param = {
+    ...searchPayload.value,
+    page: pageNum,
+    pageSize: currentPageSize.value,
+  };
   queryTestList(param);
 };
 
@@ -525,11 +532,11 @@ const handlePollAssetFileData = () => {
     ...handleSearchPayload(),
   })
     .then((res: any) => {
-      if (!res?.datasetTestings?.length && currentPage.value && currentPage.value !== 1) {
-        currentPage.value = 1;
-        handleSearchOpsData(true, true);
-        return;
-      }
+      // if (!res?.datasetTestings?.length && currentPage.value && currentPage.value !== 1) {
+      //   currentPage.value = 1;
+      //   handleSearchOpsData(true, true);
+      //   return;
+      // }
       testList.value = (res?.datasetTestings || []).map((item: any) => {
         const newItem={
           datasetId: item.datasetId,

@@ -169,7 +169,6 @@
           :row-key="(row) => row.datasetId"
           @selection-change="handleSelectionChange"
           ref="multipleTable"
-          max-height="782"
           :border="false">
           <el-table-column
             type="selection"
@@ -963,6 +962,7 @@ const handleDataSetProps = () => {
 
 const handleImportDataSet = () =>{
   dialogImportVisible.value = true;
+  showTaskExportNotify.value = false;
 }
 const handleUploadMyFile = (options: any) => {
   dataSetAPI.importDataSet(

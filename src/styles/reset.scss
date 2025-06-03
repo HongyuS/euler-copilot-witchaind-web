@@ -206,7 +206,7 @@ $newHoverBg: linear-gradient(
 
   .el-dropdown-menu__item:not(.is-disabled):hover {
     color: rgb(255 255 255) !important;
-    background: var(--o-button-bg);
+    background: var(--o-button-bg) !important;
   }
 }
 
@@ -312,7 +312,6 @@ div:focus {
   flex-direction: column;
   width: 168px !important;
   padding: 8px 16px 16px !important;
-  background: rgb(253 254 255) !important;
   transform: translateY(-10px);
 
   .el-checkbox-group {
@@ -341,7 +340,7 @@ div:focus {
   }
 }
 .form-right-tip {
-  color: rgb(141, 152, 170);
+  color: var(--o-text-color-tertiary);
   font-size: 12px;
 }
 .kbLibraryPage {
@@ -420,7 +419,6 @@ div:focus {
 .dataSet-edit-dialog {
   .el-form-item__content {
     button.is-disabled {
-      background: #b8d9ff !important;
       border: unset;
       span {
         color: #fff !important;
@@ -431,7 +429,6 @@ div:focus {
 
 .upload-ops-btn {
   button.is-disabled {
-    background: #b8d9ff !important;
     border: unset;
   }
 }
@@ -474,6 +471,9 @@ div:focus {
   }
   .el-pager li{
     background-color: var(--o-bg-color-base) !important;
+    &.is-active{
+      color: rgb(99,149,253) !important;
+    }
   }
   .btn-next {
     margin-right: 8px !important;
@@ -674,7 +674,7 @@ div:focus {
           .start-date,
           .end-date {
             .el-date-table-cell__text {
-              background: rgb(0 119 255);
+              background: rgb(99,149,253);
             }
           }
 

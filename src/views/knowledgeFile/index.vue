@@ -531,7 +531,7 @@
       <el-form-item
         :label="$t('assetFile.docName')"
         prop="name"
-        class="docName">
+        >
         <el-input
           v-model="ruleForm.docName"
           :placeholder="$t('assetLibrary.message.pleasePlace')" />
