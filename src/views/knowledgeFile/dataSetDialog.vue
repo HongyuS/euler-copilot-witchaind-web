@@ -205,7 +205,6 @@ const handleCancelVisible = () => {
 
 onMounted(() => {
   dataSetAPI.queryLlmData().then(res => {
-    console.log('llmList', res)
     llmList.value = res.llms || [];
   })
 })

@@ -171,7 +171,7 @@ const handleCancelVisible = () => {
                 }
 
                 .evaluate-dataSetName {
-                    color: black;
+                    color: var(--o-primary-color);
                 }
 
             }

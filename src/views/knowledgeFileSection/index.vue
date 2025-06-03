@@ -1,5 +1,5 @@
 <template>
-  <CustomLoading :dark="false" :loading="loading" />
+  <CustomLoading :loading="loading" />
 
   <div class="kf-section-container">
     <div class="kf-section-container-action">
@@ -135,11 +135,12 @@
             v-if="fileInfo?.docTask?.taskStatus === 'success'" 
             placement="bottom"
             popper-class="dropdown-container kf-section-ops-dowlon"
+            :disabled="!(selectedData.length > 0)"
             @visible-change="handleBatchDownBth">
             <el-button
               class="kf-batch-ops"
               :class="batchDownBth ? 'upBtn' : 'downBtn'">
-              {{ $t('btnText.batch') }}
+              {{ $t('btnText.batchOps') }}
               <el-icon
                 class="el-icon--right"
                 v-if="!batchDownBth">
@@ -154,12 +155,10 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item
-                  :disabled="!(selectedData.length > 0)"
                   @click="handleEnableData(true)">
                   {{ $t('btnText.enable') }}
                 </el-dropdown-item>
                 <el-dropdown-item
-                  :disabled="!(selectedData.length > 0)"
                   @click="handleEnableData(false)">
                   {{ $t('btnText.close') }}
                 </el-dropdown-item>
@@ -167,7 +166,7 @@
             </template>
           </el-dropdown>
         </div>
-        <div v-if="fileInfo?.docTask?.taskStatus === 'success'" class="kf-section-container-table-box">
+        <div v-if="!['pending','running','failed'].includes(fileInfo?.docTask?.taskStatus)" class="kf-section-container-table-box">
           <el-table
             :data="fileTableList.data"
             ref="fileSectionTable"
@@ -188,7 +187,7 @@
                     <span :class="`text-type-${scope.row.chunkType} text-type-tag`">
                       {{ textType[scope.row.chunkType] }}
                     </span>
-                    <span style="white-space: pre-wrap">
+                    <span style="white-space: pre-wrap;max-width:calc(100vw - 650px);">
                       <span v-for="itemText in scope.row?.text?.split('\n')">
                         <div v-html="itemText"></div>
                       </span>
@@ -222,7 +221,7 @@
         <div v-if="fileInfo?.docTask?.taskStatus === 'running'">
           <el-empty :description="$t('assetFile.status.analyticIng')" :image="empty_running" />
         </div>
-        <div v-if="fileInfo?.tdocTask?.taskStatus === 'error'">
+        <div v-if="fileInfo?.tdocTask?.taskStatus === 'failed'">
           <el-empty :description="$t('assetFile.status.analyticFail')" :image="empty_failed" />
         </div>
       </div>

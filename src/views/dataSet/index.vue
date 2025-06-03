@@ -1,5 +1,5 @@
 <template>
-  <CustomLoading :dark="false" :loading="loading" />
+  <CustomLoading :loading="loading" />
   <div
     class="dataset-empty-content"
     v-if="!isSearch && !fileTableList.data.length">
@@ -544,7 +544,7 @@ const batchDownBth = ref(false);
 const loading = ref(false);
 const checkedFilterList = ref([]);
 const filterStatusList = ref();
-const customColor = ref('#0077FF');
+const customColor = ref('rgb(99, 149, 253)');
 const filterEnableList = ref();
 const totalCount = ref(0);
 const statusRef = ref();

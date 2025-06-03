@@ -1,6 +1,6 @@
 <template>
   <div class="kf-container">
-    <CustomLoading :dark="false" :loading="loading" />
+    <CustomLoading :loading="loading" />
     <div class="kf-container-action">
       <div
         class="kf-container-right"
@@ -452,7 +452,7 @@
   <el-dialog
     align-center
     v-model="delTipVisible"
-    class="tip-dialog"
+    class="tip-dialog del-dialog"
     width="400"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
@@ -648,7 +648,7 @@ import { downloadFun } from '@/utils/downloadFun';
 
 const route = useRoute();
 const dialogImportVisible = ref(false);
-const customColor = ref('#0077FF');
+const customColor = ref('rgb(99, 149, 253)');
 const menuType = ref('klFile');
 const buttonRef = ref();
 const created_time = ref();
@@ -888,6 +888,7 @@ const handleRunKl = (row: any, type: string) => {
     cancelTipVisible.value = true;
     opsItem.value = row;
   } else {
+    loading.value = true;
     KfAppAPI.runLibraryFile({
       parse: true,
     },[row.docId]).then(() => {
@@ -899,12 +900,15 @@ const handleRunKl = (row: any, type: string) => {
         duration: 3000,
       });
       handleSearchOpsData(true, true);
+    }).finally(() => {
+      loading.value = false;
     });
   }
 };
 
 const handleConfirmFileAnalytic = () => {
-  KfAppAPI.runLibraryFile({
+    loading.value = true;
+    KfAppAPI.runLibraryFile({
     parse: false,
   },[opsItem.value.docId]).then(() => {
     ElMessage({
@@ -916,6 +920,8 @@ const handleConfirmFileAnalytic = () => {
     });
     handleSearchOpsData(true, true);
     handleCancelVisible();
+  }).finally(() => {
+    loading.value = false;
   });
 };
 
@@ -1219,6 +1225,7 @@ const handleSelectDeleteKl = () => {
 };
 
 const handleSelectRunKl = () => {
+  loading.value = true;
   checkTableSelecData.value = selectionFileData.value;
   const ids = selectionFileData.value.map((item) => item.docId);
   KfAppAPI.runLibraryFile({parse:true},ids).then(() => {
@@ -1232,6 +1239,8 @@ const handleSelectRunKl = () => {
     selectionFileData.value = [];
     multipleTable.value.clearSelection();
     handleSearchOpsData(true, true);
+  }).finally(() => {
+    loading.value = false;
   });
 };
 

@@ -1,7 +1,7 @@
 <template>
   <el-config-provider :locale="locales">
     <router-view />
-    <CustomLoading loadingText="下载中" :dark="false" :loading="downLoading" />
+    <CustomLoading loadingText="下载中" :loading="downLoading" />
   </el-config-provider>
 </template>
 
@@ -46,12 +46,26 @@ const handleMessage = (e: MessageEvent) => {
         ElMessage({
           message: '未获取到token数据！',
           type: 'warning',
+          customClass: 'o-message--warning',
         })
       }
+  }else if(e.data?.type === 'changeTheme') {
+    const theme = e.data.theme;
+    if(theme) {
+      document.body.setAttribute('theme', theme);
+      localStorage.setItem('theme-witchiand', theme);
+    } else {
+      ElMessage({
+        message: '未获取到主题数据！',
+        type: 'warning',
+        customClass: 'o-message--warning',
+      });
+    }
   }
 };
 
 onMounted(() => {
+  document.body.setAttribute('theme', localStorage.getItem('theme') || 'light');
   // 监听手动导航
   router.beforeEach((to, from, next) => {
     if (from.name === undefined && to.name) {
@@ -83,6 +97,14 @@ onMounted(() => {
   window.addEventListener('message', handleMessage);
 });
 onUnmounted(() => window.removeEventListener('message', handleMessage));
+
+// 页面加载时应用存储的主题
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme-witchiand') || 'light';
+  if (savedTheme) {
+    document.body.setAttribute('theme', savedTheme);
+  }
+});
 </script>
 
 <style lang="scss"></style>

@@ -135,6 +135,7 @@
             placement="bottom" 
             popper-class="kf-ops-dowlon dropdown-container"
             @visible-change="handleBatchDownBth"
+             trigger="click"
             :disabled="multipleSelection.length === 0"
           >
             <el-button 
@@ -241,9 +242,7 @@
                 <div
                   class="kl-card-more-icon"
                   @click.stop>
-                  <el-icon>
-                    <IconMore />
-                  </el-icon>
+                  <span class="icon-more"></span>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -601,7 +600,6 @@ import Upload from '@/components/Upload/index.vue';
 import '@/styles/knowledgeLibrary.scss';
 import {
   IconList,
-  IconMore,
   IconSearch,
   IconThumbnail,
   IconAlarmOrange,
@@ -621,7 +619,7 @@ import CustomLoading from '@/components/CustomLoading/index.vue';
 import { debounce } from 'lodash';
 import KbAppAPI, { ITaskType } from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
-import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import FilterContainr from '@/components/TableFilter/index.vue';
 import { defineProps } from 'vue';
 import router from '@/router';
@@ -638,7 +636,7 @@ groupName: {
   type: String
 },
 });
-const { navGroup,curTeamInfo } =  storeToRefs(useGroupStore());
+const { navGroup } =  storeToRefs(useGroupStore());
 const { t } = useI18n();
 const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);

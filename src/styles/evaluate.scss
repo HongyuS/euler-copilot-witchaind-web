@@ -27,15 +27,10 @@
 
             .dropdown-disabled {
                 cursor: not-allowed;
-                border: 1px solid rgb(191, 199, 215) !important;
-                background-color: rgb(235, 237, 243);
-                color: rgb(191, 199, 215) !important;
 
                 &:hover,
                 :active {
                     cursor: not-allowed;
-                    background-color: rgb(235, 237, 243);
-                    color: rgb(191, 199, 215) !important;
                 }
             }
 
@@ -62,7 +57,7 @@
         align-items: center;
 
         .searchIconIsActive {
-            color: #0077ff !important;
+            color: rgb(99, 149, 253) !important;
         }
 
         .el-icon {
@@ -71,7 +66,7 @@
         }
 
         .el-icon:hover {
-            color: #0077ff;
+            color: rgb(99, 149, 253);
             cursor: pointer;
         }
 
@@ -88,7 +83,7 @@
     }
 
     .test-name {
-        color: rgb(99, 149, 253);
+        color: rgb(99, 149, 253) !important;
         font-size: 12px;
         font-weight: 500;
         cursor: pointer;
@@ -111,14 +106,14 @@
         .el-progress__text {
             width: 24px;
             min-width: 18px;
-            color: rgb(0 0 0);
+            color: var(--o-text-color-primary);
         }
 
         .statusAnalysisText {
             font-size: 12px;
             font-family: 'HarmonyOS Sans SC Medium';
             margin-left: 2px;
-            color: rgb(0 0 0);
+            color: var(--o-text-color-primary);
         }
     }
 
@@ -131,7 +126,7 @@
         padding: 0px 8px;
         font-size: 12px;
         line-height: 16px;
-        color: rgb(255 255 255);
+        color: rgb(255 255 255) !important; 
         text-align: center;
         border-radius: 2px;
         font-weight: 500;
@@ -154,6 +149,14 @@
         background: rgb(250, 192, 84);
     }
 
+    .test-manage-btns{
+        button{
+            border: unset;
+        }
+        .el-button--text:not(.is-disabled)>span{
+            color: rgb(99, 149, 253);
+        }
+    }
 
     .el-table__body {
         width: 100% !important;
@@ -166,7 +169,6 @@
     .el-table__cell {
         padding: 0 !important;
         font-size: 12px;
-        color: black;
     }
 
     .el-table--border .el-table__cell:first-child .cell {
@@ -214,7 +216,7 @@
                     color: rgb(78,88,101);
                 }
                 .evaluate-dataSetName{
-                    color: black;
+                    color: var(--o-primary-color);
                 }
                 
             }
@@ -235,7 +237,7 @@
     }
 }
 .el-select__popper .el-select-dropdown__list{    
-    background-color: white;               
+    // background-color: white;               
     .el-select-dropdown__item{
         display: flex;
         align-items: center;

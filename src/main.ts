@@ -17,6 +17,7 @@ import 'virtual:svg-icons-register';
 import 'element-plus/theme-chalk/dark/css-vars.css';
 import '@/styles/index.scss';
 import 'uno.css';
+import '@/styles/theme.scss';
 import 'animate.css';
 import router from './router';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';

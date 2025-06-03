@@ -25,7 +25,7 @@
 		<rect id="矩形" x="251.596313" y="14.038086" width="1.524880" height="1.624650" fill="#E1E4EA" fill-opacity="1.000000"/>
 	</g>
 	<path id="路径" d="M224.6 26.04L105.66 26.04L105.66 105.69L162.16 105.69L162.16 119.72L143.9 119.72C143.12 119.72 142.5 120.39 142.5 121.22C142.5 122.04 143.12 122.71 143.9 122.71L186.68 122.71C187.46 122.71 188.08 122.04 188.08 121.22C188.08 120.39 187.46 119.72 186.68 119.72L168.4 119.72L168.4 105.69L224.6 105.69L224.6 26.04Z" stroke="#C3CEDF" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
-	<rect id="矩形" x="105.662659" y="25.982544" width="118.940613" height="71.159660" fill="#FBFDFF" fill-opacity="1.000000"/>
+	<rect id="矩形" x="105.662659" y="25.982544" width="118.940613" height="71.159660" fill="#FBFDFF" fill-opacity=""/>
 	<rect id="矩形" x="105.662659" y="25.982544" width="118.940613" height="71.159660" stroke="#C3CEDF" stroke-opacity="1.000000" stroke-width="1.000000"/>
 	<path id="路径" d="M111.11 34.17L220.29 34.17" stroke="#C3CEDF" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round" stroke-linecap="round"/>
 	<rect id="矩形" x="215.179321" y="29.072693" width="1.811557" height="1.930084" fill="#B8BCC1" fill-opacity="1.000000"/>

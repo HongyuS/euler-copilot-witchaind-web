@@ -162,31 +162,4 @@ onMounted(()=>{
         }
     }
 }
-.el-message-box{
-  padding: 0px !important;
-  .el-message-box__content{
-    .el-message-box__message{
-      padding-left: 0px;
-    }
-  }
-  .el-message-box__btns{
-    justify-content: center;
-    .el-button-confirm{
-        --el-button-bg-color:white;
-        --el-button-text-color: rgb(78,88,101);
-        &:focus{
-            background-color: white;
-            color: rgb(78,88,101) !important;
-        }
-        &:hover,&:active{
-            background-color: white;
-            color: rgba(78,88,101,0.8) !important;
-        }
-    }
-    .el-button{
-        width: 64px;
-        height: 24px;
-    }
-  }
-}
 </style>

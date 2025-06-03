@@ -13,7 +13,7 @@
             <knowledgeFileSection />
           </el-tab-pane>
           <el-tab-pane :label="$t('assetFile.log')" name="log">
-            <documentLog />
+            <documentLog :activeName="activeName" />
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -45,6 +45,7 @@ const handleTabClick = (tab: any, event: any) => { }
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 8px;
+    color: var(--o-text-color-primary);
   }
 
 }

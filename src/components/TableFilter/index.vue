@@ -176,7 +176,7 @@ const hanldeSearhNameFilter = () => {
 <style lang="scss">
 .isChcekHover {
   .el-checkbox__label {
-    color: rgb(255 255 255) !important;
+    color: rgb(255 255 255) ;
   }
 
   .el-checkbox__inner {
@@ -213,7 +213,7 @@ const hanldeSearhNameFilter = () => {
 }
 
 .filterPopper {
-  border: 1px solid #0077ff !important;
+  border: 1px solid rgb(99, 149, 253) !important;
 }
 
 .inputSearchFilterPopper {

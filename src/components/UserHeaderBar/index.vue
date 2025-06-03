@@ -24,12 +24,13 @@ import '@/styles/headerBar.scss';
   .knowledge-welcome-text {
     margin-top: 56px;
     margin-bottom: 24px;
+    color: var(--o-text-color-primary);
   }
 
   .knowledge-show-text {
     font-size: 16px;
     line-height: 21px;
-    color: rgb(78 88 101);
+    color: var(--o-text-color-secondary);
   }
 }
 </style>

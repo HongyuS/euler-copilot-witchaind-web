@@ -1,5 +1,6 @@
 .group-info {
     padding: 24px;
+    background-color: var(--o-bg-color-dark);
 
     .group-info-title {
         display: flex;
@@ -17,6 +18,7 @@
                 height: 16px;
                 font-size: 12px;
                 line-height: 16px;
+                color: rgb(99, 149, 253);
                 .last-name{
                     text-overflow: ellipsis;
                     max-width: 130px;
@@ -31,6 +33,7 @@
                 font-weight: 700;
                 display: flex;
                 line-height: 16px;
+                color: var(--o-text-color-primary);
                 .last-name{
                     margin-left: 4px;
                     text-overflow: ellipsis;
@@ -52,7 +55,7 @@
         .group-mid-menu {
             width: 400px;
             height: 32px;
-            background-color: white;
+            background-color: var(--o-bg-color-base);
             display: flex;
             border-radius: 4px;
             position: absolute;
@@ -69,6 +72,7 @@
                 font-weight: 700;
                 margin: 2px ;
                 cursor: pointer;
+                color: var(--o-text-color-primary);
             }
 
             .section-active {
@@ -81,9 +85,9 @@
     }
     .group-info-content{
         width: 100%;
-        height: calc(100vh - 100px);
+        height: calc(100vh - 80px);
         border-radius: 8px;
-        background-color: rgb(253,254,255);
+        background-color: var(--o-bg-color-base);
         margin-top: 16px;
         padding: 24px;
        
