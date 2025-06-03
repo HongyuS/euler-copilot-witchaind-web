@@ -44,7 +44,7 @@
                         <!-- 卡片布局 -->
                         <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
                             <div v-if="groupList.length === 0" class="group-card-empty">
-                                <el-empty :description="$t('group.noData')"></el-empty>
+                                <el-empty :description="$t('group.noData')" :image="empty_pending"></el-empty>
                             </div>
                             <div class="group-card-item" v-for="item in groupList" :key="item.teamId" @click="handleToGroup(item)">
                                 <div class="group-card-title">
@@ -135,6 +135,7 @@ import CreateGroup from './createGroup.vue';
 import GroupAPI from '@/api/group';
 import { TabPaneName } from 'element-plus';
 import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+import empty_pending from '@/assets/svg/taskEmpty.svg';
 const { t } = useI18n();
 
 const groupStore = useGroupStore();

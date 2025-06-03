@@ -1,5 +1,5 @@
 <template>
-  <CustomLoading :dark="false" :loading="loading" />
+  <CustomLoading :loading="loading" />
   <div class="evaluate-empty-content" v-if="!isSearch && testList.length === 0">
     <EmptyStatus :description="$t('testing.testEmptyDesc')" :buttonText="$t('testing.testEmptyText')" buttonClass="group-btn" @click="handleCreate" />
   </div>
@@ -126,7 +126,7 @@
           </div>
           <div class="statusAnalysis" v-if="scope.row.testingTask?.taskStatus === StatusEnum.RUNNING">
             <div class="percent-box">
-              <el-progress :percentage="scope.row?.testingTask?.taskCompleted ?? 0" color="#0077FF" striped striped-flow />
+              <el-progress :percentage="scope.row?.testingTask?.taskCompleted ?? 0" color="rgb(99, 149, 253)" striped striped-flow />
             </div>
             <div class="statusAnalysisText">
               {{ $t('testing.testingStatus.running') }}
@@ -175,7 +175,7 @@
       </el-table-column>
       <el-table-column :label="$t('btnText.operation')" width="150">
         <template #default="scope">
-          <div v-if="!scope.row.datasetId">
+          <div v-if="!scope.row.datasetId" class="test-manage-btns">
             <el-button v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) " type="text"
               @click="handleStopTesting(scope.row)">{{ $t('dataset.stop') }}</el-button>
             <el-button v-else :disabled="scope.row.testingTask?.taskStatus === StatusEnum.SUCCESS" type="text"

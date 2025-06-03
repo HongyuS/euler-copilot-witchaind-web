@@ -1,5 +1,5 @@
 <template>
-  <el-empty :description="description">
+  <el-empty :description="description" :image="empty_pending">
     <el-button
       v-if="showButton"
       type="primary"
@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import i18n from '@/lang'; // 引入国际化模块
+import empty_pending from '@/assets/svg/taskEmpty.svg';
 
 interface Props {
   // 空状态描述文本

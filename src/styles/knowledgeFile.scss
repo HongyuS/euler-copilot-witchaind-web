@@ -74,12 +74,13 @@
     .kf-container-right {
       flex: 1;
       min-width: 700px;
-      background: rgb(254 254 254);
+      background: var(--o-bg-color-base);
       border-radius: 4px;
 
       .kf-container-table-ops {
         display: flex;
         justify-content: space-between;
+        background-color: var(--o-bg-color-base);
         .kf-container-table-ops-left{
           display: flex;
           margin-bottom: 16px;
@@ -118,6 +119,7 @@
         height: calc(100% - 56px);
         display: flex;
         flex-direction: column;
+        background-color: var(--o-bg-color-base);
         tbody {
           td {
             border-right: unset !important;
@@ -138,7 +140,7 @@
       }
 
       .kf-name-row {
-        color: #0077ff;
+        color: rgb(99, 149, 253);
         font-size: 12px;
         font-weight: 500;
         cursor: pointer;
@@ -209,7 +211,7 @@
         padding: 0px 8px;
         font-size: 12px;
         line-height: 16px;
-        color: rgb(255 255 255);
+        color: rgb(255 255 255) !important;
         text-align: center;
         border-radius: 2px;
         font-weight: 500;
@@ -269,7 +271,7 @@
         .el-progress__text {
           width: 24px;
           min-width: 18px;
-          color: rgb(0 0 0);
+          color: var(--o-text-color-primary);
         }
 
         .statusAnalysisText {
@@ -277,7 +279,7 @@
           font-family: 'HarmonyOS Sans SC Regular';
           font-weight: 500;
           margin-left: 2px;
-          color: rgb(0 0 0);
+          color: var(--o-text-color-primary);
         }
       }
 
@@ -304,7 +306,7 @@
         gap: 4px;
         align-items: center;
         .searchIconIsActive {
-          color: #0077ff !important;
+          color: rgb(99, 149, 253) !important;
         }
 
         .el-icon {
@@ -313,7 +315,7 @@
         }
 
         .el-icon:hover {
-          color: #0077ff;
+          color: rgb(99, 149, 253);
         }
 
         svg {
@@ -330,7 +332,6 @@
           box-sizing: border-box;
           width: 100% !important;
           background: #fefefe !important;
-          border: 1px solid #07f !important;
 
           .el-select-dropdown {
             width: 100% !important;
@@ -352,12 +353,10 @@
           .el-textarea__inner {
             width: 400px !important;
             font-size: 12px;
-            color: var(--o-color-black);
           }
 
           .el-input__inner {
             font-size: 12px;
-            color: var(--o-color-black);
           }
 
           .el-textarea__inner {
@@ -417,16 +416,6 @@
     overflow-y: auto;
     padding-top: 24px !important;
     padding-left: 16px !important;
-    .is-focused,
-    .el-select__selected-item {
-      span {
-        color: #000000 !important;
-      }
-    }
-
-    .el-input__inner {
-      color: #000000 !important;
-    }
 
     .el-form-item .is-disabled span {
       color: rgb(191, 199, 215) !important;
@@ -441,18 +430,6 @@
   .el-dropdown-menu__item {
     font-size: 12px;
   }
-}
-
-.upload-dialog {
-  width: 560px;
-  padding: 0 !important;
-}
-.upload-drag {
-  color: rgb(78, 88, 101);
-  font-size: 12px;
-}
-.upload-tip-text {
-  width: 480px;
 }
 
 .chooseFileBtn {
@@ -537,8 +514,6 @@
     top: 44px !important;
     box-sizing: border-box;
     width: 100% !important;
-    background: #fefefe !important;
-    border: 1px solid #07f !important;
 
     .el-select-dropdown {
       width: 100% !important;
@@ -556,6 +531,7 @@
     display: flex;
     gap: 17.5px;
     align-items: center;
+    color: var(--o-text-color-secondary);
   }
 
   .iconAlarmOrange {
@@ -565,7 +541,7 @@
     }
   }
 }
-.cancel-analytic-dialog{
+.cancel-analytic-dialog,.del-dialog {
   padding: 0px;
   .tip-ops-btn{
     display: flex;

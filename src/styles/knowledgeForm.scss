@@ -18,7 +18,7 @@
     }
 
     .deleteConfig:hover {
-      color: #0077ff;
+      color: rgb(99, 149, 253);
     }
   }
 }
@@ -30,7 +30,7 @@
     top: 44px !important;
     box-sizing: border-box;
     width: 100% !important;
-    background: #fefefe !important;
+    border: 1px solid var(--o-select-popper-padding) !important;
 
     .el-select-dropdown {
       width: 100% !important;
@@ -46,21 +46,10 @@
       display: unset !important;
     }
 
-    .is-focused,
-    .el-select__selected-item {
-      span {
-        color: #000000 !important;
-      }
-    }
-
     .is-disabled {
       span {
         color: rgb(191, 199, 215) !important;
       }
-    }
-
-    .el-input__inner {
-      color: #000000 !important;
     }
 
     .is-transparent {
@@ -69,20 +58,10 @@
       }
     }
 
-    .is-focused {
-      span {
-        color: #000000 !important;
-      }
-    }
-
     .removeIsTrans {
       span {
         color: #a8abb2 !important;
       }
-    }
-
-    .el-textarea__inner {
-      color: #000000 !important;
     }
   }
 
@@ -123,12 +102,10 @@
     .el-textarea__inner {
       width: 320px !important;
       font-size: 12px;
-      color: var(--o-color-black);
     }
 
     .el-input__inner {
       font-size: 12px;
-      color: var(--o-color-black);
     }
 
     .el-textarea__inner {
@@ -223,8 +200,6 @@
 
 .analyticMethodSelect {
   box-sizing: border-box;
-  background: #fefefe !important;
-  border-color: #07f !important;
   .el-select-dropdown {
     width: 100% !important;
     max-width: unset !important;
@@ -355,7 +330,7 @@
     transform: rotateZ(180deg);
   }
   .copydocument:hover {
-    color: #0077ff;
+    color: rgb(99, 149, 253);
   }
 }
 

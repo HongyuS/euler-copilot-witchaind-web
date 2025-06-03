@@ -20,7 +20,8 @@
           <el-button
             @click="batchDelete()"
             :disabled="multipleSelection.length === 0"
-            class="delFileBtn cancelBtn">
+            class="delFileBtn cancelBtn"
+            >
             {{ $t('btnText.batchDelete') }}
           </el-button>
         </div>

@@ -17,7 +17,7 @@
       height: 24px;
       font-size: 16px;
       line-height: 24px;
-      color: rgb(0, 0, 0);
+      color: var(--o-text-color-primary);
       font-weight: 700;
     }
 
@@ -57,14 +57,6 @@
           margin-right: 8px;
           .dropdown-disabled{
             cursor: not-allowed;
-            border: 1px solid rgb(191, 199, 215) !important ;
-            background-color: rgb(235,237,243);
-            color: rgb(191, 199, 215) !important;
-            &:hover,:active{
-              cursor: not-allowed;
-              background-color: rgb(235,237,243);
-              color: rgb(191, 199, 215) !important;
-            }
           }
           
         }
@@ -119,7 +111,7 @@
           align-items: center;
           width: 64px;
           height: 32px;
-          border: 1px solid rgb(195 206 223);
+          border: 1px solid var(--o-border-color-light);
           border-radius: 4px;
           overflow: hidden;
 
@@ -169,7 +161,7 @@
         flex-direction: column;
         height: 232px;
         padding: 16px;
-        background: rgb(244 246 250);
+        background: var(--o-bg-color-light);
         border-radius: 8px;
         border: 1px solid transparent;
         cursor: pointer;
@@ -189,6 +181,7 @@
             font-size: 16px;
             font-weight: 700;
             line-height: 24px;
+            color: var(--o-text-color-primary);
           }
           .el-checkbox{
             height: 20px;
@@ -230,7 +223,7 @@
           font-size: 12px;
           line-height: 16px;
           letter-spacing: 0px;
-          color: rgb(78,88,101);
+          color: var(--o-text-color-secondary);
           height: 112px;
           width: 396px;
         }
@@ -239,7 +232,7 @@
           display: flex;
           gap: 16px;
           align-items: center;
-          color: rgb(141 152 170);
+          color: var(--o-text-color-tertiary);
           width: 100%;
           font-size: 12px;
 
@@ -353,7 +346,7 @@
     }
 
     .kl-name-row {
-      color: #0077ff;
+      color: rgb(99, 149, 253);
       font-size: 12px;
       font-weight: 500;
       cursor: pointer;
@@ -471,7 +464,7 @@
         margin-bottom: 8px;
         font-size: 12px;
         font-weight: 600;
-        color: rgb(0 0 0);
+        color: var(--o-text-color-primary);
       }
 
       .item-info {
@@ -636,20 +629,6 @@
   }
 }
 
-.upload-dialog {
-  width: 560px;
-  padding: 0 !important;
-}
-
-.upload-drag {
-  color: rgb(78, 88, 101);
-  font-size: 12px;
-}
-
-.upload-tip-text {
-  width: 480px;
-}
-
 .chooseFileBtn {
   padding: 4px 8px;
 }
@@ -659,6 +638,7 @@
     display: flex;
     gap: 17px;
     align-items: center;
+    color: var(--o-text-color-secondary);
   }
 
   .iconAlarmOrange {
@@ -680,6 +660,7 @@
 
   .delTip {
     height: 24px !important;
+    color: var(--o-text-color-secondary);
   }
 }
 
@@ -689,7 +670,7 @@
   align-items: center;
 
   .searchIconIsActive {
-    color: #0077ff !important;
+    color: rgb(99, 149, 253) !important;
   }
 
   .el-icon {
@@ -698,7 +679,7 @@
   }
 
   .el-icon:hover {
-    color: #0077ff;
+    color: rgb(99, 149, 253);
   }
 
   svg {
@@ -728,7 +709,7 @@
 }
 
 .searchIconIsActive {
-  color: #0077ff !important;
+  color: rgb(99, 149, 253) !important;
 }
 
 .delToolTip {

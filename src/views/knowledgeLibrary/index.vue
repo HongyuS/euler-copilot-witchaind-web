@@ -135,6 +135,7 @@
             placement="bottom" 
             popper-class="kf-ops-dowlon dropdown-container"
             @visible-change="handleBatchDownBth"
+             trigger="click"
             :disabled="multipleSelection.length === 0"
           >
             <el-button 

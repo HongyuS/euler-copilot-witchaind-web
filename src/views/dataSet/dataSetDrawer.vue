@@ -10,7 +10,7 @@
         {{ dataSetInfo.datasetName }}
       </h4>
     </template>
-    <CustomLoading :dark="false" :loading="loading" />
+    <CustomLoading :loading="loading" />
     <div class="empty-container" v-if="props.dataSetRow?.status === 'pending'">
         <el-empty :description="$t('dataset.taskStatus.pending')" :image="empty_pending" />
     </div>

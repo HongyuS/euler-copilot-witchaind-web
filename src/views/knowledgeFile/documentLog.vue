@@ -8,17 +8,23 @@
   </template>
   
   <script lang="ts" setup>
-  import { ref, onMounted, onBeforeUnmount } from 'vue'
+  import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue'
   import * as monaco from 'monaco-editor'
   import { editor } from 'monaco-editor'
   import KfAppAPI from '@/api/kfApp';
   import { downloadFun } from '@/utils/downloadFun';
+
+  const props = defineProps<{
+    activeName: string
+  }>()
 
   const route = useRoute();
   
   let content = ref('');
   const codeEditBox = ref<HTMLElement | null>(null)
   let monacoEditor: editor.IStandaloneCodeEditor | null = null
+
+  let observer: MutationObserver | null = null;
   
   // 注册自定义语言和主题
   const registerCustomLanguage = () => {
@@ -86,17 +92,38 @@
       }
     })
   }
-  
+
+// 监听主题变化
+const observeThemeChange = () => {
+  const body = document.body;
+  observer = new MutationObserver(() => {
+    const newTheme = body.getAttribute('theme') === 'dark' ? 'vs-dark' : 'vs';
+    monaco.editor.setTheme(newTheme);
+  });
+  observer.observe(body, { attributes: true, attributeFilter: ['theme'] });
+};
+// 设置初始主题
+const setInitialTheme = () => {
+  const body = document.body;
+  const initialTheme = body.getAttribute('theme') === 'dark' ? 'vs-dark' : 'vs';
+  monaco.editor.setTheme(initialTheme);
+};
   // 生命周期钩子
   onMounted(() => {
     initMonaco();
     getDocumentLog();
+    setInitialTheme();
+    observeThemeChange();
   })
   
   onBeforeUnmount(() => {
     if (monacoEditor) {
       monacoEditor.dispose()
       monacoEditor = null
+    }
+    if (observer) {
+      observer.disconnect();
+      observer = null;
     }
   })
 
@@ -114,7 +141,7 @@
     flex-direction: column;
     border-radius: 8px;
     padding: 8px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid var(--o-border-color-base);
     .code-edit-tools{
       padding:16px;
     }

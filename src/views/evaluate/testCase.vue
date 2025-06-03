@@ -136,7 +136,6 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
 
 let chartInstanceR: echarts.ECharts | null = null;
 let chartInstanceL: echarts.ECharts | null = null;
-let resizeTimer: NodeJS.Timeout | null = null;
 
 const testCaseAvg = ref({
     aveScore:0,
@@ -150,20 +149,8 @@ const testCaseAvg = ref({
 })
 const testCaseList = ref([]);
 
-// 防抖处理resize
-const debounceResize = () => {
-    if (resizeTimer) {
-        clearTimeout(resizeTimer);
-    }
-    resizeTimer = setTimeout(() => {
-        if (chartInstanceR && chartInstanceL && props.visible) {
-            chartInstanceR.resize();
-            chartInstanceL.resize();
-        }
-    }, 100);
-};
-
 const initChart = async () => {
+    const isDarkMode = document.body.getAttribute('theme') === 'dark';
     try {
         // 等待DOM更新
         await nextTick();
@@ -193,7 +180,7 @@ const initChart = async () => {
                 left: 'left',
                 textStyle: {
                     fontSize: 14,
-                    color: '#333',
+                    color: isDarkMode ? 'white' : 'black', // 动态更新颜色
                     fontWeight: '700',
                 }
             },
@@ -206,10 +193,6 @@ const initChart = async () => {
                     endAngle: -45, //仪表盘结束角度
                     itemStyle: {
                         color: '#f37215', //颜色
-                        shadowColor: 'rgba(0,138,255,0.45)', //阴影颜色
-                        shadowBlur: 10, //图形阴影的模糊大小
-                        shadowOffsetX: 2, //阴影水平方向上的偏移距离
-                        shadowOffsetY: 2 //阴影垂直方向上的偏移距离
                     },
                     progress: {
                         show: true, //是否显示进度条
@@ -246,27 +229,24 @@ const initChart = async () => {
                     pointer: {
                         icon: 'triangle',
                         width: 8,
-                        length: '10%',
+                        length: '10px',
                         itemStyle: {
-                            color: 'black',
+                            color: isDarkMode ? 'white' : 'black', // 动态更新箭头颜色
                             shadowColor: 'rgba(0,0,0,0.3)',
                             shadowBlur: 8
                         },
-                        offsetCenter: [0, '-60%']
+                        offsetCenter: [0, '-56px'], //相对于仪表盘中心的偏移位置
                     },
                     axisLine: {
-                        show: false, //是否显示仪表盘轴线
+                        show: true, // 启用仪表盘轴线以显示背景
                         lineStyle: {
-                            width: 18 //轴线宽度
+                            color: [
+                                [1, isDarkMode ?'#3E4551':'#DEE4EE'] // 未走到部分颜色
+                            ],
                         }
                     },
                     axisTick: {
                         show: false, //是否显示刻度
-                        distance: -29,
-                        itemStyle: {
-                            color: '#fff',
-                            width: 2
-                        }
                     },
                     splitLine: {
                         show: false, //是否显示分隔线
@@ -282,16 +262,17 @@ const initChart = async () => {
                         valueAnimation: true, //是否开启标签的数字动画
                         offsetCenter: [0, 0], //相对于仪表盘中心的偏移位置
                         fontSize: 32, //文字的字体大小
-                        color: 'black',
+                        color: isDarkMode ? 'white' : 'black', // 动态更新颜色
                         fontWeight: 'bolder', //文字字体的粗细
-                        backgroundColor: 'white', // 添加白色背景
+                        backgroundColor: isDarkMode ? 'rgb(42 47 55)' : 'white', // 动态更新背景颜色
                         borderRadius: 100, // 设置圆形边框
                         padding: [10, 10, 10, 10], // 设置内边距使背景更大
                         width: 120, // 设置背景宽度
                         height: 120, // 设置背景高度
-                        shadowColor: 'rgba(141,152,170,0.4)',
+                        shadowColor: isDarkMode?'#22262D':'rgba(141,152,170,0.4)',
                         shadowBlur: 20, // 阴影模糊大小
-
+                        shadowOffsetX: 2, //阴影水平方向上的偏移距离
+                        shadowOffsetY: 16, //阴影垂直方向上的偏移距离
                     },
                     data: [
                         {
@@ -321,6 +302,7 @@ const initChart = async () => {
                 text: t('testing.evaluationQuality'),
                 textStyle: {
                     fontSize: 14,
+                    color: isDarkMode ? 'white' : 'black' // 动态设置标题颜色
                 }
             },
             xAxis: {
@@ -337,9 +319,10 @@ const initChart = async () => {
                     show: false
                 },
                 axisLine: {
-                    lineStyle: {
-                        color: 'rgb(141,152,170)',
-                    }
+                    lineStyle:  [
+                        [0.7, '#91c7ae'], // 已走过部分颜色
+                        [1, 'red'] // 未走到部分颜色
+                    ]
                 },
                 axisLabel: {
                     interval: 0 // 确保所有标签都显示
@@ -351,6 +334,9 @@ const initChart = async () => {
                 name: t('testing.scoreY'),
                 textStyle: {
                     color: 'black',
+                },
+                nameTextStyle: {
+                    color: isDarkMode ? '#C0C8D5' : '#666F7A' // 动态设置Y轴顶部文字颜色
                 },
                 splitLine: {
                     show: true,
@@ -384,6 +370,55 @@ const initChart = async () => {
     }
 }
 
+// 监听主题变化
+const handleThemeChange = () => {
+    const isDarkMode = document.body.getAttribute('theme') === 'dark';
+    if (chartInstanceR) {
+        chartInstanceR.setOption({
+            title: {
+                textStyle: {
+                    color: isDarkMode ? 'white' : 'black', // 动态更新颜色
+                }
+            },
+            series:[{
+                detail:{
+                    color: isDarkMode ? 'white' : 'black', // 动态更新颜色
+                    backgroundColor: isDarkMode ? 'rgb(42 47 55)' : 'white', // 动态更新背景颜色
+                    shadowColor: isDarkMode?'#22262D':'rgba(141,152,170,0.4)',
+                },
+                pointer: {
+                    itemStyle: {
+                        color: isDarkMode ? 'white' : 'black', // 动态更新箭头颜色
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: [
+                            [1, isDarkMode ?'#3E4551':'#DEE4EE'] // 未走到部分颜色
+                        ],
+                    }
+                }
+            }]
+        });
+        chartInstanceR.resize(); // 确保图表重新渲染
+    }
+    if (chartInstanceL) {
+        chartInstanceL.setOption({
+            title: {
+                textStyle: {
+                    color: isDarkMode ? 'white' : 'black' // 动态设置标题颜色
+                }
+            },
+            yAxis: {
+                nameTextStyle: {
+                    color: isDarkMode ? '#C0C8D5' : '#666F7A' // 动态设置Y轴顶部文字颜色
+                }
+            }
+        });
+        chartInstanceL.resize(); // 确保图表重新渲染
+    }
+};
+
 const handleMessage = (event: MessageEvent) => {
     if(event.data.type === 'changeLanguage'){
         initChart();
@@ -391,8 +426,10 @@ const handleMessage = (event: MessageEvent) => {
 }
 // 监听窗口大小变化
 onMounted(() => {
-    window.addEventListener('resize', debounceResize);
     window.addEventListener('message',handleMessage );
+    const observer = new MutationObserver(handleThemeChange);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['theme'] }); // 监听主题变化
+    onBeforeUnmount(() => observer.disconnect()); // 组件销毁时断开监听
 });
 onUnmounted(() => window.removeEventListener('message', handleMessage));
 
@@ -421,10 +458,10 @@ const queryTestCase = ()=>{
     })
 }
 
-// 监听visible变化，处理图表清理
+// 监听visible变化，处理图表清理和主题切换
 watch(() => props.visible, (newVal) => {
     if (newVal) {
-        // drawer打开时初始化数据
+        // drawer打开时初始化数据并切换主题
         queryTestCase();
     } else {
         // drawer关闭时清理图表实例
@@ -449,10 +486,6 @@ onBeforeUnmount(() => {
         chartInstanceL.dispose();
         chartInstanceL = null;
     }
-    if (resizeTimer) {
-        clearTimeout(resizeTimer);
-    }
-    window.removeEventListener('resize', debounceResize);
 });
 
 const handleClose = () => {
@@ -473,7 +506,7 @@ const handleDownloadReport = () => {
     .drawer-title {
         font-size: 16px;
         font-weight: 700;
-        color: black;
+        color: var(--o-text-color-primary);
         line-height: 32px;
     }
 }
@@ -501,7 +534,7 @@ const handleDownloadReport = () => {
     #rightChart {
         width: 23%;
         height: 300px;
-        background-color: rgb(244, 246, 250);
+        background-color: var(--o-bg-color-light);
         border-radius: 8px;
         padding: 16px;
         display: flex;
@@ -512,7 +545,7 @@ const handleDownloadReport = () => {
         width: 75%;
         height: 256px;
         min-height: 300px;
-        background-color: rgb(244, 246, 250);
+        background-color: var(--o-bg-color-light);
         border-radius: 8px;
         padding: 16px;
     }

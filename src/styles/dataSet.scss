@@ -74,7 +74,7 @@
         margin-bottom: 8px;
         font-size: 12px;
         font-weight: 600;
-        color: rgb(0 0 0);
+        color: var(--o-text-color-primary);
       }
 
       .item-info {
@@ -262,7 +262,7 @@
     align-items: center;
 
     .searchIconIsActive {
-      color: #0077ff !important;
+      color: rgb(99, 149, 253) !important;
     }
 
     .el-icon {
@@ -271,7 +271,7 @@
     }
 
     .el-icon:hover {
-      color: #0077ff;
+      color: rgb(99, 149, 253);
     }
 
     svg {
@@ -280,7 +280,7 @@
     }
   }
   .dataSet-name-row{
-    color: #0077ff;
+    color: rgb(99, 149, 253);
     cursor: pointer;
   }
   .statusFail,
@@ -292,7 +292,7 @@
     padding: 0px 8px;
     font-size: 12px;
     line-height: 16px;
-    color: rgb(255 255 255);
+    color: rgb(255 255 255) !important;
     text-align: center;
     border-radius: 2px;
     font-weight: 500;
@@ -355,14 +355,14 @@
     .el-progress__text {
       width: 24px;
       min-width: 18px;
-      color: rgb(0 0 0);
+      color: var(--o-text-color-primary);
     }
 
     .statusGenerateText {
       font-size: 12px;
       font-family: 'HarmonyOS Sans SC Medium';
       margin-left: 2px;
-      color: rgb(0 0 0);
+      color: var(--o-text-color-primary);
     }
   }
   .el-table__body-wrapper {
@@ -453,4 +453,21 @@
   }
 
   
+}
+.el-dropdown-menu {
+  padding: 4px 0 !important;
+  .el-dropdown-menu__item {
+    font-size: 12px !important;
+  }
+}
+
+.el-message-box .el-message-box__btns .el-button-confirm{
+  background-color: var(--o-button-bg-color) !important;
+  color: var(--o-text-color-secondary) !important;
+  border-color: var(--o-button-border-color) !important;
+  &:hover{
+    background-color: var(--o-button-bg-color-hover) !important;
+    color: var(--o-button-color_hover) !important;
+  border-color: var(--o-button-border-color_hover) !important;
+}
 }
