@@ -3,7 +3,7 @@
     <CustomLoading :loading="loading" />
     <div class="group-container">
         <div class="group-box">
-            <el-tabs type="border-card" class="group-tabs" default-active="mycreated" v-model="activeName"
+            <el-tabs type="card" class="group-tabs" default-active="mycreated" v-model="activeName"
                 @tab-change="handleTabChange">
                 <el-tab-pane class="group-tabs-item" v-for="tab in groupTabs" :name="tab.name" :key="tab.name"
                     :label="tab.label">
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="group-content-container">
+                    <div class="group-content-container" :style="groupList.length === 0? 'height: calc(100vh - 408px)' : ''">
                         <!-- 卡片布局 -->
                         <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
                             <div v-if="groupList.length === 0" class="group-card-empty">
@@ -107,7 +107,8 @@
                             </el-table>
                         </div>
                     </div>
-                    <el-pagination v-if="groupList?.length > 0" :current-page="currentPage" :page-size="currentPageSize"
+                    <el-pagination class="group-pagination"
+                        v-if="groupList?.length > 0" :current-page="currentPage" :page-size="currentPageSize"
                         :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
                         popper-class="kbLibraryPage" @size-change="handleSizeChange"
                         @current-change="handleCurrentChange" />
