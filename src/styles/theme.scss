@@ -1,6 +1,6 @@
 
 body[theme='dark'] {
-    --o-main-bg: var(--o-bg-color-dark);
+    --o-main-bg: url('/src/assets/images/dark_bg.svg');
     --o-bg-dialog:var(--o-bg-color-base);
     --o-button-bg:rgb(99 149 253);
     --o-tag-text-color:rgb(99 149 253);
@@ -15,10 +15,15 @@ body[theme='dark'] {
     --o-tag-code-bg:rgb(168 67 205 0.3);
     --o-tag-qa-color:rgb(235 175 0);
     --o-tag-qa-bg:rgb(66 53 0);
+    --o-empty-img-pending: url('/src/assets/images/empty_pending_dark.svg');
+    --o-empty-img-failed: url('/src/assets/images/empty_failed_dark.svg');
+    --o-empty-img-running: url('/src/assets/images/empty_running_dark.svg');
+    --o-task-list-icon: url('/src/assets/svg/dark_taskList.svg');
+    --o-task-score-icon: url('/src/assets/svg/dark_taskScore.svg');
 }
 
 body[theme='light'] {
-    --o-main-bg: url('/src/assets/images/userHeader.jpeg') center/101% 100%;
+    --o-main-bg: url('/src/assets/images/light_bg.svg');
     --o-bg-dialog:var(--o-bg-color-base);
     --o-button-bg:rgb(99 149 253);
     --o-tag-text-color:rgb(99 149 253);
@@ -33,4 +38,9 @@ body[theme='light'] {
     --o-tag-code-bg:rgb(189 69 232 0.3);
     --o-tag-qa-color:rgb(235 175 0);
     --o-tag-qa-bg:rgb(249 235 184);
+    --o-empty-img-pending: url('/src/assets/images/empty_pending.svg');
+    --o-empty-img-failed: url('/src/assets/images/empty_failed.svg');
+    --o-empty-img-running: url('/src/assets/images/empty_running.svg');
+    --o-task-list-icon: url('/src/assets/svg/light_taskList.svg');
+    --o-task-score-icon: url('/src/assets/svg/light_taskScore.svg');
 }

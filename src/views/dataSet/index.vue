@@ -2,7 +2,7 @@
   <CustomLoading :loading="loading" />
   <div
     class="dataset-empty-content"
-    v-if="!isSearch && !fileTableList.data.length">
+    v-if="!isSearch && !fileTableList.data.length && totalCount === 0">
     <EmptyStatus
       :button-text="$t('dataset.emptyText')"
       :description="$t('dataset.emptyDesc')"
@@ -68,13 +68,15 @@
               <div
                 class="packData"
                 v-if="['success', 'error', 'canceled', 'failed'].includes(item.exportStatus)">
-                <IconError
+                <el-icon
                   v-if="['error', 'canceled', 'failed'].includes(item.exportStatus)"
-                  class="errorIcon" />
+                  class="errorIcon">
+                  <img src="@/assets/svg/fail.svg" alt="fail icon" />
+                </el-icon>
                 <el-icon
                   v-if="item.percent === 100"
                   class="successIcon">
-                  <CircleCheckFilled />
+                   <img src="@/assets/svg/succes.svg" alt="success icon" />
                 </el-icon>
                 <span v-if="item.exportStatus === 'success'">
                   {{ $t('exportTask.exportSuccess') }}

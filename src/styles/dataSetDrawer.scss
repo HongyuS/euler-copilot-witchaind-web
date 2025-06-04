@@ -96,15 +96,21 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: var(--o-bg-color-dark);
+                background: var(--o-bg-color-light);
                 border-radius: 4px;
                 .dataSetListIcon{
-                    margin-top: 5px;
+                    width: 16px;
+                    height: 16px;
+                    display: inline-block;
                     margin-right: 4px;
+                    background: var(--o-task-list-icon);
                 }
                 .dataSetScoreIcon{
-                    margin-top: 4px;
+                    width: 16px;
+                    height: 16px;
+                    display: inline-block;
                     margin-right: 4px;
+                    background: var(--o-task-score-icon);
                 }
                 .dataSetListText,.dataSetScoreText{
                     margin-right: 8px;
@@ -113,11 +119,14 @@
 
                 .dataSetListNumber{
                     font-size: 14px;
+                    font-weight: 700;
+                    color: var(--o-text-color-primary);
                 }
 
                 .dataSetScoreNumber{
                     color: var(--o-color-major);
                     font-size: 14px;
+                    font-weight: 700;
                 }
             }
         }

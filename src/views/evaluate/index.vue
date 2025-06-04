@@ -1,6 +1,6 @@
 <template>
   <CustomLoading :loading="loading" />
-  <div class="evaluate-empty-content" v-if="!isSearch && testList.length === 0 && currentPage === 1">
+  <div class="evaluate-empty-content" v-if="!isSearch && testList.length === 0 && totalCount === 0">
     <EmptyStatus :description="$t('testing.testEmptyDesc')" :buttonText="$t('testing.testEmptyText')" buttonClass="group-btn" @click="handleCreate" />
   </div>
   <div class="group-table-box" v-else>

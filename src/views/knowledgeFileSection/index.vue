@@ -215,14 +215,17 @@
             @change="handleChangePage"
             popper-class="kbLibraryPage" />
         </div>
-        <div v-if="fileInfo?.docTask?.taskStatus === 'pending'">
-          <el-empty :description="$t('assetFile.status.analyticWaitIng')" :image="empty_pending" />
+        <div class="empty_box" v-if="fileInfo?.docTask?.taskStatus === 'pending'">
+          <div class="empty_img empty_pending"></div>
+          <div class="empty_text">{{ $t('assetFile.status.analyticWaitIng') }}</div>
         </div>
-        <div v-if="fileInfo?.docTask?.taskStatus === 'running'">
-          <el-empty :description="$t('assetFile.status.analyticIng')" :image="empty_running" />
+        <div class="empty_box" v-if="fileInfo?.docTask?.taskStatus === 'running'">
+          <div class="empty_img empty_running"></div>
+          <div class="empty_text">{{ $t('assetFile.status.analyticIng') }}</div>
         </div>
-        <div v-if="fileInfo?.tdocTask?.taskStatus === 'failed'">
-          <el-empty :description="$t('assetFile.status.analyticFail')" :image="empty_failed" />
+        <div class="empty_box" v-if="fileInfo?.docTask?.taskStatus === 'failed'">
+          <div class="empty_img empty_failed"></div>
+          <div class="empty_text">{{ $t('assetFile.status.analyticFail') }}</div>
         </div>
       </div>
     </div>
@@ -262,9 +265,6 @@ import { ChunkRequest } from '@/api/apiType';
 import { debounce } from 'lodash';
 import { CheckboxValueType } from 'element-plus';
 import { useGroupStore } from '@/store/modules/group';
-import empty_pending from '@/assets/images/empty_pending.svg'
-import empty_failed from '@/assets/images/empty_failed.svg'
-import empty_running from '@/assets/images/empty_running.svg'
 const { t } = useI18n();
 
 const route = useRoute();

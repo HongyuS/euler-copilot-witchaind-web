@@ -43,8 +43,9 @@
                     <div class="group-content-container" :style="groupList.length === 0? 'height: calc(100vh - 408px)' : ''">
                         <!-- 卡片布局 -->
                         <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
-                            <div v-if="groupList.length === 0" class="group-card-empty">
-                                <el-empty :description="$t('group.noData')" :image="empty_pending"></el-empty>
+                            <div v-if="groupList.length === 0" class="group-card-empty empty_box">
+                                <div class="empty_img empty_pending"></div>
+                                <div class="empty_text">{{ $t('group.noData') }}</div>
                             </div>
                             <div class="group-card-item" v-for="item in groupList" :key="item.teamId" @click="handleToGroup(item)">
                                 <div class="group-card-title">
@@ -136,8 +137,7 @@ import CreateGroup from './createGroup.vue';
 import GroupAPI from '@/api/group';
 import { TabPaneName } from 'element-plus';
 import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
-import empty_pending from '@/assets/svg/taskEmpty.svg';
-const { t } = useI18n();
+const { t, locale} = useI18n();
 
 const groupStore = useGroupStore();
 const { setCurTeamInfo } = groupStore;
@@ -193,7 +193,7 @@ const handleSizeChange = (pageSize: number) => {
 
 const { navGroup } = storeToRefs(useGroupStore());
 
-const groupTabs = [
+const groupTabs = ref([
     {
         label: t('group.myCreate'),
         name: 'mycreated',
@@ -202,7 +202,20 @@ const groupTabs = [
         label: t('group.myJoin'),
         name: 'myjoined',
     },
-]
+])
+watch(()=>locale , () => {
+    groupTabs.value = [
+        {
+            label: t('group.myCreate'),
+            name: 'mycreated',
+        },
+        {
+            label: t('group.myJoin'),
+            name: 'myjoined',
+        },
+    ];
+}, { immediate: true,deep: true });
+
 const switchIcon = ref('thumb');
 const teamSearchName = ref();
 const createGroupVisible = ref(false);

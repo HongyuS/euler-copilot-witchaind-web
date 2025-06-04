@@ -11,14 +11,17 @@
       </h4>
     </template>
     <CustomLoading :loading="loading" />
-    <div class="empty-container" v-if="props.dataSetRow?.status === 'pending'">
-        <el-empty :description="$t('dataset.taskStatus.pending')" :image="empty_pending" />
+    <div class="empty_box" v-if="props.dataSetRow?.status === 'pending'">
+      <div class="empty_img empty_pending"></div>
+      <div class="empty_text">{{ $t('dataset.taskStatus.pending') }}</div>
     </div>
-    <div class="empty-container" v-else-if="props.dataSetRow?.status === 'failed'">
-        <el-empty :description="$t('dataset.taskStatus.failed')" :image="empty_failed" />
+    <div class="empty_box" v-else-if="props.dataSetRow?.status === 'failed'">
+      <div class="empty_img empty_failed"></div>
+      <div class="empty_text">{{ $t('dataset.taskStatus.failed') }}</div>
     </div>
-    <div class="empty-container" v-else-if="props.dataSetRow?.status === 'running'">
-        <el-empty :description="$t('dataset.taskStatus.running')+'...'" :image="empty_running" />
+    <div class="empty_box" v-else-if="props.dataSetRow?.status === 'running'">
+      <div class="empty_img empty_pending"></div>
+      <div class="empty_text">{{ $t('dataset.taskStatus.running') }}</div>
     </div>
     <div v-else>
     <div class="dataSetInfoContainer">
@@ -85,16 +88,12 @@
       </div>
       <div class="dataSetInfoRight">
         <div class="dataSetListBox">
-          <span class="dataSetListIcon">
-            <img src="/src/assets/svg/taskList.svg" />
-          </span>
+          <span class="dataSetListIcon" />
           <span class="dataSetListText">{{ $t('dataset.dataCountLimit') }}</span>
           <span class="dataSetListNumber">{{  props.dataSetRow.dataCnt }}</span>
         </div>
         <div class="dataSetScoreBox">
-          <span class="dataSetScoreIcon">
-            <img src="/src/assets/svg/taskScore.svg" />
-          </span>
+          <span class="dataSetScoreIcon" />
           <span class="dataSetScoreText">{{ $t('dataset.score') }}</span>
           <span class="dataSetScoreNumber">{{ props.dataSetRow.score>0?props.dataSetRow.score?.toFixed(2):'--' }}</span>
         </div>
@@ -261,9 +260,6 @@ import { ref, watch, onUnmounted } from 'vue';
 import '@/styles/dataSetDrawer.scss';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import dataSetAPI from '@/api/dataSet';
-import empty_pending from '@/assets/images/empty_pending.svg'
-import empty_failed from '@/assets/images/empty_failed.svg'
-import empty_running from '@/assets/images/empty_running.svg'
 import { IconAlarm } from '@computing/opendesign-icons';
 
 const {t} = useI18n();

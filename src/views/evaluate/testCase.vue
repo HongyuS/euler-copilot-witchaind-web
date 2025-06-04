@@ -8,14 +8,17 @@
             </el-button>
         </template>
         <template #default>
-            <div class="empty-container" v-if="props.rowData?.status === 'pending'">
-                <el-empty :description="$t('testing.testingStatus.pending')" :image="empty_pending" />
+            <div class="empty_box" v-if="props.rowData?.status === 'pending'">
+                <div class="empty_img empty_pending"></div>
+                <div class="empty_text">{{ $t('testing.testingStatus.pending') }}</div>
             </div>
-            <div class="empty-container" v-else-if="props.rowData?.status === 'failed'">
-                <el-empty :description="$t('testing.testingStatus.failed')" :image="empty_failed" />
+            <div class="empty_box" v-else-if="props.rowData?.status === 'failed'">
+                <div class="empty_img empty_failed"></div>
+                <div class="empty_text">{{ $t('testing.testingStatus.failed') }}</div>
             </div>
-            <div class="empty-container" v-else-if="props.rowData?.status === 'running'">
-                <el-empty :description="$t('testing.testingStatus.running')+'...'" :image="empty_running" />
+            <div class="empty_box" v-else-if="props.rowData?.status === 'running'">
+                <div class="empty_img empty_running"></div>
+                <div class="empty_text">{{ $t('testing.testingStatus.running') }}</div>
             </div>
             <div v-else>
                 <div class="chart-container">
@@ -108,9 +111,6 @@
 import EvaluateAPI from '@/api/evaluate';
 import * as echarts from 'echarts';
 import { onMounted, onBeforeUnmount, watch, nextTick, ref } from 'vue';
-import empty_pending from '@/assets/images/empty_pending.svg'
-import empty_failed from '@/assets/images/empty_failed.svg'
-import empty_running from '@/assets/images/empty_running.svg'
 import { downloadFun } from '@/utils/downloadFun';
 
 const { t } = useI18n();
@@ -513,18 +513,6 @@ const handleDownloadReport = () => {
 
 .el-drawer__body {
     padding: 16px 24px 24px 24px;
-
-    .empty-container {
-        height: calc(100vh - 192px);
-        display: flex;
-        align-items: center;
-        justify-self: center;
-
-        .el-empty__image {
-            width: 320px;
-            height: 130px;
-        }
-    }
 }
 
 .chart-container {

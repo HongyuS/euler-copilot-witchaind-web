@@ -18,6 +18,10 @@
 #app {
   width: 100%;
   height: 100%;
+  background-image: var(--o-main-bg) !important;
+  background-size: cover; /* 图片自动缩放覆盖整个容器 */
+  background-position: center; /* 图片居中显示 */
+  background-repeat: no-repeat; /* 禁止重复 */
 }
 
 html,
@@ -313,6 +317,7 @@ div:focus {
   width: 168px !important;
   padding: 8px 16px 16px !important;
   transform: translateY(-10px);
+  background-color: var(--o-bg-color-base) !important;
 
   .el-checkbox-group {
     .el-checkbox {
@@ -604,14 +609,25 @@ div:focus {
   width: 586px !important;
   height: 380px;
   margin-right: -12px;
-
-  .el-picker-panel__sidebar {
-    width: 104px !important;
-    padding-top: 4px !important;
-  }
+  border-color: rgb(99,149,253) !important;
 
   .el-picker-panel {
     width: 100% !important;
+    background-color: var(--o-bg-color-base);
+  }
+  .el-picker-panel__sidebar {
+    width: 104px !important;
+    padding-top: 4px !important;
+    height: 378px;
+    background-color: var(--o-bg-color-base);
+    border-right-color: var(--o-border-color-base);
+  }
+
+  .el-picker-panel__shortcut {
+    font-size: 12px;
+    line-height: 32px !important;
+    padding-left: 16px !important;
+    color: var(--o-text-color-secondary);
   }
 
   .el-picker-panel__body-wrapper {
@@ -622,10 +638,21 @@ div:focus {
     min-width: unset !important;
     height: 345px;
     margin-left: 104px !important;
+    .el-input {
+      width: 100px !important;
+      .el-input__wrapper {
+        height: 24px !important;
+      }
+    }
 
     .el-picker-panel__content {
       height: 300px !important;
       padding: 8px !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-right-color: var(--o-border-color-base);
 
       tbody tr {
         height: 32px;
@@ -635,7 +662,7 @@ div:focus {
       th {
         height: 32px !important;
         padding: 0 !important;
-        color: rgb(191 199 215);
+        color: var(--o-text-color-tertiary) !important;
         border: unset !important;
       }
 
@@ -650,6 +677,23 @@ div:focus {
       }
 
       tbody:has(.el-date-table__row) {
+        .prev-month{
+          .el-date-table-cell {
+            .el-date-table-cell__text {
+              color: var(--o-text-color-tertiary) !important;
+            }
+          }
+        }
+        .available {
+          &:hover{
+            .el-date-table-cell__text {
+              color: white !important;
+            }
+          }
+          .el-date-table-cell__text {
+            color: var(--o-text-color-secondary) !important;
+          }
+        }
         .el-date-table__row {
           margin-bottom: 4px;
           td {
@@ -687,18 +731,37 @@ div:focus {
       }
     }
   }
+  .el-date-range-picker__editors-wrap {
+    display: flex;
+    gap: 8px;
+  }
+  .el-date-range-picker__time-picker-wrap {
+    padding: 0 0px !important;
+  }
 
   .el-date-range-picker__header {
     height: 32px;
     padding: 8px !important;
     margin-bottom: 8px;
+    width: 224px !important;
+    line-height: 16px !important;
 
     button {
       margin-top: 0 !important;
+      display: flex;
+      height: 16px;
+      align-items: center;
+    }
+    div {
+      width: 120px !important;
+      margin-left: 45px !important;
     }
   }
 
   .el-date-range-picker__time-header {
+    display: flex;
+    padding: 2px 16px 8px !important;
+    border-bottom-color: var(--o-border-color-base);
     .el-icon {
       margin: 0 12px !important;
       font-size: 8px !important;
@@ -726,6 +789,21 @@ div:focus {
     gap: 16px;
     justify-content: end;
     padding-right: 24px !important;
+    background-color: var(--o-bg-color-base);
+    border-top-color: var(--o-border-color-light);
+    .el-button.is-disabled{
+      background-color: unset !important;
+    }
+    .el-button:not(.is-disabled){
+      color: rgb(99, 149, 253) !important;
+      &:hover,&:focus{
+        color: rgba(99, 149, 253,0.8) !important;
+        background-color: unset !important;
+      }
+    }
+    .el-button.is-text > span:hover {
+      color: rgba(99, 149, 253,0.8) !important;
+    }
   }
 
   .el-time-panel {
@@ -740,64 +818,6 @@ div:focus {
     .is-plain {
       color: #a8abb2 !important;
     }
-  }
-}
-.datetimerangeClass {
-  .el-picker-panel__sidebar {
-    height: 378px;
-  }
-  .el-picker-panel__shortcut {
-    font-size: 12px;
-    line-height: 32px !important;
-    padding-left: 16px !important;
-  }
-  .el-picker-panel__body {
-    .el-input {
-      width: 100px !important;
-      .el-input__wrapper {
-        height: 24px !important;
-      }
-    }
-  }
-
-  .el-picker-panel__body-wrapper {
-    height: 345px !important;
-  }
-
-  .el-date-range-picker__time-header {
-    display: flex;
-    padding: 2px 16px 8px !important;
-    .el-input--small .el-input__inner {
-      font-size: 12px !important;
-    }
-  }
-
-  .el-date-range-picker__header {
-    width: 224px !important;
-    line-height: 16px !important;
-    button {
-      display: flex;
-      height: 16px;
-      align-items: center;
-    }
-    div {
-      width: 120px !important;
-      margin-left: 45px !important;
-    }
-  }
-
-  .el-picker-panel__content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .el-date-range-picker__editors-wrap {
-    display: flex;
-    gap: 8px;
-  }
-  .el-date-range-picker__time-picker-wrap {
-    padding: 0 0px !important;
   }
 }
 
@@ -1032,4 +1052,34 @@ div:focus {
 .el-switch__core{
   background-color: var(--o-switch-bg-color) !important;
   border-color: var(--o-switch-bg-color) !important;
+}
+
+.empty_box{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 200px);
+}
+.empty_img{
+  width: 330px;
+  height: 130px;
+}
+.empty_pending{
+  background-image: var(--o-empty-img-pending);
+  background-repeat: no-repeat;
+}
+.empty_failed{
+  background-image: var(--o-empty-img-failed);
+  background-repeat: no-repeat;
+}
+.empty_running{
+  background-image: var(--o-empty-img-running);
+  background-repeat: no-repeat;
+}
+.empty_text{
+  font-size: 12px;
+  margin-top: 8px;
+  color: var(--el-text-color-secondary);
+  font-family: 'HarmonyOS Sans SC';
 }
