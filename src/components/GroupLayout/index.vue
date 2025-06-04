@@ -77,7 +77,7 @@
 import { useRouter } from 'vue-router';
 import { useGroupStore } from "@/store/modules/group";
 import { storeToRefs } from 'pinia';
-import groupDetail from '@/views/group/groupDetail/index.vue';
+import groupDetail from '@/views/groupDetail/index.vue';
 
 const router = useRouter();
 const groupStore = useGroupStore();

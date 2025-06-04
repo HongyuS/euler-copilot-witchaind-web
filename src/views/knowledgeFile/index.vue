@@ -431,7 +431,7 @@
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
-        <IconAlarmOrange />
+        <IconAlarm />
       </span>
       {{ $t('dialogTipText.confirmCancelAnalytic') }}
     </div>
@@ -457,7 +457,7 @@
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
-        <IconAlarmOrange />
+        <IconAlarm />
       </span>
       <span>
         {{ $t('dialogTipText.confirmDelFile') }}
@@ -493,7 +493,7 @@
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
-        <IconAlarmOrange />
+        <IconAlarm />
       </span>
       <span>
         {{ $t('dialogTipText.confirmDelSelected') }}
@@ -581,7 +581,7 @@
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
           <span class="iconAlarmOrange">
-            <IconAlarmOrange />
+            <IconAlarm />
           </span>
           <span class="editTipText">{{ $t('assetFile.analyticTip') }}</span>
         </div>
@@ -932,6 +932,11 @@ const handCheckTableData = (tableList:any) => {
   });
 };
 
+const handleCleartTimer = () => {
+  clearInterval(pollingKfTimer.value);
+  pollingKfTimer.value = null;
+};
+
 const handeAssetLibraryData = (
   payload: DocListRequest,
   loadingStatus: boolean,
@@ -963,13 +968,18 @@ const handeAssetLibraryData = (
 };
 
 const handlePollAssetFileData = () => {
-  KfAppAPI.getKbLibraryFile({
+  let payload = {
     page: currentPage.value,
     pageSize: currentPageSize.value,
     kbId: route.query.kb_id as string,
     ...handleSearchPayload(),
     ...sortFilter.value,
-  })
+  };
+  if(Object.keys(payload).length === 0){
+    console.warn('handlePollAssetFileData payload is empty');
+    return;
+  }
+  KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
       if (res.page === currentPage.value && fileTableList.data?.length) {
         if (!res?.documents?.length && currentPage.value !== 1) {
@@ -1080,22 +1090,31 @@ const handleMessage = (event: MessageEvent) => {
     }
   }
 };
-watch(()=>knowledgeTabActive.value,()=>{
-  if(knowledgeTabActive.value === 'document'){
-    const kbId = route.query.kb_id;
-    handeAssetLibraryData(
-      {
-        kbId: kbId as string,
-        page: 1,
-        pageSize: 20,
-      },
-      true,
-      true
-    );
-  }else{
-    handleCleartTimer();
-  }
-})
+
+// 监听标签页变化
+watch(
+  () => knowledgeTabActive.value,
+  (newValue) => {
+    if (newValue === 'document') {
+      const kbId = route.query.kb_id;
+      if (kbId) {
+        handeAssetLibraryData(
+          {
+            kbId: kbId as string,
+            page: 1,
+            pageSize: 20,
+          },
+          true,
+          true
+        );
+      }
+    } else {
+      handleCleartTimer();
+    }
+  },
+  { immediate: true }
+);
+
 onMounted(() => {
   const kbId = route.query.kb_id;
   if (kbId?.length && knowledgeTabActive.value === 'document' ) {
@@ -1121,10 +1140,6 @@ onMounted(() => {
   window.addEventListener('message', handleMessage);
 });
 
-const handleCleartTimer = () => {
-  clearInterval(pollingKfTimer.value);
-  pollingKfTimer.value = null;
-};
 
 onUnmounted(() => {
   handleCleartTimer();

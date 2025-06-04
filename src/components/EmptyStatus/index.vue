@@ -1,6 +1,8 @@
 <template>
-  <el-empty :description="description" :image="empty_pending">
-    <el-button
+  <div class="empty_box">
+    <div class="empty_img empty_pending"></div>
+      <div class="empty_desc empty_text ">{{ description }}</div>
+      <el-button
       v-if="showButton"
       type="primary"
       class="empty-button-common"
@@ -9,12 +11,11 @@
     >
       {{ buttonText }}
     </el-button>
-  </el-empty>
+  </div>
 </template>
 
 <script setup lang="ts">
 import i18n from '@/lang'; // 引入国际化模块
-import empty_pending from '@/assets/svg/taskEmpty.svg';
 
 interface Props {
   // 空状态描述文本
@@ -48,7 +49,8 @@ const handleButtonClick = () => {
 
 <style>
 /* 如果需要自定义样式可以在这里添加 */
-.el-empty__description>p{
+.empty_desc{
     font-size: 12px !important;
+    margin-bottom: 16px;
 }
 </style>

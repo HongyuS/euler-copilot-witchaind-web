@@ -2,7 +2,6 @@
     width: 100%;
     height: calc(100vh - 300px);
     padding: 0 24px;
-    background: var(--o-bg-color-dark);
     min-width: 820px;
 
     .group-box {
@@ -101,9 +100,6 @@
                   max-height: 660px;
                   overflow-y: auto;
                   .group-card-empty{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
                     width: 90vw;
                     height: 650px;
                   }
