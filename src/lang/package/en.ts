@@ -80,9 +80,9 @@ export default {
   },
   groupDetail: {
     teamSet: 'Team Settings',
-    teamdynamic: 'Team Dynamics',
+    teamNews: 'Team News',
     roleManage: 'Role Management',
-    MemberPermission: 'Member/Permission',
+    MemberAuthority: 'Member/Authority',
     dissolveTeam: 'Dissolve Team',
     dissolve: 'Dissolve',
     dissolveTip:
@@ -94,6 +94,7 @@ export default {
     dissolveSuccess: ' dissolved successfully.',
     createTeamSuccess: 'Team created successfully.',
     updateTeamSuccess: 'Team updated successfully.',
+    inviteMember: 'Invite Member',
   },
   assetLibrary: {
     assetLibrary: 'Asset Libraries',
@@ -133,6 +134,7 @@ export default {
     uploadFailedNet: 'Upload failed.Check the netwok.',
     fileSuffiexNot: 'The file name extension is not supported.',
     copySuccessFul: 'Copy successful',
+    copyFailed: 'Copy failed',
     numberUpperLimit: 'Max documents per upload',
     sizeUpperLimit: 'Max size per upload',
     assetEmptyText: ' Create Asset Libraries',
