@@ -132,6 +132,7 @@ $newHoverBg: linear-gradient(
   background-color: var(--o-button-bg-color_disabled) !important;
   background-image: none;
   border-color: var(--o-button-border-color_disabled) !important;
+  color: var(--o-button-color_disabled) !important;
   cursor: not-allowed;
 }
 .el-button--primary.is-disabled, .el-button--primary.is-disabled:hover {

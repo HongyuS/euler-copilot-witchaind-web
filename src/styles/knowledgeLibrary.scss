@@ -277,6 +277,15 @@
             letter-spacing: 0;
             color: rgb(141 152 170);
           }
+          .id-copy{
+            margin-left: 5px;
+            color: var(--o-text-color-tertiary);
+            position: relative;
+            top: 1px;
+            &:hover {
+              color: var(--o-text-color-secondary);
+            }
+          }
 
           .id-label {
             font-family: 'HarmonyOS Sans SC Regular';

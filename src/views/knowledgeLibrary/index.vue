@@ -274,6 +274,9 @@
             <div class="kl-card-id">
               <span class="id-label">{{ `ID:${' '} ` }}</span>
               <span class="id-value">{{ item.kbId }}</span>
+              <el-icon class="id-copy" @click.stop="handleCopyId(item.kbId)" >
+                <CopyDocument />
+              </el-icon>
             </div>
             <div class="kl-card-footer">
               <div>
@@ -629,6 +632,7 @@ import { CheckboxValueType } from 'element-plus';
 import { bytesToSize } from '@/utils/bytesToSize';
 import { downloadFun } from '@/utils/downloadFun';
 import { validate } from 'uuid';
+import { CopyDocument } from '@element-plus/icons-vue';
 const route = useRoute();
 
 defineProps({
@@ -711,7 +715,26 @@ const isAllChecked = computed(() => {
   return fileTableList.data.every(item => item?.checked);
 });
 const isIndeterminate = ref(false);
-
+const handleCopyId = (id: string) => {
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = id;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    ElMessage({
+      showClose: true,
+      message: t('assetLibrary.copySuccessFul'),
+      icon: IconSuccess,
+      customClass: 'o-message--success',
+      duration: 3000,
+    });
+  } catch (error) {
+    ElMessage.error(t('assetLibrary.copyFailed'));
+  }
+}
 const handleCheckboxChange = (checked: CheckboxValueType, item: any) => {
   if (checked) {
     if(!multipleSelection.value.includes(item)){
