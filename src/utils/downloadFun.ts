@@ -1,10 +1,7 @@
 import { useAppStore, useAppStoreHook } from '@/store';
-import { storeToRefs } from 'pinia';
 
 export function downloadFun(url: string) {
-  const appStore = useAppStore();
-  const { parentToken } = storeToRefs(appStore);
-  const token = parentToken.value || localStorage.getItem('ECSESSION');
+  const token = localStorage.getItem('ECSESSION');
   if (!token) {
     ElMessage.error(`Token is not available yet`);
     return;
