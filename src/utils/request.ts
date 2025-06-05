@@ -22,15 +22,11 @@ const service = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const appStore = useAppStore();
-    const { parentToken } = storeToRefs(appStore);
     const accessToken = localStorage.getItem(TOKEN_KEY);
     if (accessToken) {
       config.headers.Authorization = accessToken;
     }
-    if (parentToken.value) {
-      config.headers['Authorization'] = `Bearer ${parentToken.value}`;
-    }
+    config.headers['Authorization'] = `Bearer ${localStorage.getItem('ECSESSION')}`;
     return config;
   },
   (error: any) => {

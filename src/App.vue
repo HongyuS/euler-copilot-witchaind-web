@@ -18,7 +18,6 @@ const { locale } = useI18n();
 const locales = computed(() => appStore.locale);
 const appStore = useAppStore();
 const {downLoading}  = storeToRefs(appStore);
-const { changeParentToken } = appStore;
 // 新增路由状态标记
 const isManualNavigation = ref(false);
 
@@ -41,7 +40,9 @@ const handleMessage = (e: MessageEvent) => {
   }else if(e.data?.type === 'parentToken') {
     const token = e.data.parentToken;
       if(token){
-        changeParentToken(token);
+        if(location.origin.includes('localhost')){
+          localStorage.setItem('ECSESSION', token)
+        }
       }else{
         ElMessage({
           message: '未获取到token数据！',
