@@ -702,7 +702,6 @@ const currentPageSize = ref(20);
 const dialogEditVisible = ref(false);
 const loading = ref(false);
 const taskListImportDate = ref();
-const taskTimer = ref();
 const taskList = ref<any>([]);
 const uploadTaskListData = ref<{
   showUploadNotify?: boolean;
@@ -946,6 +945,10 @@ const handeAssetLibraryData = (
     handleCleartTimer();
   }
   loading.value = loadingStatus;
+  if (!payload?.kbId) {
+    console.warn('kbId is null or undefined');
+    return;
+  }
   KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
       if (res.documents?.length) {
@@ -975,8 +978,8 @@ const handlePollAssetFileData = () => {
     ...handleSearchPayload(),
     ...sortFilter.value,
   };
-  if(Object.keys(payload).length === 0){
-    console.warn('handlePollAssetFileData payload is empty');
+  if (!payload?.kbId || pollingKfTimer.value === null) {
+    handleCleartTimer();
     return;
   }
   KfAppAPI.getKbLibraryFile(payload)
@@ -1075,7 +1078,19 @@ const handleQueryKbData = () => {
 };
 
 const handleStartPollTimer = () => {
-  pollingKfTimer.value = setInterval(() => handlePollAssetFileData(), 15000);
+  try {
+    if (pollingKfTimer.value) {
+      handleCleartTimer();
+    }
+    // 检查所有必要条件
+    if (!route.path.includes('/libraryInfo') || knowledgeTabActive.value !== 'document' || !route.query.kb_id) {
+      return;
+    }
+    pollingKfTimer.value = setInterval(() => {handlePollAssetFileData()}, 15000);
+  } catch (error) {
+    console.error('启动轮询失败:', error);
+    handleCleartTimer(); // 确保清除任何可能部分创建的定时器
+  }
 };
 // 添加postMessage监听器
 const handleMessage = (event: MessageEvent) => {
@@ -1118,8 +1133,8 @@ watch(
 onMounted(() => {
   const kbId = route.query.kb_id;
   if (kbId?.length && knowledgeTabActive.value === 'document' ) {
-  handleQueryKbData();
-  handeAssetLibraryData(
+    handleQueryKbData();
+    handeAssetLibraryData(
       {
         kbId: kbId as string,
         page: 1,
@@ -1145,7 +1160,6 @@ onUnmounted(() => {
   handleCleartTimer();
   // 移除postMessage事件监听
   window.removeEventListener('message', handleMessage);
-  taskTimer.value = null;
 });
 
 const handleVisibleChange = (e: boolean) => {
