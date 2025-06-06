@@ -40,9 +40,7 @@ const handleMessage = (e: MessageEvent) => {
   }else if(e.data?.type === 'parentToken') {
     const token = e.data.parentToken;
       if(token){
-        if(location.origin.includes('localhost')){
-          localStorage.setItem('ECSESSION', token)
-        }
+        localStorage.setItem('ECSESSION', token)
       }else{
         ElMessage({
           message: '未获取到token数据！',

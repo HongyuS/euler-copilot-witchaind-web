@@ -51,7 +51,7 @@ const isSubmitDisabled = computed(()=>{
     return oldData === newData
 })
 
-let groupName = route.query.name as string;
+let groupName = ref('');
 let activeName = 'teamSet';
 const form = ref({
     teamName: '',
@@ -69,6 +69,7 @@ const queryGroupDetail = () => {
     };
     GroupAPI.teamList(param).then((res: any) => {
         form.value = res.teams[0];
+        groupName.value = res.teams[0].teamName;
     }).finally(() => {
         loading.value = false;
     })
@@ -144,12 +145,14 @@ onMounted(()=>{
         font-size: 16px;
         font-weight: 700;
         line-height: 24px;
+        color: var(--o-text-color-primary);
     }
 
     .group-detail-tabs {
         .el-form-item__label {
             font-size: 12px;
             padding-right: 24px;
+            color: var(--o-text-color-secondary);
         }
         .btn-tips{
             font-size: 12px;
