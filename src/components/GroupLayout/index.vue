@@ -82,11 +82,11 @@ import groupDetail from '@/views/groupDetail/index.vue';
 const router = useRouter();
 const groupStore = useGroupStore();
 const { navGroup, groupMenu } = storeToRefs(groupStore);
-const { handleSwitchMenu, delNav } = groupStore;
+const { handleSwitchMenu, delNav, initNav } = groupStore;
 
 const handleHomeClick = () => {
-    delNav(1);
     router.push('/group');
+    initNav();
     handleSwitchMenu('knowledge');
 };
 const handleGroupClick = ( number: number, currentNav:{ path:string,query:any }) => {

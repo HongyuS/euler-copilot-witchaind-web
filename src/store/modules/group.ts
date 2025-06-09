@@ -36,6 +36,9 @@ export const useGroupStore = defineStore(
     let setCurTeamInfo = (value: any) => {
       curTeamInfo.value = value;
     };
+    let initNav = () => {
+      navGroup.value = [{ name: '数据治理', path: '/group', query: {} }];
+    };
     return {
       navGroup,
       groupMenu,
@@ -45,6 +48,7 @@ export const useGroupStore = defineStore(
       delNav,
       handleKnowledgeTab,
       setCurTeamInfo,
+      initNav,
     };
   },
   {
