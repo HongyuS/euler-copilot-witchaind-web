@@ -101,7 +101,7 @@ export default {
     assetId: 'Asset ID',
     welcomeUsePro: 'Welcome to witChainD!',
     profile:
-      'witChainD offers efficient document management and intelligent analysis,supporting a variety of file formats including xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip and txt.Equipped with an advanced document processing technology and powerful retrieval capabilities of the openEuler Intelligence,WitchainD aims to provide you with an exceptional intelligent Q&A service.',
+      'witChainD offers efficient document management and intelligent analysis,supporting a variety of file formats including xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip,jpeg,png and txt.Equipped with an advanced document processing technology and powerful retrieval capabilities of the openEuler Intelligence,WitchainD aims to provide you with an exceptional intelligent Q&A service.',
     message: {
       name: 'Enter an asset libraray name.',
       libraryNameLen: 'The asset library name can contain 1 to 15 characters.',
@@ -315,7 +315,7 @@ export default {
     fileZipFormat:
       'The file must be in .zip format. A maximum of five asssets with a total size of 5 GB can be uploaded.',
     fileAllFormat:
-      'The file can be in .xlsx,.pdf,.doc,.docx,.txt,.pptx,.html,.json,.yaml,.md or .zip format. A maximum of 100 files with a total size of 500 MB can be uploaded.',
+      'The file can be in .xlsx,.pdf,.doc,.docx,.txt,.pptx,.html,.json,.yaml,.md,.jpeg,.png or .zip format. A maximum of 100 files with a total size of 500 MB can be uploaded.',
     fileDataSetFormat:
       'The file supports import in xlsx, yaml and json formats. Up to 10 files can be uploaded, and each file contains no more than 512 pieces of data.',
     continueAdd: 'You can drag files to the list area below to add more.',
