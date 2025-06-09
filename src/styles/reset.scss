@@ -910,9 +910,13 @@ div:focus {
  * 重置el-select下拉框样式
  */
 .el-select__popper {  
-  .el-select-dropdown__list {
+  border: 1px solid rgb(99,149,253) !important;
+    border-radius: 4px !important;
+    .el-scrollbar{
+      border-radius: 4px;
+    }
+    .el-select-dropdown__list {
     padding: 4px 0 !important;
-    border: 1px solid rgb(99,149,253) !important;
     background-color: var(--o-bg-color-base);
     border-radius: 4px;
     li {
