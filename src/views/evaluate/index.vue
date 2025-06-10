@@ -525,6 +525,10 @@ const queryTestList = (params: any) => {
   })
 }
 const handlePollAssetFileData = () => {
+  if (!route.query.kb_id || pollingKfTimer.value === null) {
+    clearInterval(pollingKfTimer.value);
+    return;
+  }
   EvaluateAPI.testingList({
     page: currentPage.value,
     pageSize: currentPageSize.value,
@@ -532,11 +536,6 @@ const handlePollAssetFileData = () => {
     ...handleSearchPayload(),
   })
     .then((res: any) => {
-      // if (!res?.datasetTestings?.length && currentPage.value && currentPage.value !== 1) {
-      //   currentPage.value = 1;
-      //   handleSearchOpsData(true, true);
-      //   return;
-      // }
       testList.value = (res?.datasetTestings || []).map((item: any) => {
         const newItem={
           datasetId: item.datasetId,

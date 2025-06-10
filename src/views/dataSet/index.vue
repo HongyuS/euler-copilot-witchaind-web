@@ -651,6 +651,10 @@ const handleSearchPayload = (): Record<string, unknown> => {
 };
 
 const handlePollFileDataSet = () => {
+  if (!route.query.kb_id || pollingKfTimer.value === null) {
+    clearInterval(pollingKfTimer.value);
+    return;
+  }
   dataSetAPI.queryDataSetList({
     page: currentPage.value,
     pageSize: currentPageSize.value,

@@ -110,7 +110,7 @@ export default {
     assetId: '资产ID',
     welcomeUsePro: '欢迎使用知识库!',
     profile:
-      '知识库专注于文档的高效管理和智能解析，支持包括xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip以及txt在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Intelligence的强大检索功能，旨在为您提供卓越的智能问答服务体验。',
+      '知识库专注于文档的高效管理和智能解析，支持包括xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip,jpeg,png以及txt在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Intelligence的强大检索功能，旨在为您提供卓越的智能问答服务体验。',
     message: {
       name: '请输入资产库名称',
       libraryNameLen: '资产库名称长度1-15个字符',
@@ -323,7 +323,7 @@ export default {
     confirmCancelAnalytic: '确认取消解析？点击确认后将停止解析，请谨慎操作。',
     fileZipFormat: '文件支持.zip格式，最多支持上传5个资产库，资产库总大小不超过5GB',
     fileAllFormat:
-      '文件支持.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html,.json,.yaml,.md,.zip格式，最多支持上传128个文件，文件总大小不超过500MB',
+      '文件支持.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html,.json,.yaml,.md,.zip,.jpeg,.png格式，最多支持上传128个文件，文件总大小不超过500MB',
     fileDataSetFormat:
       '文件支持xlsx、yaml和json格式导入，最多支持上传10个文件，每个文件包含的数据量不超过512条',
     continueAdd: '您仍可以通过拖拽文件到下方列表区域进行文件添加',

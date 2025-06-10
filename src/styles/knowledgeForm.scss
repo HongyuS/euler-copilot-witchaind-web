@@ -28,9 +28,6 @@
 
   .el-select__popper {
     top: 44px !important;
-    box-sizing: border-box;
-    width: 100% !important;
-    border: 1px solid var(--o-select-popper-padding) !important;
 
     .el-select-dropdown {
       width: 100% !important;
@@ -202,8 +199,8 @@
 .analyticMethodSelect {
   box-sizing: border-box;
   .el-select-dropdown {
-    width: 100% !important;
-    max-width: unset !important;
+    // width: 100% !important;
+    // max-width: unset !important;
   }
 
   .el-select-dropdown__item.is-hovering {
