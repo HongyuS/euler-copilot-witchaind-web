@@ -316,6 +316,7 @@ const handleSearchData = () => {
     true,
     true
   );
+  currentPage.value = 1;
   statusFilterVisible.value = false;
   modelFilterVisible.value = false;
   searchFilterVisible.value = false;
@@ -342,8 +343,7 @@ const handleInput = debounce(() => {
       }
       return newItem;
     });
-    
- 
+    totalCount.value = res.totalCount;
   }).finally(() => {
     loading.value = false;
   })
@@ -397,8 +397,8 @@ const handleRunTesting = (isRun: boolean, row: any) => {
     handeAssetLibraryData(
       {
         kbId: route.query.kb_id as string,
-        page: 1,
-        pageSize: 20,
+        page: currentPage.value,
+        pageSize: currentPageSize.value,
       },
       true,
       true
@@ -449,8 +449,8 @@ const handleDelete = (arr: any) => {
     handeAssetLibraryData(
       {
         kbId: route.query.kb_id as string,
-        page: 1,
-        pageSize: 20,
+        page: currentPage.value,
+        pageSize: currentPageSize.value,
       },
       true,
       true
@@ -518,8 +518,7 @@ const queryTestList = (params: any) => {
       }
       return newItem;
     });
-    
- 
+    totalCount.value = res?.total || 0;
   }).finally(() => {
     loading.value = false;
   })
@@ -544,7 +543,7 @@ const handlePollAssetFileData = () => {
         }
         return newItem;
       });
-      
+      totalCount.value = res?.total || 0;
     })
     .finally(() => {
       loading.value = false;
@@ -622,6 +621,8 @@ watch(()=>knowledgeTabActive.value, () => {
       true,
       true
     );
+    currentPage.value = 1;
+    currentPageSize.value = 20;
     dataSetAPI.queryLlmData().then((res:any)=>{
         llmOptions.value = res.llms?.map((item: any) => {
             return { label: item.llmName, value: item.llmId,icon:item.llmIcon };
@@ -648,6 +649,8 @@ onMounted(() => {
       true,
       true
     );
+    currentPage.value = 1;
+    currentPageSize.value = 20;
   }
 });
 
