@@ -627,6 +627,8 @@ watch(()=>knowledgeTabActive.value,()=>{
       true,
       true
     );
+    currentPage.value = 1;
+    currentPageSize.value = 20;
   }else{
     handleCleartTimer();
   }
@@ -662,20 +664,8 @@ const handlePollFileDataSet = () => {
     ...handleSearchPayload(),
   })
     .then((res: any) => {
-      if (res.page === currentPage.value && fileTableList.data?.length) {
-        if (!res?.datasets?.length && currentPage.value !== 1) {
-          currentPage.value = 1;
-          handleSearchOpsData(true, true);
-          return;
-        }
-        fileTableList.data = fileTableList.data.map((item) => {
-          let fileData = res?.datasets?.filter((file: any) => file.id === item.id)?.[0];
-          return fileData || item;
-        });
-      }
-      if (res.datasets?.length) {
-        handCheckTableData(res.datasets);
-      }
+      fileTableList.data = res?.datasets;
+      totalCount.value = res.total;
     })
     .finally(() => {
       loading.value = false;
@@ -752,6 +742,7 @@ const handleSearchData = () => {
     true,
     true
   );
+  currentPage.value = 1;
   enableFilterVisible.value = false;
   statusFilterVisible.value = false;
   creatorVisible.value = false
@@ -770,6 +761,8 @@ onMounted(() => {
       true,
       true
     );
+    currentPage.value = 1;
+    currentPageSize.value = 20;
   }
 });
 onUnmounted(()=>{

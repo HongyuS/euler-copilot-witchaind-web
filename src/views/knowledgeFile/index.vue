@@ -136,7 +136,7 @@
                 </div>
               </template>
               <template #default="scope">
-                <span>{{ scope.row.docType.docTypeName }}</span>
+                <span>{{ scope.row.docType?.docTypeName }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -984,20 +984,8 @@ const handlePollAssetFileData = () => {
   }
   KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
-      if (res.page === currentPage.value && fileTableList.data?.length) {
-        if (!res?.documents?.length && currentPage.value !== 1) {
-          currentPage.value = 1;
-          handleSearchOpsData(true, true);
-          return;
-        }
-        fileTableList.data = fileTableList.data.map((item) => {
-          let fileData = res?.documents?.filter((file: any) => file.docId === item.docId)?.[0];
-          return fileData || item;
-        });
-      }
-      if (res.documents?.length) {
-        handCheckTableData(res.documents);
-      }
+      fileTableList.data = res?.documents;
+      totalCount.value = res.total;
     })
     .finally(() => {
       loading.value = false;
@@ -1041,6 +1029,7 @@ const handleSearchData = () => {
     true,
     true
   );
+  currentPage.value = 1;
   fileFilterVisible.value = false;
   categoryFilterVisible.value = false;
   enableFilterVisible.value = false;
@@ -1122,6 +1111,8 @@ watch(
           true,
           true
         );
+        currentPage.value = 1;
+        currentPageSize.value = 20;
       }
     } else {
       handleCleartTimer();
@@ -1143,6 +1134,8 @@ onMounted(() => {
       true,
       true
     );
+    currentPage.value = 1;
+    currentPageSize.value = 20;
     KbAppAPI.queryParseMethodList().then((res: any) => {
       parserMethodOptions.value = res?.map((item: any) => {
         return { label: item, value: item };
