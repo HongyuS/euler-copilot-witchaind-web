@@ -4,7 +4,6 @@
   gap: 16px;
   width: 100%;
   height: 100%;
-  padding: 16px 24px 24px;
   min-width: 1240px;
   .kf-section-container-top {
     display: flex;
@@ -40,21 +39,21 @@
     display: flex;
     gap: 2px;
     width: 100%;
-    height: calc(100% - 80px);
+    height: calc(100vh - 228px);
 
     .kf-section-container-left {
       display: flex;
       flex-direction: column;
       gap: 16px;
       width: 314px;
-      padding: 24px;
-      background: rgb(254 254 254);
+      background: var(--o-bg-color-base);
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
       box-shadow: iniset -1px 0 0 0 rgb(223 229 239);
 
       .kf-section-info-title {
         font-size: 16px;
+        color: var(--o-text-color-primary);
         font-weight: 700;
       }
 
@@ -64,12 +63,13 @@
         .kf-section-info-label {
           width: 101px;
           font-size: 12px;
-          color: rgb(78 88 101);
+          color: var(--o-text-color-secondary);
         }
 
         .kf-section-info-content {
           max-width: 145px;
           font-size: 12px;
+          color: var(--o-text-color-primary);
         }
       }
     }
@@ -78,13 +78,23 @@
       flex: 1;
       min-width: 700px;
       height: 100%;
-      padding: 24px 0 24px 24px;
       overflow: hidden;
-      background: rgb(254 254 254);
+      background: var(--o-bg-color-base);
       border-top-right-radius: 4px;
       border-bottom-right-radius: 4px;
 
+      .el-empty{
+        display: flex;
+        align-items: center;
+        height: calc(100vh - 400px);
+      .el-empty__image{
+          width: 320px;
+          height: 130px;
+        }
+      }
+
       .kf-section-container-table-ops {
+        color: var(--o-text-color-primary);
         display: flex;
         gap: 24px;
         margin-bottom: 8px;
@@ -101,8 +111,9 @@
             height: 32px;
             box-sizing: border-box;
             padding: unset !important;
-            background: white !important;
+            background: var(--o-bg-color-base) !important;
             border-color: blue;
+            box-shadow: unset;
           }
           .el-input__wrapper {
             width: 280px;
@@ -138,7 +149,7 @@
         }
 
         .el-scrollbar .el-scrollbar__bar .el-scrollbar__thumb {
-          background: #c3cedf !important;
+          background: rgb(195, 206, 223) !important;
           opacity: 1;
         }
 
@@ -157,12 +168,6 @@
           background-clip: content-box;
           border-radius: 4px;
         }
-        tbody {
-          .el-checkbox__inner::after {
-            top: 0;
-            left: 3px;
-          }
-        }
       }
 
       .el-table {
@@ -175,17 +180,15 @@
         max-height: 100% !important;
       }
 
-      .el-checkbox__inner::before {
-        top: 4.5px !important;
-        width: 13px;
-      }
-
       .el-table__header {
         height: 32px;
         colgroup {
           col:first-child {
             width: 24px !important;
           }
+        }
+        & thead tr th{
+          background-color: var(--o-bg-color-base) !important;
         }
         .kf-selection {
           border-bottom: unset;
@@ -196,7 +199,6 @@
             padding-left: 0 !important;
           }
         }
-
         col[name='el-table_1_column_1'] {
           width: 24px !important;
         }
@@ -234,8 +236,8 @@
 
         .kf-selection {
           width: 46px !important;
-          border-top: 1px solid rgb(223 229 239);
-          border-left: 1px solid rgb(223 229 239);
+          border-top: 1px solid var(--o-border-color-base);
+          border-left: 1px solid var(--o-border-color-base);
           border-top-left-radius: 4px;
           border-bottom-left-radius: 4px;
 
@@ -244,10 +246,6 @@
             position: absolute !important;
             top: 13px !important;
             padding-left: 18px;
-          }
-          .el-checkbox__inner {
-            width: 12px;
-            height: 12px;
           }
         }
 
@@ -259,23 +257,36 @@
           font-size: 12px;
           line-height: 16px;
           border-radius: 2px;
+          min-width: 40px;
         }
-        .text-type-para {
-          color: rgb(0, 119, 255);
-          background-color: rgb(184, 217, 255);
+        .text-type-text {
+          color: var(--o-tag-text-color);
+          background-color: var(--o-tag-text-bg);
         }
         .text-type-table {
-          background-color: rgb(194, 231, 199);
-          color: rgb(36, 171, 54);
+          color: var(--o-tag-table-color);
+          background-color: var(--o-tag-table-bg);
         }
         .text-type-image {
-          background-color: rgb(253, 217, 188);
-          color: rgb(249, 118, 17);
+          color: var(--o-tag-image-color);
+          background-color: var(--o-tag-image-bg);
+        }
+        .text-type-link {
+          color: var(--o-tag-link-color);
+          background-color: var(--o-tag-link-bg);
+        }
+        .text-type-code {
+          color: var(--o-tag-code-color);
+          background-color: var(--o-tag-code-bg);
+        }
+        .text-type-qa {
+          color: var(--o-tag-qa-color);
+          background-color: var(--o-tag-qa-bg);
         }
         .kf-file-content {
           margin-top: 20px;
-          border-top: 1px solid rgb(223 229 239);
-          border-right: 1px solid rgb(223 229 239);
+          border-top: 1px solid var(--o-border-color-base);
+          border-right: 1px solid var(--o-border-color-base);
           border-top-right-radius: 4px;
           border-bottom-right-radius: 4px;
 
@@ -292,9 +303,14 @@
             display: flex;
             gap: 16px;
             justify-content: space-between;
+            align-items: flex-start;
 
             .kf-file-content-text {
+              display: flex;
               padding: 16px 0;
+              .text-type-text,.text-type-tag{
+                display: inline-block;
+              }
               .highlighted-term {
                 display: inline-block;
                 background: rgb(235, 175, 0);
@@ -303,6 +319,10 @@
 
             .kf-file-content-ops {
               padding: 16px 0;
+              min-width: 70px;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
             }
           }
         }
@@ -340,10 +360,6 @@
         left: calc(100% - 13px) !important;
       }
     }
-
-    .kf-batch-ops {
-      width: 72px;
-    }
   }
 
   .kf-section-name {
@@ -362,7 +378,6 @@
 }
 
 .kf-section-ops-dowlon {
-  width: 72px;
 
   .el-dropdown-menu__item {
     font-size: 12px;
@@ -411,12 +426,8 @@
   width: 120px !important;
   min-width: unset !important;
   transform: translateY(-10px);
-  background: white !important;
-  border: 1px solid #0077ff !important;
   padding: 4px 16px !important;
-  .el-checkbox__input.is-indeterminate .el-checkbox__inner:before {
-    transform: translateX(3px);
-  }
+  background-color: var(--o-bg-color-base) !important;
   .el-checkbox {
     position: relative;
   }
@@ -427,11 +438,6 @@
   .isFileTypeChcekHover {
     .el-checkbox__label {
       color: rgb(255 255 255) !important;
-    }
-
-    .el-checkbox__inner {
-      box-sizing: border-box;
-      border-color: rgb(208 212 220) !important;
     }
   }
 
@@ -453,6 +459,7 @@
   display: flex;
   justify-content: center;
   gap: 8px;
+  box-shadow: 1px 0 0 0 var(--el-input-border-color) inset,0 1px 0 0 var(--el-input-border-color) inset,0 -1px 0 0 var(--el-input-border-color) inset;
   .fileCheckTypeContent {
     width: 64px;
     height: 32px;
@@ -476,7 +483,7 @@
 }
 .filteTypeShowClass {
   border-radius: 2px;
-  border: 1px solid #0077ff;
+  border: 1px solid rgb(99, 149, 253);
   .fileCheckTypeContent {
     transform: translateY(-1px);
     span {
@@ -490,4 +497,30 @@
     // -webkit-border-horizontal-spacing: 13px; // 水平间距
     -webkit-border-vertical-spacing: 8px; // 垂直间距
   }
+}
+
+.kf-section-edit-dialog{
+  .el-dialog__header {
+    padding: 0 0 16px 8px !important;
+}
+  .el-textarea__inner{
+    max-height: 500px;
+  }
+  .el-dialog__body {
+    padding-left: 8px;
+    padding-right: 4px;
+    padding-bottom: 0px;
+  }
+  .el-dialog__footer {
+    padding-bottom: 8px;
+
+    .dialog-footer {
+        display: flex;
+        justify-content: center;
+        & button{
+            height: 24px;
+            width: 64px;
+        }
+    }
+}
 }

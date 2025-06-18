@@ -1,10 +1,10 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
-import { useUserStoreHook } from '@/store/modules/user';
 import { ResultEnum } from '@/enums/ResultEnum';
 import { TOKEN_KEY } from '@/enums/CacheEnum';
 import qs from 'qs';
 import i18n from '@/lang/index';
 import { IconError } from '@computing/opendesign-icons';
+import { useAppStore } from '@/store/modules/app';
 
 // 创建 axios 实例
 const service = axios.create({
@@ -26,6 +26,7 @@ service.interceptors.request.use(
     if (accessToken) {
       config.headers.Authorization = accessToken;
     }
+    config.headers['Authorization'] = `Bearer ${localStorage.getItem('ECSESSION')}`;
     return config;
   },
   (error: any) => {
@@ -40,49 +41,33 @@ service.interceptors.response.use(
     if (response.config.responseType === 'blob' || response.config.responseType === 'arraybuffer') {
       return response;
     }
-
-    const { retcode, data, retmsg } = response?.data;
-    if (retcode?.toString() === ResultEnum.SUCCESS) {
-      return data;
+    const { code, result, message } = response?.data;
+    if (code?.toString() === ResultEnum.SUCCESS) {
+      return result;
     }
     ElMessage({
       showClose: true,
-      message: retmsg || i18n.global.t('pageTipText.systemError'),
+      message: message || i18n.global.t('pageTipText.systemError'),
       icon: IconError,
       customClass: 'o-message--error',
       duration: 3000,
     });
-    return Promise.reject(new Error(retmsg || 'Error'));
+    return Promise.reject(new Error(message || 'Error'));
   },
   (error: any) => {
     // 异常处理
     if (error?.response?.data) {
-      const { retcode, retmsg } = error.response.data;
+      const { retcode, message } = error.response.data;
       if (retcode?.toString() === ResultEnum.TOKEN_INVALID) {
-        if (error?.config?.url === '/user/login') {
-          ElMessage({
-            showClose: true,
-            message: i18n.global.t('login.message.loginTip'),
-            icon: IconError,
-            customClass: 'o-message--error',
-            duration: 3000,
-          });
-        } else {
-          ElNotification({
-            title: i18n.global.t('dialogTipText.tipsText'),
-            message: i18n.global.t('login.message.loginToken'),
-            type: 'info',
-          });
-          useUserStoreHook()
-            .resetToken()
-            .then(() => {
-              location.reload();
-            });
-        }
+        ElNotification({
+          title: i18n.global.t('dialogTipText.tipsText'),
+          message: i18n.global.t('login.message.loginToken'),
+          type: 'info',
+        });
       } else {
         ElMessage({
           showClose: true,
-          message: retmsg || error?.message,
+          message: message || error?.message,
           icon: IconError,
           customClass: 'o-message--error',
           duration: 3000,

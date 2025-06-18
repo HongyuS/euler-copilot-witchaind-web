@@ -6,6 +6,17 @@ import en from 'element-plus/es/locale/lang/en';
 import { store } from '@/store';
 
 export const useAppStore = defineStore('app', () => {
+  const downLoading = ref(false);
+
+  const changeDownLoading = (value: boolean) => {
+    downLoading.value = value;
+  };
+  const parentToken = ref('');
+
+  function changeParentToken(value: string) {
+    parentToken.value = value;
+  }
+
   // 语言
   const language = useStorage('language', defaultSettings.language);
   /**
@@ -31,6 +42,10 @@ export const useAppStore = defineStore('app', () => {
     language,
     locale,
     changeLanguage,
+    parentToken,
+    changeParentToken,
+    downLoading,
+    changeDownLoading,
   };
 });
 

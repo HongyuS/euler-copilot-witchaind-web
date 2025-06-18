@@ -1,0 +1,46 @@
+
+body[theme='dark'] {
+    --o-main-bg: url('/src/assets/images/dark_bg.webp');
+    --o-bg-dialog:var(--o-bg-color-base);
+    --o-button-bg:rgb(99 149 253);
+    --o-tag-text-color:rgb(99 149 253);
+    --o-tag-text-bg:rgb(5 45 90);
+    --o-tag-table-color:rgb(36 171 54);
+    --o-tag-table-bg:rgb(18 57 23);
+    --o-tag-image-color:rgb(249 118 17);
+    --o-tag-image-bg:rgb(71 42 20);
+    --o-tag-link-color:rgb(55 164 227);
+    --o-tag-link-bg:rgba(55 164 227 0.3);
+    --o-tag-code-color:rgb(168 67 205);
+    --o-tag-code-bg:rgb(168 67 205 0.3);
+    --o-tag-qa-color:rgb(235 175 0);
+    --o-tag-qa-bg:rgb(66 53 0);
+    --o-empty-img-pending: url('/src/assets/images/empty_pending_dark.svg');
+    --o-empty-img-failed: url('/src/assets/images/empty_failed_dark.svg');
+    --o-empty-img-running: url('/src/assets/images/empty_running_dark.svg');
+    --o-task-list-icon: url('/src/assets/svg/dark_taskList.svg');
+    --o-task-score-icon: url('/src/assets/svg/dark_taskScore.svg');
+}
+
+body[theme='light'] {
+    --o-main-bg: url('/src/assets/images/light_bg.webp');
+    --o-bg-dialog:var(--o-bg-color-base);
+    --o-button-bg:rgb(99 149 253);
+    --o-tag-text-color:rgb(99 149 253);
+    --o-tag-text-bg:rgb(184 217 255);
+    --o-tag-table-color:rgb(36 171 54);
+    --o-tag-table-bg:rgb(194 231 199);
+    --o-tag-image-color:rgb(249 118 17);
+    --o-tag-image-bg:rgb(253 217 188);
+    --o-tag-link-color:rgb(61 182 252);
+    --o-tag-link-bg:rgba(61 182 252 0.3);
+    --o-tag-code-color:rgb(189 69 232);
+    --o-tag-code-bg:rgb(189 69 232 0.3);
+    --o-tag-qa-color:rgb(235 175 0);
+    --o-tag-qa-bg:rgb(249 235 184);
+    --o-empty-img-pending: url('/src/assets/images/empty_pending.svg');
+    --o-empty-img-failed: url('/src/assets/images/empty_failed.svg');
+    --o-empty-img-running: url('/src/assets/images/empty_running.svg');
+    --o-task-list-icon: url('/src/assets/svg/light_taskList.svg');
+    --o-task-score-icon: url('/src/assets/svg/light_taskScore.svg');
+}

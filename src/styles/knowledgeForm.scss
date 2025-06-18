@@ -18,20 +18,16 @@
     }
 
     .deleteConfig:hover {
-      color: #0077ff;
+      color: rgb(99, 149, 253);
     }
   }
 }
 
-.kl-ruleForm {
+.kl-ruleForm,.dataSet-ruleForm {
   padding-bottom: 0;
 
   .el-select__popper {
     top: 44px !important;
-    box-sizing: border-box;
-    width: 100% !important;
-    background: #fefefe !important;
-    border: 1px solid #07f !important;
 
     .el-select-dropdown {
       width: 100% !important;
@@ -47,21 +43,10 @@
       display: unset !important;
     }
 
-    .is-focused,
-    .el-select__selected-item {
-      span {
-        color: #000000 !important;
-      }
-    }
-
     .is-disabled {
       span {
         color: rgb(191, 199, 215) !important;
       }
-    }
-
-    .el-input__inner {
-      color: #000000 !important;
     }
 
     .is-transparent {
@@ -70,20 +55,10 @@
       }
     }
 
-    .is-focused {
-      span {
-        color: #000000 !important;
-      }
-    }
-
     .removeIsTrans {
       span {
         color: #a8abb2 !important;
       }
-    }
-
-    .el-textarea__inner {
-      color: #000000 !important;
     }
   }
 
@@ -113,7 +88,6 @@
 
   .el-select-dropdown__item.is-hovering {
     color: #fff !important;
-    background: #07f;
   }
 
   .el-form-item__content {
@@ -125,12 +99,10 @@
     .el-textarea__inner {
       width: 320px !important;
       font-size: 12px;
-      color: var(--o-color-black);
     }
 
     .el-input__inner {
       font-size: 12px;
-      color: var(--o-color-black);
     }
 
     .el-textarea__inner {
@@ -158,6 +130,7 @@
     align-items: center;
     padding: 0 !important;
     font-size: 12px !important;
+    color: var(--o-text-color-secondary) !important;
 
     .el-icon {
       margin-top: 2px;
@@ -225,28 +198,24 @@
 
 .analyticMethodSelect {
   box-sizing: border-box;
-  background: #fefefe !important;
-  border-color: #07f !important;
   .el-select-dropdown {
-    width: 100% !important;
-    max-width: unset !important;
+    // width: 100% !important;
+    // max-width: unset !important;
   }
 
   .el-select-dropdown__item.is-hovering {
     color: #fff;
-    background: #07f !important;
   }
 }
 
 .create-dialog {
-  width: 560px;
   height: 600px;
   position: relative;
   padding: 0 !important;
   overflow: hidden;
 
   .el-dialog__body {
-    height: 470px !important;
+    height: 460px !important;
     max-height: unset !important;
     min-height: unset !important;
     padding-left: 16px !important;
@@ -279,8 +248,6 @@
 
   .el-select-dropdown__item.is-hovering {
     color: #fff !important;
-    background: #07f;
-    width: 319px;
   }
 
   .kl-ops-btn {
@@ -361,7 +328,7 @@
     transform: rotateZ(180deg);
   }
   .copydocument:hover {
-    color: #0077ff;
+    color: rgb(99, 149, 253);
   }
 }
 

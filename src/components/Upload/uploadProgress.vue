@@ -29,7 +29,7 @@
           v-for="(item, index) in taskStatusList"
           :key="item.id"
           class="item">
-          <di class="item-box">
+          <div class="item-box">
             <div class="item-info">
               <div
                 :class="
@@ -40,13 +40,7 @@
                 <TextSingleTootip :content="item.name" />
               </div>
               <div
-                class="item-file-size"
-                v-if="!['pending', 'running'].includes(item.uploadStatus)">
-                <TextSingleTootip
-                  :content="`，${$t('dialogTipText.fileSize')} ${bytesToSize(item?.file?.size || item?.size || 0)}`" />
-              </div>
-              <div
-                v-if="!['success', 'canceled','error'].includes(item.uploadStatus)"
+                v-if="!['success', 'canceled','error','failed'].includes(item.uploadStatus)"
                 class="upload-status">
                 {{ `，${$t('assetLibrary.uploadIng')}...` }}
               </div>
@@ -56,7 +50,7 @@
               v-if="typeof item.id === 'string'">
               <IconX @click="handleCloseSingleUpload(item.taskId)" />
             </div>
-          </di>
+          </div>
           <el-progress
             :percentage="item.percent"
             v-if="item.uploadStatus !== 'canceled'"
@@ -72,17 +66,12 @@
             <span>{{ $t('uploadText.uploadSuccess') }}</span>
           </div>
           <div
-            v-if="['error'].includes(item.uploadStatus)"
+            v-if="['error','failed'].includes(item.uploadStatus)"
             class="upload-error">
             <span>
               <el-icon class="icon-tip"><WarningFilled /></el-icon>
             </span>
             <span>{{ $t('uploadText.uploadFailed') }}</span>
-            <span
-              class="upload-restart"
-              @click="handleUploadRestart(item)">
-              {{ $t('btnText.retry') }}
-            </span>
           </div>
           <div
             v-if="item.uploadStatus === 'canceled'"
@@ -105,7 +94,6 @@
 </template>
 <script setup lang="ts">
 import '@/styles/uploadProgress.scss';
-import { bytesToSize } from '@/utils/bytesToSize';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import { IconChevronUp, IconChevronDown, IconX } from '@computing/opendesign-icons';
 const taskStatusList = ref<any>([]);
@@ -175,8 +163,12 @@ watch(
   () => props.taskListImportDate,
   () => {
     taskStatusList.value = props.uploadingList;
+  },
+  {
+    deep: true,
   }
 );
+
 onMounted(() => {
   if (props.isKnowledgeFileUpload) {
     taskStatusList.value = props.uploadingList.filter((item) => item?.uploadStatus !== 'success');

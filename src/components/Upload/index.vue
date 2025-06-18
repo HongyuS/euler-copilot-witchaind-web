@@ -19,7 +19,9 @@
           </el-button>
           <el-button
             @click="batchDelete()"
-            class="delFileBtn cancelBtn">
+            :disabled="multipleSelection.length === 0"
+            class="delFileBtn cancelBtn"
+            >
             {{ $t('btnText.batchDelete') }}
           </el-button>
         </div>
@@ -29,12 +31,16 @@
               props.maxFileNum
             }}
           </div>
-          <div>
+          <div v-if="uploadType !== 'dataset'" >
             {{ $t('dialogTipText.fileSizes') }}:{{ allFileSizesInfo }}/{{ maxFileSizesInfo }}
           </div>
         </div>
       </div>
-      <div class="list-tip">{{ $t('dialogTipText.continueAdd') }}</div>
+      <div class="list-tip">
+        <el-icon>
+          <IconAlertCircle/>
+        </el-icon>
+        {{ $t('dialogTipText.continueAdd') }}</div>
     </div>
     <el-upload
       ref="uploadRef"
@@ -125,7 +131,7 @@
         class="resetBtn"
         type="primary"
         :disabled="btnDisabled"
-        @click="uploadType === 'file' ? uploadKnowledgeFile() : uploadFiles()">
+        @click="handleFileType(uploadType)">
         {{ $t('btnText.confirm') }}
       </el-button>
       <el-button
@@ -139,7 +145,7 @@
 <script lang="ts" setup>
 import { computed, reactive, ref } from 'vue';
 import '@/styles/upload.scss';
-import { IconUpload, IconError } from '@computing/opendesign-icons';
+import { IconUpload, IconError, IconAlertCircle } from '@computing/opendesign-icons';
 import type { UploadFile, UploadProgressEvent } from 'element-plus/es/components/upload/src/upload';
 const { t } = useI18n();
 import { ElMessage } from 'element-plus';
@@ -149,6 +155,21 @@ interface TableRow {
   name: string;
   size?: string;
   file: UploadFile;
+}
+const handleFileType = (type: string)=>{
+  switch(type){
+    case 'file':
+      uploadKnowledgeFile();
+      break;
+    case 'dataset':
+      uploadDatasetFile();
+      break;
+    case 'kbfile':
+      uploadFiles();
+      break;
+    default:
+      break;
+  }
 }
 const doUpload = (options: any) => {
   props.handleUploadMyFile(options);
@@ -216,6 +237,7 @@ const props = defineProps({
   },
   uploadType: {
     type: String,
+    default:'kbfile'
   },
 });
 const fileTableList = reactive<{
@@ -323,7 +345,6 @@ const handleUploadRestart = (item: any) => {
       });
     },
     onSuccess: () => {
-      item.percent = 100;
       props.handInitTaskList();
     },
     fileInfo: item,
@@ -364,13 +385,12 @@ watch(
   () => {
     uploadingList.value = props.taskList?.map((item: any) => {
       return {
-        id: item.id,
+        id: item.opId,
         newUploadTask: false,
-        taskId: item.task.id,
-        name: item.name,
-        size: item?.document_size,
-        percent: item?.task?.status && item?.task?.status !== 'pending' ? 100 : 99,
-        uploadStatus: item?.task?.status,
+        taskId: item.taskId,
+        name: item.opName,
+        percent: item?.taskStatus && item?.taskStatus === 'success' ? 100 : (item?.taskStatus === 'failed'? 0 : 99),
+        uploadStatus: item?.taskStatus,
       };
     });
     handleToggleUploadNotify();
@@ -445,19 +465,15 @@ const uploadFiles = () => {
     uploadingList.value = [
       ...uploadingList.value,
       ...res?.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
-          id: item.id,
-          taskId: item.task.id,
-          name: item.name,
-          size: item?.document_size,
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
           percent:
-            item?.task?.status === 'success'
+            item?.taskStatus === 'success'
               ? 100
-              : reportDetail?.current_stage
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
-          uploadStatus: item?.task?.status,
+              : item.taskCompleted,
+          uploadStatus: item?.taskStatus,
         };
       }),
     ];
@@ -515,7 +531,6 @@ const uploadKnowledgeFile = () => {
         },
         onSuccess: () => {
           uploadFileNumber += 1;
-          item.percent = 100;
           item.uploadStatus = 'success';
           resolve(true); // 标记成功
         },
@@ -535,10 +550,8 @@ const uploadKnowledgeFile = () => {
       handleToggleUploadNotify();
     }
 
-    // 所有成功后的回调
-    if (errorCount === 0) {
-      props.handleQueryTaskList(fileTableList.data); // 统一更新列表
-    }
+    // 所有上传完成后的回调
+    props.handleQueryTaskList(fileTableList.data); // 统一更新列表
   });
 
   uploadingList.value.length && handleToggleUploadNotify();
@@ -547,6 +560,69 @@ const uploadKnowledgeFile = () => {
   uploadRef.value?.clearFiles();
   allFileSizes.value = 0;
 };
+
+// 提交数据集
+const uploadDatasetFile = () => {
+  props?.handleImportLoading(true);
+  let uploadFileNumber = 0;
+  uploadingList.value = fileTableList.data.map((item) => {
+    return {
+      id: item.id,
+      name: item.name,
+      file: item.file,
+      percent: 0,
+      newUploadTask: true,
+    };
+  });
+  const uploadPromises = uploadingList.value.map((item) => {
+    return new Promise((resolve, reject) => {
+      doUpload({
+        file: item.file,
+        onProgress: (evt: any) => {
+          if (evt < 100) {
+            item.percent = evt;
+          }
+        },
+        onError: (e: any) => {
+          uploadingList.value = uploadingList.value.map((up) => {
+            if (up.id === e.id) {
+              return { ...e, uploadStatus: 'error' };
+            }
+            return up;
+          });
+          reject(e); // 传递错误
+        },
+        onSuccess: () => {
+          uploadFileNumber += 1;
+          item.uploadStatus = 'success';
+          resolve(true); // 标记成功
+        },
+        fileInfo: item,
+      });
+    });
+  });
+
+  // 所有上传完成后统一更新列表
+  Promise.allSettled(uploadPromises).then((results) => {
+    const successCount = results.filter((result) => result.status === 'fulfilled').length;
+    const errorCount = results.length - successCount;
+
+    // 统一更新列表
+    props?.handleImportLoading(false);
+    if (errorCount > 0) {
+      handleToggleUploadNotify();
+    }
+
+    // 所有上传完成后的回调
+    props.handleQueryTaskList(fileTableList.data); // 统一更新列表
+  });
+
+  uploadingList.value.length && handleToggleUploadNotify();
+  props.handleCancelVisible();
+  fileTableList.data = [];
+  uploadRef.value?.clearFiles();
+  allFileSizes.value = 0;
+}
 
 const handleToggleUploadNotify = () => {
   props.toggleUploadNotify({

@@ -1,7 +1,6 @@
 <template>
   <el-form
     ref="ruleFormRef"
-    style="max-width: 600px"
     :model="ruleForm"
     :rules="rules"
     label-width="auto"
@@ -29,11 +28,11 @@
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.name')"
-      prop="name">
+      prop="kbName">
       <el-input
-        v-model="ruleForm.name"
+        v-model="ruleForm.kbName"
         minlength="1"
-        maxlength="50"
+        maxlength="20"
         :placeholder="$t('assetLibrary.message.pleasePlace')" />
     </el-form-item>
     <el-form-item
@@ -49,9 +48,9 @@
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.language')"
-      prop="language">
+      prop="tokenizer">
       <el-select
-        v-model="ruleForm.language"
+        v-model="ruleForm.tokenizer"
         :placeholder="$t('assetLibrary.message.pleaseChoose')"
         :suffix-icon="IconCaretDown"
         :teleported="false"
@@ -65,7 +64,7 @@
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.embeddedModel')"
-      prop="embedding_model">
+      prop="embeddingModel">
       <template #label>
         {{ $t('assetLibrary.embeddedModel') }}
         <el-tooltip
@@ -80,11 +79,11 @@
       </template>
 
       <el-select
-        v-model="ruleForm.embedding_model"
+        v-model="ruleForm.embeddingModel"
         :placeholder="$t('assetLibrary.message.pleaseChoose')"
         :teleported="false"
         class="select-container"
-        :disabled="props.formData.id"
+        :disabled="props.formData?.id"
         :suffix-icon="IconCaretDown">
         <el-option
           v-for="item in emBeddingModelOptions"
@@ -95,9 +94,9 @@
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.analyticMethod')"
-      prop="default_parser_method">
+      prop="defaultParseMethod">
       <el-select
-        v-model="ruleForm.default_parser_method"
+        v-model="ruleForm.defaultParseMethod"
         :placeholder="$t('assetLibrary.message.pleaseChoose')"
         :suffix-icon="IconCaretDown"
         popper-class="analyticMethodSelect">
@@ -110,7 +109,7 @@
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.fileChunkSize')"
-      prop="default_chunk_size">
+      prop="defaultChunkSize">
       <template #label>
         {{ $t('assetLibrary.fileChunkSize') }}
         <el-tooltip
@@ -125,10 +124,54 @@
       </template>
       <el-input-number
         class="config-size"
-        v-model="ruleForm.default_chunk_size"
-        :min="512"
+        v-model="ruleForm.defaultChunkSize"
+        :min="128"
         :max="1024" />
-      <span class="form-right-tip">（512~1024）</span>
+      <span class="form-right-tip">（128~1024）</span>
+    </el-form-item>
+    <el-form-item
+      :label="$t('assetLibrary.fileChunkSize')"
+      prop="uploadCountLimit">
+      <template #label>
+        {{ $t('assetLibrary.numberUpperLimit') }}
+        <el-tooltip
+          :content="$t('formTipText.fileChunkSizeTip')"
+          placement="top"
+          popper-class="fileChunkSizeTip"
+          effect="light">
+          <el-icon>
+            <IconHelpCircle />
+          </el-icon>
+        </el-tooltip>
+      </template>
+      <el-input-number
+        class="config-size"
+        v-model="ruleForm.uploadCountLimit"
+        :min="128"
+        :max="1024" />
+      <span class="form-right-tip">（128~1024）</span>
+    </el-form-item>
+    <el-form-item
+      :label="$t('assetLibrary.fileChunkSize')"
+      prop="uploadSizeLimit">
+      <template #label>
+        {{ $t('assetLibrary.sizeUpperLimit') }}
+        <el-tooltip
+          :content="$t('formTipText.fileChunkSizeTip')"
+          placement="top"
+          popper-class="fileChunkSizeTip"
+          effect="light">
+          <el-icon>
+            <IconHelpCircle />
+          </el-icon>
+        </el-tooltip>
+      </template>
+      <el-input-number
+        class="config-size"
+        v-model="ruleForm.uploadSizeLimit"
+        :min="128"
+        :max="2048" />
+      <span class="form-right-tip">（128M~2048M）</span>
     </el-form-item>
     <el-form-item
       :label="
@@ -137,7 +180,7 @@
       class="config-form">
       <el-button
         class="resetBtn addDocuType"
-        :disabled="ruleForm?.document_type_list?.length >= 10"
+        :disabled="ruleForm?.docTypes?.length >= 10"
         @click="handleAddDocType">
         {{ $t('btnText.add') }}
       </el-button>
@@ -152,12 +195,13 @@
     </el-form-item>
 
     <el-form-item
-      v-for="(item, index) in ruleForm.document_type_list"
+      v-for="(item, index) in ruleForm.docTypes"
       :key="`documentType${index}`"
       label="domain"
       class="domain-config">
       <el-input
-        v-model="ruleForm.document_type_list[index].type"
+        v-model="ruleForm.docTypes[index].docTypeName"
+        maxlength="20"
         :placeholder="$t('assetLibrary.message.categoryInfo')" />
       <el-icon
         class="deleteConfig"
@@ -199,6 +243,7 @@ import TextTooltip from '@/components/TextSingleTootip/index.vue';
 import { v4 as uuidv4 } from 'uuid';
 import KbAppAPI from '@/api/kbApp';
 
+const route = useRoute()
 const { t } = useI18n();
 const loading = ElLoading.service({
   visible: false,
@@ -206,13 +251,15 @@ const loading = ElLoading.service({
   background: 'rgba(122, 122, 122, 0.5)',
 });
 interface RuleForm {
-  default_chunk_size: number;
-  default_parser_method: string;
+  defaultChunkSize: number;
+  defaultParseMethod: string;
   description: string;
-  document_type_list: any[];
-  embedding_model: string;
-  language: string;
-  name: string;
+  docTypes: any[];
+  embeddingModel: string;
+  tokenizer: string;
+  kbName: string;
+  uploadCountLimit: number;
+  uploadSizeLimit: number;
   [property: string]: any;
 }
 
@@ -221,13 +268,15 @@ const ruleFormRef = ref<FormInstance>();
 const createLoading = ref(false);
 const isSubmitDisabled = ref(true);
 const ruleForm = ref<RuleForm>({
-  name: '',
-  language: '',
-  default_chunk_size: 1024,
-  embedding_model: '',
-  default_parser_method: '',
-  document_type_list: [],
+  kbName: '',
+  tokenizer: '',
+  defaultChunkSize: 512,
+  embeddingModel: '',
+  defaultParseMethod: '',
+  docTypes: [],
   description: '',
+  uploadSizeLimit: 512,
+  uploadCountLimit: 128,
 });
 const languageOptions = ref();
 const emBeddingModelOptions = ref();
@@ -264,20 +313,19 @@ onMounted(() => {
     ? JSON.parse(
         JSON.stringify({
           ...props.formData,
-          document_type_list: props.formData?.document_type_list.filter(
-            (item: any) => item?.type?.length
+          docTypes: props.formData?.docTypes.filter(
+            (item: any) => item?.docTypeName?.length
           ),
-          default_chunk_size: props.formData.default_chunk_size || 1024,
+          defaultChunkSize: props.formData.defaultChunkSize || 512,
+          uploadSizeLimit: props.formData?.uploadSizeLimit || 512,
+          uploadCountLimit: props.formData?.uploadCountLimit || 128,
         } as RuleForm)
       )
     : ruleForm.value;
 
   KbAppAPI.queryLanguageList().then((res: any) => {
     languageOptions.value = res?.map((item: any) => {
-      if (item === 'English') {
-        return { label: item, value: 'en' };
-      }
-      return { label: item, value: 'zh' };
+      return { label: item, value: item };
     });
   });
 
@@ -318,7 +366,7 @@ const rules = reactive<FormRules<RuleForm>>({
       required: true,
     },
   ],
-  name: [
+  kbName: [
     {
       required: true,
       message: t('assetLibrary.message.name'),
@@ -330,34 +378,36 @@ const rules = reactive<FormRules<RuleForm>>({
       trigger: ['blur', 'change'],
     },
   ],
-  language: [
+  tokenizer: [
     {
       required: true,
       message: t('assetLibrary.message.languagePlace'),
-      trigger: ['blur', 'chanblurge'],
+      trigger: ['blur', 'change'],
     },
   ],
-  embedding_model: [
+  embeddingModel: [
     {
       required: true,
       message: t('assetLibrary.message.modelPlace'),
       trigger: ['blur', 'change'],
     },
   ],
-  default_parser_method: [
+  defaultParseMethod: [
     {
       required: true,
       message: t('assetLibrary.message.analyticMethodPlace'),
       trigger: ['blur', 'change'],
     },
   ],
-  default_chunk_size: [
+  defaultChunkSize: [
     {
       message: t('assetLibrary.message.pleasePlace'),
       trigger: ['blur', 'change'],
       required: true,
     },
   ],
+  uploadSizeLimit:[ { required: true  } ],
+  uploadCountLimit:[ { required: true  } ],
 });
 
 const handleCopyTextToclipboard = (text: string) => {
@@ -385,27 +435,27 @@ onMounted(() => {
     }
   });
 });
-
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
     let payload = {
-      name: ruleForm.value.name,
-      language: ruleForm.value?.language?.toLocaleLowerCase(),
+      kbName: ruleForm.value.kbName,
+      tokenizer: ruleForm.value?.tokenizer?.toLocaleLowerCase(),
       description: ruleForm.value.description,
-      embedding_model: ruleForm.value.embedding_model,
-      default_parser_method: ruleForm.value.default_parser_method,
-      default_chunk_size: ruleForm.value.default_chunk_size,
-      document_type_list: ruleForm.value.document_type_list.filter((item) => item.type.length > 0),
+      embeddingModel: ruleForm.value.embeddingModel,
+      defaultParseMethod: ruleForm.value.defaultParseMethod,
+      defaultChunkSize: ruleForm.value.defaultChunkSize,
+      uploadCountLimit: ruleForm.value.uploadCountLimit,
+      uploadSizeLimit: ruleForm.value.uploadSizeLimit,
+      docTypes: ruleForm.value.docTypes.filter((item) => item.docTypeName.length > 0),
     };
     if (valid) {
       loading.visible.value = true;
       createLoading.value = true;
-      if (ruleForm.value?.id) {
+      if (ruleForm.value?.kbId) {
         KbAppAPI.updateKbLibrary({
-          id: ruleForm.value.id,
-          ...payload,
-        })
+          kbId: ruleForm.value.kbId,
+        },payload)
           .then((res) => {
             props.handleOpsKbForm();
             if (props.configInfo) {
@@ -418,16 +468,23 @@ const submitForm = async (formEl: FormInstance | undefined) => {
               customClass: 'o-message--success',
               duration: 3000,
             });
-            ruleForm.value.document_type_list = (res as any).document_type_list;
+            ruleForm.value.docTypes = (res as any).docTypes;
           })
           .finally(() => {
             loading.visible.value = false;
             createLoading.value = false;
           });
       } else {
-        KbAppAPI.createKbLibrary({
+        let docArr:any = []
+        ruleForm.value.docTypes.map((item) => {
+          docArr.push({
+            docTypeId:item.docTypeId,
+            docTypeName:item.docTypeName
+          })
+        } )
+        KbAppAPI.createKbLibrary({teamId:route.query.id?.toString() ?? ''},{
           ...payload,
-          document_type_list: ruleForm.value.document_type_list.map((item) => item.type),
+          docTypes: docArr
         })
           .then(() => {
             props.handleOpsKbForm();
@@ -449,17 +506,17 @@ const handleCancelForm = () => {
 };
 
 const handleRemoveDocType = (index: number) => {
-  ruleForm.value.document_type_list.splice(index, 1);
+  ruleForm.value.docTypes.splice(index, 1);
 };
 
 const handleRemoveAllDocType = () => {
-  ruleForm.value.document_type_list.splice(0);
+  ruleForm.value.docTypes.splice(0);
 };
 
 const handleAddDocType = () => {
-  ruleForm.value.document_type_list.push({
-    id: uuidv4(),
-    type: '',
+  ruleForm.value.docTypes.push({
+    docTypeId: uuidv4(),
+    docTypeName: '',
   });
 };
 </script>

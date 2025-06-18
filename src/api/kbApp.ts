@@ -1,67 +1,102 @@
 import request from '@/utils/request';
 import { CreateKbRequest, QueryKbRequest, UpdateKbRequest } from './apiType';
 import { ModelForm } from '@/components/UserHeaderBar/modelConfig';
+import qs from 'qs';
 
+export type ITaskType =
+  | 'doc_parse'
+  | 'kb_export'
+  | 'kb_import'
+  | 'dataset_export'
+  | 'dataset_import'
+  | 'dataset_generate'
+  | 'tetsing_run';
 class KbAppAPI {
   /** 获取用户所有知识库*/
   static getKbLibrary(data: QueryKbRequest) {
     return request({
-      url: `/kb/list`,
+      url: `/kb/team`,
       method: 'post',
       data: data,
     });
   }
 
   /** 删除用户知识库*/
-  static delKbLibrary(data: { id: string; task_id: string }) {
+  static delKbLibrary(data: string[]) {
     return request({
-      url: `/kb/rm`,
-      method: 'post',
+      url: `/kb`,
+      method: 'delete',
       data: data,
     });
   }
 
   /** 创建用户知识库*/
-  static createKbLibrary(data: CreateKbRequest) {
+  static createKbLibrary(params: { teamId: string }, data: CreateKbRequest) {
     return request({
-      url: `/kb/create`,
+      url: `/kb`,
       method: 'post',
       data: data,
+      params,
     });
   }
 
   /**更新资产库 */
-  static updateKbLibrary(data: UpdateKbRequest) {
+  static updateKbLibrary(params: { kbId: string }, data: UpdateKbRequest) {
     return request({
-      url: `/kb/update`,
+      url: `/kb`,
+      method: 'put',
+      data: data,
+      params,
+    });
+  }
+
+  /** 获取导入/导出任务列表*/
+  static queryTaskList(data: {
+    teamId: string;
+    taskType: ITaskType;
+    pageSize: number;
+    page: number;
+  }) {
+    return request({
+      url: `/task`,
       method: 'post',
       data: data,
     });
   }
 
-  /** 获取导入知识库状态*/
-  static queryKbTaskList(data: { types: any[]; page_size: number; page_number: number }) {
+  static stopKbTaskList(params: { taskId?: string; taskType?: ITaskType }, data: string[]) {
     return request({
-      url: `/kb/task/list`,
-      method: 'post',
+      url: `/task`,
+      method: 'delete',
+      params,
       data: data,
     });
   }
 
-  static stopKbTaskList(data: { task_id?: string; types?: any[] }) {
+  /** 删除任务列表一条任务 */
+  static stopOneTaskList(params: { taskId: string }) {
     return request({
-      url: `/kb/task/rm`,
-      method: 'post',
-      data: data,
+      url: `/task/one`,
+      method: 'delete',
+      params,
+    });
+  }
+  /** 删除任务列表所有任务 */
+  static stopAllTaskList(params: { teamId: string; taskType: ITaskType }) {
+    return request({
+      url: `/task/all`,
+      method: 'delete',
+      params,
     });
   }
 
   /**导入资产库 */
-  static importKbLibrary(payload: { data: any }, options: any) {
+  static importKbLibrary(payload: { data: any; params: any }, options: any) {
     return request({
       url: `/kb/import`,
       method: 'post',
       data: payload.data,
+      params: payload.params,
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -76,12 +111,13 @@ class KbAppAPI {
 
   /**打包资产库 */
 
-  static savebLibrary(id: string, options: any) {
+  static savebLibrary(kbIds: string[], options: any) {
     return request({
       url: `/kb/export`,
-      data: {
-        id,
+      params: {
+        kbIds,
       },
+      paramsSerializer: (params) => qs.stringify(params, { indices: false }),
       method: 'post',
       onUploadProgress(e) {
         const rate = Math.floor((e.loaded / (e.total as number)) * 100);
@@ -105,14 +141,14 @@ class KbAppAPI {
 
   static queryLanguageList() {
     return request({
-      url: `/kb/language`,
+      url: `/other/tokenizer`,
       method: 'get',
     });
   }
 
   static queryEmbeddingModelList() {
     return request({
-      url: `/other/embedding_model`,
+      url: `/other/embedding`,
       method: 'get',
     });
   }
@@ -120,6 +156,13 @@ class KbAppAPI {
   static queryParseMethodList() {
     return request({
       url: `/other/parse_method`,
+      method: 'get',
+    });
+  }
+
+  static querySearchMethodList() {
+    return request({
+      url: `/other/search_method`,
       method: 'get',
     });
   }

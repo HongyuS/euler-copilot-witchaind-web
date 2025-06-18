@@ -1,0 +1,61 @@
+<svg width="320.000000" height="130.000000" viewBox="0 0 320 130" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<linearGradient x1="97.573189" y1="24.330544" x2="97.573189" y2="51.055855" id="paint_linear_1560_59431_0" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#7C8084"/>
+			<stop offset="0.140000" stop-color="#7A7E82" stop-opacity="0.949020"/>
+			<stop offset="0.330000" stop-color="#74787D" stop-opacity="0.831373"/>
+			<stop offset="0.550000" stop-color="#6B6F73" stop-opacity="0.619608"/>
+			<stop offset="0.780000" stop-color="#5E6267" stop-opacity="0.329412"/>
+			<stop offset="1.000000" stop-color="#4F5359" stop-opacity="0.000000"/>
+		</linearGradient>
+		<linearGradient x1="209.118317" y1="15.575953" x2="209.118317" y2="88.051788" id="paint_linear_1560_59433_0" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#7C8084"/>
+			<stop offset="0.120000" stop-color="#7A7E82" stop-opacity="0.949020"/>
+			<stop offset="0.290000" stop-color="#74787D" stop-opacity="0.831373"/>
+			<stop offset="0.480000" stop-color="#6B6F73" stop-opacity="0.619608"/>
+			<stop offset="0.680000" stop-color="#5E6267" stop-opacity="0.329412"/>
+			<stop offset="0.880000" stop-color="#4F5359" stop-opacity="0.000000"/>
+		</linearGradient>
+	</defs>
+	<g opacity="0.500000">
+		<g opacity="0.170000">
+			<rect id="矩形" x="82.214355" y="23.481689" width="30.723660" height="25.822083" fill="url(#paint_linear_1560_59431_0)" fill-opacity="1.000000"/>
+			<rect id="矩形" x="82.714355" y="23.981689" width="29.723660" height="24.822083" stroke="#C3CEDF" stroke-opacity="1.000000" stroke-width="1.000000"/>
+		</g>
+	</g>
+	<g opacity="0.500000">
+		<g opacity="0.170000">
+			<rect id="矩形" x="167.462158" y="13.277100" width="83.312302" height="70.022919" fill="url(#paint_linear_1560_59433_0)" fill-opacity="1.000000"/>
+		</g>
+		<rect id="矩形" x="167.462158" y="13.277344" width="83.312302" height="3.625000" fill="#42464D" fill-opacity="1.000000"/>
+		<rect id="矩形" x="242.383728" y="14.274078" width="1.498423" height="1.510417" fill="#62676D" fill-opacity="1.000000"/>
+		<rect id="矩形" x="245.131775" y="14.274078" width="1.498423" height="1.510417" fill="#62676D" fill-opacity="1.000000"/>
+		<rect id="矩形" x="247.879822" y="14.274078" width="1.498423" height="1.510417" fill="#62676D" fill-opacity="1.000000"/>
+	</g>
+	<path id="路径" d="M254.78 57.14C244.22 51.7 234.88 53.25 237.26 66.35C239.65 79.45 238.52 90.56 228.45 88.75C218.39 86.94 208.33 62.31 206.66 42.64C205 22.97 171.6 -3.76 156.2 11.74C156.2 11.74 151.74 17.23 152.17 27.32" stroke="#6395FD" stroke-opacity="1.000000" stroke-width="0.750000" stroke-dasharray="4 4"/>
+	<path id="路径" d="M219.1 32.67L102.23 32.67L102.23 106.74L157.75 106.74L157.75 119.78L139.81 119.78C139.05 119.78 138.43 120.4 138.43 121.17C138.43 121.93 139.05 122.55 139.81 122.55L181.83 122.55C182.33 122.55 182.78 122.29 183.03 121.86C183.27 121.43 183.27 120.9 183.03 120.47C182.78 120.04 182.33 119.78 181.83 119.78L163.89 119.78L163.89 106.74L219.1 106.74L219.1 32.67Z" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<rect id="矩形" x="102.232422" y="32.628906" width="116.876968" height="66.156250" fill="#2D3139" fill-opacity="1.000000"/>
+	<rect id="矩形" x="102.232422" y="32.628906" width="116.876968" height="66.156250" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000"/>
+	<path id="路径" d="M107.59 40.24L214.87 40.24" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round" stroke-linecap="round"/>
+	<rect id="矩形" x="209.852051" y="35.501709" width="1.780126" height="1.794375" fill="#576372" fill-opacity="1.000000"/>
+	<rect id="矩形" x="206.595215" y="35.501709" width="1.780126" height="1.794375" fill="#576372" fill-opacity="1.000000"/>
+	<rect id="矩形" x="213.115723" y="35.501709" width="1.780126" height="1.794375" fill="#576372" fill-opacity="1.000000"/>
+	<path id="路径" d="M246.98 67.67L246.98 67.67C245.12 65.21 247.88 62.43 250.32 64.31C252.18 66.77 249.42 69.55 246.98 67.67Z" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M179.26 68.62L190.88 71.34L190.92 71.28L179.59 68.61L179.26 68.62L179.26 68.62Z" fill="#B8BDC6" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="路径" d="M190.88 71.34L190.92 71.28L179.59 68.61L179.26 68.62L179.26 68.62L190.88 71.34Z" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M142.07 68.62L130.46 71.34L130.42 71.28L141.74 68.61L142.07 68.62L142.07 68.62Z" fill="#B8BDC6" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="路径" d="M130.46 71.34L130.42 71.28L141.74 68.61L142.07 68.62L142.07 68.62L130.46 71.34Z" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<rect id="矩形" x="141.967773" y="68.628174" width="37.640377" height="18.427084" fill="#42464D" fill-opacity="1.000000"/>
+	<rect id="矩形" x="141.967773" y="68.628174" width="37.640377" height="18.427084" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M179.6 68.62L141.96 68.62L138.06 79.49L182.89 79.49L179.6 68.62L179.6 68.62Z" fill="#626D7C" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="路径" d="M141.96 68.62L138.06 79.49L182.89 79.49L179.6 68.62L179.6 68.62L141.96 68.62Z" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<rect id="矩形" x="162.074707" y="59.052734" width="2.436558" height="8.838992" transform="rotate(179.9 162.074707 59.052734)" fill="#6395FD" fill-opacity="1.000000"/>
+	<rect id="矩形" x="168.709229" y="62.223145" width="2.479087" height="8.819492" transform="rotate(-139.94 168.709229 62.223145)" fill="#6395FD" fill-opacity="1.000000"/>
+	<rect id="矩形" x="147.321045" y="55.521729" width="2.479190" height="8.819274" transform="rotate(-40.25 147.321045 55.521729)" fill="#6395FD" fill-opacity="1.000000"/>
+	<ellipse id="椭圆形" cx="88.102600" cy="87.130829" rx="1.387539" ry="1.398646" stroke="#576372" stroke-opacity="1.000000" stroke-width="1.000000" stroke-linejoin="round"/>
+	<path id="路径" d="M156.85 37.52C162.34 44.7 170.37 60.18 131.05 53.96C115.17 51.45 79.55 42.46 70.41 49.85C60.77 57.66 67.22 64.78 67.22 64.78" stroke="#6395FD" stroke-opacity="1.000000" stroke-width="0.750000" stroke-dasharray="4 4"/>
+	<ellipse id="椭圆形" cx="68.692444" cy="67.199249" rx="2.280599" ry="2.298854" stroke="#6395FD" stroke-opacity="1.000000" stroke-width="0.750000" stroke-dasharray="4 4"/>
+</svg>

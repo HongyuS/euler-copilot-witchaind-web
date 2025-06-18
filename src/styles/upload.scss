@@ -1,4 +1,6 @@
 .upload-dialog {
+  width: 544px ;
+  padding: 0;
   .el-dialog__body {
     max-height: unset !important;
   }
@@ -39,6 +41,8 @@
       margin: 8px 0;
       font-size: var(--o-font-size-info);
       line-height: var(--o-line-height-info);
+      display: flex;
+      align-items: center;
     }
 
     &.has-files {
@@ -46,19 +50,11 @@
         height: 184px;
       }
 
-      .el-table__header .cell {
-        color: rgb(78 88 101);
-      }
-
-      .el-table__body .cell {
-        color: rgb(0 0 0);
-      }
-
       .el-alert--info {
         align-items: start;
         max-height: 48px;
         margin-bottom: 16px;
-        background-color: rgb(184 217 255) !important;
+        background-color: var(--o-color-primary-fourth) !important;
 
         .el-alert__content {
           padding-right: 0 !important;
@@ -116,6 +112,16 @@
     height: 264px;
     overflow: hidden;
     cursor: pointer;
+
+    .upload-drag{
+      color: var(--o-text-color-secondary);
+      line-height: 16px;
+      margin-bottom: 4px;
+    }
+    .upload-tip-text{
+      color: var(--o-text-color-tertiary);
+      width: 400px;
+    }
 
     .upload-drag-mask {
       position: absolute;
@@ -222,13 +228,10 @@
   .el-upload-dragger {
     box-sizing: border-box;
     padding: 0 !important;
-    border: 1px dashed rgb(195 206 223);
-    border-radius: 2px;
-  }
-
-  .el-checkbox__inner::before {
-    top: 4.5px !important;
-    width: 13px !important;
+    border: unset;
+    border: 2px dashed var(--o-border-color-light);
+    border-radius: 8px;
+    background-color: var(--o-bg-color-base);
   }
 
   .el-progress__text {

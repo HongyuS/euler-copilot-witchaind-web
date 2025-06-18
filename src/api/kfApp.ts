@@ -11,46 +11,40 @@ class KfAppAPI {
     });
   }
   /** 修改资产库里的文件*/
-  static updateLibraryFile(data: DocRenameRequest) {
+  static updateLibraryFile(params: { docId: string }, data: DocRenameRequest) {
     return request({
-      url: `/doc/update`,
-      method: 'post',
-      data: data,
-    });
-  }
-
-  /** 是否启用文件*/
-  static switchLibraryFile(data: { enabled: boolean; id: string }) {
-    return request({
-      url: `/doc/switch`,
-      method: 'post',
+      url: `/doc`,
+      method: 'put',
+      params,
       data: data,
     });
   }
 
   /** 是否删除文件*/
-  static delLibraryFile(data: { ids: any[] }) {
+  static delLibraryFile(data: string[]) {
     return request({
-      url: `/doc/rm`,
-      method: 'post',
+      url: `/doc`,
+      method: 'delete',
       data: data,
     });
   }
 
   /** 是否重启/取消文件*/
-  static runLibraryFile(data: { ids: string[]; run: string }) {
+  static runLibraryFile(params: { parse: boolean }, data: string[]) {
     return request({
-      url: `/doc/run`,
+      url: `/doc/parse`,
       method: 'post',
-      data: data,
+      params,
+      data,
     });
   }
 
   /**导入资产库文档 */
   static importKbLibraryFile(payload: { data: any; params: any }, options: any) {
     return request({
-      url: `/doc/upload?kb_id=${payload.params.kb_id}`,
+      url: `/doc`,
       method: 'post',
+      params: payload.params,
       data: payload.data,
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -99,12 +93,35 @@ class KfAppAPI {
     });
   }
 
-  /** 是否启用文件*/
-  static switchLibraryFileSection(data: { enabled: boolean; ids: string[]; document_id: string }) {
+  /**  更新文本块内容 */
+  static updateFileSection(
+    params: { chunkId: string },
+    data: { enabled?: boolean; text?: string }
+  ) {
+    return request({
+      url: `/chunk`,
+      method: 'put',
+      params,
+      data: data,
+    });
+  }
+
+  /**  批量启用文本块内容 */
+  static switchFileSection(params: { enabled: boolean }, data: string[]) {
     return request({
       url: `/chunk/switch`,
-      method: 'post',
+      method: 'put',
+      params,
       data: data,
+    });
+  }
+
+  /** 查询文档日志*/
+  static getDocumentLog(data: { docId: string }) {
+    return request({
+      url: `/doc/report`,
+      method: 'get',
+      params: data,
     });
   }
 }

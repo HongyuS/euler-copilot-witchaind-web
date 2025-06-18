@@ -1,8 +1,14 @@
 <template>
-  <UserHeaderBar />
   <CustomLoading :loading="loading" />
-
-  <div class="knowledgeLibrary-container">
+  <div class="empty-content" v-if="!fileTableList.data.length && !isSearch && totalCount === 0">
+    <EmptyStatus
+      :description="$t('assetLibrary.assetEmptyDesc')"
+      :buttonText="$t('assetLibrary.assetEmptyText')"
+      buttonClass="group-btn"
+      @click="handleCreateKnowledge"
+    />
+  </div>
+  <div v-else class="knowledgeLibrary-container">
     <div
       v-if="showTaskExportNotify"
       class="o-export-progress-notify"
@@ -32,7 +38,7 @@
             v-for="(item, index) in taskExportList"
             :key="item.id"
             class="item">
-            <di class="item-box">
+            <div class="item-box">
               <div class="item-info">
                 <div class="item-name">
                   <h2 class="item-name-text">
@@ -47,7 +53,7 @@
               <div class="item-close">
                 <IconX @click="handleCloseSingleUpload(item.taskId)" />
               </div>
-            </di>
+            </div>
             <div class="taskStatusPer">
               <div
                 class="waitExport"
@@ -60,13 +66,15 @@
               <div
                 class="packData"
                 v-if="['success', 'error', 'canceled', 'failed'].includes(item.exportStatus)">
-                <IconError
+                <el-icon
                   v-if="['error', 'canceled', 'failed'].includes(item.exportStatus)"
-                  class="errorIcon" />
+                  class="errorIcon">
+                  <img src="@/assets/svg/fail.svg" alt="fail icon" />
+                </el-icon>
                 <el-icon
                   v-if="item.percent === 100"
                   class="successIcon">
-                  <CircleCheckFilled />
+                   <img src="@/assets/svg/succes.svg" alt="success icon" />
                 </el-icon>
                 <span v-if="item.exportStatus === 'success'">
                   {{ $t('exportTask.exportSuccess') }}
@@ -85,11 +93,6 @@
                   v-if="['error', 'failed'].includes(item.exportStatus)"
                   class="errorTask">
                   <div class="errorReson">{{ $t('exportTask.reason') }}</div>
-                  <div
-                    class="errorRestart"
-                    @click="handleUploadRestart(item)">
-                    {{ $t('btnText.retry') }}
-                  </div>
                 </div>
 
                 <div
@@ -115,7 +118,7 @@
       class="knowledgeLibrary-box knowledgeLibrary-table-box"
       :class="{ knowledgeLibrayList: switchIcon === 'list' }">
       <div class="kl-tilte">
-        {{ $t('assetLibrary.assetLibrary') }}
+          {{ groupName }}
       </div>
       <div class="kl-ops">
         <div class="kl-left-btn">
@@ -127,9 +130,56 @@
           </el-button>
           <el-button
             @click="handleImportKnowledge"
-            class="ImportAsset cancelBtn">
+            class="ImportAsset">
             {{ $t('btnText.batchImport') }}
           </el-button>
+          <el-dropdown 
+            placement="bottom" 
+            popper-class="kf-ops-dowlon dropdown-container"
+            @visible-change="handleBatchDownBth"
+            :disabled="multipleSelection.length === 0"
+          >
+            <el-button 
+            :class="{
+              'upBtn': batchDownBth,
+              'downBtn': !batchDownBth,
+              'dropdown-disabled': multipleSelection.length === 0
+            }"
+            >
+              {{ $t('btnText.batchOps') }}
+              <el-icon class="el-icon--right" v-if="!batchDownBth">
+                <IconCaretDown />
+              </el-icon>
+              <el-icon class="el-icon--right el-icon--caretup" v-if="batchDownBth">
+                <IconCaretUp />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleBatchDelete" >
+                  {{ $t('btnText.batchDelete') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click="handleBatchExport" >
+                  {{ $t('btnText.batchExport') }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <el-button v-if="switchIcon === 'thumb'" @click="handleMultipleSelect">
+            {{multiple? $t('btnText.cancelMultiple') : $t('btnText.multiple')}}
+          </el-button>
+          <span v-if="multiple && switchIcon === 'thumb'" class="multipleSelect" >
+            <el-checkbox 
+              :label="$t('btnText.checkAll')" 
+              size="large" 
+              v-model="isAllChecked"
+              :indeterminate="isIndeterminate"
+              @change="handleSelectAll"
+            />
+          </span>
+          <span v-if="multipleSelection.length>0 " class="multipleSelectNum">
+            {{ $t('btnText.selected',{count: multipleSelection.length }) }} 
+          </span>
         </div>
         <div class="kl-right-btn">
           <div class="kl-btn-search">
@@ -170,7 +220,6 @@
       </div>
       <div
         class="kl-card-box"
-        @scroll="handleScroll"
         ref="klCardBox"
         v-if="switchIcon === 'thumb'">
         <div
@@ -178,22 +227,23 @@
           :class="5 < fileTableList.data.length ? 'kl-card-display' : 'kl-card-show'">
           <div
             class="kl-single-card"
-            v-for="item in fileTableList.data"
             @click="handleJumpAssets(item)"
-            :key="item.id">
+            v-for="item in fileTableList.data"
+            :key="item?.kbId"
+            :class="{'is-checked': item?.checked}">
             <div class="kl-card-top">
-              <div class="kl-card-name">
-                <TextSingleTootip :content="item.name" />
+              <div class="kl-card-name"
+              >
+                <TextSingleTootip :content="item.kbName" />
               </div>
               <el-dropdown
+                v-if="!multiple"
                 placement="bottom-end"
                 popper-class="dropdown-container assetDro">
                 <div
                   class="kl-card-more-icon"
                   @click.stop>
-                  <el-icon>
-                    <IconMore />
-                  </el-icon>
+                  <span class="icon-more"></span>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
@@ -209,37 +259,57 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
+              <el-checkbox 
+                v-else 
+                v-model="item.checked" 
+                @click.stop
+                @change="(val) => handleCheckboxChange(val, item)"
+              />
             </div>
             <div class="kl-card-desc">
               <TextMoreTootip
                 :value="item.description"
                 :row="6" />
             </div>
+            <div class="kl-card-id">
+              <span class="id-label">{{ `ID:${' '} ` }}</span>
+              <span class="id-value">{{ item.kbId }}</span>
+              <el-icon class="id-copy" @click.stop="handleCopyId(item.kbId)" >
+                <CopyDocument />
+              </el-icon>
+            </div>
             <div class="kl-card-footer">
+              <div>
+                @{{ item.authorName }}
+              </div>
               <div class="kl-card-file-icon">
                 <img
-                  src="/src/assets/images/file.png"
+                  src="/src/assets/images/file_count.svg"
                   class="filePng" />
                 <div class="kl-card-file">
-                  <span class="kl-file-num">{{ item.document_count }}</span>
+                  <span class="kl-file-num">{{ item.docCnt }}</span>
                   <span class="kl-file-text">
                     <TextSingleTootip
-                      :content="`${$t('assetLibrary.piece')}${$t('assetLibrary.file')}`" />
+                      :content="`${$t('assetLibrary.piece')}`" />
                   </span>
+                </div>
+              </div>
+              <div class="kl-card-file-icon">
+                <img
+                  src="/src/assets/images/file_size.svg"
+                  class="filePng" />
+                <div class="kl-card-file">
+                 {{ bytesToSize(item.docSize) }}
                 </div>
               </div>
               <div class="kl-card-timer-icon">
                 <img
-                  src="/src/assets/images/timer.png"
+                  src="/src/assets/images/date_time.svg"
                   class="timePng" />
                 <div class="kl-card-timer">
-                  <TextSingleTootip :content="convertUTCToLocalTime(item.created_time)" />
+                  <TextSingleTootip :content="convertUTCToLocalTime(item.createdTime)" />
                 </div>
               </div>
-            </div>
-            <div class="kl-card-id">
-              <span class="id-label">{{ `ID:${' '} ` }}</span>
-              <span class="id-value">{{ item.id }}</span>
             </div>
           </div>
         </div>
@@ -249,32 +319,34 @@
           {{ $t('pageTipText.NoData') }}
         </div>
       </div>
+      <!-- 表格视图 -->
       <div
         class="kl-table-box"
         v-else>
         <el-table
+          ref="tableListRef"
           :data="fileTableList.data"
           :border="true"
-          @sort-change="handleSortChange"
           @selection-change="handleSelectionChange"
           :class="fileTableList.data.length < currentPageSize ? 'showPagination' : ''">
+          <el-table-column type="selection"  width="55" />
           <el-table-column
-            prop="name"
+            prop="kbName"
             :label="$t('assetLibrary.name')"
             :show-overflow-tooltip="true"
-            width="300"
+            width="130"
             :fixed="true"
             class-name="kl-name">
             <template #default="scope">
               <span
                 class="kl-name-row"
                 @click="handleJumpAssets(scope.row)">
-                {{ scope.row.name }}
+                {{ scope.row.kbName }}
               </span>
             </template>
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="kbId"
             :label="$t('assetLibrary.assetId')"
             show-overflow-tooltip
             :fixed="true"
@@ -286,7 +358,7 @@
                 <el-icon
                   ref="inputSearchRef"
                   :class="
-                    sortFilter?.id?.length! > 0 || fileFilterVisible ? 'searchIconIsActive' : ''
+                    sortFilter?.kbId?.length! > 0 || fileFilterVisible ? 'searchIconIsActive' : ''
                   ">
                   <IconSearch />
                 </el-icon>
@@ -301,7 +373,7 @@
                   virtual-triggering>
                   <FilterContainr
                     filterType="input"
-                    v-model:serachName="sortFilter.id"
+                    v-model:serachName="sortFilter.kbId"
                     :hanldeSearhNameFilter="hanldeSearhNameFilter"
                     :searchPayload="sortFilter" />
                 </el-popover>
@@ -309,7 +381,7 @@
             </template>
             <template #default="scope">
               <span class="kf-name-row">
-                {{ scope.row.id }}
+                {{ scope.row.kbId }}
               </span>
             </template>
           </el-table-column>
@@ -318,65 +390,72 @@
             :label="$t('assetLibrary.desc')"
             :show-overflow-tooltip="true" />
           <el-table-column
-            prop="document_count"
+            prop="docCnt"
             sortable
-            width="150"
+            width="100"
             :label="$t('assetLibrary.fileNum')" />
-
-          <el-table-column
-            prop="created_time"
+            <el-table-column
+            prop="docSize"
             sortable
-            class-name="asset-upload-time-cell"
-            :label="$t('assetLibrary.uploadTime')"
-            width="200"
-            @header-click="() => {}"
-            @click.stop>
+            width="100"
+            :label="$t('assetLibrary.fileSize')" >
+            <template #default="scope">
+              <span class="kf-name-row">
+                {{ bytesToSize(scope.row.docSize) }}
+              </span>
+            </template>
+          </el-table-column>
+            <el-table-column
+            prop="authorName"
+            width="100"
+            :label="$t('assetLibrary.creator')">
             <template #header>
-              <div class="asset-custom-header custom-header">
-                <span>{{ $t('assetLibrary.uploadTime') }}</span>
-                <el-date-picker
-                  popper-class="datetimerangeClass"
-                  placement="bottom"
-                  class="timer-picker"
-                  v-model="created_time"
-                  type="datetimerange"
-                  :teleported="true"
-                  :shortcuts="shortcuts"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  :unlink-panels="true"
-                  time-format="HH:mm"
-                  @change="handleTimeChange"
-                  ref="tiemPick"
-                  @visible-change="handleVisibleChange" />
+              <div class="asset-id-custom-header">
+                <span>{{ $t('assetLibrary.creator') }}</span>
+                <el-icon
+                  ref="authorNameSearchRef"
+                  :class="
+                    sortFilter?.authorName?.length! > 0 || authorNameFilterVisible ? 'searchIconIsActive' : ''
+                  ">
+                  <IconSearch />
+                </el-icon>
                 <el-popover
-                  :visible="timeFilterVisible"
-                  popper-class="filterPopper timeFilterPo"
+                  ref="popoverRef"
+                  v-model:visible="authorNameFilterVisible"
+                  popper-class="inputSearchFilterPopper"
                   placement="bottom-start"
-                  :show-arrow="false">
-                  <template #reference>
-                    <el-icon
-                      @click="handeDatePickerShow"
-                      @click.stop
-                      :class="
-                        sortFilter?.created_time_start?.length! > 0 || timeFilterVisible
-                          ? 'searchIconIsActive'
-                          : ''
-                      ">
-                      <IconFilter />
-                    </el-icon>
-                  </template>
+                  :virtual-ref="authorNameSearchRef"
+                  :show-arrow="false"
+                  trigger="click"
+                  virtual-triggering>
+                  <FilterContainr
+                    filterType="input"
+                    v-model:serachName="sortFilter.authorName"
+                    :hanldeSearhNameFilter="hanldeSearhAuthorNameFilter"
+                    :searchPayload="sortFilter" />
                 </el-popover>
               </div>
             </template>
             <template #default="scope">
-              <span>{{ convertUTCToLocalTime(scope.row.created_time) }}</span>
+              <span>{{ scope.row.authorName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="createdTime"
+            sortable
+            class-name="asset-upload-time-cell"
+            :label="$t('assetLibrary.uploadTime')"
+            width="150"
+            @header-click="() => {}"
+            @click.stop>
+            <template #default="scope">
+              <span>{{ convertUTCToLocalTime(scope.row.createdTime) }}</span>
             </template>
           </el-table-column>
           <el-table-column
             prop="action"
             :label="$t('btnText.operation')"
-            width="180">
+            width="150">
             <template #default="scope">
               <el-button
                 text
@@ -396,17 +475,18 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          v-if="fileTableList.data?.length > 0"
-          v-model:current-page="currentPage"
-          v-model:page-size="currentPageSize"
-          :page-sizes="pagination.pageSizes"
-          :layout="pagination.layout"
-          :total="totalCount"
-          popper-class="kbLibraryPage"
-          @change="handleChangePage" />
       </div>
+      <el-pagination
+        v-if="fileTableList.data?.length > 0"
+        v-model:current-page="currentPage"
+        v-model:page-size="currentPageSize"
+        :page-sizes="pagination.pageSizes"
+        :layout="pagination.layout"
+        :total="totalCount"
+        popper-class="kbLibraryPage"
+        @change="handleChangePage" />
     </div>
+  </div>
     <el-dialog
       v-model="dialogImportVisible"
       class="upload-dialog"
@@ -427,7 +507,8 @@
         :taskList="importTaskList"
         :toggleUploadNotify="toggleUploadNotify"
         :handleStopUploadFile="handleStopUploadFile"
-        :handleImportLoading="handleImportLoading" />
+        :handleImportLoading="handleImportLoading"
+        uploadType="kbfile" />
     </el-dialog>
     <el-dialog
       v-if="dialogCreateVisible"
@@ -437,7 +518,7 @@
       width="560"
       @close="handleCloseCreateKb"
       :title="
-        formData?.name?.length > 0
+        formData?.kbName?.length > 0
           ? $t('btnText.editAssetLibrary')
           : $t('btnText.createAssetLibrary')
       ">
@@ -476,14 +557,14 @@
       :title="$t('dialogTipText.tipsText')">
       <div class="delTip">
         <span class="iconAlarmOrange">
-          <IconAlarmOrange />
+          <IconAlarm />
         </span>
         <span>
           {{ $t('dialogTipText.confirmDelAsset') }}
           <span>
             【
             <span class="delToolTip">
-              <TextSingleTootip :content="opsItem.name" />
+              <TextSingleTootip :content="opsItem.kbName" />
             </span>
             】
             {{ userLanguage === 'zh' ? '吗？' : null }}
@@ -504,7 +585,6 @@
         </el-button>
       </div>
     </el-dialog>
-  </div>
   <UploadProgress
     :showUploadNotify="uploadTaskListData.showUploadNotify"
     :uploadingList="uploadTaskListData.uploadingList"
@@ -518,34 +598,49 @@
     :taskListLoading="taskListLoading" />
 </template>
 <script lang="ts" setup>
-import UserHeaderBar from '@/components/UserHeaderBar/index.vue';
 import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import Upload from '@/components/Upload/index.vue';
 import '@/styles/knowledgeLibrary.scss';
 import {
   IconList,
-  IconMore,
   IconSearch,
   IconThumbnail,
   IconAlarmOrange,
   IconChevronUp,
   IconChevronDown,
   IconX,
-  IconError,
-  IconFilter,
   IconSuccess,
+  IconCaretDown,
+  IconCaretUp,
+  IconAlarm,
 } from '@computing/opendesign-icons';
 import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 
 import { debounce } from 'lodash';
-import KbAppAPI from '@/api/kbApp';
+import KbAppAPI, { ITaskType } from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
-import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import FilterContainr from '@/components/TableFilter/index.vue';
+import { defineProps } from 'vue';
+import router from '@/router';
+import { useGroupStore } from '@/store/modules/group';
+import EmptyStatus from '@/components/EmptyStatus/index.vue'
+import { CheckboxValueType } from 'element-plus';
+import { bytesToSize } from '@/utils/bytesToSize';
+import { downloadFun } from '@/utils/downloadFun';
+import { validate } from 'uuid';
+import { CopyDocument } from '@element-plus/icons-vue';
+const route = useRoute();
 
+defineProps({
+groupName: {
+  type: String
+},
+});
+const { navGroup } =  storeToRefs(useGroupStore());
 const { t } = useI18n();
 const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);
@@ -560,13 +655,15 @@ const importTaskList = ref([]);
 const userLanguage = ref();
 
 const resetFormData = ref({
-  name: '',
-  language: '',
-  default_chunk_size: 1024,
-  embedding_model: '',
-  default_parser_method: '',
-  document_type_list: [],
+  kbName: '',
+  tokenizer: '',
+  defaultChunkSize: 512,
+  embeddingModel: '',
+  defaultParseMethod: '',
+  docTypes: [],
   description: '',
+  uploadSizeLimit:512,
+  uploadCountLimit:128,
 });
 const showTaskExportNotify = ref(false);
 const taskExportList = ref<any[]>([]);
@@ -598,46 +695,205 @@ const importTaskTotal = ref(0);
 const importTaskPage = ref(1);
 const importTaskPageSize = ref(10);
 const taskListLoading = ref(false);
-const timeFilterVisible = ref(false);
+const authorNameFilterVisible = ref(false);
 const fileFilterVisible = ref(false);
 const inputSearchRef = ref();
-const timePick = ref();
-const created_time = ref();
+const authorNameSearchRef = ref();
 const shortcuts = ref();
 const fileTableList = reactive<{
   data: Array<any>;
 }>({
   data: [],
 });
+const tableListRef = ref();
 const taskTimer = ref();
-
-const handleScroll = (e: { target: any }) => {
-  const klCardBox = e.target;
-  // 检查是否已经滚动到底部
-  if (klCardBox?.clientHeight + klCardBox.scrollTop + 10 >= klCardBox?.scrollHeight) {
-    if (currentPage.value * currentPageSize.value < totalCount.value) {
-      currentPage.value = currentPage.value + 1;
-      loading.value = true;
-
-      KbAppAPI.getKbLibrary({
-        page_number: currentPage.value,
-        page_size: currentPageSize.value,
-      })
-        .then((res: any) => {
-          fileTableList.data = [...fileTableList.data, ...res?.data_list];
-          totalCount.value = res?.total;
-        })
-        .finally(() => {
-          loading.value = false;
-        });
+const batchDownBth = ref(false);
+const multiple = ref(false)
+const multipleSelection = ref<any[]>([]);
+const isAllChecked = computed(() => {
+  if (!fileTableList.data.length) return false;
+  return fileTableList.data.every(item => item?.checked);
+});
+const isIndeterminate = ref(false);
+const handleCopyId = (id: string) => {
+  try {
+    const textarea = document.createElement('textarea');
+    textarea.value = id;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    ElMessage({
+      showClose: true,
+      message: t('assetLibrary.copySuccessFul'),
+      icon: IconSuccess,
+      customClass: 'o-message--success',
+      duration: 3000,
+    });
+  } catch (error) {
+    ElMessage.error(t('assetLibrary.copyFailed'));
+  }
+}
+const handleCheckboxChange = (checked: CheckboxValueType, item: any) => {
+  if (checked) {
+    if(!multipleSelection.value.includes(item)){
+      multipleSelection.value.push(item);
+    }
+  } else {
+    const index = multipleSelection.value.findIndex(i => i.kbId === item.kbId);
+    if (index !== -1) {
+      multipleSelection.value.splice(index, 1);
     }
   }
+    isIndeterminate.value = multipleSelection.value.length > 0 && multipleSelection.value.length < fileTableList.data.length;
 };
+
+const handleSelectAll = (checked:CheckboxValueType) => {
+  fileTableList.data.forEach(item => {
+    item.checked = checked;
+    handleCheckboxChange(checked, item);
+  });
+  isIndeterminate.value = false;
+};
+
+const handleClearSelection = () => {
+  tableListRef.value?.clearSelection();
+  fileTableList.data.forEach(item => {
+    item.checked = false;
+  });
+  multipleSelection.value = [];
+  isIndeterminate.value = false;
+};
+
+const handleBatchDownBth = (e: boolean) => {
+  batchDownBth.value = e;
+};
+
+const handleDelete= async (ids:string[],successFn:Function)=>{
+  loading.value = true;
+  KbAppAPI.delKbLibrary(ids).then((res) => {
+    if (res) {
+      ElMessage({
+        showClose: true,
+        message: t('opsMessage.delSuccess'),
+        icon: IconSuccess,
+        customClass: 'o-message--success',
+        duration: 3000,
+      });
+      handleOpsKbConfirm();
+    }
+    successFn();
+  })
+  .finally(() => {
+    loading.value = false;
+  });
+}
+const handleBatchDelete = () => {
+  ElMessageBox.confirm(
+    t('dialogTipText.confirmDelKL'),
+    t('dialogTipText.tipsText'),
+    {
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    const ids = multipleSelection.value.map(item => item.kbId);
+    const successFn = ()=>{
+      handleClearSelection();
+      handleQueryKbLibrary({
+        page: 1,
+        pageSize: 10,
+      });
+    }
+    handleDelete(ids,successFn);
+  })
+}
+
+const handleBatchExport = () => {
+  dialogImportVisible.value = false;
+  uploadTaskListData.value.showUploadNotify = false;
+  loading.value = true;
+  handleInitExportTaskList().then((res) => {
+    showTaskExportNotify.value = true;
+    showTaskExportList.value = true;
+    exportTaskTotal.value = exportTaskTotal.value + 1;
+    let kbIds:string[] = [];
+    const arr = multipleSelection.value.map((row)=>{
+      kbIds.push(row.kbId);
+      let item = {
+        name: row.kbName,
+        id: row.kbId,
+        exportStatus: 'pending',
+        taskId: res?.data,
+      }
+      return item;
+    })
+    let taskOptions:any = []
+    arr?.map((item: any) => {
+      taskOptions.push({
+        taskDownUrl: '',
+        onProgress: (evt: any) => {
+          item.percent = evt;
+        },
+        onError: () => {
+          item.exportStatus = 'error';
+          item.percent = '0';
+          loading.value = false;
+        },
+      });
+      return item;
+    });
+    taskExportList.value = [
+      ...arr,
+      ...res.map((item: any) => {
+        return {
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
+          percent:
+            item?.taskStatus === 'success'
+              ? 100
+              : item.taskCompleted,
+          exportStatus: item?.taskStatus,
+        };
+      }),
+    ];
+    KbAppAPI.savebLibrary(kbIds, taskOptions)
+        .then((taskRes:any) => {
+          arr?.map((item: any,index) => {
+            item.taskId = taskRes[index];
+
+          })
+          loading.value = false;
+          taskExportTimer.value = setInterval(() => {
+            handleInitExportTaskList();
+          }, 2500);
+        })
+        .catch(() => {
+          arr?.map((item: any,index) => {
+            taskOptions[index].onError();
+          })
+        }),
+    handleMultipleSelect()
+  })
+}
+
+const handleMultipleSelect = () => {
+  multiple.value = !multiple.value;
+  handleSelectAll(false);
+};
+
 const handleQueryKbLibrary = (params: QueryKbRequest) => {
   loading.value = true;
-  KbAppAPI.getKbLibrary(params)
+  let teamId = route.query.id as string ?? localStorage.getItem('teamId');
+  KbAppAPI.getKbLibrary({ teamId: teamId , ...params })
     .then((res: any) => {
-      fileTableList.data = res?.data_list;
+      fileTableList.data = res?.kbList;
       totalCount.value = res?.total;
     })
     .finally(() => {
@@ -646,25 +902,10 @@ const handleQueryKbLibrary = (params: QueryKbRequest) => {
 };
 onMounted(() => {
   handleQueryKbLibrary({
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
   });
 });
-
-const handleVisibleChange = (e: boolean) => {
-  timeFilterVisible.value = e;
-};
-
-const handeDatePickerShow = (e: { pageX: string; pageY: string }) => {
-  timeFilterVisible.value = true;
-  timePick.value.handleOpen();
-  let dateTimerContainer = document.querySelector('.datetimerangeClass') as HTMLElement;
-  if (dateTimerContainer) {
-    dateTimerContainer.style.position = 'absolute';
-    dateTimerContainer.style.left = e.pageX + 'px';
-    dateTimerContainer.style.top = e.pageY + 'px';
-  }
-};
 
 const handleFilterData = (params: sortFilterType) => {
   let filterPaylod: sortFilterType = {};
@@ -679,15 +920,30 @@ const handleFilterData = (params: sortFilterType) => {
 };
 
 const hanldeSearhNameFilter = (filterName: string) => {
-  sortFilter.value.id = filterName;
+  if(!validate(filterName)){
+    ElMessage.error(t('assetLibrary.assetFormat'));
+    return;
+  }
+  sortFilter.value.kbId = filterName;
   currentPage.value = 1;
   currentPageSize.value = 10;
   handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     ...handleFilterData(sortFilter.value),
   });
   fileFilterVisible.value = false;
+};
+const hanldeSearhAuthorNameFilter = (filterName: string) => {
+  sortFilter.value.authorName = filterName;
+  currentPage.value = 1;
+  currentPageSize.value = 10;
+  handleQueryKbLibrary({
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
+    ...handleFilterData(sortFilter.value),
+  });
+  authorNameFilterVisible.value = false;
 };
 
 const handleSwitch = (switchType: string) => {
@@ -696,9 +952,12 @@ const handleSwitch = (switchType: string) => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   knoledgekeyWord.value = '';
+  handleClearSelection();
+  isIndeterminate.value = false;
+
   handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
   });
 };
 const handleImportKnowledge = () => {
@@ -711,28 +970,30 @@ const toggleUploadNotify = (uploadTaskPayload: {}) => {
 };
 
 const handInitTaskList = (selectedFiles: string | any[]) => {
-  return KbAppAPI.queryKbTaskList({
-    types: ['import_knowledge_base'],
-    page_number: 1,
-    page_size: importTaskPageSize.value,
+  return KbAppAPI.queryTaskList({
+    teamId:route.query.id as string,
+    taskType: 'kb_import',
+    page: 1,
+    pageSize: importTaskPageSize.value,
   }).then((res: any) => {
-    importTaskList.value = res.data_list || [];
+    importTaskList.value = res.tasks || [];
     importTaskTotal.value = selectedFiles ? res.total + selectedFiles.length : res.total;
-    return res.data_list || [];
+    return res.tasks || [];
   });
 };
 
 const handelTaskList = () => {
-  KbAppAPI.queryKbTaskList({
-    types: ['import_knowledge_base'],
-    page_number: 1,
-    page_size: importTaskPageSize.value,
+  KbAppAPI.queryTaskList({
+    teamId:route.query.id as string,
+    taskType: 'kb_import',
+    page: 1,
+    pageSize: importTaskPageSize.value,
   }).then((res: any) => {
-    importTaskList.value = res.data_list || [];
+    importTaskList.value = res.tasks || [];
     importTaskTotal.value = res.total;
     taskListImportDate.value = Date.now();
     taskListLoading.value = false;
-    if (res.data_list?.every((item: any) => !['pending', 'running'].includes(item.task.status))) {
+    if (res.tasks?.every((item: any) => !['pending', 'running'].includes(item.taskStatus))) {
       clearInterval(taskTimer.value);
       taskTimer.value = null;
       handleOpsKbConfirm();
@@ -767,26 +1028,23 @@ const handleImportLoading = (loadingStatus: boolean) => {
 };
 
 const handleStopUploadFile = (taskId: string) => {
-  taskListImportDate.value = Date.now();
-  taskListLoading.value = true;
-  let payload: any = {
-    task_id: taskId,
-  };
-  if (taskId === 'all') {
-    payload = { types: ['import_knowledge_base'] };
-  }
-  KbAppAPI.stopKbTaskList(payload).then(() => {
-    KbAppAPI.queryKbTaskList({
-      types: ['import_knowledge_base'],
-      page_number: 1,
-      page_size: importTaskPageSize.value,
-    }).then((res: any) => {
-      importTaskList.value = res.data_list || [];
-      taskListLoading.value = false;
+  if(taskId==='all'){
+    handleCloseAllTask('kb_import');
+  }else{
+    taskListImportDate.value = Date.now();
+    taskListLoading.value = true;
+    let payload: any = {
+      taskId
+    };
+    KbAppAPI.stopOneTaskList(payload).then((res:any) => {
+      handelTaskList();
+      importTaskList.value = res.tasks || [];
       importTaskTotal.value = res.total || 0;
       taskListImportDate.value = Date.now();
+    }).finally(()=>{
+      taskListLoading.value = false;
     });
-  });
+  }
 };
 
 const handleExportKl = async (row: any) => {
@@ -800,14 +1058,13 @@ const handleExportKl = async (row: any) => {
     taskExportList.value = [
       ...[
         {
-          name: row.name,
-          id: row.id,
+          name: row.kbName,
+          id: row.kbId,
           exportStatus: 'pending',
           taskId: res.data,
         },
       ]?.map((item: any) => {
         let taskOptions = {
-          taksInfo: row,
           taskDownUrl: '',
           onProgress: (evt: any) => {
             item.percent = evt;
@@ -815,9 +1072,10 @@ const handleExportKl = async (row: any) => {
           onError: () => {
             item.exportStatus = 'error';
             item.percent = '0';
+            loading.value = false;
           },
         };
-        KbAppAPI.savebLibrary(row.id, taskOptions)
+        KbAppAPI.savebLibrary([row.kbId], taskOptions)
           .then((taskRes) => {
             item.taskId = taskRes;
             loading.value = false;
@@ -832,18 +1090,15 @@ const handleExportKl = async (row: any) => {
         return item;
       }),
       ...res.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
         return {
-          id: item.id,
-          taskId: item.task.id,
-          name: item.name,
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
           percent:
-            item?.task?.status === 'success'
+            item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
-          exportStatus: item?.task?.status,
+              : item.taskCompleted,
+          exportStatus: item?.taskStatus,
         };
       }),
     ];
@@ -854,7 +1109,6 @@ const handleUploadRestart = (task: { taskId: string }) => {
   taskExportList.value.forEach((item) => {
     if (task.taskId === item.taskId) {
       let taskOptions = {
-        taksInfo: task,
         taskDownUrl: '',
         onProgress: (evt: any) => {
           item.percent = evt;
@@ -867,7 +1121,7 @@ const handleUploadRestart = (task: { taskId: string }) => {
           item.exportStatus = 'success';
         },
       };
-      KbAppAPI.savebLibrary(task.taskId, taskOptions)
+      KbAppAPI.savebLibrary([task.taskId], taskOptions)
         .then(() => {
           taskOptions.onSuccess();
         })
@@ -879,47 +1133,64 @@ const handleUploadRestart = (task: { taskId: string }) => {
 };
 
 const handleCloseSingleUpload = (taskId: string) => {
-  taskExportLoading.value = true;
-  let payload: any = {
-    task_id: taskId,
-  };
-  if (taskId === 'all') {
-    payload = { types: ['export_knowledge_base'] };
+  if(taskId === 'all'){
+    handleCloseAllTask('kb_export');
+  }else{
+    taskExportLoading.value = true;
+    let payload: any = {
+      taskId
+    };
+    KbAppAPI.stopOneTaskList(payload).then(() => {
+      handleInitExportTaskList();
+    }).finally(()=>{
+      taskExportLoading.value = false;
+    })
   }
-  KbAppAPI.stopKbTaskList(payload).then(() => {
-    handleInitExportTaskList();
-  });
 };
 
+const handleCloseAllTask=(type: ITaskType)=>{
+  taskExportLoading.value = true;
+  KbAppAPI.stopAllTaskList({
+    teamId: route.query.id as string,
+    taskType:type
+  }).then(() => {
+    if(type === 'kb_export'){
+      handleInitExportTaskList();
+    }else{
+      handelTaskList();
+    }
+  }).finally(()=>{
+    taskExportLoading.value = false;
+  })
+}
+
 const handleInitExportTaskList = () => {
-  return KbAppAPI.queryKbTaskList({
-    types: ['export_knowledge_base'],
-    page_number: 1,
-    page_size: exportTaskPageSize.value,
+  return KbAppAPI.queryTaskList({
+    teamId: route.query.id as string,
+    taskType: 'kb_export',
+    page: 1,
+    pageSize: exportTaskPageSize.value,
   }).then((res: any) => {
     exportTaskTotal.value = res?.total || 0;
     taskExportLoading.value = false;
     taskExportList.value =
-      res.data_list.map((item: any) => {
-        let reportDetail = item?.task?.reports?.[0];
+      res.tasks.map((item: any) => {
         return {
-          id: item.id,
-          taskId: item.task.id,
-          name: item.name,
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
           percent:
-            item?.task?.status === 'success'
+            item?.taskStatus === 'success'
               ? 100
-              : reportDetail
-                ? ((reportDetail?.current_stage / reportDetail?.stage_cnt) * 100).toFixed(1)
-                : 0,
-          exportStatus: item?.task?.status,
+              : item.taskCompleted,
+          exportStatus: item?.taskStatus,
         };
       }) || [];
-    if (res?.data_list.every((item: any) => !['pending', 'running'].includes(item?.task?.status))) {
+    if (res?.tasks.every((item: any) => !['pending', 'running'].includes(item?.taskStatus))) {
       clearInterval(taskExportTimer.value);
       taskExportTimer.value = null;
     }
-    return res?.data_list || [];
+    return res?.tasks || [];
   });
 };
 
@@ -939,21 +1210,6 @@ const handleExportScroll = (e: { target: any }) => {
     }
   }
 };
-
-// const handleQueryExportTaskList = () => {
-//   taskExportTimer.value = setInterval(() => {
-//     KbAppAPI.queryKbTaskList({
-//       type: "save_knowledge_base",
-//     }).then((res: any) => {
-//       taskExportList.value = res || [];
-//       taskListExportDate.value = Date.now();
-//       if (res?.every((item) => item.status !== "pending")) {
-//         clearInterval(taskExportTimer.value);
-//         taskExportTimer.value = null;
-//       }
-//     });
-//   }, 2500);
-// };
 
 watch(
   () => t(''),
@@ -1013,19 +1269,6 @@ watch(
   }
 );
 
-const handleTimeChange = (e: (string | undefined)[]) => {
-  sortFilter.value.created_time_start = e?.[0] ? uTCToLocalTime(e?.[0]) : '';
-  sortFilter.value.created_time_end = e?.[1] ? uTCToLocalTime(e?.[1]) : '';
-  currentPage.value = 1;
-  currentPageSize.value = 10;
-  handleQueryKbLibrary({
-    page_number: 1,
-    page_size: 10,
-    ...handleFilterData(sortFilter.value),
-  });
-  handleCancelVisible();
-};
-
 const handleCreateKnowledge = () => {
   dialogCreateVisible.value = true;
 };
@@ -1035,35 +1278,30 @@ const handleCancelVisible = () => {
   dialogCreateVisible.value = false;
 };
 
-const handleJumpAssets = (kbItem: any) => {
-  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kbItem.id}`, '_self');
+const handleJumpAssets = async (kbItem: any) => {
+  await router.push({path:'/libraryInfo',query:{kb_id:kbItem.kbId}},);
+  let groupNav = navGroup.value;
+  groupNav[2]={
+    name:kbItem.kbName,
+    path:'/libraryInfo',
+    query:{
+      kb_id:kbItem.kbId
+    }
+  }
 };
 
 const handleAddFile = () => {
   const assetLibraryObj = fileTableList.data[0];
-  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${assetLibraryObj.id}`, '_self');
+  handleJumpAssets(assetLibraryObj)
 };
 
 const handleCancelAddFile = () => {
   addTipVisible.value = false;
 };
 
-const handleSelectionChange = () => {};
-
-const handleSortChange = (data: { column: any; prop: string; order: any }) => {
-  currentPage.value = 1;
-  sortFilter.value = data.order
-    ? {
-        [data.prop === 'created_time' ? 'created_time_order' : 'document_count_order']:
-          data.order === 'descending' ? 'desc' : 'asc',
-      }
-    : {};
-  handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
-    ...handleFilterData(sortFilter.value),
-  });
-};
+const handleSelectionChange = (val:any) => {
+  multipleSelection.value = val;
+}
 
 const handleEditKl = (row: any) => {
   formData.value = row;
@@ -1075,41 +1313,43 @@ const handleDeleteKl = (row: any) => {
   delTipVisible.value = true;
 };
 
-const handleOpenDownload = (fileId: any) => {
-  window.open(`${window.origin}/witchaind/api/kb/download?task_id=${fileId}`);
+const handleOpenDownload = (fileId: string) => {
+  const url = `${window.origin}/witchaind/api/kb/download?taskId=${fileId}`;
+  downloadFun(url);
 };
+const isSearch = computed(()=>{
+  return Object.values(sortFilter.value).some(value => {
+    if (typeof value === 'string') return value.trim() !== '';
+    return value !== null && value !== undefined; // 其他类型需非空
+  })
+})
 
 const handleInputSearch = debounce((e) => {
   let payload: {
-    page_number: number;
-    page_size: number;
+    page: number;
+    pageSize: number;
     [property: string]: any;
   } = {
-    page_number: 1,
-    page_size: currentPageSize.value,
+    page: 1,
+    pageSize: currentPageSize.value,
   };
-  if (e) {
     payload = {
       ...payload,
-      name: e,
+      kbName: e,
     };
-
-    if (switchIcon.value === 'list') {
-      sortFilter.value.name = e;
-      payload = { ...payload, ...handleFilterData(sortFilter.value) };
-    }
-  }
+    sortFilter.value.kbName = e;
+    payload = { ...payload, ...handleFilterData(sortFilter.value) };
   handleQueryKbLibrary(payload);
 }, 200);
 
 const handleOpsKbConfirm = () => {
   let payload: {
-    page_number: number;
-    page_size: number;
+    page: number;
+    pageSize: number;
     [property: string]: any;
   } = {
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
   };
   if (switchIcon.value === 'thumb') {
     currentPage.value = 1;
@@ -1122,40 +1362,24 @@ const handleOpsKbConfirm = () => {
   }
   payload = {
     ...payload,
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
   };
   if (knoledgekeyWord.value?.length > 0) {
-    payload.name = knoledgekeyWord.value;
+    payload.kbName = knoledgekeyWord.value;
   }
   handleQueryKbLibrary(payload);
 };
 
 const handleConfirmDelKb = (row: any) => {
-  loading.value = true;
   delTipVisible.value = false;
-  KbAppAPI.delKbLibrary({
-    id: row.id,
-    task_id: row.task_id,
-  })
-    .then((res) => {
-      if (res) {
-        ElMessage({
-          showClose: true,
-          message: t('opsMessage.delSuccess'),
-          icon: IconSuccess,
-          customClass: 'o-message--success',
-          duration: 3000,
-        });
-        if (switchIcon.value === 'thumb') {
-          klCardBox.value.scrollTop = 0;
-        }
-        handleOpsKbConfirm();
-      }
-    })
-    .finally(() => {
-      loading.value = false;
+  const successFn = ()=>{
+    handleQueryKbLibrary({
+      page: 1,
+      pageSize: 10,
     });
+  }
+  handleDelete([row.kbId], successFn)
 };
 
 const handleCancelDelKb = () => {
@@ -1178,8 +1402,8 @@ const handleOpsKbForm = () => {
   currentPage.value = 1;
   currentPageSize.value = 10;
   handleQueryKbLibrary({
-    page_number: 1,
-    page_size: 10,
+    page: 1,
+    pageSize: 10,
     ...handleFilterData(sortFilter.value),
   });
 };
@@ -1188,8 +1412,8 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
   currentPage.value = pageNum;
   currentPageSize.value = pageSize;
   handleQueryKbLibrary({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     ...handleFilterData(sortFilter.value),
   });
 };
@@ -1197,8 +1421,10 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
 const handleUploadMyFile = (options: any) => {
   KbAppAPI.importKbLibrary(
     {
+      params:{
+        teamId: route.query.id as string      },
       data: {
-        files: options.file.raw,
+        kb_packages: options.file?.raw,
       },
     },
     options

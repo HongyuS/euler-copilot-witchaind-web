@@ -1,42 +1,14 @@
 <template>
-  <div class="page-platform-header">
-    <HeaderBar />
-  </div>
   <CustomLoading :loading="loading" />
 
   <div class="kf-section-container">
-    <div class="kf-section-container-top">
-      <div class="kf-section-left-menu">
-        <el-link
-          type="primary"
-          target="_blank"
-          class="home-menu"
-          :underline="false"
-          @click="handleJumpHome">
-          {{ $t('btnText.homePage') }}
-        </el-link>
-        <div>/</div>
-        <el-link
-          @click="handleJumpFile"
-          type="primary"
-          target="_blank"
-          class="home-menu libraryName"
-          :underline="false">
-          <TextSingleTootip :content="libraryInfo?.name" />
-        </el-link>
-        <div>/</div>
-        <div class="kf-section-name">
-          <TextSingleTootip :content="fileInfo?.name" />
-        </div>
-      </div>
-    </div>
     <div class="kf-section-container-action">
       <div class="kf-section-container-left">
         <div class="kf-section-info-title">{{ $t('assetFile.baseInfo') }}</div>
         <div class="kf-section-info-desc">
           <div class="kf-section-info-label">{{ $t('assetFile.docName') }}</div>
           <div class="kf-section-info-content">
-            <TextSingleTootip :content="fileInfo?.name" />
+            <TextSingleTootip :content="fileInfo?.docName" />
           </div>
         </div>
         <div class="kf-section-info-desc">
@@ -44,7 +16,7 @@
             {{ $t('assetFile.category') }}
           </div>
           <div class="kf-section-info-content">
-            <TextSingleTootip :content="fileInfo?.document_type?.type" />
+            <TextSingleTootip :content="fileInfo?.docType?.docTypeName" />
           </div>
         </div>
         <div class="kf-section-info-desc">
@@ -52,7 +24,7 @@
             {{ $t('assetLibrary.analyticMethod') }}
           </div>
           <div class="kf-section-info-content">
-            {{ fileInfo?.parser_method }}
+            {{ fileInfo?.parseMethod }}
           </div>
         </div>
         <div class="kf-section-info-desc">
@@ -60,20 +32,20 @@
             {{ $t('assetFile.uploadTime') }}
           </div>
           <div class="kf-section-info-content">
-            {{ fileInfo?.created_time ? convertUTCToLocalTime(fileInfo?.created_time) : '--' }}
+            {{ fileInfo?.createdTime ? convertUTCToLocalTime(fileInfo?.createdTime) : '--' }}
           </div>
         </div>
         <div class="kf-section-info-desc">
           <div class="kf-section-info-label">
             {{ $t('assetFile.chunkSize') }}
           </div>
-          <div class="kf-section-info-content">{{ fileInfo?.chunk_size }}</div>
+          <div class="kf-section-info-content">{{ fileInfo?.chunkSize }}</div>
         </div>
       </div>
       <div class="kf-section-container-right">
         <div class="kf-section-container-table-ops">
           <div class="kf-pre-title">{{ $t('assetFile.contentView') }}</div>
-          <div class="kf-btn-search">
+          <div v-if="fileInfo?.docTask?.taskStatus === 'success'"  class="kf-btn-search">
             <el-input
               ref="inputRef"
               v-model="textkeyWord"
@@ -160,13 +132,15 @@
             </el-input>
           </div>
           <el-dropdown
+            v-if="fileInfo?.docTask?.taskStatus === 'success'" 
             placement="bottom"
             popper-class="dropdown-container kf-section-ops-dowlon"
+            :disabled="!(selectedData.length > 0)"
             @visible-change="handleBatchDownBth">
             <el-button
               class="kf-batch-ops"
               :class="batchDownBth ? 'upBtn' : 'downBtn'">
-              {{ $t('btnText.batch') }}
+              {{ $t('btnText.batchOps') }}
               <el-icon
                 class="el-icon--right"
                 v-if="!batchDownBth">
@@ -181,12 +155,10 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item
-                  :disabled="!(selectedData.length > 0)"
                   @click="handleEnableData(true)">
                   {{ $t('btnText.enable') }}
                 </el-dropdown-item>
                 <el-dropdown-item
-                  :disabled="!(selectedData.length > 0)"
                   @click="handleEnableData(false)">
                   {{ $t('btnText.close') }}
                 </el-dropdown-item>
@@ -194,7 +166,7 @@
             </template>
           </el-dropdown>
         </div>
-        <div class="kf-section-container-table-box">
+        <div v-if="!['pending','running','failed'].includes(fileInfo?.docTask?.taskStatus)" class="kf-section-container-table-box">
           <el-table
             :data="fileTableList.data"
             ref="fileSectionTable"
@@ -212,16 +184,19 @@
               <template #default="scope">
                 <div class="kf-file-content-box">
                   <div class="kf-file-content-text">
-                    <span :class="`text-type-${scope.row.type} text-type-tag`">
-                      {{ textType[scope.row.type] }}
+                    <span :class="`text-type-${scope.row.chunkType} text-type-tag`">
+                      {{ textType[scope.row.chunkType] }}
                     </span>
-                    <span style="white-space: pre-wrap">
+                    <span style="white-space: pre-wrap;max-width:calc(100vw - 650px);">
                       <span v-for="itemText in scope.row?.text?.split('\n')">
                         <div v-html="itemText"></div>
                       </span>
                     </span>
                   </div>
                   <div class="kf-file-content-ops">
+                    <el-button text @click="handleEditContent(scope.row)">
+                        {{ $t('btnText.edit') }}
+                    </el-button>
                     <el-switch
                       v-model:model-value="scope.row.enabled"
                       @change="handleSwitch(scope.row)"
@@ -240,14 +215,47 @@
             @change="handleChangePage"
             popper-class="kbLibraryPage" />
         </div>
+        <div class="empty_box" v-if="fileInfo?.docTask?.taskStatus === 'pending'">
+          <div class="empty_img empty_pending"></div>
+          <div class="empty_text">{{ $t('assetFile.status.analyticWaitIng') }}</div>
+        </div>
+        <div class="empty_box" v-if="fileInfo?.docTask?.taskStatus === 'running'">
+          <div class="empty_img empty_running"></div>
+          <div class="empty_text">{{ $t('assetFile.status.analyticIng') }}</div>
+        </div>
+        <div class="empty_box" v-if="fileInfo?.docTask?.taskStatus === 'failed'">
+          <div class="empty_img empty_failed"></div>
+          <div class="empty_text">{{ $t('assetFile.status.analyticFail') }}</div>
+        </div>
       </div>
     </div>
   </div>
+  <el-dialog
+    class="kf-section-edit-dialog"
+    v-model="contentDialogVisible"
+    :title="$t('btnText.edit')"
+    width="500"
+    align-center
+  >
+  <el-input
+    v-model="sectionText"
+    type="textarea"
+    autosize
+    :placeholder="$t('assetFile.contentPlaceholder')"
+    maxlength="1000"
+  />
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="contentDialogVisible = false">{{ $t('btnText.cancel') }}</el-button>
+        <el-button type="primary" @click="handleSaveContent">
+          {{ $t('btnText.confirm') }}
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 <script setup lang="ts">
-import KbAppAPI from '@/api/kbApp';
 import KfAppAPI from '@/api/kfApp';
-import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
@@ -256,16 +264,20 @@ import { IconCaretDown, IconSearch, IconCaretUp, IconSuccess } from '@computing/
 import { ChunkRequest } from '@/api/apiType';
 import { debounce } from 'lodash';
 import { CheckboxValueType } from 'element-plus';
+import { useGroupStore } from '@/store/modules/group';
 const { t } = useI18n();
 
 const route = useRoute();
 const textkeyWord = ref();
 const textType = ref<any>({
-  para: t('fileChunk.parag'),
+  text: t('fileChunk.parag'),
   table: t('fileChunk.table'),
   image: t('fileChunk.img'),
+  code: t('fileChunk.code'),
+  link: t('fileChunk.link'),
+  qa: t('fileChunk.qa'),
 });
-const fileType = ref<any>(['para', 'table', 'image']);
+const fileType = ref<any>(['text', 'table', 'image','code','link','qa']);
 const pagination = ref({
   layout: 'total,sizes,prev,pager,next,jumper',
 });
@@ -276,7 +288,7 @@ const fileTableList = reactive<{
 }>({
   data: [],
 });
-const libraryInfo = ref<any>({});
+const sectionText = ref('');
 const fileInfo = ref<any>({});
 const loading = ref(false);
 const totalCount = ref(0);
@@ -290,6 +302,11 @@ const popoverRef = ref();
 const filteTypeShow = ref(false);
 const isHoverIndex = ref();
 const batchDownBth = ref(false);
+const contentDialogVisible = ref(false);
+const rowData = ref();
+const store = useGroupStore();
+const { curTeamInfo } = storeToRefs(store);
+
 
 const highlightSearchTerm = (text: String, searchTerm: any) => {
   const highlightedTerm = `<span class="highlighted-term">${searchTerm}</span>`;
@@ -303,7 +320,7 @@ const handleFileSectionData = (payload: ChunkRequest) => {
   KfAppAPI.chunkLibraryFile(payload)
     .then((res: any) => {
       fileTableList.data =
-        res?.data_list?.map((item: { text: String }) => {
+        res?.chunks?.map((item: { text: String }) => {
           return {
             ...item,
             text: payload.text?.length ? highlightSearchTerm(item.text, payload.text) : item.text,
@@ -319,9 +336,9 @@ const handleFileSectionData = (payload: ChunkRequest) => {
 const handeSearchFileType = () => {
   currentPage.value = 1;
   let payload: any = {
-    document_id: ids.value.document_id,
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    docId: ids.value.document_id,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     text: textkeyWord.value,
   };
   if (fileType.value?.length) {
@@ -341,7 +358,7 @@ const handleShowFileType = (showStatus: boolean) => {
 const handleCheckAllChange = (val: CheckboxValueType) => {
   isIndeterminate.value = false;
   if (val) {
-    fileType.value = ['para', 'table', 'image'];
+    fileType.value = ['text', 'table', 'image','code','link','qa'];
   } else {
     fileType.value = [];
   }
@@ -377,33 +394,26 @@ onMounted(() => {
       id: kb_Id,
       document_id: kf_Id,
     };
-    KbAppAPI.getKbLibrary({
-      id: kb_Id,
-      page_number: 1,
-      page_size: 10,
-    }).then((res: any) => {
-      libraryInfo.value = res.data_list?.[0];
-    });
     KfAppAPI.getKbLibraryFile({
-      kb_id: kb_Id,
-      id: kf_Id,
-      page_number: 1,
-      page_size: 10,
+      kbId: kb_Id,
+      docId: kf_Id,
+      page: 1,
+      pageSize: 10,
     }).then((res: any) => {
-      fileInfo.value = res.data_list?.[0];
+      fileInfo.value = res.documents?.[0];
     });
     handleFileSectionData({
-      document_id: kf_Id,
-      page_number: 1,
-      page_size: 20,
+      docId: kf_Id,
+      page: 1,
+      pageSize: 20,
     });
   }
 });
 
 const handleSwitch = (row: any) => {
-  KfAppAPI.switchLibraryFileSection({
-    ids: [row.id],
-    document_id: ids.value.document_id,
+  KfAppAPI.updateFileSection({
+    chunkId: row.chunkId,
+  },{
     enabled: row.enabled,
   }).then(() => {
     ElMessage({
@@ -414,9 +424,9 @@ const handleSwitch = (row: any) => {
       duration: 3000,
     });
     let payload: any = {
-      document_id: ids.value.document_id,
-      page_number: currentPage.value,
-      page_size: currentPageSize.value,
+      docId: ids.value.document_id,
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
       text: textkeyWord.value,
     };
     if (fileType.value?.length) {
@@ -427,11 +437,8 @@ const handleSwitch = (row: any) => {
 };
 
 const handleEnableData = (enabledType: any) => {
-  KfAppAPI.switchLibraryFileSection({
-    ids: selectedData.value.map((item: any) => item.id),
-    document_id: ids.value.document_id,
-    enabled: enabledType,
-  }).then(() => {
+  let idArr = selectedData.value.map((item: any) => item.chunkId)
+  KfAppAPI.switchFileSection({enabled: enabledType},idArr).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsSuccess'),
@@ -440,9 +447,9 @@ const handleEnableData = (enabledType: any) => {
       duration: 3000,
     });
     let payload: any = {
-      document_id: ids.value.document_id,
-      page_number: currentPage.value,
-      page_size: currentPageSize.value,
+      docId: ids.value.document_id,
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
       text: textkeyWord.value,
     };
     if (fileType.value?.length) {
@@ -480,9 +487,12 @@ watch(
   () => t(''),
   () => {
     textType.value = {
-      para: t('fileChunk.parag'),
+      text: t('fileChunk.parag'),
       table: t('fileChunk.table'),
       image: t('fileChunk.img'),
+      code: t('fileChunk.code'),
+      link: t('fileChunk.link'),
+      qa: t('fileChunk.qa'),
     };
   },
   {
@@ -491,15 +501,22 @@ watch(
   }
 );
 
+watch(()=>contentDialogVisible.value,()=>{
+  sectionText.value = rowData.value?.text;
+},{
+  deep: true,
+  immediate: true,
+})
+
 const handleChangePage = (pageNum: number, pageSize: number) => {
   currentPage.value = pageNum;
   currentPageSize.value = pageSize;
   const kf_Id = route.query.file_id as string;
   fileSectionTable.value.setScrollTop(0);
   let payload: any = {
-    document_id: kf_Id,
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    docId: kf_Id,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     text: textkeyWord.value,
   };
   if (fileType.value?.length) {
@@ -512,9 +529,9 @@ const handleInputSearch = debounce((e) => {
   textkeyWord.value = e;
   currentPage.value = 1;
   let payload: any = {
-    document_id: ids.value.document_id,
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
+    docId: ids.value.document_id,
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
     text: textkeyWord.value,
   };
   if (fileType.value?.length) {
@@ -523,12 +540,29 @@ const handleInputSearch = debounce((e) => {
   handleFileSectionData(payload);
 }, 200);
 
-const handleJumpHome = () => {
-  window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
-};
-
-const handleJumpFile = () => {
-  const kb_Id = route.query.kb_id as string;
-  window.open(`${window.origin}/witchaind/#/knowledge/file?kb_id=${kb_Id}`, '_self');
-};
+const handleEditContent= (row: any) => {
+  contentDialogVisible.value = true;
+  rowData.value = row;
+}
+const handleSaveContent = () => {
+  contentDialogVisible.value = false;
+  KfAppAPI.updateFileSection({
+    chunkId: rowData.value.chunkId
+  },
+    {
+      text: sectionText.value,
+    }
+  ).then(() => {
+    let payload: any = {
+      docId: route.query.file_id,
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
+      text: textkeyWord.value,
+    };
+    if (fileType.value?.length) {
+      payload.types = fileType.value;
+    }
+    handleFileSectionData(payload);
+  })
+}
 </script>

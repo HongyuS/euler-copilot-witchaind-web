@@ -1,0 +1,81 @@
+.library-info {
+    padding: 24px;
+
+    .library-info-title {
+        display: flex;
+        align-items: center;
+
+        .library-left-menu {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            width: 232px;
+            height: 16px;
+
+            .home-menu {
+                display: inline-block;
+                max-width: 80px;
+                height: 16px;
+                font-size: 12px;
+                line-height: 16px;
+            }
+
+            .library-name {
+                max-width: 152px;
+                font-size: 12px;
+                font-weight: 700;
+                display: flex;
+                line-height: 16px;
+                & div{
+                    margin-left: 4px;
+                }
+            }
+        }
+
+        .library-mid-menu {
+            width: 400px;
+            height: 32px;
+            background-color: white;
+            display: flex;
+            border-radius: 4px;
+            position: absolute;
+            left: 50%; 
+            transform: translateX(-50%); 
+            .section {
+                width: 197px;
+                height: 28px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+                font-weight: 700;
+                margin: 2px ;
+                cursor: pointer;
+            }
+
+            .section-active {
+
+                color: white;
+                background-color: rgb(99, 149, 253);
+                border-radius: 4px;
+            }
+        }
+    }
+    .library-info-content{
+        width: 100%;
+        height: calc(100vh - 100px);
+        border-radius: 8px;
+        background-color: rgb(253,254,255);
+        margin-top: 16px;
+        padding: 24px;
+    }
+}
+.library-info-title{
+ font-size: 16px;
+ font-weight: 700;
+ margin-bottom: 8px;
+ color: var(--o-text-color-primary);
+}
+ .library-info-tabs{
+ }

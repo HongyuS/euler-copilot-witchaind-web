@@ -1,60 +1,36 @@
 <template>
-  <div class="page-platform-header">
-    <HeaderBar />
-  </div>
-  <CustomLoading :loading="loading" />
   <div class="kf-container">
-    <div class="kf-container-top">
-      <div class="kf-left-menu">
-        <el-link
-          @click="handleJumpHome"
-          type="primary"
-          target="_blank"
-          class="home-menu"
-          :underline="false">
-          {{ $t('btnText.homePage') }}
-        </el-link>
-        <div>/</div>
-        <div class="kf-name">
-          <TextTooltip :content="kbInfo.name" />
-        </div>
-      </div>
-      <div class="kf-right-title">
-        {{ menuType === MenuType.KL_FILE ? $t('btnText.assetDocList') : $t('btnText.configInfo') }}
-      </div>
-    </div>
+    <CustomLoading :loading="loading" />
     <div class="kf-container-action">
-      <div class="kf-container-left">
-        <div
-          class="kf-file-btn"
-          :class="menuType === MenuType.KL_FILE ? 'kf-ops-btn' : ''"
-          @click="handleChangeMenu(MenuType.KL_FILE)">
-          {{ $t('btnText.assetDocList') }}
-        </div>
-        <div
-          class="kf-file-config"
-          :class="menuType === MenuType.KL_CONFIG ? 'kf-ops-btn' : ''"
-          @click="handleChangeMenu(MenuType.KL_CONFIG)">
-          {{ $t('btnText.configInfo') }}
-        </div>
-      </div>
       <div
         class="kf-container-right"
         v-if="menuType === MenuType.KL_FILE">
         <div class="kf-container-table-ops">
+        <div class="kf-container-table-ops-left" >
           <el-button
             type="primary"
-            style="margin-right: 24px"
+            style="margin-right: 8px"
             @click="handleImportKnowledge"
             class="importFileBtn">
             {{ $t('btnText.importFile') }}
           </el-button>
+          <el-button
+            type="primary"
+            style="margin-right: 8px"
+            @click="handleGenerateDataSet(true)"
+            :disabled="!isGenerateDataSet"
+            class="dataSetBtn">
+            {{ $t('assetFile.generateDataset') }}
+          </el-button>
           <el-dropdown
             placement="bottom"
             popper-class="dropdown-container kf-ops-dowlon"
-            @visible-change="handleBatchDownBth">
-            <el-button :class="batchDownBth ? 'upBtn' : 'downBtn'">
-              {{ $t('btnText.batchDown') }}
+            @visible-change="handleBatchDownBth"
+            :disabled="!(selectionFileData.length > 0)">
+            <el-button
+              :class="batchDownBth ? 'upBtn' : 'downBtn'"
+              :disabled="!(selectionFileData.length > 0)">
+              {{ $t('btnText.batchOps') }}
               <el-icon
                 class="el-icon--right"
                 v-if="!batchDownBth">
@@ -76,28 +52,29 @@
                   @click="handleDownloadFile(selectionFileData)">
                   {{ $t('btnText.downloadChoose') }}
                 </el-dropdown-item>
+                <el-dropdown-item
+                  :disabled="!(selectionFileData.length > 0)"
+                  @click="handleSelectRunKl">
+                  {{ $t('btnText.batchAnalytic') }}
+                </el-dropdown-item>
+                <el-dropdown-item
+                  :disabled="!(selectionFileData.length > 0)"
+                  @click="handleSelectDeleteKl">
+                  {{ $t('btnText.batchDelete') }}
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-button
-            class="delFileBtn"
-            :disabled="!(selectionFileData.length > 0)"
-            @click="handleSelectRunKl">
-            {{ $t('btnText.analytic') }}
-          </el-button>
-          <el-button
-            class="delFileBtn cancelBtn"
-            :disabled="!(selectionFileData.length > 0)"
-            @click="handleSelectDeleteKl">
-            {{ $t('btnText.delete') }}
-          </el-button>
+        </div>
+        <el-input :placeholder="$t('assetFile.placeholderFile')" v-model="searchPayload.docName" class="kf-container-table-ops-right" 
+          maxlength="150"  @input="hanldeSearhNameFilter"  :suffix-icon="IconSearch" />
         </div>
         <div class="kf-container-table-box">
           <el-table
             :data="fileTableList.data"
             class="fileTableContainer"
             cell-calss-name="tableCell"
-            :row-key="(row) => row.id"
+            :row-key="(row) => row.docId"
             @selection-change="handleSelectionChange"
             @sort-change="handleSortChange"
             ref="multipleTable"
@@ -107,53 +84,25 @@
               :fixed="true"
               class-name="kl-selection"
               width="35"
-              :reserve-selection="true" />
+              :reserve-selection="true"
+              :selectable="checkSelecTable" />
             <el-table-column
-              prop="name"
+              prop="docName"
               :label="$t('assetFile.docName')"
               show-overflow-tooltip
               :fixed="true"
               class-name="kl-name"
               min-width="150">
-              <template #header>
-                <div class="custom-header">
-                  <span>{{ $t('assetFile.docName') }}</span>
-                  <el-icon
-                    ref="inputSearchRef"
-                    :class="
-                      searchPayload?.name?.length > 0 || fileFilterVisible
-                        ? 'searchIconIsActive'
-                        : ''
-                    ">
-                    <IconSearch />
-                  </el-icon>
-                  <el-popover
-                    ref="popoverRef"
-                    v-model:visible="fileFilterVisible"
-                    popper-class="inputSearchFilterPopper"
-                    placement="bottom-start"
-                    :virtual-ref="inputSearchRef"
-                    :show-arrow="false"
-                    trigger="click"
-                    virtual-triggering>
-                    <FilterContainr
-                      filterType="input"
-                      v-model:serachName="searchPayload.name"
-                      :hanldeSearhNameFilter="hanldeSearhNameFilter"
-                      :searchPayload="searchPayload" />
-                  </el-popover>
-                </div>
-              </template>
               <template #default="scope">
                 <span
                   class="kf-name-row"
                   @click="handleJumpFileSection(scope.row)">
-                  {{ scope.row.name }}
+                  {{ scope.row.docName }}
                 </span>
               </template>
             </el-table-column>
             <el-table-column
-              prop="document_type"
+              prop="docType"
               :label="$t('assetFile.category')"
               width="150"
               show-overflow-tooltip>
@@ -163,7 +112,7 @@
                   <el-icon
                     ref="buttonRef"
                     :class="
-                      searchPayload?.document_type_list?.length > 0 || categoryFilterVisible
+                      searchPayload?.docTypeId?.length > 0 || categoryFilterVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -187,16 +136,16 @@
                 </div>
               </template>
               <template #default="scope">
-                <span>{{ scope.row.document_type.type }}</span>
+                <span>{{ scope.row.docType?.docTypeName }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              prop="chunk_size"
+              prop="chunkSize"
               :label="$t('assetFile.chunkSize')"
               sortable
               width="120" />
             <el-table-column
-              prop="created_time"
+              prop="createdTime"
               class-name="upload-time-cell"
               sortable
               :label="$t('assetFile.uploadTime')"
@@ -230,7 +179,7 @@
                         @click="handeDatePickerShow"
                         @click.stop
                         :class="
-                          searchPayload?.created_time_start?.length > 0 || timeFilterVisible
+                          searchPayload?.createdTimeStart?.length > 0 || timeFilterVisible
                             ? 'searchIconIsActive'
                             : ''
                         ">
@@ -241,11 +190,11 @@
                 </div>
               </template>
               <template #default="scope">
-                <span>{{ convertUTCToLocalTime(scope.row.created_time) }}</span>
+                <span>{{ convertUTCToLocalTime(scope.row.createdTime) }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              prop="status"
+              prop="taskStatus"
               :label="$t('assetFile.analyticStatus')"
               width="220">
               <template #header>
@@ -255,7 +204,7 @@
                     ref="statusRef"
                     @click.stop
                     :class="
-                      searchPayload?.status?.length > 0 || statusFilterVisible
+                      searchPayload?.parseStatus?.length > 0 || statusFilterVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -280,41 +229,31 @@
               </template>
               <template #default="scope">
                 <div
-                  v-if="scope.row.task.status === StatusEnum.FAIL"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.FAIL"
                   class="statusFail">
                   {{ $t('assetFile.status.analyticFail') }}
                 </div>
                 <div
-                  v-if="scope.row.task.status === StatusEnum.SUCCESS"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.SUCCESS"
                   class="statusSuccess">
                   {{ $t('assetFile.status.analyticSucces') }}
                 </div>
                 <div
-                  v-if="scope.row.task.status === StatusEnum.CANCEL"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.CANCEL"
                   class="statusCancel">
                   {{ $t('assetFile.status.cancelAnalytic') }}
                 </div>
                 <div
-                  v-if="scope.row.task.status === StatusEnum.ANALYSIS_ING"
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.ANALYSIS_ING"
                   class="statusWaitIng">
-                  <div class="icon-box icon-loading"></div>
                   {{ $t('assetFile.status.analyticWaitIng') }}
                 </div>
                 <div
                   class="statusAnalysis"
-                  v-if="scope.row.task.status === StatusEnum.RUNNING">
+                  v-if="scope.row.docTask?.taskStatus === StatusEnum.RUNNING">
                   <div class="percent-box">
                     <el-progress
-                      :percentage="
-                        scope.row.task?.reports?.[0]?.current_stage &&
-                        scope.row.task?.reports?.[0]?.stage_cnt
-                          ? Math.floor(
-                              ((scope.row.task?.reports?.[0]?.current_stage || 0) /
-                                (scope.row.task?.reports?.[0]?.stage_cnt || 0)) *
-                                100
-                            )
-                          : 0
-                      "
+                      :percentage=" scope.row.docTask?.taskCompleted ?? 0 "
                       :color="customColor"
                       striped
                       striped-flow />
@@ -326,7 +265,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="parser_method"
+              prop="parseMethod"
               :label="$t('assetFile.parsingMethod')"
               width="150"
               show-overflow-tooltip>
@@ -336,7 +275,7 @@
                   <el-icon
                     ref="parserMethodRef"
                     :class="
-                      searchPayload?.parser_method?.length > 0 || parserMethodVisible
+                      searchPayload?.parseMethods?.length > 0 || parserMethodVisible
                         ? 'searchIconIsActive'
                         : ''
                     ">
@@ -361,17 +300,12 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="status"
+              prop="finishedTime"
               :label="$t('assetFile.parsingComTime')"
               width="200">
               <template #default="scope">
                 <div>
-                  {{
-                    scope?.row?.task?.status === 'success' &&
-                    scope?.row?.task?.reports?.[0]?.create_time
-                      ? convertUTCToLocalTime(scope?.row?.task?.reports?.[0]?.create_time)
-                      : '--'
-                  }}
+                  {{convertUTCToLocalTime(scope.row.docTask?.finishedTime)}}
                 </div>
               </template>
             </el-table-column>
@@ -423,20 +357,13 @@
               fixed="right">
               <template #default="scope">
                 <el-button
-                  v-if="scope.row.status === StatusEnum.RUNNING"
+                  v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) "
                   text
                   @click="handleRunKl(scope.row, 'cancel')">
                   {{ $t('btnText.cancel') }}
                 </el-button>
                 <el-button
-                  v-if="
-                    [
-                      StatusEnum.FAIL,
-                      StatusEnum.CANCEL,
-                      StatusEnum.ANALYSIS_ING,
-                      StatusEnum.SUCCESS,
-                    ].includes(scope.row.status)
-                  "
+                  v-if="scope.row.status==='idle'"
                   text
                   @click="handleRunKl(scope.row, 'run')">
                   {{ $t('btnText.analytic') }}
@@ -468,17 +395,10 @@
             :page-sizes="pagination.pageSizes"
             :layout="pagination.layout"
             :total="totalCount"
+            :default-page-size="20"
             popper-class="kbLibraryPage"
             @change="handleChangePage" />
         </div>
-      </div>
-      <div
-        class="kf-container-right kf-container-form"
-        v-if="menuType === MenuType.KL_CONFIG">
-        <KnowledgeForm
-          :configInfo="true"
-          :formData="kbInfo"
-          :handleQueryKbData="handleQueryKbData" />
       </div>
     </div>
   </div>
@@ -491,7 +411,7 @@
       :singleFileLimit="true"
       :singleFileSize="0.05"
       :tipText="$t('dialogTipText.fileAllFormat')"
-      accept=".md,.xlsx,.pdf,.doc,.docx,.txt,.pptx,.html"
+      accept=".xlsx,.pdf,.doc,.docx,.txt,.pptx,.html,.md,.json,.yaml,.md,.zip,.jpeg,.png"
       :maxFileNum="128"
       :maxSize="0.488"
       :handleUploadMyFile="handleUploadMyFile"
@@ -506,12 +426,12 @@
   <el-dialog
     align-center
     v-model="cancelTipVisible"
-    class="tip-dialog"
+    class="tip-dialog cancel-analytic-dialog"
     width="432"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
-        <IconAlarmOrange />
+        <IconAlarm />
       </span>
       {{ $t('dialogTipText.confirmCancelAnalytic') }}
     </div>
@@ -532,19 +452,19 @@
   <el-dialog
     align-center
     v-model="delTipVisible"
-    class="tip-dialog"
+    class="tip-dialog del-dialog"
     width="400"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
-        <IconAlarmOrange />
+        <IconAlarm />
       </span>
       <span>
         {{ $t('dialogTipText.confirmDelFile') }}
         <span>
           【
           <span class="delToolTip">
-            <TextSingleTootip :content="opsItem.name" />
+            <TextSingleTootip :content="opsItem.docName" />
           </span>
           】
           {{ userLanguage === 'zh' ? '吗？' : null }}
@@ -573,7 +493,7 @@
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
       <span class="iconAlarmOrange">
-        <IconAlarmOrange />
+        <IconAlarm />
       </span>
       <span>
         {{ $t('dialogTipText.confirmDelSelected') }}
@@ -611,16 +531,16 @@
       <el-form-item
         :label="$t('assetFile.docName')"
         prop="name"
-        class="docName">
+        >
         <el-input
-          v-model="ruleForm.name"
+          v-model="ruleForm.docName"
           :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
       <el-form-item
         :label="$t('assetLibrary.analyticMethod')"
-        prop="parser_method">
+        prop="parseMethod">
         <el-select
-          v-model="ruleForm.parser_method"
+          v-model="ruleForm.parseMethod"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
           :teleported="false"
           :suffix-icon="IconCaretDown">
@@ -633,9 +553,9 @@
       </el-form-item>
       <el-form-item
         :label="$t('assetFile.category')"
-        prop="type_id">
+        prop="docTypeId">
         <el-select
-          v-model="ruleForm.type_id"
+          v-model="ruleForm.docTypeName"
           popper-class="docTypeClass"
           :placeholder="$t('assetLibrary.message.pleaseChoose')"
           :suffix-icon="IconCaretDown"
@@ -644,7 +564,9 @@
             v-for="item in filterCategoryList"
             :key="item.value"
             :label="item.label"
-            :value="item.value" />
+            :value="item.label" >
+            {{ item.label }}
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item
@@ -653,13 +575,13 @@
         class="fileChunkSize">
         <el-input-number
           class="config-size"
-          v-model="ruleForm.chunk_size"
+          v-model="ruleForm.chunkSize"
           :min="512"
           :max="1024" />
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
           <span class="iconAlarmOrange">
-            <IconAlarmOrange />
+            <IconAlarm />
           </span>
           <span class="editTipText">{{ $t('assetFile.analyticTip') }}</span>
         </div>
@@ -680,6 +602,12 @@
       </el-form-item>
     </el-form>
   </el-dialog>
+  <DataSetDialog 
+    :selectionFileData="selectionFileData" 
+    :generateDialogVisible="generateDialogVisible" 
+    :handleGenerateDataSet="handleGenerateDataSet"
+    :handleClearSelected="handleClearSelected"s
+    />
   <UploadProgress
     :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
@@ -692,7 +620,6 @@
     :isShowAllClear="false" />
 </template>
 <script setup lang="ts">
-import HeaderBar from '@/components/UserHeaderBar/headerCom.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import '@/styles/knowledgeFile.scss';
 import {
@@ -704,23 +631,24 @@ import {
   IconSuccess,
 } from '@computing/opendesign-icons';
 import { StatusEnum, MenuType } from '@/enums/KnowledgeEnum';
-import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
 import FilterContainr from '@/components/TableFilter/index.vue';
 const { t } = useI18n();
 import { type FormInstance } from 'element-plus';
 import KfAppAPI from '@/api/kfApp';
 import { DocListRequest } from '@/api/apiType';
 import KbAppAPI from '@/api/kbApp';
-import TextTooltip from '@/components/TextSingleTootip/index.vue';
-
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import { convertUTCToLocalTime, uTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 
 import { FileForm, DocumentType } from './fileConfig';
+import router from '@/router';
+import { useGroupStore } from '@/store/modules/group';
+import DataSetDialog from './dataSetDialog.vue';
+import { downloadFun } from '@/utils/downloadFun';
 
 const route = useRoute();
 const dialogImportVisible = ref(false);
-const customColor = ref('#0077FF');
+const customColor = ref('rgb(99, 149, 253)');
 const menuType = ref('klFile');
 const buttonRef = ref();
 const created_time = ref();
@@ -744,16 +672,18 @@ const opsItem = ref();
 const multipleTable = ref();
 const selectionFileData = ref<any[]>([]);
 const importTaskTotal = ref(0);
+const checkTableSelecData = ref<any[]>([]);
+const generateDialogVisible = ref(false);
 const searchPayload = ref<any>({
-  name: '',
-  document_type_list: [],
-  chunk_size_order: '',
-  created_time_order: '',
-  status: [],
-  created_time_start: '',
-  created_time_end: '',
+  docName: '',
+  docTypeId: [],
+  chunkSizeOrder: '',
+  createdTimeOrder: '',
+  parseStatus: [],
+  createdTimeStart: '',
+  createdTimeEnd: '',
   enabled: '',
-  parser_method: [],
+  parseMethods: [],
 });
 const kbInfo = ref<any>({});
 const checkedFilterList = ref([]);
@@ -772,7 +702,6 @@ const currentPageSize = ref(20);
 const dialogEditVisible = ref(false);
 const loading = ref(false);
 const taskListImportDate = ref();
-const taskTimer = ref();
 const taskList = ref<any>([]);
 const uploadTaskListData = ref<{
   showUploadNotify?: boolean;
@@ -784,15 +713,23 @@ const uploadTaskListData = ref<{
 const parserMethodOptions = ref<any>([]);
 const userLanguage = ref();
 const isSubmitDisabled = ref(true);
+const isGenerateDataSet = computed(()=>{
+  const arr = selectionFileData.value.filter((item:any) => {
+    return item.docTask?.taskStatus === 'success';
+  })
+  return arr.length > 0;
+})
 const ruleForm = ref<FileForm>({
-  id: '',
-  name: '',
-  type_id: '',
-  parser_method: '',
-  chunk_size: 1024,
+  docId: '',
+  docName: '',
+  docTypeId: '',
+  parseMethod: '',
+  chunkSize: 1024,
 });
+const store = useGroupStore();
+const { knowledgeTabActive,curTeamInfo } = storeToRefs(store);
 const rules = reactive({
-  name: [
+  docName: [
     {
       required: true,
       message: t('assetFile.message.name'),
@@ -898,9 +835,9 @@ watch(
 );
 
 watch(
-  () => ruleForm.value.name,
+  () => ruleForm.value.docName,
   () => {
-    isSubmitDisabled.value = !ruleForm.value.name?.length;
+    isSubmitDisabled.value = !ruleForm.value.docName?.length;
   },
   {
     deep: true,
@@ -926,17 +863,13 @@ const handleSearchPayload = () => {
   return searchParams || {};
 };
 
-const handleJumpHome = () => {
-  window.open(`${window.origin}/witchaind/#/knowledge/library`, '_self');
-};
-
 const handelCategoryFilterProper = (filterList: any) => {
-  searchPayload.value.document_type_list = filterList;
+  searchPayload.value.docTypeId = filterList;
   handleSearchData();
 };
 
 const handelStatusFilterProper = (filterList: any) => {
-  searchPayload.value.status = filterList;
+  searchPayload.value.parseStatus = filterList;
   handleSearchData();
 };
 const handelEnableFilterProper = (filterList: any) => {
@@ -945,7 +878,7 @@ const handelEnableFilterProper = (filterList: any) => {
 };
 
 const handelParserMethodFilterProper = (filterList: any) => {
-  searchPayload.value.parser_method = filterList;
+  searchPayload.value.parseMethods = filterList;
   handleSearchData();
 };
 
@@ -954,10 +887,10 @@ const handleRunKl = (row: any, type: string) => {
     cancelTipVisible.value = true;
     opsItem.value = row;
   } else {
+    loading.value = true;
     KfAppAPI.runLibraryFile({
-      ids: [row.id],
-      run: type,
-    }).then(() => {
+      parse: true,
+    },[row.docId]).then(() => {
       ElMessage({
         showClose: true,
         message: t('opsMessage.opsAnalyticIng'),
@@ -966,15 +899,17 @@ const handleRunKl = (row: any, type: string) => {
         duration: 3000,
       });
       handleSearchOpsData(true, true);
+    }).finally(() => {
+      loading.value = false;
     });
   }
 };
 
 const handleConfirmFileAnalytic = () => {
-  KfAppAPI.runLibraryFile({
-    ids: [opsItem.value.id],
-    run: 'cancel',
-  }).then(() => {
+    loading.value = true;
+    KfAppAPI.runLibraryFile({
+    parse: false,
+  },[opsItem.value.docId]).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsCancel'),
@@ -984,7 +919,21 @@ const handleConfirmFileAnalytic = () => {
     });
     handleSearchOpsData(true, true);
     handleCancelVisible();
+  }).finally(() => {
+    loading.value = false;
   });
+};
+
+const handCheckTableData = (tableList:any) => {
+  checkTableSelecData.value = tableList.filter((checkItem:any) => {
+    const selecData = tableList.find((notCheckItem:any) => notCheckItem?.docId === checkItem?.docId);
+    return selecData && ['pending', 'running'].includes(selecData.task?.taskStatus);
+  });
+};
+
+const handleCleartTimer = () => {
+  clearInterval(pollingKfTimer.value);
+  pollingKfTimer.value = null;
 };
 
 const handeAssetLibraryData = (
@@ -996,16 +945,21 @@ const handeAssetLibraryData = (
     handleCleartTimer();
   }
   loading.value = loadingStatus;
+  if (!payload?.kbId) {
+    console.warn('kbId is null or undefined');
+    return;
+  }
   KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
-      if (!res?.data_list?.length && currentPage.value !== 1) {
+      if (res.documents?.length) {
+        handCheckTableData(res.documents);
+      }
+      if (!res?.documents?.length && currentPage.value && currentPage.value !== 1) {
         currentPage.value = 1;
         handleSearchOpsData(true, true);
         return;
       }
-      fileTableList.data = res?.data_list || [];
-      currentPage.value = res.page_number;
-      currentPageSize.value = res.page_size;
+      fileTableList.data = res?.documents || [];
       totalCount.value = res.total;
       if (pollTimer) {
         handleStartPollTimer();
@@ -1017,25 +971,21 @@ const handeAssetLibraryData = (
 };
 
 const handlePollAssetFileData = () => {
-  KfAppAPI.getKbLibraryFile({
-    page_number: currentPage.value,
-    page_size: currentPageSize.value,
-    kb_id: route.query.kb_id as string,
+  let payload = {
+    page: currentPage.value,
+    pageSize: currentPageSize.value,
+    kbId: route.query.kb_id as string,
     ...handleSearchPayload(),
     ...sortFilter.value,
-  })
+  };
+  if (!payload?.kbId || pollingKfTimer.value === null) {
+    handleCleartTimer();
+    return;
+  }
+  KfAppAPI.getKbLibraryFile(payload)
     .then((res: any) => {
-      if (res.page_number === currentPage.value && fileTableList.data?.length) {
-        if (!res?.data_list?.length && currentPage.value !== 1) {
-          currentPage.value = 1;
-          handleSearchOpsData(true, true);
-          return;
-        }
-        fileTableList.data = fileTableList.data.map((item) => {
-          let fileData = res?.data_list?.filter((file: any) => file.id === item.id)?.[0];
-          return fileData || item;
-        });
-      }
+      fileTableList.data = res?.documents;
+      totalCount.value = res.total;
     })
     .finally(() => {
       loading.value = false;
@@ -1043,29 +993,43 @@ const handlePollAssetFileData = () => {
 };
 
 const hanldeSearhNameFilter = (filterName: string) => {
-  searchPayload.value.name = filterName;
+  searchPayload.value.docName = filterName;
   handleSearchData();
 };
-
-const handleJumpFileSection = (row: any) => {
-  window.open(
-    `${window.origin}/witchaind/#/knowledge/fileSection?kb_id=${route.query.kb_id}&file_id=${row.id}`,
-    '_self'
-  );
+const groupStore = useGroupStore();
+const { navGroup } = storeToRefs(groupStore);
+const handleJumpFileSection = async (row: any) => {
+  await router.push({
+    path: '/documentInfo',
+    query: {
+      kb_id: route.query.kb_id,
+      file_id: row.docId,
+    },
+  });
+  let groupNav = navGroup.value;
+  groupNav[3] = {
+    name: row.docName,
+    path: '/documentInfo',
+    query: {
+      kb_id: route.query.kb_id,
+      file_id:row.docId,
+    },
+  };
 };
 
 const handleSearchData = () => {
   handeAssetLibraryData(
     {
-      page_number: 1,
-      page_size: currentPageSize.value,
-      kb_id: route.query.kb_id as string,
+      page: 1,
+      pageSize: currentPageSize.value ?? 20,
+      kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
       ...sortFilter.value,
     },
     true,
     true
   );
+  currentPage.value = 1;
   fileFilterVisible.value = false;
   categoryFilterVisible.value = false;
   enableFilterVisible.value = false;
@@ -1075,24 +1039,27 @@ const handleSearchData = () => {
 
 const handleQueryKbData = () => {
   const kbId = route.query.kb_id;
+  curTeamInfo
+  const teamId = localStorage.getItem('teamId') ?? '';
   KbAppAPI.getKbLibrary({
-    id: kbId,
-    page_number: 1,
-    page_size: 10,
+    teamId,
+    kbId: kbId,
+    page: 1,
+    pageSize: 20,
   }).then((res: any) => {
-    kbInfo.value = res.data_list?.[0] || {};
+    kbInfo.value = res.kbList?.[0] || {};
     let categoryList = JSON.parse(
-      JSON.stringify(Array.from(new Set(res.data_list?.[0]?.document_type_list)) || '[]')
+      JSON.stringify(Array.from(new Set(res.kbList?.[0]?.docTypes)) || '[]')
     );
     filterCategoryList.value = [
-      ...categoryList.map((item: { type: string; id: string }) => {
+      ...categoryList.map((item: { type: string; docId: string }) => {
         return {
           label: item.type,
-          value: item.id,
+          value: item.docId,
         };
       }),
       {
-        label: 'default type',
+        label: 'default',
         value: '00000000-0000-0000-0000-000000000000',
       },
     ].filter((item) => item?.label?.length > 0);
@@ -1100,9 +1067,20 @@ const handleQueryKbData = () => {
 };
 
 const handleStartPollTimer = () => {
-  pollingKfTimer.value = setInterval(() => handlePollAssetFileData(), 15000);
+  try {
+    if (pollingKfTimer.value) {
+      handleCleartTimer();
+    }
+    // 检查所有必要条件
+    if (!route.path.includes('/libraryInfo') || knowledgeTabActive.value !== 'document' || !route.query.kb_id) {
+      return;
+    }
+    pollingKfTimer.value = setInterval(() => {handlePollAssetFileData()}, 15000);
+  } catch (error) {
+    console.error('启动轮询失败:', error);
+    handleCleartTimer(); // 确保清除任何可能部分创建的定时器
+  }
 };
-
 // 添加postMessage监听器
 const handleMessage = (event: MessageEvent) => {
   if(event.data?.type!=='changeActive'){
@@ -1117,24 +1095,52 @@ const handleMessage = (event: MessageEvent) => {
   }
 };
 
+// 监听标签页变化
+watch(
+  () => knowledgeTabActive.value,
+  (newValue) => {
+    if (newValue === 'document') {
+      const kbId = route.query.kb_id;
+      if (kbId) {
+        handeAssetLibraryData(
+          {
+            kbId: kbId as string,
+            page: 1,
+            pageSize: 20,
+          },
+          true,
+          true
+        );
+        currentPage.value = 1;
+        currentPageSize.value = 20;
+      }
+    } else {
+      handleCleartTimer();
+    }
+  },
+  { immediate: true }
+);
+
 onMounted(() => {
   const kbId = route.query.kb_id;
-  if (kbId?.length) {
+  if (kbId?.length && knowledgeTabActive.value === 'document' ) {
+    handleQueryKbData();
     handeAssetLibraryData(
       {
-        kb_id: kbId as string,
-        page_number: 1,
-        page_size: 20,
+        kbId: kbId as string,
+        page: 1,
+        pageSize: 20,
       },
       true,
       true
     );
+    currentPage.value = 1;
+    currentPageSize.value = 20;
     KbAppAPI.queryParseMethodList().then((res: any) => {
       parserMethodOptions.value = res?.map((item: any) => {
         return { label: item, value: item };
       });
     });
-    handleQueryKbData();
   }
   document.addEventListener('click', () => handleDateTimerange);
   
@@ -1142,10 +1148,6 @@ onMounted(() => {
   window.addEventListener('message', handleMessage);
 });
 
-const handleCleartTimer = () => {
-  clearInterval(pollingKfTimer.value);
-  pollingKfTimer.value = null;
-};
 
 onUnmounted(() => {
   handleCleartTimer();
@@ -1179,22 +1181,18 @@ const handleDateTimerange = (e: { target: Node | null }) => {
 };
 
 const handleTimeChange = (e: (string | undefined)[]) => {
-  searchPayload.value.created_time_start = e?.[0] ? uTCToLocalTime(e?.[0]) : '';
-  searchPayload.value.created_time_end = e?.[1] ? uTCToLocalTime(e?.[1]) : '';
+  searchPayload.value.createdTimeStart = e?.[0] ? uTCToLocalTime(e?.[0]) : '';
+  searchPayload.value.createdTimeEnd = e?.[1] ? uTCToLocalTime(e?.[1]) : '';
   handleSearchOpsData(true, true);
   handleCancelVisible();
-};
-
-const handleChangeMenu = (type: string) => {
-  menuType.value = type;
 };
 
 const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) => {
   handeAssetLibraryData(
     {
-      page_number: currentPage.value,
-      page_size: currentPageSize.value,
-      kb_id: route.query.kb_id as string,
+      page: currentPage.value,
+      pageSize: currentPageSize.value,
+      kbId: route.query.kb_id as string,
       ...handleSearchPayload(),
       ...sortFilter.value,
     },
@@ -1204,8 +1202,11 @@ const handleSearchOpsData = (loadingStatus: boolean, startPollTimer: boolean) =>
 };
 
 const handleSwitch = (row: any) => {
-  KfAppAPI.switchLibraryFile({
-    id: row.id,
+  KfAppAPI.updateLibraryFile({docId: row.docId},{
+    docName: row.docName,
+    docTypeId: row.docTypeId,
+    chunkSize: row.chunkSize,
+    parseMethod: row.parseMethod,
     enabled: row.enabled,
   }).then(() => {
     ElMessage({
@@ -1246,12 +1247,10 @@ const handleSelectDeleteKl = () => {
 };
 
 const handleSelectRunKl = () => {
-  KfAppAPI.runLibraryFile({
-    ids: selectionFileData.value.map((item) => {
-      return item.id;
-    }),
-    run: 'run',
-  }).then(() => {
+  loading.value = true;
+  checkTableSelecData.value = selectionFileData.value;
+  const ids = selectionFileData.value.map((item) => item.docId);
+  KfAppAPI.runLibraryFile({parse:true},ids).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.opsAnalyticIng'),
@@ -1262,13 +1261,13 @@ const handleSelectRunKl = () => {
     selectionFileData.value = [];
     multipleTable.value.clearSelection();
     handleSearchOpsData(true, true);
+  }).finally(() => {
+    loading.value = false;
   });
 };
 
 const handleConfirmDleSingle = (row: any) => {
-  KfAppAPI.delLibraryFile({
-    ids: [row.id],
-  }).then(() => {
+  KfAppAPI.delLibraryFile([row.docId]).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.delSuccess'),
@@ -1278,11 +1277,11 @@ const handleConfirmDleSingle = (row: any) => {
     });
     let selectData = JSON.parse(JSON.stringify(selectionFileData.value));
     selectData = selectData
-      .filter((item: any) => item.id !== row.id)
-      .filter((item: { id: any }) => item?.id);
+      .filter((item: any) => item.docId !== row.docId)
+      .filter((item: { docId: any }) => item?.docId);
     if (selectData?.length > 0) {
-      selectData.forEach((item: { id: any }) => {
-        multipleTable.value.toggleRowSelection(item.id);
+      selectData.forEach((item: { docId: any }) => {
+        multipleTable.value.toggleRowSelection(item.docId);
       });
       selectionFileData.value = selectData;
     } else {
@@ -1298,11 +1297,10 @@ const handleConfirmDleSelected = () => {
   delSelectTipVisible.value = false;
   loading.value = true;
   handleCleartTimer();
-  KfAppAPI.delLibraryFile({
-    ids: selectionFileData.value.map((item) => {
-      return item.id;
-    }),
-  })
+  let ids=selectionFileData.value.map((item) => {
+      return item.docId;
+    })
+  KfAppAPI.delLibraryFile(ids)
     .then(() => {
       ElMessage({
         showClose: true,
@@ -1319,7 +1317,9 @@ const handleConfirmDleSelected = () => {
     })
     .catch(() => {
       handleStartPollTimer();
-    });
+    }).finally(()=>{
+      loading.value = false;
+    })
 };
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -1327,8 +1327,11 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid) => {
     if (valid) {
       KfAppAPI.updateLibraryFile({
+        docId: ruleForm.value.docId
+      },{
         ...ruleForm.value,
-        document_type: ruleForm.value.document_type,
+        docTypeId: ruleForm.value.docTypeId,
+        docTypeName: ruleForm.value.docTypeName,
       }).then(() => {
         ElMessage({
           showClose: true,
@@ -1345,11 +1348,12 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 };
 
 const handleEditKl = (row: any) => {
-  ruleForm.value.id = row.id;
-  ruleForm.value.name = row.name;
-  ruleForm.value.chunk_size = row.chunk_size || 1024;
-  ruleForm.value.parser_method = row.parser_method;
-  ruleForm.value.type_id = JSON.parse(JSON.stringify(row.document_type.id));
+  ruleForm.value.docId = row.docId;
+  ruleForm.value.docName = row.docName;
+  ruleForm.value.chunkSize = row.chunkSize || 1024;
+  ruleForm.value.parseMethod = row.parseMethod;
+  ruleForm.value.docTypeId = JSON.parse(JSON.stringify(row.docType.docTypeId));
+  ruleForm.value.docTypeName = JSON.parse(JSON.stringify(row.docType.docTypeName));
   dialogEditVisible.value = true;
 };
 
@@ -1361,7 +1365,7 @@ const handleChangePage = (pageNum: number, pageSize: number) => {
 
 const sortFilter = ref({});
 const handleSortChange = (data: { column: any; prop: string; order: any }) => {
-  let sortKey = data.prop === 'chunk_size' ? 'chunk_size_order' : 'created_time_order';
+  let sortKey = data.prop === 'chunkSize' ? 'chunkSizeOrder' : 'createdTimeOrder';
   let sortValue = data.order ? (data.order === 'ascending' ? 'asc' : 'desc') : null;
   sortFilter.value = sortValue
     ? {
@@ -1384,18 +1388,14 @@ const toggleUploadNotify = (uploadTaskPayload: any) => {
   uploadTaskListData.value = uploadTaskPayload;
 };
 
-onUnmounted(() => {
-  taskTimer.value = null;
-});
-
 const handleUploadMyFile = (options: any) => {
   KfAppAPI.importKbLibraryFile(
     {
       data: {
-        files: options.file.raw,
+        docs: options.file.raw,
       },
       params: {
-        kb_id: route.query.kb_id,
+        kbId: route.query.kb_id,
       },
     },
     options
@@ -1410,15 +1410,32 @@ const handleUploadMyFile = (options: any) => {
 
 const handleDownloadFile = async (downloadData: any) => {
   for (const item of downloadData) {
-    const url = `${window.origin}/witchaind/api/doc/download?id=${item.id}`;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'filename'; // 指定文件名
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    await new Promise(resolve => setTimeout(resolve, 333)); // 添加延迟
+    const url = `${window.origin}/witchaind/api/doc/download?docId=${item.docId}`;
+    downloadFun(url);
+    await new Promise((resolve) => setTimeout(resolve, 333)); // 添加延迟
   }
 };
+
+const checkSelecTable = (row: { docId: any; }) => {
+  return checkTableSelecData.value.every((item) => item?.docId !== row?.docId);
+};
+
+const handleGenerateDataSet = (visible: boolean) => {
+  let flag = true;
+  selectionFileData.value.forEach((item) => {
+    if (item.docTask?.taskStatus !== 'success') {
+      flag = false;
+    }
+  });
+  if (!flag) {
+    ElMessage.error(t('assetFile.generateTip'));
+    return;
+  }
+  generateDialogVisible.value = visible;
+};
+
+const handleClearSelected = ()=>{
+  checkTableSelecData.value = [];
+  multipleTable.value.clearSelection();
+}
 </script>

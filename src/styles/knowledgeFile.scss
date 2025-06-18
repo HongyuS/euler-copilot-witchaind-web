@@ -3,8 +3,7 @@
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  height: calc(100% - 48px);
-  padding: 16px 24px 24px;
+  height: calc(100vh - 200px);
   min-width: 1240px;
   .kf-container-top {
     display: flex;
@@ -68,50 +67,59 @@
 
       .kf-ops-btn {
         color: rgb(255 255 255);
-        background: rgb(0 119 255);
+        background: rgb(99,149,253);
       }
     }
 
     .kf-container-right {
       flex: 1;
       min-width: 700px;
-      padding: 16px 24px 24px 24px;
-      background: rgb(254 254 254);
+      background: var(--o-bg-color-base);
       border-radius: 4px;
 
       .kf-container-table-ops {
         display: flex;
-        margin-bottom: 8px;
+        justify-content: space-between;
+        background-color: var(--o-bg-color-base);
+        .kf-container-table-ops-left{
+          display: flex;
+          margin-bottom: 16px;
 
-        .importFileBtn {
-          padding: 8px 15px;
-        }
+          .importFileBtn {
+            padding: 8px 15px;
+          }
 
-        .is-disabled {
-          background: #ebedf3;
-        }
+          .dataSetBtn{
+            margin-left: unset !important;
+          }
 
-        .delFileBtn {
-          padding: 8px 27px;
-          margin-left: 8px;
+          .delFileBtn {
+            padding: 8px 27px;
+            margin-left: 8px;
 
-          span {
-            min-width: unset !important;
+            span {
+              min-width: unset !important;
+            }
+          }
+
+          .el-dropdown {
+            button {
+              min-width: 96px;
+              padding: 8px 13.2px;
+            }
           }
         }
-
-        .el-dropdown {
-          button {
-            min-width: 96px;
-            padding: 8px 13.2px;
-          }
+        .kf-container-table-ops-right{
+          width: 356px;
+          font-size: 12px;
         }
       }
 
       .kf-container-table-box {
-        height: calc(100% - 40px);
+        height: calc(100% - 56px);
         display: flex;
         flex-direction: column;
+        background-color: var(--o-bg-color-base);
         tbody {
           td {
             border-right: unset !important;
@@ -132,7 +140,7 @@
       }
 
       .kf-name-row {
-        color: #0077ff;
+        color: rgb(99, 149, 253);
         font-size: 12px;
         font-weight: 500;
         cursor: pointer;
@@ -140,11 +148,6 @@
 
       .el-table__body-wrapper {
         flex: unset !important;
-      }
-
-      .el-checkbox__inner::before {
-        top: 4.5px !important;
-        width: 13px;
       }
 
       .upload-time-cell {
@@ -192,7 +195,6 @@
       }
 
       .el-pagination {
-        margin-top: 0;
         margin-top: 24px !important;
       }
 
@@ -202,15 +204,17 @@
 
       .statusFail,
       .statusSuccess,
+      .statusWaitIng,
       .statusCancel {
-        height: 24px;
+        height: 16px;
         width: fit-content;
         padding: 0px 8px;
         font-size: 12px;
-        line-height: 24px;
-        color: rgb(255 255 255);
+        line-height: 16px;
+        color: rgb(255 255 255) !important;
         text-align: center;
         border-radius: 2px;
+        font-weight: 500;
       }
 
       .statusFail {
@@ -224,12 +228,9 @@
       .statusCancel {
         background: rgb(141, 152, 170);
       }
-
       .statusWaitIng {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-      }
+        background: rgb(250, 192, 84);
+    }
 
       @keyframes rotate-img {
         from {
@@ -270,7 +271,7 @@
         .el-progress__text {
           width: 24px;
           min-width: 18px;
-          color: rgb(0 0 0);
+          color: var(--o-text-color-primary);
         }
 
         .statusAnalysisText {
@@ -278,7 +279,7 @@
           font-family: 'HarmonyOS Sans SC Regular';
           font-weight: 500;
           margin-left: 2px;
-          color: rgb(0 0 0);
+          color: var(--o-text-color-primary);
         }
       }
 
@@ -305,7 +306,7 @@
         gap: 4px;
         align-items: center;
         .searchIconIsActive {
-          color: #0077ff !important;
+          color: rgb(99, 149, 253) !important;
         }
 
         .el-icon {
@@ -314,7 +315,7 @@
         }
 
         .el-icon:hover {
-          color: #0077ff;
+          color: rgb(99, 149, 253);
         }
 
         svg {
@@ -324,14 +325,13 @@
       }
 
       .kl-ruleForm {
-        max-width: 1000px !important;
+        max-width: 544px !important;
 
         .el-select__popper {
           top: 44px !important;
           box-sizing: border-box;
           width: 100% !important;
           background: #fefefe !important;
-          border: 1px solid #07f !important;
 
           .el-select-dropdown {
             width: 100% !important;
@@ -341,7 +341,6 @@
 
         .el-select-dropdown__item.is-hovering {
           color: #fff;
-          background: #07f !important;
           width: 399px;
         }
 
@@ -354,12 +353,10 @@
           .el-textarea__inner {
             width: 400px !important;
             font-size: 12px;
-            color: var(--o-color-black);
           }
 
           .el-input__inner {
             font-size: 12px;
-            color: var(--o-color-black);
           }
 
           .el-textarea__inner {
@@ -419,16 +416,6 @@
     overflow-y: auto;
     padding-top: 24px !important;
     padding-left: 16px !important;
-    .is-focused,
-    .el-select__selected-item {
-      span {
-        color: #000000 !important;
-      }
-    }
-
-    .el-input__inner {
-      color: #000000 !important;
-    }
 
     .el-form-item .is-disabled span {
       color: rgb(191, 199, 215) !important;
@@ -445,28 +432,16 @@
   }
 }
 
-.upload-dialog {
-  width: 560px;
-  padding: 0 !important;
-}
-.upload-drag {
-  color: rgb(78, 88, 101);
-  font-size: 12px;
-}
-.upload-tip-text {
-  width: 480px;
-}
-
 .chooseFileBtn {
   padding: 4px 8px;
 }
 
-.edit-dialog {
+.edit-dialog,.dataSet-edit-dialog {
   padding: 0 !important;
   .el-dialog__body {
     padding-bottom: 0 !important;
   }
-  .kf-ruleForm {
+  .kf-ruleForm,.dataSet-ruleForm {
     .el-form-item {
       gap: unset !important;
       margin-bottom: 24px;
@@ -501,12 +476,6 @@
     }
   }
 
-  .docName {
-    label {
-      transform: translateX(-9px);
-    }
-  }
-
   .editTip {
     display: flex;
     gap: 9px;
@@ -523,6 +492,7 @@
   .editTipText {
     font-size: 12px;
     color: #8d98aa;
+    line-height: 16px;
   }
 
   .config-size {
@@ -539,8 +509,6 @@
     top: 44px !important;
     box-sizing: border-box;
     width: 100% !important;
-    background: #fefefe !important;
-    border: 1px solid #07f !important;
 
     .el-select-dropdown {
       width: 100% !important;
@@ -550,8 +518,6 @@
 
   .el-select-dropdown__item.is-hovering {
     color: #fff !important;
-    background: #07f;
-    width: 319px;
   }
 }
 
@@ -560,6 +526,7 @@
     display: flex;
     gap: 17.5px;
     align-items: center;
+    color: var(--o-text-color-secondary);
   }
 
   .iconAlarmOrange {
@@ -568,6 +535,18 @@
       height: 24px;
     }
   }
+}
+.cancel-analytic-dialog,.del-dialog {
+  padding: 0px;
+  .tip-ops-btn{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    & button{
+      height: 24px;
+    }
+  }
+
 }
 
 .delTipText {
