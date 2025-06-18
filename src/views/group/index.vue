@@ -203,7 +203,7 @@ const groupTabs = ref([
         name: 'myjoined',
     },
 ])
-watch(()=>locale , () => {
+watch(()=>t('') , () => {
     groupTabs.value = [
         {
             label: t('group.myCreate'),
