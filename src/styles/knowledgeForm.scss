@@ -9,7 +9,7 @@
     flex-wrap: nowrap;
     gap: 8px;
     align-items: center;
-    width: 320px;
+    width: 328px;
 
     .deleteConfig {
       position: absolute;
@@ -92,12 +92,11 @@
 
   .el-form-item__content {
     flex: unset !important;
-    width: 320px !important;
 
     .el-input,
     .el-select__wrapper,
     .el-textarea__inner {
-      width: 320px !important;
+      width: 352px !important;
       font-size: 12px;
     }
 
@@ -126,11 +125,10 @@
 
   .el-form-item__label {
     display: flex;
-    gap: 4px;
     align-items: center;
     padding: 0 !important;
     font-size: 12px !important;
-    color: var(--o-text-color-secondary) !important;
+    color: var(--o-item-label-text) !important;
 
     .el-icon {
       margin-top: 2px;
@@ -145,10 +143,11 @@
 
   .el-form-item__label::before {
     margin-right: 0 !important;
+    width: 8px;
   }
 
   .config-form {
-    margin-bottom: 8px !important;
+    margin-bottom: 24px !important;
     height: 24px !important;
     .el-form-item__content {
       display: flex;
@@ -196,6 +195,12 @@
   }
 }
 
+.kl-ruleForm{
+  .config-form{
+    margin-bottom: 8px !important;
+  }
+}
+
 .analyticMethodSelect {
   box-sizing: border-box;
   .el-select-dropdown {
@@ -215,7 +220,7 @@
   overflow: hidden;
 
   .el-dialog__body {
-    height: 460px !important;
+    height: 464px !important;
     max-height: unset !important;
     min-height: unset !important;
     padding-left: 16px !important;

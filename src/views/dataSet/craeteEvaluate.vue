@@ -79,7 +79,7 @@ const props = defineProps({
 
 const isSubmitDisabled = ref(true);
 const ruleFormRef = ref<FormInstance>()
-const formLabelWidth = '120px';
+const formLabelWidth = '60px';
 const parserMethodOptions = ref<any>([])
 const llmOptions = ref<Array<{
     label: string,

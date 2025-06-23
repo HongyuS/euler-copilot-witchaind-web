@@ -42,12 +42,12 @@
                     </div>
                     <div class="group-content-container" :style="groupList.length === 0? 'height: calc(100vh - 408px)' : ''">
                         <!-- 卡片布局 -->
-                        <div v-if="switchIcon === 'thumb'" class="group-tabs-content">
+                        <div v-if="switchIcon === 'thumb'" class="" :class="groupList.length === 0 ? 'group-card-empty-mid' : 'group-tabs-content'">
                             <div v-if="groupList.length === 0" class="group-card-empty empty_box">
                                 <div class="empty_img empty_pending"></div>
                                 <div class="empty_text">{{ $t('group.noData') }}</div>
                             </div>
-                            <div class="group-card-item" v-for="item in groupList" :key="item.teamId" @click="handleToGroup(item)">
+                            <div v-else class="group-card-item" v-for="item in groupList" :key="item.teamId" @click="handleToGroup(item)">
                                 <div class="group-card-title">
                                     <span class="group-card-title-name">{{ item.teamName }}</span>
                                     <span v-if="item.isPublic" class="card-type card-type-public">{{ $t('group.public') }}</span>

@@ -140,12 +140,14 @@ onMounted(()=>{
     height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
+    margin-right: 24px;
 
     .group-name {
         font-size: 16px;
         font-weight: 700;
         line-height: 24px;
         color: var(--o-text-color-primary);
+        margin-bottom: 8px;
     }
 
     .group-detail-tabs {

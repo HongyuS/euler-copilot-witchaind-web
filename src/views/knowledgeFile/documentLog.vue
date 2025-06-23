@@ -135,13 +135,14 @@ const setInitialTheme = () => {
   
   <style lang="scss" scoped>
   .editor-container {
-    width: 100%;
-    height: 100%;
+    width: calc(100% - 24px);
+    height: calc(100vh - 215px);
     display: flex;
     flex-direction: column;
     border-radius: 8px;
     padding: 8px;
     border: 1px solid var(--o-border-color-base);
+    margin-top: 16px;
     .code-edit-tools{
       padding:16px;
     }

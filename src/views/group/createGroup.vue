@@ -2,7 +2,7 @@
     <el-dialog class="evaluate-dialog" v-model="props.createGroupVisible" align-center
         :title="props.dialogueType === 'edit' ? $t('group.editTeam') : $t('group.createTeam')" width="544" v-if="props.createGroupVisible"
         @close="handleCancelVisible">
-        <el-form ref="ruleFormRef" class="evaluate-form" :model="form" labelPosition="left" :rules="rules">
+        <el-form ref="ruleFormRef" class="evaluate-form" :model="form" labelPosition="right" :rules="rules">
             <el-form-item :label="$t('group.teamName')" prop="teamName" :label-width="formLabelWidth">
                 <el-input maxlength="100" v-model="form.teamName" autocomplete="off" :placeholder="t('model.pleasePlace')" />
             </el-form-item>
@@ -38,7 +38,7 @@ const props = defineProps({
     handlequeryTeamList: Function,
 })
 const ruleFormRef = ref<FormInstance>()
-const formLabelWidth = '100px';
+const formLabelWidth = '58px';
 const isSubmitDisabled = ref(true);
 interface RuleForm {
     testId?: string;
@@ -155,20 +155,32 @@ const handleCancelVisible = () => {
 </script>
 <style lang="scss">
 .evaluate-dialog {
+    padding: 0;
     .el-dialog__header {
-        padding: 0 0 16px 8px !important;
+        padding: 16px 24px 16px 24px;
     }
 
     .el-dialog__body {
-        padding-left: 8px;
-        padding-right: 4px;
-        padding-bottom: 0px;
-
+        padding: 24px 24px 0px 24px;
+        margin-right: 0pxs;
         .evaluate-form {
             .el-form-item {
+                margin-bottom: 24px;
                 .el-form-item__label {
-                    color: rgb(78, 88, 101);
+                    font-size: 12px !important;
+                    color: var(--o-item-label-text);
+                    padding-right: 0px;
+                    margin-right: 24px;
+                    font-family: 'HarmonyOS Sans SC';
                 }
+                .el-form-item__label:before {
+                    width: 8px;
+                    margin-right: 0px;
+                }
+                .el-input__inner,.el-textarea__inner{
+                    font-size:12px !important;
+                }
+                
 
                 .evaluate-dataSetName {
                     color: var(--o-primary-color);
@@ -179,7 +191,8 @@ const handleCancelVisible = () => {
     }
 
     .el-dialog__footer {
-        padding-bottom: 8px;
+        padding-bottom: 24px;
+        padding-top: 8px;
 
         .dialog-footer {
             display: flex;
@@ -188,6 +201,12 @@ const handleCancelVisible = () => {
             & button {
                 height: 24px;
                 width: 64px;
+                &:first-child{
+                    margin:0 8px 0 0 !important;
+                }
+                &:last-child {
+                    margin: 0 !important;
+                }
             }
         }
     }

@@ -99,9 +99,9 @@ export default {
   assetLibrary: {
     assetLibrary: 'Asset Libraries',
     assetId: 'Asset ID',
-    welcomeUsePro: 'Welcome to witChainD!',
+    welcomeUsePro: 'Welcome to WitChainD',
     profile:
-      'witChainD offers efficient document management and intelligent analysis,supporting a variety of file formats including xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip,jpeg,png and txt.Equipped with an advanced document processing technology and powerful retrieval capabilities of the openEuler Intelligence,WitchainD aims to provide you with an exceptional intelligent Q&A service.',
+      'WitChainD offers efficient document management and intelligent analysis,supporting a variety of file formats including xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip,jpeg,png and txt.Equipped with an advanced document processing technology and powerful retrieval capabilities of the openEuler Intelligence,WitchainD aims to provide you with an exceptional intelligent Q&A service.',
     message: {
       name: 'Enter an asset libraray name.',
       libraryNameLen: 'The asset library name can contain 1 to 15 characters.',
@@ -183,6 +183,7 @@ export default {
   dataset: {
     importDataset: 'Import Dataset',
     emptyText: 'Generate the dataset',
+    emptyDoc: 'No documents available.',
     emptyDesc: 'No data set information available. Go to the document management and generate one!',
     placeholderDataset: 'Enter a dataset name',
     placeInput: 'Please Input',

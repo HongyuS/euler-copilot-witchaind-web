@@ -42,6 +42,7 @@
           <div class="kf-section-info-content">{{ fileInfo?.chunkSize }}</div>
         </div>
       </div>
+      <div class="kf-section-divider" ></div>
       <div class="kf-section-container-right">
         <div class="kf-section-container-table-ops">
           <div class="kf-pre-title">{{ $t('assetFile.contentView') }}</div>
@@ -170,7 +171,6 @@
           <el-table
             :data="fileTableList.data"
             ref="fileSectionTable"
-            :class-name="fileTableList.data.length < currentPageSize ? 'showPagination' : ''"
             @selection-change="handleSelectionChange">
             <el-table-column
               type="selection"
@@ -184,14 +184,12 @@
               <template #default="scope">
                 <div class="kf-file-content-box">
                   <div class="kf-file-content-text">
-                    <span :class="`text-type-${scope.row.chunkType} text-type-tag`">
-                      {{ textType[scope.row.chunkType] }}
-                    </span>
-                    <span style="white-space: pre-wrap;max-width:calc(100vw - 650px);">
-                      <span v-for="itemText in scope.row?.text?.split('\n')">
-                        <div v-html="itemText"></div>
+                      <span style="white-space: pre-wrap;" v-for="(itemText,index) in scope.row?.text?.split('\n')">
+                        <span v-if="index === 0" :class="`text-type-${scope.row.chunkType} text-type-tag`">
+                          {{ textType[scope.row.chunkType] }}
+                        </span>
+                        <span v-html="itemText"></span>
                       </span>
-                    </span>
                   </div>
                   <div class="kf-file-content-ops">
                     <el-button text @click="handleEditContent(scope.row)">
@@ -207,7 +205,7 @@
             </el-table-column>
           </el-table>
           <el-pagination
-            v-if="fileTableList.data?.length > 0"
+            v-if=" totalCount > currentPageSize"
             v-model:current-page="currentPage"
             v-model:page-size="currentPageSize"
             :layout="pagination.layout"
@@ -240,16 +238,17 @@
   <el-input
     v-model="sectionText"
     type="textarea"
-    autosize
+    :autosize="{ minRows: 10}"
     :placeholder="$t('assetFile.contentPlaceholder')"
     maxlength="1000"
+    :show-word-limit="true"
   />
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="contentDialogVisible = false">{{ $t('btnText.cancel') }}</el-button>
         <el-button type="primary" @click="handleSaveContent">
           {{ $t('btnText.confirm') }}
         </el-button>
+        <el-button @click="contentDialogVisible = false">{{ $t('btnText.cancel') }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -474,7 +473,7 @@ watch(
           tbodyContainer?.getBoundingClientRect().height >
           tableContainer?.getBoundingClientRect().height
         ) {
-          tableContainer.style.height = 'calc(100% - 96px)';
+          tableContainer.style.height = 'calc(100% - 135px)';
         } else {
           tableContainer.style.height = 'unset';
         }

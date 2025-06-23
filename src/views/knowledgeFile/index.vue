@@ -1,7 +1,16 @@
 <template>
   <div class="kf-container">
     <CustomLoading :loading="loading" />
-    <div class="kf-container-action">
+      <div
+    class="dataset-empty-content"
+    v-if="!isSearch && !fileTableList.data.length && totalCount === 0">
+    <EmptyStatus
+      :button-text="$t('btnText.importFile')"
+      :description="$t('dataset.emptyDoc')"
+      @click="handleImportKnowledge"
+      />
+  </div>
+    <div v-else class="kf-container-action">
       <div
         class="kf-container-right"
         v-if="menuType === MenuType.KL_FILE">
@@ -152,7 +161,7 @@
               width="200"
               @click.stop>
               <template #header>
-                <div class="custom-header">
+                <div class="upload-time-header custom-header">
                   <span>{{ $t('assetFile.uploadTime') }}</span>
                   <el-date-picker
                     popper-class="datetimerangeClass"
@@ -581,7 +590,7 @@
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
           <span class="iconAlarmOrange">
-            <IconAlarm />
+            <IconAlarmOrange />
           </span>
           <span class="editTipText">{{ $t('assetFile.analyticTip') }}</span>
         </div>
@@ -749,6 +758,15 @@ const fileTableList = reactive<{
 }>({
   data: [],
 });
+
+const isSearch = computed(()=>{
+  return Object.values(searchPayload.value).some(value => {
+    if (typeof value === 'string') return value.trim() !== '';
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'boolean') return true;
+    return value !== null && value !== undefined; // 其他类型需非空
+  });
+})
 
 watch(
   () => t(''),

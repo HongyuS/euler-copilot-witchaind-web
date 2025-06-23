@@ -134,15 +134,6 @@
       prop="uploadCountLimit">
       <template #label>
         {{ $t('assetLibrary.numberUpperLimit') }}
-        <el-tooltip
-          :content="$t('formTipText.fileChunkSizeTip')"
-          placement="top"
-          popper-class="fileChunkSizeTip"
-          effect="light">
-          <el-icon>
-            <IconHelpCircle />
-          </el-icon>
-        </el-tooltip>
       </template>
       <el-input-number
         class="config-size"
@@ -156,15 +147,6 @@
       prop="uploadSizeLimit">
       <template #label>
         {{ $t('assetLibrary.sizeUpperLimit') }}
-        <el-tooltip
-          :content="$t('formTipText.fileChunkSizeTip')"
-          placement="top"
-          popper-class="fileChunkSizeTip"
-          effect="light">
-          <el-icon>
-            <IconHelpCircle />
-          </el-icon>
-        </el-tooltip>
       </template>
       <el-input-number
         class="config-size"
@@ -193,7 +175,6 @@
         <TextTooltip :content="$t('assetLibrary.supAddCategoris')" />
       </div>
     </el-form-item>
-
     <el-form-item
       v-for="(item, index) in ruleForm.docTypes"
       :key="`documentType${index}`"
@@ -518,5 +499,17 @@ const handleAddDocType = () => {
     docTypeId: uuidv4(),
     docTypeName: '',
   });
+  
+  // 添加后自动滚动到底部，确保新增的输入框可见
+  setTimeout(() => {
+    // 获取所有的domain-config元素
+    const domainConfigs = document.querySelectorAll('.domain-config');
+    // 获取最后一个（即新添加的）元素
+    const lastDomainConfig = domainConfigs[domainConfigs.length - 1];
+    if (lastDomainConfig) {
+      // 使用scrollIntoView滚动到新添加的元素
+      lastDomainConfig.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, 100); // 增加延迟时间，确保DOM已更新
 };
 </script>

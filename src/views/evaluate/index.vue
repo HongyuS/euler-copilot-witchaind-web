@@ -40,11 +40,11 @@
       <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" :show-overflow-tooltip="true" />
       <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')" :show-overflow-tooltip="true">
         <template #default="scope">
-          <div class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </div>
+          <span class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </span>
         </template>
       </el-table-column>
       <el-table-column prop="description" :label="$t('testing.testingDesc')" :show-overflow-tooltip="true" />
-      <el-table-column prop="modelType" width="250" :label="'testing.type'" :show-overflow-tooltip="true">
+      <el-table-column prop="modelType" width="150" :label="$t('testing.type')" :show-overflow-tooltip="true">
         <template #header>
           <div class="custom-header">
             <span>{{ $t('testing.type') }}</span>
@@ -62,13 +62,13 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="scope.row.llm" class="testing-model-type">
+          <span v-if="scope.row.llm" class="testing-model-type">
             <img :src="`data:image/svg+xml;base64,${scope.row.llm?.llmIcon}`"/>
             {{ scope.row.llm?.llmName}}
-          </div>
+          </span>
         </template>
       </el-table-column>
-      <el-table-column prop="searchMethod" width="150" :label="$t('testing.method')">
+      <el-table-column prop="searchMethod" width="150" :label="$t('testing.method')" :show-overflow-tooltip="true">
         <template #header>
           <div class="custom-header">
             <span>{{ $t('testing.method') }}</span>
@@ -86,9 +86,9 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="scope.row.llm">
+          <span v-if="scope.row.llm">
             {{ scope.row.searchMethod}}
-          </div>
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="topk" width="80" label="Top_k"></el-table-column>

@@ -78,7 +78,7 @@ export default {
     createTime: '创建时间',
     noData: '暂无数据',
     teamDetail: '团队详情',
-    witchaind: '数据治理',
+    witchaind: '知识库',
     documentMnagement: '文档管理',
     datasetManagement: '数据集管理',
     testingManagement: '评测管理',
@@ -108,9 +108,9 @@ export default {
   assetLibrary: {
     assetLibrary: '资产库',
     assetId: '资产ID',
-    welcomeUsePro: '欢迎使用知识库!',
+    welcomeUsePro: '欢迎使用WitChainD',
     profile:
-      '知识库专注于文档的高效管理和智能解析，支持包括xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip,jpeg,png以及txt在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Intelligence的强大检索功能，旨在为您提供卓越的智能问答服务体验。',
+      'WitChainD专注于文档的高效管理和智能解析，支持包括xlsx,pdf,doc,docx,pptx,html,json,yaml,md,zip,jpeg,png以及txt在内的多种文件格式。本平台搭载的先进文档处理技术，结合openEuler Intelligence的强大检索功能，旨在为您提供卓越的智能问答服务体验。',
     message: {
       name: '请输入资产库名称',
       libraryNameLen: '资产库名称长度1-15个字符',
@@ -193,6 +193,7 @@ export default {
   dataset: {
     importDataset: '导入数据集',
     emptyText: '去生成数据集',
+    emptyDoc: '暂无文档信息',
     emptyDesc: '暂无数据集信息，去文档管理生成一个吧！',
     placeholderDataset: '请输入数据集名称',
     placeInput: '请输入',

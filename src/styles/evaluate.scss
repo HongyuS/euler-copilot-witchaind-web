@@ -36,7 +36,7 @@
         }
     }
     .test-table{
-        height: calc(100vh - 324px);
+        height: calc(100vh - 330px);
     }
     .el-table.is-scrolling-left.el-table--border .el-table-fixed-column--left.is-last-column.el-table__cell {
         border-right: unset !important;
@@ -91,8 +91,9 @@
     }
 
     .testing-model-type{
-        display: flex;
-        align-items: center;
+        img{
+            transform: translateY(25%);
+        }
     }
 
     .statusAnalysis {
@@ -205,21 +206,21 @@
     left: -50px;
     top: 16px;
 }
-
 .evaluate-dialog {
     .el-dialog__header {
-        padding: 0 0 16px 8px !important;
+        padding: 16px 0 16px 24px;
     }
 
     .el-dialog__body {
-        padding-left: 8px;
-        padding-right: 4px;
-        padding-bottom: 0px;
 
         .evaluate-form {
             .el-form-item {
                 .el-form-item__label{
-                    color: rgb(78,88,101);
+                    color: --o-item-label-text;
+                }
+                .el-form-item__label:before{
+                    position: absolute;
+                    left: -8px;
                 }
                 .evaluate-dataSetName{
                     color: var(--o-primary-color);

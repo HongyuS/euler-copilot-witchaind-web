@@ -20,6 +20,7 @@ body[theme='dark'] {
     --o-empty-img-running: url('/src/assets/images/empty_running_dark.svg');
     --o-task-list-icon: url('/src/assets/svg/dark_taskList.svg');
     --o-task-score-icon: url('/src/assets/svg/dark_taskScore.svg');
+    --o-item-label-text: #D3DCE9;
 }
 
 body[theme='light'] {
@@ -43,4 +44,5 @@ body[theme='light'] {
     --o-empty-img-running: url('/src/assets/images/empty_running.svg');
     --o-task-list-icon: url('/src/assets/svg/light_taskList.svg');
     --o-task-score-icon: url('/src/assets/svg/light_taskScore.svg');
+    --o-item-label-text: #4e5865;
 }

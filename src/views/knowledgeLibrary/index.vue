@@ -515,7 +515,7 @@
       v-model="dialogCreateVisible"
       class="create-dialog"
       align-center
-      width="560"
+      width="544"
       @close="handleCloseCreateKb"
       :title="
         formData?.kbName?.length > 0

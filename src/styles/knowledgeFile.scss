@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 206px);
   min-width: 1240px;
   .kf-container-top {
     display: flex;
@@ -120,6 +120,9 @@
         display: flex;
         flex-direction: column;
         background-color: var(--o-bg-color-base);
+        .fileTableContainer{
+          height:100%;
+        }
         tbody {
           td {
             border-right: unset !important;
@@ -323,7 +326,9 @@
           height: 16px;
         }
       }
-
+      .upload-time-header{
+        gap: 1.09px !important;
+      }
       .kl-ruleForm {
         max-width: 544px !important;
 
@@ -445,8 +450,14 @@
     .el-form-item {
       gap: unset !important;
       margin-bottom: 24px;
+      div{
+        font-size: 12px;
+      }
+      .el-form-item__label{
+        font-size: 12px;
+      }
     }
-
+    
     .kl-ops-btn {
       display: flex;
       justify-content: center;
@@ -462,6 +473,7 @@
         min-height: unset !important;
         justify-content: center;
         margin-left: unset !important;
+        font-size: 12px;
       }
     }
   }
@@ -478,13 +490,13 @@
 
   .editTip {
     display: flex;
-    gap: 9px;
+    gap: 8px;
     margin-top: 4px;
   }
 
   .iconAlarmOrange {
     svg {
-      width: 20px;
+      width: 16px;
       height: 16px;
     }
   }

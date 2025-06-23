@@ -430,7 +430,9 @@
     height: calc(100vh - 256px);
     display: flex;
     flex-direction: column;
-
+    .dataSetTableContainer{
+      height: calc(100vh - 318px);
+    }
     tbody {
       td {
         border-right: unset !important;

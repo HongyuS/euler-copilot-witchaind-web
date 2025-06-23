@@ -1,4 +1,5 @@
 import { store } from '@/store';
+import i18n from '@/lang/index';
 
 interface TeamList {
   teamId: string;
@@ -12,7 +13,7 @@ interface TeamList {
 export const useGroupStore = defineStore(
   'group',
   () => {
-    let navGroup = ref([{ name: '数据治理', path: '/group', query: {} }]);
+    let navGroup = ref([{ name: i18n.global.t('group.witchaind'), path: '/group', query: {} }]);
     let groupMenu = ref('knowledge');
     let knowledgeTabActive = ref('document');
     let curTeamInfo: Ref<TeamList> = ref({
@@ -37,7 +38,7 @@ export const useGroupStore = defineStore(
       curTeamInfo.value = value;
     };
     let initNav = () => {
-      navGroup.value = [{ name: '数据治理', path: '/group', query: {} }];
+      navGroup.value = [{ name: i18n.global.t('group.witchaind'), path: '/group', query: {} }];
     };
     return {
       navGroup,
