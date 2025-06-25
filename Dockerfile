@@ -1,4 +1,4 @@
-FROM node:18.18.2-alpine
+FROM node:22.14.0-alpine
 WORKDIR /opt/data_chain_web
 RUN mkdir -p /opt/data_chain_web
 COPY . /opt/data_chain_web
