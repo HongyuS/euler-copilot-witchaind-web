@@ -176,7 +176,7 @@
             type="selection"
             :fixed="true"
             class-name="dataSet-selection"
-            width="35"
+            width="32"
             :reserve-selection="true"
             :selectable="checkSelecTable" />
           <el-table-column
@@ -197,6 +197,7 @@
           <el-table-column
             prop="description"
             :label="$t('dataset.datasetDesc')"
+            min-width="300"
             show-overflow-tooltip>
             <template #default="scope">
               <span>{{ scope.row.description }}</span>
@@ -204,14 +205,17 @@
           </el-table-column>
           <el-table-column
             prop="dataCnt"
+            min-width="120"
             :label="$t('dataset.dataCountLimit')"
             sortable />
           <el-table-column
           prop="dataCntExisted"
+          min-width="120"
           :label="$t('dataset.currentDataCount')"
           sortable />
           <el-table-column
             prop="isDataCleared"
+            min-width="140"
             :label="$t('dataset.isDataCleared')">
             <template #header>
               <div class="custom-header">
@@ -251,6 +255,7 @@
           </el-table-column>
           <el-table-column
             prop="isChunkRelated"
+            min-width="180"
             :label="$t('dataset.isChunkRelated')">
             <template #header>
               <div class="custom-header">
@@ -291,7 +296,7 @@
           <el-table-column
             prop="taskStatus"
             :label="$t('dataset.status')"
-            width="180">
+            width="250">
             <template #header>
               <div class="custom-header">
                 <span>{{ $t('dataset.status') }}</span>
@@ -372,12 +377,12 @@
           <el-table-column
             prop="score"
             :label="`${$t('dataset.score')}(1~100)`"
-            width="175"
+            width="210"
             show-overflow-tooltip
             sortable
           >
           <template #default="scope">
-              {{ scope.row.score?.toFixed(2)?scope.row.score?.toFixed(2)>0?scope.row.score:0:'--'  }}
+            {{scope.row.score>0?scope.row.score:'--'}}
           </template>
         </el-table-column>
         <el-table-column
@@ -416,6 +421,7 @@
             prop="dataSetCreatime"
             class-name="upload-time-cell"
             :label="$t('dataset.finishedTime')"
+            width="150"
             @click.stop>
             <template #default="scope">
                 {{ convertUTCToLocalTime(scope.row.generateTask?.createdTime) }}

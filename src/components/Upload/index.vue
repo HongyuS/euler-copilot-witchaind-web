@@ -107,18 +107,20 @@
         <div
           v-else
           class="upload-add">
-          <el-icon class="upload-btn-icon">
-            <IconUpload />
-          </el-icon>
-          <div class="upload-tip">
-            <div class="upload-drag">{{ $t('dialogTipText.dragFile') }}</div>
-            <div class="upload-tip-text">({{ tipText }})</div>
-            <div style="margin-top: 24px">
-              <el-button
-                type="primary"
-                class="chooseFileBtn">
-                {{ $t('btnText.chooseFile') }}
-              </el-button>
+          <div class="upload-add-inner" >
+            <el-icon class="upload-btn-icon">
+              <IconUpload />
+            </el-icon>
+            <div class="upload-tip">
+              <div class="upload-drag">{{ $t('dialogTipText.dragFile') }}</div>
+              <div class="upload-tip-text">({{ tipText }})</div>
+              <div style="margin-top: 24px">
+                <el-button
+                  type="primary"
+                  class="chooseFileBtn">
+                  {{ $t('btnText.chooseFile') }}
+                </el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -150,6 +152,7 @@ import type { UploadFile, UploadProgressEvent } from 'element-plus/es/components
 const { t } = useI18n();
 import { ElMessage } from 'element-plus';
 import { bytesToSize, isMaxMemoryOut } from '@/utils/bytesToSize';
+import IconInfo from '@/assets/svg/icon_info.svg?component';
 interface TableRow {
   id: string | number;
   name: string;

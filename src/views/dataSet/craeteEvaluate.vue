@@ -9,7 +9,7 @@
         align-center
     >
         <el-form class="evaluate-form" ref="ruleFormRef" :model="form" labelPosition="left" :rules="rules" >
-            <el-form-item :label="$t('testing.datasetUsed')" :label-width="formLabelWidth">
+            <el-form-item :label="$t('testing.datasetUsed')" :label-width="formLabelWidth" class="evaluate-dataSetName-container" prop="datasetId">
                 <div class="evaluate-dataSetName" >
                     {{ props.rowData?.datasetName }}
                 </div>
@@ -21,7 +21,7 @@
                 <el-input v-model="form.desc" show-word-limit maxlength="200" type="textarea" autocomplete="off" :placeholder="t('model.pleasePlace')" />
             </el-form-item>
             <el-form-item :label="$t('testing.type')" prop="type" :label-width="formLabelWidth">
-                <el-select v-model="form.type" :placeholder="t('model.pleasePlace')">
+                <el-select v-model="form.type" :placeholder="t('model.pleasePlace')" :suffix-icon="IconCaretDown" @change="isSubmitDisabled = false">
                     <template #label="{ label, value }">
                         <img v-if="form.type" :src="`data:image/svg+xml;base64,${llmOptions.find(item => item.value === form.type)?.icon}`" style="vertical-align: middle; margin-right: 8px;" />
                         <span>{{ label }}</span>
@@ -38,7 +38,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('testing.method')" prop="method" :label-width="formLabelWidth">
-                <el-select v-model="form.method" :placeholder="t('model.pleasePlace')">
+                <el-select v-model="form.method" :placeholder="t('model.pleasePlace')" :suffix-icon="IconCaretDown">
                     <el-option
                         v-for="item in parserMethodOptions"
                         :key="item.value"
@@ -48,6 +48,7 @@
             </el-form-item>
             <el-form-item label="Top_k" prop="topk" :label-width="formLabelWidth">
                 <el-input-number v-model="form.topk" :min="0" :max="10" />
+                <span class="topk-desc">（1~10）</span>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -67,6 +68,7 @@ import KbAppAPI from '@/api/kbApp';
 import dataSetAPI from '@/api/dataSet';
 import EvaluateAPI from '@/api/evaluate';
 import { useGroupStore } from '@/store/modules/group';
+import { IconCaretDown, } from '@computing/opendesign-icons';
 const { t, } = useI18n();
 const store = useGroupStore();
 const { handleKnowledgeTab } = store;
@@ -79,7 +81,7 @@ const props = defineProps({
 
 const isSubmitDisabled = ref(true);
 const ruleFormRef = ref<FormInstance>()
-const formLabelWidth = '120px';
+const formLabelWidth = '60px';
 const parserMethodOptions = ref<any>([])
 const llmOptions = ref<Array<{
     label: string,
@@ -87,7 +89,7 @@ const llmOptions = ref<Array<{
     icon: string
 }>>([]);
 
-const form = reactive({
+let form = reactive({
   name: '',
   type: '',
   desc: '',
@@ -138,17 +140,22 @@ const handleCancelVisible = () => {
     ruleFormRef.value?.resetFields();
 }
 
-onMounted(() => {
-    KbAppAPI.querySearchMethodList().then((res: any) => {
+onMounted( async () => {
+    await KbAppAPI.querySearchMethodList().then((res: any) => {
         parserMethodOptions.value = res?.map((item: any) => {
             return { label: item, value: item };
         });
     });
-    dataSetAPI.queryLlmData().then((res:any)=>{
+    await dataSetAPI.queryLlmData().then((res:any)=>{
         llmOptions.value = res.llms?.map((item: any) => {
             return { label: item.llmName, value: item.llmId,icon:item.llmIcon };
         });
     })
+    // 设置默认值
+    form.name = '测试数据01'
+    form.type = llmOptions.value.length > 0 ? llmOptions.value[0].value : '';
+    form.method = parserMethodOptions.value.length > 0 ? parserMethodOptions.value[0].value : '';
+    form.topk = 5;
 })
 
 </script>

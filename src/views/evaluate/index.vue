@@ -36,15 +36,15 @@
     </div>
     <el-table class="test-table" ref="testingTableRef" :data="testList" style="margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
       @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" />
-      <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" :show-overflow-tooltip="true" />
-      <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')" :show-overflow-tooltip="true">
+      <el-table-column type="selection" width="54" fixed="left" />
+      <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" :show-overflow-tooltip="true" fixed="left" />
+      <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')" :show-overflow-tooltip="true" fixed="left">
         <template #default="scope">
-          <div class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </div>
+          <span class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </span>
         </template>
       </el-table-column>
-      <el-table-column prop="description" :label="$t('testing.testingDesc')" :show-overflow-tooltip="true" />
-      <el-table-column prop="modelType" width="250" :label="'testing.type'" :show-overflow-tooltip="true">
+      <el-table-column prop="description" min-width="400" :label="$t('testing.testingDesc')" :show-overflow-tooltip="true" />
+      <el-table-column prop="modelType" width="150" :label="$t('testing.type')" :show-overflow-tooltip="true">
         <template #header>
           <div class="custom-header">
             <span>{{ $t('testing.type') }}</span>
@@ -62,13 +62,13 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="scope.row.llm" class="testing-model-type">
+          <span v-if="scope.row.llm" class="testing-model-type">
             <img :src="`data:image/svg+xml;base64,${scope.row.llm?.llmIcon}`"/>
             {{ scope.row.llm?.llmName}}
-          </div>
+          </span>
         </template>
       </el-table-column>
-      <el-table-column prop="searchMethod" width="150" :label="$t('testing.method')">
+      <el-table-column prop="searchMethod" width="150" :label="$t('testing.method')" :show-overflow-tooltip="true">
         <template #header>
           <div class="custom-header">
             <span>{{ $t('testing.method') }}</span>
@@ -86,9 +86,9 @@
           </div>
         </template>
         <template #default="scope">
-          <div v-if="scope.row.llm">
+          <span v-if="scope.row.llm">
             {{ scope.row.searchMethod}}
-          </div>
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="topk" width="80" label="Top_k"></el-table-column>
@@ -133,7 +133,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="aveScore" width="150" :label= "`${$t('testing.testingScore')}(0-100)`">
+      <el-table-column prop="aveScore" width="200" :label= "`${$t('testing.testingScore')}(0-100)`">
         <template #default="scope">
           {{ scope.row.aveScore<0 ?'--':scope.row.aveScore}}
         </template>
@@ -172,7 +172,7 @@
           {{ convertUTCToLocalTime(scope.row.testingTask?.finishedTime)}}
         </template>
       </el-table-column>
-      <el-table-column :label="$t('btnText.operation')" width="150">
+      <el-table-column :label="$t('btnText.operation')" width="150" fixed="right">
         <template #default="scope">
           <div v-if="!scope.row.datasetId" class="test-manage-btns">
             <el-button v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) " type="text"

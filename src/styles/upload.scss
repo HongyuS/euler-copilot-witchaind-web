@@ -3,9 +3,15 @@
   padding: 0;
   .el-dialog__body {
     max-height: unset !important;
+    padding-top: 16px;
   }
 
   .upload-to-list {
+    .el-alert--info .el-alert__icon{
+      background-image: url('@/assets/svg/icon_info.svg');
+      width: 22.3px;
+      height: 14px;
+    }
     .list-action {
       display: flex;
       justify-content: space-between;
@@ -43,6 +49,9 @@
       line-height: var(--o-line-height-info);
       display: flex;
       align-items: center;
+      .el-icon{
+        margin-right: 4px;
+      }
     }
 
     &.has-files {
@@ -150,6 +159,13 @@
   }
 
   .upload-add {
+    border: 2px dashed var(--o-border-color-light);
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .upload-btn-icon {
       font-size: 64px !important;
     }
@@ -229,8 +245,7 @@
     box-sizing: border-box;
     padding: 0 !important;
     border: unset;
-    border: 2px dashed var(--o-border-color-light);
-    border-radius: 8px;
+    border-radius: 0px;
     background-color: var(--o-bg-color-base);
   }
 

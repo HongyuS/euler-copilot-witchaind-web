@@ -1,7 +1,16 @@
 <template>
   <div class="kf-container">
     <CustomLoading :loading="loading" />
-    <div class="kf-container-action">
+      <div
+    class="dataset-empty-content"
+    v-if="!isSearch && !fileTableList.data.length && totalCount === 0">
+    <EmptyStatus
+      :button-text="$t('btnText.importFile')"
+      :description="$t('dataset.emptyDoc')"
+      @click="handleImportKnowledge"
+      />
+  </div>
+    <div v-else class="kf-container-action">
       <div
         class="kf-container-right"
         v-if="menuType === MenuType.KL_FILE">
@@ -83,7 +92,7 @@
               type="selection"
               :fixed="true"
               class-name="kl-selection"
-              width="35"
+              width="40"
               :reserve-selection="true"
               :selectable="checkSelecTable" />
             <el-table-column
@@ -152,7 +161,7 @@
               width="200"
               @click.stop>
               <template #header>
-                <div class="custom-header">
+                <div class="upload-time-header custom-header">
                   <span>{{ $t('assetFile.uploadTime') }}</span>
                   <el-date-picker
                     popper-class="datetimerangeClass"
@@ -196,7 +205,7 @@
             <el-table-column
               prop="taskStatus"
               :label="$t('assetFile.analyticStatus')"
-              width="220">
+              width="250">
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.analyticStatus') }}</span>
@@ -433,7 +442,9 @@
       <span class="iconAlarmOrange">
         <IconAlarm />
       </span>
+      <span>
       {{ $t('dialogTipText.confirmCancelAnalytic') }}
+      </span>
     </div>
     <div class="tip-ops-btn">
       <el-button
@@ -488,7 +499,7 @@
   <el-dialog
     align-center
     v-model="delSelectTipVisible"
-    class="tip-dialog"
+    class="tip-dialog del-select-dialog"
     width="400"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
@@ -496,7 +507,7 @@
         <IconAlarm />
       </span>
       <span>
-        {{ $t('dialogTipText.confirmDelSelected') }}
+        {{ $t('dialogTipText.confirmDelSelected') }}？
       </span>
     </div>
     <div class="tip-ops-btn">
@@ -581,7 +592,7 @@
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
           <span class="iconAlarmOrange">
-            <IconAlarm />
+            <IconAlarmOrange />
           </span>
           <span class="editTipText">{{ $t('assetFile.analyticTip') }}</span>
         </div>
@@ -623,6 +634,7 @@
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import '@/styles/knowledgeFile.scss';
 import {
+  IconAlarm,
   IconAlarmOrange,
   IconCaretDown,
   IconCaretUp,
@@ -749,6 +761,15 @@ const fileTableList = reactive<{
 }>({
   data: [],
 });
+
+const isSearch = computed(()=>{
+  return Object.values(searchPayload.value).some(value => {
+    if (typeof value === 'string') return value.trim() !== '';
+    if (Array.isArray(value)) return value.length > 0;
+    if (typeof value === 'boolean') return true;
+    return value !== null && value !== undefined; // 其他类型需非空
+  });
+})
 
 watch(
   () => t(''),

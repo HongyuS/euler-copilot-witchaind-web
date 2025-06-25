@@ -8,7 +8,7 @@
             {{ navGroup[3]?.name }}
           </div>
         </div>
-        <el-tabs v-model="activeName" class="library-info-tabs" @tab-click="handleTabClick">
+        <el-tabs v-model="activeName" class="document-info-tabs" @tab-click="handleTabClick">
           <el-tab-pane :label="$t('assetFile.documentInfo')" name="documentInfo">
             <knowledgeFileSection />
           </el-tab-pane>
@@ -36,6 +36,9 @@ const handleTabClick = (tab: any, event: any) => { }
 
 </script>
 <style lang="scss" scoped>
+:deep(.el-tabs__nav-wrap:after){
+  width: calc(100% - 24px) !important;
+}
 .document-info-title {
   display: flex;
   justify-content: space-between;
@@ -45,6 +48,7 @@ const handleTabClick = (tab: any, event: any) => { }
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 8px;
+    line-height: 24px;
     color: var(--o-text-color-primary);
   }
 

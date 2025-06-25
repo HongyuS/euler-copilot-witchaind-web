@@ -12,6 +12,9 @@
 
         }
     }
+    .el-drawer__body{
+        padding:0 24px 16px !important;
+    }
     .el-drawer__footer{
         padding:0 24px 0 0 !important;
         height: 48px !important;
@@ -40,13 +43,14 @@
         }
         .dataSetInfoNameBox{
             align-items: center;
+            margin-bottom: 8px;
         }
 
         .dataSetInfoLabel{
             color: var(--o-text-color-secondary);
             font-size: 12px;
             position: relative;
-            width: 80px;
+            width: 60px;
         }
 
         .dataSetInfoLabel::before{
@@ -63,9 +67,27 @@
         }
 
         .dataSetInfoContent{
-            width: 412px;
+            width: calc(100% - 132px);
             color: var(--o-text-color-primary);
             font-size: 12px;
+            .dataSetInfoDescInput{
+                width: 412px;
+                .el-input__count{
+                    background-color: transparent !important;
+                }
+            }
+            .el-input__wrapper,.el-textarea__inner{
+                width: 412px !important;
+                background-color: transparent !important;
+                font-size: 12px;
+            }
+            .el-textarea__inner{
+                height: 88px;
+                padding-right: 16px !important;
+            }
+            textarea::-webkit-scrollbar {
+                width: 4px;               /* 垂直滚动条宽度 */
+            }
         }
 
         .dataSetInfoEdit{
@@ -95,9 +117,10 @@
                 padding:0 16px;
                 display: flex;
                 align-items: center;
-                justify-content: center;
                 background: var(--o-bg-color-light);
                 border-radius: 4px;
+                font-size: 12px;
+                font-family: 'HarmonyOS Sans SC';
                 .dataSetListIcon{
                     width: 16px;
                     height: 16px;
@@ -125,34 +148,61 @@
 
                 .dataSetScoreNumber{
                     color: var(--o-color-major);
+                    font-family: 'HarmonyOS Sans SC';
                     font-size: 14px;
                     font-weight: 700;
                 }
             }
         }
     }
+
+    .dataSetInfoTableContainer{
+
+        .el-pagination{
+            padding-top: 12px !important;
+        }
+        .el-textarea__inner{
+            font-size: 12px;
+            font-family: 'HarmonyOS Sans SC';
+        }
+        .el-table .cell{
+            font-size: 12px;
+            font-family: 'HarmonyOS Sans SC';
+        }
+        .el-table thead .cell{
+            font-weight: 500;
+        }
+        .el-table tbody .cell{
+            font-weight: 400;
+        }
+        .el-table tbody tr td:first-child .cell {
+          padding-left: 16px !important;
+        }
+        .el-table tbody .el-table__cell:not(.el-table__expanded-cell):first-child,
+        .el-table thead .cell,
+        .el-table tbody .el-table-column--selection + th.el-table__cell,
+        .el-table-column--selection + td.el-table__cell {
+          padding: unset !important;
+        }
+       tbody .el-table__cell{
+          padding: 0 !important;
+        }
+        .el-table__row .cell{
+          padding: 8px !important;
+        }
+        .dataChunkText{
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2; /* 控制显示行数 */
+          text-overflow: ellipsis;
+        }
+        textarea::-webkit-scrollbar {
+            width: 4px;               /* 垂直滚动条宽度 */
+        }
+        .el-input__count{
+            background-color: transparent !important;
+        }
+    }
     
-      .el-table tbody tr td:first-child .cell {
-        padding-left: 16px !important;
-      }
-    
-      .el-table tbody .el-table__cell:not(.el-table__expanded-cell):first-child,
-      .el-table thead .cell,
-      .el-table tbody .el-table-column--selection + th.el-table__cell,
-      .el-table-column--selection + td.el-table__cell {
-        padding: unset !important;
-      }
-     tbody .el-table__cell{
-        padding: 0 !important;
-      }
-      .el-table__row .cell{
-        padding: 8px !important;
-      }
-      .dataChunkText{
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2; /* 控制显示行数 */
-        text-overflow: ellipsis;
-      }
 }

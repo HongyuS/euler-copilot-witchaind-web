@@ -2,7 +2,6 @@
   <div
     v-if="showUploadNotify"
     class="o-upload-progress-notify"
-    v-loading="taskListLoading"
     :element-loading-text="`${$t('pageTipText.Loading')}...`"
     element-loading-background="rgba(122, 122, 122, 0.3)">
     <div class="o-upload-notify__head">

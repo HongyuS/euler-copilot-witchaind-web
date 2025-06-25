@@ -12,10 +12,10 @@
                         <el-input v-model="form.description" type="textarea" :rows="4" maxlength="200"
                             show-word-limit />
                     </el-form-item>
-                    <el-form-item prop="isPublic" :label="$t('group.isPublic')">
+                    <el-form-item prop="isPublic" :label="$t('group.isPublic')" class="isPublicItem">
                         <el-switch v-model="form.isPublic" style="--el-switch-on-color: rgb(36,171,54); " />
                     </el-form-item>
-                    <el-form-item prop="memberCount" :label="$t('group.teamSize')">
+                    <el-form-item prop="memberCount" :label="$t('group.teamSize')" class="memberCountItem" >
                        {{ form.memberCount }}{{ $t('group.people') }}
                     </el-form-item>
                     <el-form-item prop="deleteTeam" :label="$t('groupDetail.dissolveTeam')">
@@ -140,19 +140,56 @@ onMounted(()=>{
     height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
+    margin-right: 24px;
 
     .group-name {
         font-size: 16px;
         font-weight: 700;
         line-height: 24px;
         color: var(--o-text-color-primary);
+        margin-bottom: 8px;
     }
 
     .group-detail-tabs {
-        .el-form-item__label {
-            font-size: 12px;
-            padding-right: 24px;
-            color: var(--o-text-color-secondary);
+        .el-form-item{
+            margin-bottom: 24px;
+            .el-form-item__label {
+                font-size: 12px;
+                padding-right: 24px;
+                color: var(--o-text-color-secondary);
+            }
+            .el-form-item__content{
+                font-size:12px;
+                .el-input__inner,.el-textarea__inner{
+                    font-size: 12px;
+                }
+                .el-switch{
+                    height: 16px;
+                    .el-switch__core{
+                        min-width: 32px;
+                        height: 16px;
+                        .el-switch__action{
+                            width: 12px;
+                            height: 12px;
+                        }
+                    }
+                }
+                .el-switch.is-checked .el-switch__core .el-switch__action{
+                    left: calc(100% - 13px);
+                }
+            }
+        }
+        .isPublicItem,.memberCountItem{
+            height: 16px;
+            line-height: 16px;
+            .el-form-item__label-wrap .el-form-item__label{
+                height: 16px;
+                line-height: 16px;
+            }
+            .el-form-item__content{
+                height: 16px;
+                line-height: 16px;
+            }
         }
         .btn-tips{
             font-size: 12px;

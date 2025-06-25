@@ -30,7 +30,7 @@
         <el-input :rows="4" show-word-limit type="textarea" v-model="ruleForm.description" maxlength="200"
           :placeholder="$t('assetLibrary.message.pleasePlace')" />
       </el-form-item>
-      <el-form-item :label="$t('assetLibrary.fileNum')" prop="documentIds">
+      <el-form-item :label="$t('assetLibrary.fileNum')" prop="documentIds" class="dataSetFileNum">
         <span>{{ props.selectionFileData.length }}</span>
       </el-form-item>
 
@@ -38,7 +38,7 @@
         <el-input-number class="config-size" v-model="ruleForm.dataCnt" :min="1" :max="512" />
       </el-form-item>
       <el-form-item :label="$t('testing.type')" prop="llmId">
-        <el-select v-model="ruleForm.llmId" :placeholder="t('assetLibrary.message.pleaseChoose')">
+        <el-select v-model="ruleForm.llmId" :placeholder="t('assetLibrary.message.pleaseChoose')" :suffix-icon="IconCaretDown">
           <template #label="{ label, value }">
               <img v-if="ruleForm.llmId" :src="`data:image/svg+xml;base64,${llmList.find(item => item.llmId === ruleForm.llmId)?.llmIcon}`" style="vertical-align: middle; margin-right: 8px;" />
               <span>{{ label }}</span>
@@ -77,6 +77,7 @@ import dataSetAPI from '@/api/dataSet'
 import { ref } from 'vue';
 import { useGroupStore } from '@/store/modules/group';
 import CustomLoading from '@/components/CustomLoading/index.vue';
+import { IconCaretDown, } from '@computing/opendesign-icons';
 
 const store = useGroupStore();
 const { handleKnowledgeTab } = store;

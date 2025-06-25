@@ -3,7 +3,7 @@
     <el-header />
     <div class="knowledge-welcome">
       <div class="knowledge-welcome-text">
-        <h1>{{ `Hi, ${$t('assetLibrary.welcomeUsePro')}` }}</h1>
+        <div>{{ `${$t('assetLibrary.welcomeUsePro')}` }}</div>
       </div>
       <div class="knowledge-show-text">
         {{ $t('assetLibrary.profile') }}
@@ -18,19 +18,27 @@ import '@/styles/headerBar.scss';
 </script>
 <style lang="scss" scoped>
 .knowledge-welcome {
-  width: 832px;
+  font-family:'HarmonyOS Sans SC';
+  position: absolute;
+  top: 64px;
   padding-left: 24px;
 
   .knowledge-welcome-text {
-    margin-top: 56px;
     margin-bottom: 24px;
     color: var(--o-text-color-primary);
+    font-size: 32px;
+    line-height: 40px;
+    font-weight: 700;
+    font-family: 'HarmonyOS Sans SC';
   }
 
   .knowledge-show-text {
+    width: 824px;
     font-size: 16px;
-    line-height: 21px;
+    line-height: 24px;
     color: var(--o-text-color-secondary);
+    word-break: break-all;
+    font-family: 'HarmonyOS Sans SC';
   }
 }
 </style>
