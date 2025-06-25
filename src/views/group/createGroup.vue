@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="evaluate-dialog" v-model="props.createGroupVisible" align-center
+    <el-dialog class="craete-group-dialog" v-model="props.createGroupVisible" align-center
         :title="props.dialogueType === 'edit' ? $t('group.editTeam') : $t('group.createTeam')" width="544" v-if="props.createGroupVisible"
         @close="handleCancelVisible">
         <el-form ref="ruleFormRef" class="evaluate-form" :model="form" labelPosition="right" :rules="rules">
@@ -154,7 +154,7 @@ const handleCancelVisible = () => {
 }
 </script>
 <style lang="scss">
-.evaluate-dialog {
+.craete-group-dialog {
     padding: 0;
     .el-dialog__header {
         padding: 16px 24px 16px 24px;
@@ -172,8 +172,11 @@ const handleCancelVisible = () => {
                     padding-right: 0px;
                     margin-right: 24px;
                     font-family: 'HarmonyOS Sans SC';
+                    width: 48px !important;
                 }
                 .el-form-item__label:before {
+                    position: absolute;
+                    left: -8px;
                     width: 8px;
                     margin-right: 0px;
                 }

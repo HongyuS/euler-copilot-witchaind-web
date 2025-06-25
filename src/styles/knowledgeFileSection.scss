@@ -79,7 +79,7 @@
     .kf-section-divider{
       width: 1px;
       height: 100vh;
-      background: #DFE5EF;
+      background: var(--o-border-color-base);
     }
     .kf-section-container-right {
       flex: 1;
@@ -481,7 +481,8 @@
   justify-content: center;
   gap: 8px;
   border-radius: 4px 0 0 4px;
-  box-shadow: 1px 0 0 0 var(--el-input-border-color) inset,0 1px 0 0 var(--el-input-border-color) inset,0 -1px 0 0 var(--el-input-border-color) inset;
+  box-shadow: 1px 0 0 0 var(--o-border-color-base) inset,0 1px 0 0 var(--o-border-color-base) inset,0 -1px 0 0 var(--o-border-color-base) inset;
+  cursor: pointer;
   .fileCheckTypeContent {
     width: 64px;
     height: 32px;

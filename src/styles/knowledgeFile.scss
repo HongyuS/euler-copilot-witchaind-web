@@ -122,6 +122,12 @@
         background-color: var(--o-bg-color-base);
         .fileTableContainer{
           height:100%;
+          .el-table-column--selection .cell{
+            padding-left: 18px !important;
+          }
+        }
+        .el-table .cell{
+          line-height: 16px !important;
         }
         tbody {
           td {
@@ -275,13 +281,13 @@
           width: 24px;
           min-width: 18px;
           color: var(--o-text-color-primary);
+          margin-left: 8px;
         }
-
         .statusAnalysisText {
           font-size: 12px;
           font-family: 'HarmonyOS Sans SC Regular';
           font-weight: 500;
-          margin-left: 2px;
+          margin-left: 4px;
           color: var(--o-text-color-primary);
         }
       }
@@ -496,8 +502,8 @@
 
   .iconAlarmOrange {
     svg {
-      width: 16px;
-      height: 16px;
+      width: 24px;
+      height: 24px;
     }
   }
 
@@ -536,19 +542,27 @@
 .tip-dialog {
   .delTip {
     display: flex;
-    gap: 17.5px;
+    gap: 16px;
     align-items: center;
     color: var(--o-text-color-secondary);
+    & span{
+      font-size: 12px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+    }
   }
 
   .iconAlarmOrange {
+    width: 24px;
+      height: 24px;
     svg {
-      width: 28px;
+      width: 24px;
       height: 24px;
     }
   }
 }
-.cancel-analytic-dialog,.del-dialog {
+.cancel-analytic-dialog,.del-dialog,.del-select-dialog {
   padding: 0px;
   .tip-ops-btn{
     display: flex;

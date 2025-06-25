@@ -253,8 +253,7 @@
   }
 
   .el-table thead .el-table__cell .cell {
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    padding: 0 8px !important;
   }
 
   .custom-header {
@@ -357,12 +356,13 @@
       width: 24px;
       min-width: 18px;
       color: var(--o-text-color-primary);
+      margin-left: 8px;
     }
 
     .statusGenerateText {
       font-size: 12px;
       font-family: 'HarmonyOS Sans SC Medium';
-      margin-left: 2px;
+      margin-left: 4px;
       color: var(--o-text-color-primary);
     }
   }
@@ -432,6 +432,13 @@
     flex-direction: column;
     .dataSetTableContainer{
       height: calc(100vh - 318px);
+    }
+    .el-table__body-wrapper .el-table-column--selection>.cell, 
+    .el-table__header-wrapper .el-table-column--selection>.cell{
+      padding-left: 18px !important;
+    }
+    .el-table .cell{
+      line-height: 16px !important;
     }
     tbody {
       td {

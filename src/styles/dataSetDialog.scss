@@ -2,18 +2,44 @@
     .el-dialog__body{
         max-height: unset !important;
         height: auto !important;
-        padding-bottom: 16px !important;
-        padding-left: 16px !important;
+        padding-bottom: 24px !important;
     }
 
     .el-form-item__label:before{
         content: '';
         display: inline-block;
-        width: 5px;
+        width: 8px;
+        position: absolute;
+        left: -8px;
+        margin-right: 0px !important;
     }
-
     .dataSet-ruleForm .el-form-item:last-child {
         margin-bottom: unset !important;
+    }
+    .dataSet-ruleForm{
+        .dataSetFileNum,.isDataClean,.isComContext{
+            --o-form-item-height:16px !important;
+            .el-form-item__label, .el-form-item__content{
+                height: 16px !important;
+                line-height: 16px !important;
+                .el-switch{
+                    height: 16px !important;
+                    .el-switch__core{
+                        height: 16px !important;
+                        width: 32px !important;
+                        min-width: 32px !important;
+                        .el-switch__action{
+                            width: 12px !important;
+                            height: 12px !important;
+                        }
+                    }
+
+                }
+                .el-switch.is-checked .el-switch__core .el-switch__action{
+                    left: calc(100% - 13px) !important;
+                }
+            }
+        }
     }
 
     .el-form-item__content{

@@ -113,13 +113,14 @@
         .el-progress__text {
             width: 24px;
             min-width: 18px;
+            margin-left: 8px;
             color: var(--o-text-color-primary);
         }
 
         .statusAnalysisText {
             font-size: 12px;
             font-family: 'HarmonyOS Sans SC Medium';
-            margin-left: 2px;
+            margin-left: 4px;
             color: var(--o-text-color-primary);
         }
     }
@@ -176,6 +177,10 @@
     .el-table__cell {
         padding: 0 !important;
         font-size: 12px;
+        .cell{
+            line-height: 16px;
+            padding: 0 8px;
+        }
     }
 
     .el-table--border .el-table__cell:first-child .cell {
@@ -184,7 +189,7 @@
 
     .el-table-column--selection .cell {
         padding-right: 0 !important;
-        padding-left: 22px;
+        padding-left: 42px;
     }
 
     .group-selection::after {
@@ -201,37 +206,76 @@
 }
 
 .el-table [class*=el-table__row--level] .el-table__expand-icon {
-    width: 14px;
+    width: 16px;
+    height: 16px;
     position: absolute !important;
-    left: -50px;
+    left: -38px;
     top: 16px;
+    margin: 0 ;
+    margin-right: 8px;
 }
 .evaluate-dialog {
+    padding: 0px;
     .el-dialog__header {
         padding: 16px 0 16px 24px;
     }
 
     .el-dialog__body {
-
+        padding-bottom: 0px;
         .evaluate-form {
             .el-form-item {
+                margin-bottom: 24px;
                 .el-form-item__label{
-                    color: --o-item-label-text;
+                    color: var(--o-item-label-text);
+                    font-size: 12px;
+                    font-family: 'HarmonyOS Sans SC';
+                    padding: 0px;
+                    margin-right: 24px;
                 }
                 .el-form-item__label:before{
                     position: absolute;
                     left: -8px;
                 }
-                .evaluate-dataSetName{
-                    color: var(--o-primary-color);
+
+                .el-form-item__content{
+                    .el-input__inner,.el-textarea__inner,.el-select__selected-item{
+                        font-size: 12px;
+                        font-family: 'HarmonyOS Sans SC';
+                        --el-input-placeholder-color: var(--o-text-color-tertiary);
+                        font-weight: 400;
+                    }
+                    .el-input-number{
+                        width: 104px;
+                    }
+                    .topk-desc{
+                        font-size: 12px;
+                        line-height: 16px;
+                        font-family: 'HarmonyOS Sans SC Regular';
+                        color: #8d98aa;
+                    }
                 }
                 
+            }
+            .evaluate-dataSetName-container{
+                height: 16px !important;
+                .el-form-item__label,.el-form-item__content{
+                    height: 16px !important;
+                    line-height: 16px !important;
+                    min-height: 16px !important;
+                }
+                .evaluate-dataSetName{
+                    color: var(--o-text-color-primary);
+                    font-size: 12px;
+                    font-family: 'HarmonyOS Sans SC';
+                    line-height: 16px;
+                }
             }
         }
     }
 
     .el-dialog__footer {
-        padding-bottom: 8px;
+        padding-bottom: 24px;
+        padding-top: 8px;
 
         .dialog-footer {
             display: flex;
@@ -239,9 +283,13 @@
             & button{
                 height: 24px;
                 width: 64px;
+                margin-right: 0px;
             }
         }
     }
+}
+.el-select__popper.el-popper[role=tooltip]{
+    max-width: 414px !important;
 }
 .el-select__popper .el-select-dropdown__list{    
     // background-color: white;               

@@ -92,7 +92,7 @@
               type="selection"
               :fixed="true"
               class-name="kl-selection"
-              width="35"
+              width="40"
               :reserve-selection="true"
               :selectable="checkSelecTable" />
             <el-table-column
@@ -205,7 +205,7 @@
             <el-table-column
               prop="taskStatus"
               :label="$t('assetFile.analyticStatus')"
-              width="220">
+              width="250">
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.analyticStatus') }}</span>
@@ -442,7 +442,9 @@
       <span class="iconAlarmOrange">
         <IconAlarm />
       </span>
+      <span>
       {{ $t('dialogTipText.confirmCancelAnalytic') }}
+      </span>
     </div>
     <div class="tip-ops-btn">
       <el-button
@@ -497,7 +499,7 @@
   <el-dialog
     align-center
     v-model="delSelectTipVisible"
-    class="tip-dialog"
+    class="tip-dialog del-select-dialog"
     width="400"
     :title="$t('dialogTipText.tipsText')">
     <div class="delTip">
@@ -505,7 +507,7 @@
         <IconAlarm />
       </span>
       <span>
-        {{ $t('dialogTipText.confirmDelSelected') }}
+        {{ $t('dialogTipText.confirmDelSelected') }}？
       </span>
     </div>
     <div class="tip-ops-btn">
@@ -632,6 +634,7 @@
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import '@/styles/knowledgeFile.scss';
 import {
+  IconAlarm,
   IconAlarmOrange,
   IconCaretDown,
   IconCaretUp,
