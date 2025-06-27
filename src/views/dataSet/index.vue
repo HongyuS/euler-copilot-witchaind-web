@@ -53,7 +53,7 @@
                 </div>
               </div>
               <div class="item-close">
-                <IconX @click="handleCloseSingleUpload(item.taskId)" />
+                <IconX @click="handleCloseSingleExport(item.taskId)" />
               </div>
             </div>
             <div class="taskStatusPer">
@@ -110,7 +110,7 @@
         <div class="item-all-close">
           <div
             v-if="taskExportList.length > 0"
-            @click="handleCloseSingleUpload('all')">
+            @click="handleCloseSingleExport('all')">
             {{ $t('btnText.clearAll') }}
           </div>
         </div>
@@ -437,7 +437,7 @@
               <el-button
                 v-if="[StatusEnum.RUNNING,StatusEnum.ANALYSIS_ING].includes(scope.row.status) "
                 text
-                @click="handleRunDataSet(scope.row,false)">
+                @click="handleStopRunning(scope.row)">
                 {{ $t('dataset.stop') }}
               </el-button>
               <el-button
@@ -519,7 +519,7 @@
     :handleUploadRestart="uploadTaskListData.handleUploadRestart"
     :taskListImportDate="taskListImportDate"
     :importTaskTotal="importTaskTotal"
-    :isShowAllClear="false" />
+    :isShowAllClear="true" />
 </template>
 
 <script setup lang="ts">
@@ -869,7 +869,20 @@ const handleDeleteDataSet = (row: any) => {
     })
   })
 };
-
+const handleStopRunning = (row: any) => {
+  ElMessageBox.confirm(t('dialogTipText.stopGenerating'), 
+    t('dialogTipText.tipsText'), 
+    {
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }).then(() => {
+      handleRunDataSet(row, false);
+    })
+}
 const handleRunDataSet = (row: any, type: boolean) => {
   loading.value = true;
   let params = {
@@ -1192,7 +1205,7 @@ const handleExportScroll = (e: { target: any }) => {
   }
 };
 
-const handleCloseSingleUpload = (taskId: string) => {
+const handleCloseSingleExport = (taskId: string) => {
   if(taskId === 'all'){
     handleCloseAllTask('dataset_export');
   }else{

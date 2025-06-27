@@ -16,7 +16,7 @@
     background-color: var(--o-bg-color-base);
     border-color: var(--o-bg-color-base);
     border-radius: var(--o-border-radius);
-    box-shadow: var(--o-box-shadow);
+    box-shadow: var(--o-task-box-shadow);
 
     .o-export-notify__head {
       position: relative;
@@ -468,15 +468,4 @@
   .el-dropdown-menu__item {
     font-size: 12px !important;
   }
-}
-
-.el-message-box .el-message-box__btns .el-button-confirm{
-  background-color: var(--o-button-bg-color) !important;
-  color: var(--o-text-color-secondary) !important;
-  border-color: var(--o-button-border-color) !important;
-  &:hover{
-    background-color: var(--o-button-bg-color-hover) !important;
-    color: var(--o-button-color_hover) !important;
-  border-color: var(--o-button-border-color_hover) !important;
-}
 }

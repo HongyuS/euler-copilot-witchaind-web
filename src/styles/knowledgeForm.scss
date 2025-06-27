@@ -38,6 +38,8 @@
   .el-form-item {
     gap: 24px;
     margin-bottom: 24px;
+    display: flex;
+    align-items: center;
 
     .el-form-item__label-wrap {
       display: unset !important;
@@ -59,6 +61,11 @@
       span {
         color: #a8abb2 !important;
       }
+    }
+    .icon-help{
+      margin-left: 4px;
+      margin-top: 0px !important;
+      color: #8d98aa;
     }
   }
 

@@ -993,7 +993,7 @@ div:focus {
 }
 .el-checkbox__input.is-checked .el-checkbox__inner:after {
   border-color: var(--el-checkbox-checked-icon-color) !important;
-  transform: rotate(45deg) scaleY(1) translate(-1.5px, -1px) !important;
+  transform: rotate(45deg) scaleY(1) translate(-1.5px,0px) !important;
 }
 
 .el-input__wrapper,
@@ -1133,4 +1133,17 @@ div:focus {
 }
 .el-table .sort-caret.descending{
   border-top-color: #8D98AA !important;
+}
+
+/**
+ * 自定义消息确认框按钮样式
+ */
+.el-message-box .el-message-box__btns .el-button-confirm {
+  background-color: var(--o-button-bg-color) !important;  color: var(--o-text-color-secondary) !important;
+  border-color: var(--o-button-border-color) !important;
+  &:hover{
+    background-color: var(--o-button-bg-color-hover) !important;
+    color: var(--o-button-color_hover) !important;
+    border-color: var(--o-button-border-color_hover) !important;
+  }
 }
