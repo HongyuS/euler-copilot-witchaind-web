@@ -139,7 +139,12 @@ const handleCancelVisible = () => {
     props.close?.();
     ruleFormRef.value?.resetFields();
 }
-
+const initFormData = () => {
+    form.name = '测试数据01'
+    form.type = llmOptions.value.length > 0 ? llmOptions.value[0].value : '';
+    form.method = parserMethodOptions.value.length > 0 ? parserMethodOptions.value[0].value : '';
+    form.topk = 5;
+}
 onMounted( async () => {
     await KbAppAPI.querySearchMethodList().then((res: any) => {
         parserMethodOptions.value = res?.map((item: any) => {
@@ -151,11 +156,7 @@ onMounted( async () => {
             return { label: item.llmName, value: item.llmId,icon:item.llmIcon };
         });
     })
-    // 设置默认值
-    form.name = '测试数据01'
-    form.type = llmOptions.value.length > 0 ? llmOptions.value[0].value : '';
-    form.method = parserMethodOptions.value.length > 0 ? parserMethodOptions.value[0].value : '';
-    form.topk = 5;
+    initFormData();
 })
 
 </script>

@@ -26,7 +26,7 @@
                     <div id="leftChart"></div>
                 </div>
                 <div class="table-container">
-                    <el-table :data="testCaseList" row-key="id" max-height="620" bordered>
+                    <el-table :data="testCaseList" row-key="id" height="calc(100vh - 464px)" bordered>
                         <el-table-column prop="question" width="150" :label="$t('dataset.question')" fixed>
                             <template #default="scope">
                                 <el-tooltip
@@ -191,6 +191,8 @@ const initChart = async () => {
                     max: 100, //最小值
                     startAngle: 225, //仪表盘起始角度。正右手侧为0度，正上方为90度，正左手侧为180度。
                     endAngle: -45, //仪表盘结束角度
+                    radius:'95px', 
+                    center: ['50%', '55%'], // 调整表盘垂直位置，增加与标题的距离
                     itemStyle: {
                         color: '#f37215', //颜色
                     },
@@ -210,11 +212,11 @@ const initChart = async () => {
                                         color: 'green' // 0% 处的颜色
                                     },
                                     {
-                                        offset: 0.7,
+                                        offset: 0.6,
                                         color: 'yellow' // 100% 处的颜色
                                     },
                                     {
-                                        offset: 0.3,
+                                        offset: 0.2,
                                         color: 'orange' // 100% 处的颜色
                                     },
                                     {
@@ -292,10 +294,10 @@ const initChart = async () => {
                 color: 'rgb(141,152,170)'
             },
             grid: {
-                left: '2%',    // 左侧距离容器3%宽度（百分比更适配响应式）
+                left: '1%',    // 左侧距离容器3%宽度（百分比更适配响应式）
                 right: '1%',   // 右侧距离容器3%宽度
                 bottom: '1%',   // 底部距离容器3%宽度
-                top: '22%',    // 顶部距离容器3%宽度
+                top: '25%',    // 顶部距离容器3%宽度
                 containLabel: true // 确保坐标轴标签不被截断[3,5](@ref)
             },
             title: {
@@ -319,10 +321,11 @@ const initChart = async () => {
                     show: false
                 },
                 axisLine: {
-                    lineStyle:  [
-                        [0.7, '#91c7ae'], // 已走过部分颜色
-                        [1, 'red'] // 未走到部分颜色
-                    ]
+                    lineStyle:  {
+                        type: 'solid',
+                        color: 'rgb(223,229,239)',
+                        width: 3,
+                    }
                 },
                 axisLabel: {
                     interval: 0 // 确保所有标签都显示
@@ -336,7 +339,8 @@ const initChart = async () => {
                     color: 'black',
                 },
                 nameTextStyle: {
-                    color: isDarkMode ? '#C0C8D5' : '#666F7A' // 动态设置Y轴顶部文字颜色
+                    color: isDarkMode ? '#C0C8D5' : '#666F7A', // 动态设置Y轴顶部文字颜色
+                    padding: [0, 0, 0, 2],
                 },
                 splitLine: {
                     show: true,
@@ -345,14 +349,18 @@ const initChart = async () => {
                         color: 'rgb(141,152,170)',
                         dash: [30, 15],   // [实线长度, 间隔长度]（数值越大越稀疏）
                         opacity: 0.5
-                    }
+                    },
+                },
+                axisLabel: {
+                    align: 'left',
+                    padding: [0, 0, 0, -20],
                 }
             },
             series: [
                 {
                     type: 'bar',
                     data: Object.values(testCaseAvg.value),
-                    barWidth: '10%',
+                    barWidth: 8,
                     itemStyle: {
                         color: 'rgb(0,98,220)',
                         borderWidth: 1,
@@ -360,7 +368,6 @@ const initChart = async () => {
                         shadowBlur: 10,
                         shadowOffsetX: 4,
                         shadowOffsetY: 8,
-
                     }
                 }
             ]
@@ -424,8 +431,19 @@ const handleMessage = (event: MessageEvent) => {
         initChart();
     }
 }
+// 响应式调整函数
+function resizeChart() {
+  if (chartInstanceL) {
+    chartInstanceL.resize()
+  }
+  if (chartInstanceR) {
+    chartInstanceR.resize()
+  }
+}
 // 监听窗口大小变化
 onMounted(() => {
+    // 添加窗口大小变化监听
+    window.addEventListener('resize', resizeChart)
     window.addEventListener('message',handleMessage );
     const observer = new MutationObserver(handleThemeChange);
     observer.observe(document.body, { attributes: true, attributeFilter: ['theme'] }); // 监听主题变化
@@ -512,7 +530,7 @@ const handleDownloadReport = () => {
 }
 
 .el-drawer__body {
-    padding: 16px 24px 24px 24px;
+    padding: 16px 24px;
 }
 
 .chart-container {
@@ -520,19 +538,19 @@ const handleDownloadReport = () => {
     gap: 16px;
 
     #rightChart {
-        width: 23%;
-        height: 300px;
+        width: 30%;
+        height: 256px;
+        min-width: 233px;
         background-color: var(--o-bg-color-light);
         border-radius: 8px;
-        padding: 16px;
+        padding: 16px 16px 0;
         display: flex;
         justify-content: center;
     }
 
     #leftChart {
-        width: 75%;
+        width: calc(100vw - 30%);
         height: 256px;
-        min-height: 300px;
         background-color: var(--o-bg-color-light);
         border-radius: 8px;
         padding: 16px;

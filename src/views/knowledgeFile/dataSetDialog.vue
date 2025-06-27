@@ -36,6 +36,7 @@
 
       <el-form-item :label="$t('dataset.datasetNum')" prop="dataCnt" class="dataSetNumber">
         <el-input-number class="config-size" v-model="ruleForm.dataCnt" :min="1" :max="512" />
+        <span class="dataSetNumberTip">1～512</span>
       </el-form-item>
       <el-form-item :label="$t('testing.type')" prop="llmId">
         <el-select v-model="ruleForm.llmId" :placeholder="t('assetLibrary.message.pleaseChoose')" :suffix-icon="IconCaretDown">
@@ -203,18 +204,24 @@ const handleCancelVisible = () => {
   props.handleGenerateDataSet(false);
   handleResetDataSet();
 };
+const initFormData = ()=>{
+  ruleForm.value.datasetName = '数据集01';
+  ruleForm.value.description = '这是一段数据集简介';
+  ruleForm.value.dataCnt = 64;
+  ruleForm.value.isDataCleared = true;
+  ruleForm.value.isChunkRelated = false;
+  ruleForm.value.llmId = llmList.value[0]?.llmId || '';
+}
 
 onMounted(() => {
   dataSetAPI.queryLlmData().then(res => {
     llmList.value = res.llms || [];
   })
 })
-watch(() => props.selectionFileData,
-  () => {
-    ruleForm.value.documentIds = props.selectionFileData.map((item) => item.docId)
-  }, {
-  deep: true
-})
-
+watch(() => props.generateDialogVisible, (newVal) => {
+  if (newVal) {
+    initFormData();
+  }
+});
 
 </script>

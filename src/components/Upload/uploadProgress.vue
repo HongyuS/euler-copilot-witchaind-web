@@ -26,7 +26,7 @@
         @scroll="handleScroll">
         <div
           v-for="(item, index) in taskStatusList"
-          :key="item.id"
+          :key="item.taskId || item.id"
           class="item">
           <div class="item-box">
             <div class="item-info">
@@ -46,7 +46,7 @@
             </div>
             <div
               class="item-close"
-              v-if="typeof item.id === 'string'">
+              v-if="typeof item.taskId === 'string'">
               <IconX @click="handleCloseSingleUpload(item.taskId)" />
             </div>
           </div>

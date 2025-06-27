@@ -193,7 +193,7 @@
 
             .el-checkbox__input.is-checked .el-checkbox__inner:after {
               border-color: var(--el-checkbox-checked-icon-color) !important;
-              transform: rotate(45deg) scaleY(1) translate(3px) !important;
+              transform: rotate(45deg) scaleY(1) translate(2px) !important;
               border-width: 2px !important;
             }
           }
@@ -415,7 +415,7 @@
     background-color: var(--o-bg-color-base);
     border-color: var(--o-bg-color-base);
     border-radius: var(--o-border-radius);
-    box-shadow: var(--o-box-shadow);
+    box-shadow: var(--o-task-box-shadow);
 
     .o-export-notify__head {
       position: relative;
@@ -444,7 +444,7 @@
     }
 
     .o-export-notify__body {
-      padding: 8px 16px;
+      padding: 0px 16px 8px;
       background-color: var(--o-bg-color-light);
     }
 
@@ -458,9 +458,8 @@
       .item {
         max-height: 112px;
         padding: 16px;
-        padding-bottom: 12px;
         background: var(--o-bg-color-base);
-        border-radius: 2px;
+        border-radius: 4px;
 
         .el-progress__text {
           min-width: 10px;
@@ -720,17 +719,6 @@
 
 .searchIconIsActive {
   color: rgb(99, 149, 253) !important;
-}
-
-.delToolTip {
-  display: inline-block;
-  max-width: 150px;
-  line-height: 12px;
-}
-
-.delTipText {
-  display: inline-block;
-  width: 300px;
 }
 
 .timePng,

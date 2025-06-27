@@ -128,7 +128,7 @@ export default {
     fileSize: 'fileSize',
     creator: 'creator',
     uploadTime: 'Create Time',
-    importTaskList: 'File upload list',
+    importTaskList: 'Task upload list',
     exportTaskList: 'Export Task List',
     uploadIng: 'Uploading',
     uploadFailedNet: 'Upload failed.Check the netwok.',
@@ -333,6 +333,8 @@ export default {
       'The current dataset already has associated evaluation tasks. Should a new evaluation task be created?',
     confirmDelData: 'Are you sure to delete the selected data?',
     confirmDelSingleData: 'Are you sure to delete this data?',
+    stopGenerating:
+      'Are you sure to pause generation? Clicking OK will stop generation, so please proceed with caution.',
     stopTesting:
       'Have you decided to suspend it? After clicking "OK", the test will be stopped. Please operate with caution.',
     testDownloadTips:

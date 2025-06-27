@@ -461,70 +461,6 @@
     </div>
   </el-dialog>
   <el-dialog
-    align-center
-    v-model="delTipVisible"
-    class="tip-dialog del-dialog"
-    width="400"
-    :title="$t('dialogTipText.tipsText')">
-    <div class="delTip">
-      <span class="iconAlarmOrange">
-        <IconAlarm />
-      </span>
-      <span>
-        {{ $t('dialogTipText.confirmDelFile') }}
-        <span>
-          【
-          <span class="delToolTip">
-            <TextSingleTootip :content="opsItem.docName" />
-          </span>
-          】
-          {{ userLanguage === 'zh' ? '吗？' : null }}
-        </span>
-      </span>
-    </div>
-    <div class="tip-ops-btn">
-      <el-button
-        class="resetBtn"
-        type="primary"
-        @click="handleConfirmDleSingle(opsItem)">
-        {{ $t('btnText.confirm') }}
-      </el-button>
-      <el-button
-        class="resetBtn cancelBtn"
-        @click="handleCancelVisible">
-        {{ $t('btnText.cancel') }}
-      </el-button>
-    </div>
-  </el-dialog>
-  <el-dialog
-    align-center
-    v-model="delSelectTipVisible"
-    class="tip-dialog del-select-dialog"
-    width="400"
-    :title="$t('dialogTipText.tipsText')">
-    <div class="delTip">
-      <span class="iconAlarmOrange">
-        <IconAlarm />
-      </span>
-      <span>
-        {{ $t('dialogTipText.confirmDelSelected') }}？
-      </span>
-    </div>
-    <div class="tip-ops-btn">
-      <el-button
-        class="resetBtn"
-        type="primary"
-        @click="handleConfirmDleSelected">
-        {{ $t('btnText.confirm') }}
-      </el-button>
-      <el-button
-        class="resetBtn cancelBtn"
-        @click="handleCancelVisible">
-        {{ $t('btnText.cancel') }}
-      </el-button>
-    </div>
-  </el-dialog>
-  <el-dialog
     v-if="dialogEditVisible"
     v-model="dialogEditVisible"
     class="edit-dialog"
@@ -628,7 +564,7 @@
     :handleUploadRestart="uploadTaskListData.handleUploadRestart"
     :taskListImportDate="taskListImportDate"
     :importTaskTotal="importTaskTotal"
-    :isShowAllClear="false" />
+    :isShowAllClear="true" />
 </template>
 <script setup lang="ts">
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
@@ -677,8 +613,6 @@ const fileFilterVisible = ref(false);
 const enableFilterVisible = ref(false);
 const parserMethodVisible = ref(false);
 const cancelTipVisible = ref(false);
-const delTipVisible = ref(false);
-const delSelectTipVisible = ref(false);
 const batchDownBth = ref(false);
 const opsItem = ref();
 const multipleTable = ref();
@@ -1247,8 +1181,6 @@ const handleImportKnowledge = () => {
 
 const handleCancelVisible = () => {
   dialogImportVisible.value = false;
-  delTipVisible.value = false;
-  delSelectTipVisible.value = false;
   dialogEditVisible.value = false;
   cancelTipVisible.value = false;
   timeFilterVisible.value = false;
@@ -1259,36 +1191,19 @@ const handleSelectionChange = (newSelection: any[]) => {
 };
 
 const handleDeleteKl = (row: any) => {
-  opsItem.value = row;
-  delTipVisible.value = true;
-};
-
-const handleSelectDeleteKl = () => {
-  delSelectTipVisible.value = true;
-};
-
-const handleSelectRunKl = () => {
-  loading.value = true;
-  checkTableSelecData.value = selectionFileData.value;
-  const ids = selectionFileData.value.map((item) => item.docId);
-  KfAppAPI.runLibraryFile({parse:true},ids).then(() => {
-    ElMessage({
-      showClose: true,
-      message: t('opsMessage.opsAnalyticIng'),
-      icon: IconSuccess,
-      customClass: 'o-message--success',
-      duration: 3000,
-    });
-    selectionFileData.value = [];
-    multipleTable.value.clearSelection();
-    handleSearchOpsData(true, true);
-  }).finally(() => {
-    loading.value = false;
-  });
-};
-
-const handleConfirmDleSingle = (row: any) => {
-  KfAppAPI.delLibraryFile([row.docId]).then(() => {
+  ElMessageBox.confirm(
+    `${t('dialogTipText.confirmDelFile')}【${row.docName}】 ？`,
+    t('dialogTipText.tipsText'),
+    {
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    KfAppAPI.delLibraryFile([row.docId]).then(() => {
     ElMessage({
       showClose: true,
       message: t('opsMessage.delSuccess'),
@@ -1308,15 +1223,25 @@ const handleConfirmDleSingle = (row: any) => {
     } else {
       multipleTable.value.clearSelection();
     }
-
     handleSearchOpsData(true, true);
-    handleCancelVisible();
   });
+  })
 };
 
-const handleConfirmDleSelected = () => {
-  delSelectTipVisible.value = false;
-  loading.value = true;
+const handleSelectDeleteKl = () => {
+  ElMessageBox.confirm(
+    `${t('dialogTipText.confirmDelSelected')} ？`,
+    t('dialogTipText.tipsText'),
+    {
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    loading.value = true;
   handleCleartTimer();
   let ids=selectionFileData.value.map((item) => {
       return item.docId;
@@ -1341,6 +1266,28 @@ const handleConfirmDleSelected = () => {
     }).finally(()=>{
       loading.value = false;
     })
+  })
+
+};
+
+const handleSelectRunKl = () => {
+  loading.value = true;
+  checkTableSelecData.value = selectionFileData.value;
+  const ids = selectionFileData.value.map((item) => item.docId);
+  KfAppAPI.runLibraryFile({parse:true},ids).then(() => {
+    ElMessage({
+      showClose: true,
+      message: t('opsMessage.opsAnalyticIng'),
+      icon: IconSuccess,
+      customClass: 'o-message--success',
+      duration: 3000,
+    });
+    selectionFileData.value = [];
+    multipleTable.value.clearSelection();
+    handleSearchOpsData(true, true);
+  }).finally(() => {
+    loading.value = false;
+  });
 };
 
 const submitForm = async (formEl: FormInstance | undefined) => {

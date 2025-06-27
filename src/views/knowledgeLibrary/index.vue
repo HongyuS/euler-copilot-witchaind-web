@@ -17,7 +17,7 @@
       <div class="o-export-notify__head">
         <div class="task-list">
           <span>{{ $t('assetLibrary.exportTaskList') }}</span>
-          <span>{{ `(${exportTaskTotal})` }}</span>
+          <span>{{ `（${exportTaskTotal}）` }}</span>
         </div>
         <div class="nofity-show">
           <el-icon
@@ -51,7 +51,7 @@
                 </div>
               </div>
               <div class="item-close">
-                <IconX @click="handleCloseSingleUpload(item.taskId)" />
+                <IconX @click="handleCloseSingleExport(item.taskId)" />
               </div>
             </div>
             <div class="taskStatusPer">
@@ -108,7 +108,7 @@
         <div class="item-all-close">
           <div
             v-if="taskExportList.length > 0"
-            @click="handleCloseSingleUpload('all')">
+            @click="handleCloseSingleExport('all')">
             {{ $t('btnText.clearAll') }}
           </div>
         </div>
@@ -549,42 +549,6 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog
-      align-center
-      v-model="delTipVisible"
-      class="tip-dialog delTipDialog"
-      width="432"
-      :title="$t('dialogTipText.tipsText')">
-      <div class="delTip">
-        <span class="iconAlarmOrange">
-          <IconAlarm />
-        </span>
-        <span>
-          {{ $t('dialogTipText.confirmDelAsset') }}
-          <span>
-            【
-            <span class="delToolTip">
-              <TextSingleTootip :content="opsItem.kbName" />
-            </span>
-            】
-            {{ userLanguage === 'zh' ? '吗？' : null }}
-          </span>
-        </span>
-      </div>
-      <div class="tip-ops-btn">
-        <el-button
-          class="resetBtn"
-          @click="handleConfirmDelKb(opsItem)">
-          {{ $t('btnText.confirm') }}
-        </el-button>
-        <el-button
-          type="primary"
-          class="resetBtn cancelBtn"
-          @click="handleCancelDelKb()">
-          {{ $t('btnText.cancel') }}
-        </el-button>
-      </div>
-    </el-dialog>
   <UploadProgress
     :showUploadNotify="uploadTaskListData.showUploadNotify"
     :uploadingList="uploadTaskListData.uploadingList"
@@ -646,7 +610,6 @@ const knoledgekeyWord = ref();
 const dialogImportVisible = ref(false);
 const dialogCreateVisible = ref(false);
 const addTipVisible = ref(false);
-const delTipVisible = ref(false);
 const switchIcon = ref('thumb');
 const opsItem = ref();
 const klCardBox = ref();
@@ -1132,7 +1095,7 @@ const handleUploadRestart = (task: { taskId: string }) => {
   });
 };
 
-const handleCloseSingleUpload = (taskId: string) => {
+const handleCloseSingleExport = (taskId: string) => {
   if(taskId === 'all'){
     handleCloseAllTask('kb_export');
   }else{
@@ -1310,7 +1273,26 @@ const handleEditKl = (row: any) => {
 
 const handleDeleteKl = (row: any) => {
   opsItem.value = row;
-  delTipVisible.value = true;
+  ElMessageBox.confirm(
+    `${t('dialogTipText.confirmDelAsset')}【${row.kbName}】 ？`,
+    t('dialogTipText.tipsText'),
+    {
+      confirmButtonText: t('btnText.confirm'),
+      cancelButtonText: t('btnText.cancel'),
+      cancelButtonClass: 'el-button--primary',
+      confirmButtonClass: 'el-button-confirm',
+      type: 'warning',
+      icon:markRaw(IconAlarm)
+    }
+  ).then(()=>{
+    const successFn = ()=>{
+      handleQueryKbLibrary({
+        page: 1,
+        pageSize: 10,
+      });
+    }
+    handleDelete([row.kbId], successFn)
+  })
 };
 
 const handleOpenDownload = (fileId: string) => {
@@ -1369,21 +1351,6 @@ const handleOpsKbConfirm = () => {
     payload.kbName = knoledgekeyWord.value;
   }
   handleQueryKbLibrary(payload);
-};
-
-const handleConfirmDelKb = (row: any) => {
-  delTipVisible.value = false;
-  const successFn = ()=>{
-    handleQueryKbLibrary({
-      page: 1,
-      pageSize: 10,
-    });
-  }
-  handleDelete([row.kbId], successFn)
-};
-
-const handleCancelDelKb = () => {
-  delTipVisible.value = false;
 };
 
 const handelResetForm = () => {

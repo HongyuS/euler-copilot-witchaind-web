@@ -447,7 +447,7 @@
   padding: 4px 8px;
 }
 
-.edit-dialog,.dataSet-edit-dialog {
+.edit-dialog {
   padding: 0 !important;
   .el-dialog__body {
     padding-bottom: 0 !important;
@@ -573,15 +573,4 @@
     }
   }
 
-}
-
-.delTipText {
-  display: inline-block;
-  width: 300px;
-}
-
-.delToolTip {
-  display: inline-block;
-  max-width: 150px;
-  line-height: 12px;
 }

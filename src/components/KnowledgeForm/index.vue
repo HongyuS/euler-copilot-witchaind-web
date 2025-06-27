@@ -72,7 +72,7 @@
           placement="top"
           popper-class="analyticTipBox"
           effect="light">
-          <el-icon>
+          <el-icon class="icon-help">
             <IconHelpCircle />
           </el-icon>
         </el-tooltip>
@@ -117,7 +117,7 @@
           placement="top"
           popper-class="fileChunkSizeTip"
           effect="light">
-          <el-icon>
+          <el-icon class="icon-help">
             <IconHelpCircle />
           </el-icon>
         </el-tooltip>
@@ -288,6 +288,10 @@ const props = defineProps({
   },
 });
 
+const initFormData = () =>{
+  ruleForm.value.kbName = '资产库名称01';
+}
+
 onMounted(() => {
   loading.visible.value = false;
   ruleForm.value = props.formData
@@ -304,22 +308,27 @@ onMounted(() => {
       )
     : ruleForm.value;
 
-  KbAppAPI.queryLanguageList().then((res: any) => {
+  ruleForm.value.kbName = '资产库名称01';
+  KbAppAPI.queryLanguageList().then( (res: any) => {
+    console.log('queryLanguageList', res);
     languageOptions.value = res?.map((item: any) => {
       return { label: item, value: item };
-    });
+    })
+    ruleForm.value.tokenizer = res?.[0] || '';
   });
 
   KbAppAPI.queryEmbeddingModelList().then((res: any) => {
     emBeddingModelOptions.value = res?.map((item: any) => {
       return { label: item, value: item };
     });
+    ruleForm.value.embeddingModel = res?.[0] || '';
   });
 
   KbAppAPI.queryParseMethodList().then((res: any) => {
     parserMethodOptions.value = res?.map((item: any) => {
       return { label: item, value: item };
     });
+    ruleForm.value.defaultParseMethod = res?.[0] || '';
   });
 });
 
