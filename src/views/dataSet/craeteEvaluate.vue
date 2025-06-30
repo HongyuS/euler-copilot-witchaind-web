@@ -7,6 +7,7 @@
         v-if="props.dialogEvaluateVisible"
         @close="handleCancelVisible"
         align-center
+        :close-on-click-modal="false"
     >
         <el-form class="evaluate-form" ref="ruleFormRef" :model="form" labelPosition="left" :rules="rules" >
             <el-form-item :label="$t('testing.datasetUsed')" :label-width="formLabelWidth" class="evaluate-dataSetName-container" prop="datasetId">

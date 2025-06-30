@@ -286,13 +286,13 @@ const props = defineProps({
     type: Function,
     default: () => {},
   },
+  isCreate: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const initFormData = () =>{
-  ruleForm.value.kbName = '资产库名称01';
-}
-
-onMounted(() => {
+onMounted(async () => {
   loading.visible.value = false;
   ruleForm.value = props.formData
     ? JSON.parse(
@@ -308,28 +308,32 @@ onMounted(() => {
       )
     : ruleForm.value;
 
-  ruleForm.value.kbName = '资产库名称01';
-  KbAppAPI.queryLanguageList().then( (res: any) => {
-    console.log('queryLanguageList', res);
-    languageOptions.value = res?.map((item: any) => {
-      return { label: item, value: item };
-    })
-    ruleForm.value.tokenizer = res?.[0] || '';
-  });
+  // 并行请求
+  const [languageRes, embeddingRes, parseMethodRes] = await Promise.all([
+    KbAppAPI.queryLanguageList(),
+    KbAppAPI.queryEmbeddingModelList(),
+    KbAppAPI.queryParseMethodList(),
+  ]);
+  languageOptions.value = (languageRes as unknown as [])?.map((item: any) => ({
+    label: item,
+    value: item,
+  }));
+  emBeddingModelOptions.value = (embeddingRes as unknown as [])?.map((item: any) => ({
+    label: item,
+    value: item,
+  }));
 
-  KbAppAPI.queryEmbeddingModelList().then((res: any) => {
-    emBeddingModelOptions.value = res?.map((item: any) => {
-      return { label: item, value: item };
-    });
-    ruleForm.value.embeddingModel = res?.[0] || '';
-  });
-
-  KbAppAPI.queryParseMethodList().then((res: any) => {
-    parserMethodOptions.value = res?.map((item: any) => {
-      return { label: item, value: item };
-    });
-    ruleForm.value.defaultParseMethod = res?.[0] || '';
-  });
+  parserMethodOptions.value = (parseMethodRes as unknown as [])?.map((item: any) => ({
+    label: item,
+    value: item,
+  }));
+  // 如果是创建状态，设置默认值
+  if (props.isCreate) {
+    ruleForm.value.kbName = '资产库名称01';
+    ruleForm.value.tokenizer = languageOptions.value?.[0].value || '';
+    ruleForm.value.embeddingModel = emBeddingModelOptions.value?.[0].value || '';
+    ruleForm.value.defaultParseMethod = parserMethodOptions.value?.[0].value || '';
+  }
 });
 
 watch(

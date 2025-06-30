@@ -6,6 +6,7 @@
     class="dataSet-edit-dialog"
     align-center
     width="550"
+    :close-on-click-modal="false"
     :title="$t('assetFile.generateDataset')">
     <CustomLoading :loading="loading" />
     <el-form
