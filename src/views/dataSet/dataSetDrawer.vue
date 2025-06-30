@@ -290,7 +290,20 @@ const pagination = ref({
   pageSizes: [10, 20, 30, 40, 50],
   layout: 'total,sizes,prev,pager,next,jumper',
 });
-const tableData = ref({
+type TableData = {
+  data: Array<{
+    dataId: number;
+    question: string;
+    answer: string;
+    chunk: string;
+    chunkType: string;
+    docName: string;
+    onEdit?: boolean;
+  }>;
+  editableKeys: string[];
+};
+// 定义响应式的表格数据
+const tableData = ref<TableData>({
   data: [],
   editableKeys: ['question', 'answer'],
 });
