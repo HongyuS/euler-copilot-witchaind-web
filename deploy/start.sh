@@ -25,23 +25,6 @@ ssl_settings="
         ssl_stapling_verify on;
 "
 
-if [[ -v SSL_ENABLE_FLAG ]]; then
-    export SSL_ENABLE=ssl
-    export SSL_SETTINGS=$ssl_settings
-else
-    export SSL_ENABLE=""
-fi
-
-if [[ -v PROD ]]; then
-    export ERROR_FILE="/dev/stderr"
-    export LOG_FILE="/dev/stdout"
-    export PID_FILE="/var/lib/nginx/tmp/nginx.pid"
-else
-    export ERROR_FILE="/var/log/nginx/error.log"
-    export LOG_FILE="/var/log/nginx/access.log"
-    export PID_FILE="/var/log/nginx/nginx.pid"
-fi
-
 if [[ -v DOMAIN_LIMIT_ENABLE_FLAG ]]; then
     export DOMAIN_LIMIT=$domain_limit
 else
