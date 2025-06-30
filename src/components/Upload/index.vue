@@ -152,7 +152,6 @@ import type { UploadFile, UploadProgressEvent } from 'element-plus/es/components
 const { t } = useI18n();
 import { ElMessage } from 'element-plus';
 import { bytesToSize, isMaxMemoryOut } from '@/utils/bytesToSize';
-import IconInfo from '@/assets/svg/icon_info.svg?component';
 interface TableRow {
   id: string | number;
   name: string;
