@@ -517,6 +517,7 @@
       align-center
       width="544"
       @close="handleCloseCreateKb"
+      :close-on-click-modal="false"
       :title="
         formData?.kbName?.length > 0
           ? $t('btnText.editAssetLibrary')
@@ -526,6 +527,7 @@
         :handleOpsKbForm="handleOpsKbForm"
         :handelResetForm="handelResetForm"
         :handleCloseCreateKb="handleCloseCreateKb"
+        :isCreate="isCreate"
         :formData="formData" />
     </el-dialog>
     <el-dialog
@@ -616,6 +618,7 @@ const klCardBox = ref();
 const loading = ref(false);
 const importTaskList = ref([]);
 const userLanguage = ref();
+const isCreate = ref(true);
 
 const resetFormData = ref({
   kbName: '',
@@ -1231,9 +1234,9 @@ watch(
     immediate: true,
   }
 );
-
 const handleCreateKnowledge = () => {
   dialogCreateVisible.value = true;
+  isCreate.value = true;
 };
 
 const handleCancelVisible = () => {
@@ -1269,6 +1272,7 @@ const handleSelectionChange = (val:any) => {
 const handleEditKl = (row: any) => {
   formData.value = row;
   dialogCreateVisible.value = true;
+  isCreate.value = false;
 };
 
 const handleDeleteKl = (row: any) => {

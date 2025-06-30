@@ -1,7 +1,7 @@
 <template>
     <el-dialog class="craete-group-dialog" v-model="props.createGroupVisible" align-center
         :title="props.dialogueType === 'edit' ? $t('group.editTeam') : $t('group.createTeam')" width="544" v-if="props.createGroupVisible"
-        @close="handleCancelVisible">
+        :close-on-click-modal="false" @close="handleCancelVisible">
         <el-form ref="ruleFormRef" class="evaluate-form" :model="form" labelPosition="right" :rules="rules">
             <el-form-item :label="$t('group.teamName')" prop="teamName" :label-width="formLabelWidth">
                 <el-input maxlength="100" v-model="form.teamName" autocomplete="off" :placeholder="t('model.pleasePlace')" />

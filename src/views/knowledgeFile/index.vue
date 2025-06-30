@@ -466,6 +466,7 @@
     class="edit-dialog"
     align-center
     width="560"
+    :close-on-click-modal="false"
     :title="$t('dialogTipText.eidtFile')">
     <el-form
       ref="ruleFormRef"

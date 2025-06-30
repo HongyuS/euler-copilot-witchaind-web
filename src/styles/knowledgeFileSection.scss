@@ -211,7 +211,7 @@
           background-color: var(--o-bg-color-base) !important;
         }
         .kf-selection {
-          border-bottom: unset;
+          border-bottom: unset !important;
 
           .cell {
             width: 24px !important;
@@ -224,7 +224,7 @@
         }
 
         .kf-file-content {
-          border-bottom: unset;
+          border-bottom: unset !important;
         }
 
         .kf-file-type {
