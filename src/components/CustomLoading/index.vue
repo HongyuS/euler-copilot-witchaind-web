@@ -7,7 +7,6 @@
     :element-loading-background="backgroundColor"></div>
 </template>
 <script lang="ts" setup>
-import { defineProps } from 'vue';
 
 defineProps({
   loading: {

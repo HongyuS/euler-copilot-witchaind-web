@@ -590,7 +590,6 @@ import KbAppAPI, { ITaskType } from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
 import FilterContainr from '@/components/TableFilter/index.vue';
-import { defineProps } from 'vue';
 import router from '@/router';
 import { useGroupStore } from '@/store/modules/group';
 import EmptyStatus from '@/components/EmptyStatus/index.vue'

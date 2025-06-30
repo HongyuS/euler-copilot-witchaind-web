@@ -100,5 +100,5 @@ const handleGroupClick = ( number: number, currentNav:{ path:string,query:any })
 
 
 <style lang="scss">
-@import '@/styles/grouInfo.scss';
+@use '@/styles/grouInfo.scss';
 </style>
