@@ -1,7 +1,6 @@
 FROM node:22.14.0-alpine
-WORKDIR /opt/data_chain_web
-RUN mkdir -p /opt/data_chain_web
-COPY . /opt/data_chain_web
+WORKDIR /opt
+COPY . /opt
 
 RUN npm install pnpm -g --registry=https://registry.npmmirror.com && \
     pnpm install --registry=https://registry.npmmirror.com && \
@@ -19,36 +18,13 @@ RUN sed -i 's|repo.openeuler.org|mirrors.nju.edu.cn/openeuler|g' /etc/yum.repos.
     yum update -y && \
     yum install -y nginx shadow-utils passwd gettext && \
     yum clean all && \
-    groupadd -g 1001 eulercopilot && \
-    useradd -m -u 1001 -g eulercopilot -s /sbin/nologin eulercopilot && \
-    passwd -l eulercopilot && \
     mkdir -p /usr/share/nginx/html/witchaind
 
-COPY --from=0 /opt/data_chain_web/dist /usr/share/nginx/html/witchaind/
-COPY --from=0 /opt/data_chain_web/public /usr/share/nginx/html/witchaind/
-COPY --from=0 /opt/data_chain_web/deploy/prod/nginx.conf.tmpl /home/eulercopilot/nginx.conf.tmpl
-COPY --from=0 /opt/data_chain_web/deploy/prod/start.sh /home/eulercopilot/start.sh
-
-RUN sed -i 's/umask 002/umask 027/g' /etc/bashrc && \
-    sed -i 's/umask 022/umask 027/g' /etc/bashrc && \
-    chown -R eulercopilot:eulercopilot /usr/share/nginx && \
-    chown -R eulercopilot:eulercopilot /var/log/nginx && \
-    chown -R eulercopilot:eulercopilot /var/lib/nginx && \
-    chown -R eulercopilot:eulercopilot /etc/nginx && \
-    chmod -R 750 /var/log/nginx && \
-    find /var/log/nginx -type f -exec chmod 640 {} + && \
-    chmod -R 500 /var/lib/nginx && \
-    chmod -R 500 /usr/share/nginx && \
-    chmod -R 500 /etc/nginx && \
-    find /var/log/nginx -type f -exec chmod 400 {} +
-
-RUN yum remove -y gdb-gdbserver && \
-    sh -c "find /usr /etc \( -name *yum* -o -name *dnf* -o -name *vi* -o -name *sqlite* -o -name *python* \) -exec rm -rf {} + || true" && \
-    sh -c "find /usr /etc \( -name ps -o -name top \) -exec rm -rf {} + || true"
+COPY --from=0 /opt/dist /usr/share/nginx/html/witchaind/
+COPY --from=0 /opt/public /usr/share/nginx/html/witchaind/
+COPY --from=0 /opt/deploy/nginx.conf.tmpl /opt/nginx.conf.tmpl
+COPY --from=0 /opt/deploy/start.sh /opt/start.sh
 
 EXPOSE 9888
-
-USER eulercopilot
-WORKDIR /home/eulercopilot
-
+WORKDIR /opt
 ENTRYPOINT [ "bash", "./start.sh" ]
