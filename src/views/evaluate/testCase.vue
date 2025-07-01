@@ -285,10 +285,11 @@ const initChart = async () => {
                 }
             ]
         });
+        const { avePre, aveRec, aveFai, aveRel,  aveLcs, aveLeve, aveJac } = testCaseAvg.value;
         chartInstanceL.setOption({
             color: ['rgb(141,152,170)'],
             textStyle: {
-                color: 'rgb(141,152,170)'
+                color: 'rgb(141,152,170)' 
             },
             lineStyle: {
                 color: 'rgb(141,152,170)'
@@ -359,7 +360,7 @@ const initChart = async () => {
             series: [
                 {
                     type: 'bar',
-                    data: Object.values(testCaseAvg.value),
+                    data: [avePre, aveRec, aveFai, aveRel, aveLcs, aveLeve, aveJac],
                     barWidth: 8,
                     itemStyle: {
                         color: 'rgb(0,98,220)',
@@ -458,18 +459,20 @@ const queryTestCase = ()=>{
         testingId: props.rowData?.testingId
     }
     EvaluateAPI.testingCase(params).then((res:any) => {
+        const safe = (v: number) => v < 0 ? 0 : v;
+        const { aveScore, avePre, aveRec, aveFai, aveRel, aveLcs, aveLeve, aveJac, testCases, total } = res;
         testCaseAvg.value = {
-            aveScore:res.aveScore<0?0:res.aveScore,
-            avePre:res.avePre<0?0:res.avePre,
-            aveRec:res.aveRec<0?0:res.aveRec,
-            aveFai:res.aveFai<0?0:res.aveFai,
-            aveRel:res.aveRel<0?0:res.aveRel,
-            aveLcs:res.aveLcs<0?0:res.aveLcs,
-            aveLeve:res.aveLeve<0?0:res.aveLeve,
-            aveJac:res.aveJac<0?0:res.aveJac,
+            aveScore: safe(aveScore),
+            avePre: safe(avePre),
+            aveRec: safe(aveRec),
+            aveFai: safe(aveFai),
+            aveRel: safe(aveRel),
+            aveLcs: safe(aveLcs),
+            aveLeve: safe(aveLeve),
+            aveJac: safe(aveJac),
         };
-        testCaseList.value = res.testCases;
-        totalCount.value = res.total;
+        testCaseList.value = testCases;
+        totalCount.value = total;
     }).finally(() => {
         // 初始化图表
         initChart();
