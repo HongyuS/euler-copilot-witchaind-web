@@ -43,7 +43,7 @@
       }
     });
     
-    // 定义主题规则
+    // 定义亮色主题规则
     monaco.editor.defineTheme('customLogTheme', {
       base: 'vs',
       inherit: true,
@@ -51,7 +51,19 @@
         { token: 'uuid', foreground: '#808080' }, // 灰色
         { token: 'timestamp', foreground: '#CE9178' }, // 紫色
       ],
-      colors: {}
+      colors: { }
+    });
+    // 定义暗色主题规则
+    monaco.editor.defineTheme('customLogThemeDark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { token: 'uuid', foreground: '#808080' }, // 灰色
+        { token: 'timestamp', foreground: '#CE9178' }, // 紫色
+      ],
+      colors: {
+        'editor.background': '#1f2329'
+      }
     });
   }
   
@@ -97,7 +109,7 @@
 const observeThemeChange = () => {
   const body = document.body;
   observer = new MutationObserver(() => {
-    const newTheme = body.getAttribute('theme') === 'dark' ? 'vs-dark' : 'vs';
+    const newTheme = body.getAttribute('theme') === 'dark' ? 'customLogThemeDark' : 'customLogTheme';
     monaco.editor.setTheme(newTheme);
   });
   observer.observe(body, { attributes: true, attributeFilter: ['theme'] });
@@ -105,7 +117,7 @@ const observeThemeChange = () => {
 // 设置初始主题
 const setInitialTheme = () => {
   const body = document.body;
-  const initialTheme = body.getAttribute('theme') === 'dark' ? 'vs-dark' : 'vs';
+  const initialTheme = body.getAttribute('theme') === 'dark' ? 'customLogThemeDark' : 'customLogTheme';
   monaco.editor.setTheme(initialTheme);
 };
   // 生命周期钩子
