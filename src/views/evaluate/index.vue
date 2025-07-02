@@ -34,8 +34,9 @@
       <el-input v-model="searchPayload.testingName" :placeholder="$t('testing.placeholderTest')" class="search-input" 
       @input="handleInput" :suffix-icon="IconSearch" />
     </div>
-    <el-table class="test-table" ref="testingTableRef" :data="testList" style="margin-bottom: 20px" row-key="datasetId" bordered default-expand-all 
-      @selection-change="handleSelectionChange">
+    <el-table class="test-table" ref="testingTableRef" :data="testList" style="margin-bottom: 20px" 
+      :row-key="row => row.datasetId ? `dataset-${row.datasetId}` : `testing-${row.testingId}`"
+      bordered default-expand-all @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="54" fixed="left" />
       <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" :show-overflow-tooltip="true" fixed="left" />
       <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')" :show-overflow-tooltip="true" fixed="left">
