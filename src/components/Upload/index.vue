@@ -18,7 +18,7 @@
             {{ $t('btnText.chooseFile') }}
           </el-button>
           <el-button
-            @click="batchDelete()"
+            @click="batchDelete"
             :disabled="multipleSelection.length === 0"
             class="delFileBtn cancelBtn"
             >
@@ -368,13 +368,23 @@ const batchDelete = () => {
     ElMessage.warning(`请先选择文件再进行批量删除操作！`);
     return;
   }
-  selectedFiles.forEach((item) => item && deleteFile(item));
+  const filesToDelete = [...selectedFiles];
+  filesToDelete.forEach((item) => item && deleteFile(item));
+  multipleSelection.value = [];
 };
 const deleteFile = (row?: any) => {
   if (row) {
     const idx = fileTableList.data.findIndex((item: any) => item.id === row.id);
     fileTableList.data.splice(idx, 1);
     changeAllSizes(row.file, 'del');
+    // 同步移除el-upload内部缓存
+    if (uploadRef.value && uploadRef.value.uploadFiles) {
+      const fileIdx = uploadRef.value.uploadFiles.findIndex((f: any) => f.uid === row.file.uid);
+      if (fileIdx > -1) {
+        uploadRef.value.uploadFiles.splice(fileIdx, 1);
+      }
+    }
+    console.log(uploadRef.value)
   }
 };
 
@@ -565,20 +575,19 @@ const uploadKnowledgeFile = () => {
 
 // 提交数据集
 const uploadDatasetFile = () => {
-  props?.handleImportLoading(true);
   let uploadFileNumber = 0;
-  uploadingList.value = fileTableList.data.map((item) => {
-    return {
-      id: item.id,
-      name: item.name,
-      file: item.file,
-      percent: 0,
-      newUploadTask: true,
-    };
-  });
-  const uploadPromises = uploadingList.value.map((item) => {
-    return new Promise((resolve, reject) => {
-      doUpload({
+  props.handInitTaskList(fileTableList.data).then((res: any) => {
+    uploadingList.value = fileTableList.data.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        file: item.file,
+        percent: 0,
+        newUploadTask: true,
+      };
+    });
+    uploadingList.value.forEach((item) => {
+      return doUpload({
         file: item.file,
         onProgress: (evt: any) => {
           if (evt < 100) {
@@ -586,46 +595,46 @@ const uploadDatasetFile = () => {
           }
         },
         onError: (e: any) => {
+          uploadFileNumber += 1;
           uploadingList.value = uploadingList.value.map((up) => {
             if (up.id === e.id) {
-              return { ...e, uploadStatus: 'error' };
+              return { ...e, uploadStatus: 'error'};
             }
             return up;
           });
-          reject(e); // 传递错误
+          handleToggleUploadNotify();
         },
         onSuccess: () => {
           uploadFileNumber += 1;
-          item.uploadStatus = 'success';
-          resolve(true); // 标记成功
+          if (uploadFileNumber === fileTableList.data.length) {
+            props.handleQueryTaskList();
+            fileTableList.data = [];
+          }
         },
-        fileInfo: item,
+        fileInfo: item
       });
     });
+    uploadingList.value = [
+      ...uploadingList.value,
+      ...res?.map((item: any) => {
+        return {
+          id: item.opId,
+          taskId: item.taskId,
+          name: item.opName,
+          percent:
+            item?.taskStatus === 'success'
+              ? 100
+              : item.taskCompleted,
+          uploadStatus: item?.taskStatus,
+        };
+      }),
+    ];
+    props.handleCancelVisible();
+    uploadRef.value?.clearFiles();
+    allFileSizes.value = 0;
+    uploadingList.value.length && handleToggleUploadNotify();
   });
-
-  // 所有上传完成后统一更新列表
-  Promise.allSettled(uploadPromises).then((results) => {
-    const successCount = results.filter((result) => result.status === 'fulfilled').length;
-    const errorCount = results.length - successCount;
-
-    // 统一更新列表
-    props?.handleImportLoading(false);
-    if (errorCount > 0) {
-      handleToggleUploadNotify();
-    }
-
-    // 所有上传完成后的回调
-    props.handleQueryTaskList(fileTableList.data); // 统一更新列表
-  });
-
-  uploadingList.value.length && handleToggleUploadNotify();
-  props.handleCancelVisible();
-  fileTableList.data = [];
-  uploadRef.value?.clearFiles();
-  allFileSizes.value = 0;
-}
-
+};
 const handleToggleUploadNotify = () => {
   props.toggleUploadNotify({
     showUploadNotify: true,

@@ -44,9 +44,7 @@
                 {{ `，${$t('assetLibrary.uploadIng')}...` }}
               </div>
             </div>
-            <div
-              class="item-close"
-              v-if="typeof item.taskId === 'string'">
+            <div class="item-close" v-if="item.taskId" >
               <IconX @click="handleCloseSingleUpload(item.taskId)" />
             </div>
           </div>

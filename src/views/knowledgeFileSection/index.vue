@@ -232,7 +232,7 @@
     class="kf-section-edit-dialog"
     v-model="contentDialogVisible"
     :title="$t('btnText.edit')"
-    width="500"
+    width="544"
     align-center
   >
   <el-input

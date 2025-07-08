@@ -206,6 +206,9 @@
   .config-form{
     margin-bottom: 8px !important;
   }
+  & :nth-last-child(2) {
+    margin-bottom: 0 !important;
+  }
 }
 
 .analyticMethodSelect {

@@ -43,7 +43,6 @@
         }
         .dataSetInfoNameBox{
             align-items: center;
-            margin-bottom: 8px;
         }
 
         .dataSetInfoLabel{
@@ -120,7 +119,7 @@
                 background: var(--o-bg-color-light);
                 border-radius: 4px;
                 font-size: 12px;
-                font-family: 'HarmonyOS Sans SC';
+                font-family: 'HarmonyOS Sans SC Regular';
                 .dataSetListIcon{
                     width: 16px;
                     height: 16px;
@@ -148,7 +147,7 @@
 
                 .dataSetScoreNumber{
                     color: var(--o-color-major);
-                    font-family: 'HarmonyOS Sans SC';
+                    font-family: 'HarmonyOS Sans SC Regular';
                     font-size: 14px;
                     font-weight: 700;
                 }
@@ -163,11 +162,11 @@
         }
         .el-textarea__inner{
             font-size: 12px;
-            font-family: 'HarmonyOS Sans SC';
+            font-family: 'HarmonyOS Sans SC Regular';
         }
         .el-table .cell{
             font-size: 12px;
-            font-family: 'HarmonyOS Sans SC';
+            font-family: 'HarmonyOS Sans SC Regular';
         }
         .el-table thead .cell{
             font-weight: 500;

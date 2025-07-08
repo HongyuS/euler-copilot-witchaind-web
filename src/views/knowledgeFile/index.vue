@@ -565,6 +565,7 @@
     :handleUploadRestart="uploadTaskListData.handleUploadRestart"
     :taskListImportDate="taskListImportDate"
     :importTaskTotal="importTaskTotal"
+    :handleCloseSingleUpload="handleStopUploadFile"
     :isShowAllClear="true" />
 </template>
 <script setup lang="ts">
@@ -1407,4 +1408,11 @@ const handleClearSelected = ()=>{
   checkTableSelecData.value = [];
   multipleTable.value.clearSelection();
 }
+const handleStopUploadFile = (taskId: string) => {
+  if(taskId==='all'){
+    uploadTaskListData.value = {
+      uploadingList: [],
+    };
+  }else{}
+};
 </script>

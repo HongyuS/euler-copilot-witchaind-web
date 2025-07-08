@@ -10,7 +10,7 @@
                 <el-input v-model="form.description" :rows="4" show-word-limit type="textarea" maxlength="200"
                     :placeholder="$t('assetLibrary.message.pleasePlace')" />
             </el-form-item>
-            <el-form-item :label="$t('group.isPublic')" prop="isPublic" :label-width="formLabelWidth">
+            <el-form-item :label="$t('group.isPublic')" prop="isPublic" :label-width="formLabelWidth" class="isPublicItem">
                 <el-switch v-model="form.isPublic" style="--el-switch-on-color: rgb(36,171,54); " />
             </el-form-item>
         </el-form>
@@ -171,7 +171,7 @@ const handleCancelVisible = () => {
                     color: var(--o-item-label-text);
                     padding-right: 0px;
                     margin-right: 24px;
-                    font-family: 'HarmonyOS Sans SC';
+                    font-family: 'HarmonyOS Sans SC Regular';
                     width: 48px !important;
                 }
                 .el-form-item__label:before {
@@ -190,6 +190,30 @@ const handleCancelVisible = () => {
                 }
 
             }
+                 .isPublicItem {
+                    .el-form-item__label, .el-form-item__content{
+                        height: 16px !important;
+                        line-height: 16px !important;
+                        min-height: 16px;
+                        .el-switch{
+                            height: 16px !important;
+                            .el-switch__core{
+                                height: 16px !important;
+                                width: 32px !important;
+                                min-width: 32px !important;
+                                .el-switch__action{
+                                    width: 12px !important;
+                                    height: 12px !important;
+                                }
+                            }
+
+                        }
+                        .el-switch.is-checked .el-switch__core .el-switch__action{
+                            left: calc(100% - 13px) !important;
+                        }
+                    }
+                }
+                
         }
     }
 

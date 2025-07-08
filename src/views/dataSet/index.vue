@@ -504,14 +504,14 @@
       :handleUploadMyFile="handleUploadMyFile"
       :handleQueryTaskList="handleQueryTaskList"
       :handleCancelVisible="handleCancelVisible"
-      :taskList="taskList"
+      :taskList="importTaskList"
       :taskListImportDate="taskListImportDate"
       :toggleUploadNotify="toggleUploadNotify"
       :handleImportLoading="handleImportLoading"
+        :handInitTaskList="handInitTaskList"
       uploadType="dataset" />
   </el-dialog>
   <UploadProgress
-    :isKnowledgeFileUpload="true"
     :showUploadNotify="uploadTaskListData.showUploadNotify"
     :uploadingList="uploadTaskListData.uploadingList"
     :showTaskList="uploadTaskListData.showTaskList"
@@ -519,6 +519,7 @@
     :handleUploadRestart="uploadTaskListData.handleUploadRestart"
     :taskListImportDate="taskListImportDate"
     :importTaskTotal="importTaskTotal"
+    :handleCloseSingleUpload="handleStopUploadFile"
     :isShowAllClear="true" />
 </template>
 
@@ -734,6 +735,7 @@ const handleQueryDataSetList = (
 
 const handleCleartTimer = () => {
   clearInterval(pollingKfTimer.value);
+  clearInterval(taskTimer.value);
   pollingKfTimer.value = null;
 };
 
@@ -1001,9 +1003,6 @@ const handleUploadMyFile = (options: any) => {
     options.onError({ ...options.fileInfo, error: err });
   });
 };
-const handleQueryTaskList = () => {
-  handleSearchOpsData(true, false);
-};
 
 const handleCancelVisible = () => {
   dialogImportVisible.value = false;
@@ -1027,7 +1026,7 @@ const handleInitExportTaskList = () => {
     exportTaskTotal.value = res?.total || 0;
     taskExportLoading.value = false;
     taskExportList.value =
-      res.tasks.map((item: any) => {
+      res?.tasks.map((item: any) => {
         return {
           id: item.opId,
           taskId: item.taskId,
@@ -1182,7 +1181,11 @@ const handleCloseAllTask=(type: ITaskType)=>{
     teamId,
     taskType:type
   }).then(() => {
-    handleInitExportTaskList();
+     if(type === 'kb_export'){
+      handleInitExportTaskList();
+    }else{
+      handelTaskList();
+    }
   }).finally(()=>{
     taskExportLoading.value = false;
   })
@@ -1258,5 +1261,63 @@ watch(()=>dataSetDrawerVisible.value,()=>{
     handleSearchData();
   }
 })
-
+const taskTimer = ref();
+const taskListLoading = ref(false)
+const importTaskPage = ref(1);
+const importTaskPageSize = ref(10);
+const importTaskList = ref([]);
+const handelTaskList = () => {
+  KbAppAPI.queryTaskList({
+    teamId:localStorage.getItem('teamId') ?? '',
+    taskType: 'dataset_import',
+    page: 1,
+    pageSize: importTaskPageSize.value,
+  }).then((res: any) => {
+    importTaskList.value = res?.tasks || [];
+    importTaskTotal.value = res.total;
+    taskListImportDate.value = Date.now();
+    taskListLoading.value = false;
+    if (res?.tasks?.every((item: any) => !['pending', 'running'].includes(item.taskStatus))) {
+      clearInterval(taskTimer.value);
+      taskTimer.value = null;
+      handleSearchData()
+    }
+  });
+};
+const handleQueryTaskList = () => {
+  taskTimer.value = setInterval(() => {
+    handelTaskList();
+  }, 2500);
+};
+const handleStopUploadFile = (taskId: string) => {
+  if(taskId==='all'){
+    handleCloseAllTask('dataset_import');
+  }else{
+    taskListImportDate.value = Date.now();
+    taskListLoading.value = true;
+    let payload: any = {
+      taskId
+    };
+    KbAppAPI.stopOneTaskList(payload).then((res:any) => {
+      handelTaskList();
+      importTaskList.value = res?.tasks || [];
+      importTaskTotal.value = res.total || 0;
+      taskListImportDate.value = Date.now();
+    }).finally(()=>{
+      taskListLoading.value = false;
+    });
+  }
+};
+const handInitTaskList = (selectedFiles: string | any[]) => {
+  return KbAppAPI.queryTaskList({
+    teamId:localStorage.getItem('teamId') ?? '',
+    taskType: 'dataset_import',
+    page: 1,
+    pageSize: importTaskPageSize.value,
+  }).then((res: any) => {
+    importTaskList.value = res.tasks || [];
+    importTaskTotal.value = selectedFiles ? res.total + selectedFiles.length : res.total;
+    return res.tasks || [];
+  });
+};
 </script>

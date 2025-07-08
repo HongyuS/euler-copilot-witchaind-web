@@ -18,7 +18,7 @@ import '@/styles/headerBar.scss';
 </script>
 <style lang="scss" scoped>
 .knowledge-welcome {
-  font-family:'HarmonyOS Sans SC';
+  font-family:'HarmonyOS Sans SC Regular';
   position: absolute;
   top: 64px;
   padding-left: 24px;
@@ -29,7 +29,7 @@ import '@/styles/headerBar.scss';
     font-size: 32px;
     line-height: 40px;
     font-weight: 700;
-    font-family: 'HarmonyOS Sans SC';
+    font-family: 'HarmonyOS Sans SC Regular';
   }
 
   .knowledge-show-text {
@@ -38,7 +38,7 @@ import '@/styles/headerBar.scss';
     line-height: 24px;
     color: var(--o-text-color-secondary);
     word-break: break-all;
-    font-family: 'HarmonyOS Sans SC';
+    font-family: 'HarmonyOS Sans SC Regular';
   }
 }
 </style>
