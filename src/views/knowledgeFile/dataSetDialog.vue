@@ -57,10 +57,10 @@
       </el-select>
       </el-form-item>
       <el-form-item :label="$t('dataset.isDataCleared')" prop="isDataCleared" class="isDataClean">
-        <el-switch v-model="ruleForm.isDataCleared" class="ml-2" style="--el-switch-on-color: #13ce66" />
+        <el-switch v-model="ruleForm.isDataCleared" style="--el-switch-on-color: #13ce66" />
       </el-form-item>
       <el-form-item :label="$t('dataset.isChunkRelated')" prop="isChunkRelated" class="isComContext">
-        <el-switch v-model="ruleForm.isChunkRelated" class="ml-2" style="--el-switch-on-color: #13ce66" />
+        <el-switch v-model="ruleForm.isChunkRelated" style="--el-switch-on-color: #13ce66" />
       </el-form-item>
       <el-form-item class="kl-ops-btn">
         <el-button class="resetBtn" type="primary" :disabled="isSubmitDisabled" @click="submitForm(ruleFormRef)">

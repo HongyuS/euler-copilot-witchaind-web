@@ -153,7 +153,7 @@
                           font-size: 12px;
                           line-height: 16px;
                           color: var(--o-item-label-text);
-                          margin: 6px 0 14px;
+                          margin: 4px 0 16px;
                           display: -webkit-box;          /* 旧版 Flexbox 兼容（必须） */
                           -webkit-line-clamp: 2;         /* 限制显示行数 */
                           -webkit-box-orient: vertical;  /* 垂直方向排列 */
@@ -312,7 +312,7 @@
             align-items: flex-start !important;
             line-height: 22px;
             padding-top: 9px !important;
-            font-family: 'HarmonyOS Sans SC';
+            font-family: 'HarmonyOS Sans SC Regular';
               &.is-active{
               color: rgb(99, 149, 253) !important;
               font-weight: 500 !important;

@@ -57,7 +57,7 @@
             </div>
           </div>
         </div>
-        <div class="dataSetInfoNameBox">
+        <div class="dataSetInfoNameBox" :style="dataSetInfoEditVisible ? { marginBottom:'8px'} : null">
           <div class="dataSetInfoLabel">{{ $t('dataset.datasetName') }}</div>
           <div
             class="dataSetInfoContent"

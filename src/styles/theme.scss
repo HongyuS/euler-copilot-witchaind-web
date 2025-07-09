@@ -1,6 +1,6 @@
 
 body[theme='dark'] {
-    --o-main-bg: url('/src/assets/images/dark_bg.webp');
+    --o-main-bg: url('/src/assets/images/dark_bg_1.webp');
     --o-bg-dialog:var(--o-bg-color-base);
     --o-button-bg:rgb(99 149 253);
     --o-tag-text-color:rgb(99 149 253);
@@ -25,7 +25,7 @@ body[theme='dark'] {
 }
 
 body[theme='light'] {
-    --o-main-bg: url('/src/assets/images/light_bg.webp');
+    --o-main-bg: url('/src/assets/images/light_bg_1.webp');
     --o-bg-dialog:var(--o-bg-color-base);
     --o-button-bg:rgb(99 149 253);
     --o-tag-text-color:rgb(99 149 253);

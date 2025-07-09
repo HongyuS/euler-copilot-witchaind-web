@@ -222,13 +222,14 @@
 
     .el-dialog__body {
         padding-bottom: 0px;
+        max-height:400px;
         .evaluate-form {
             .el-form-item {
                 margin-bottom: 24px;
                 .el-form-item__label{
                     color: var(--o-item-label-text);
                     font-size: 12px;
-                    font-family: 'HarmonyOS Sans SC';
+                    font-family: 'HarmonyOS Sans SC Regular';
                     padding: 0px;
                     margin-right: 24px;
                 }
@@ -240,9 +241,12 @@
                 .el-form-item__content{
                     .el-input__inner,.el-textarea__inner,.el-select__selected-item{
                         font-size: 12px;
-                        font-family: 'HarmonyOS Sans SC';
+                        font-family: 'HarmonyOS Sans SC Regular';
                         --el-input-placeholder-color: var(--o-text-color-tertiary);
                         font-weight: 400;
+                    }
+                    .el-textarea__inner{
+                        height: 88px;
                     }
                     .el-input-number{
                         width: 104px;
@@ -266,7 +270,7 @@
                 .evaluate-dataSetName{
                     color: var(--o-text-color-primary);
                     font-size: 12px;
-                    font-family: 'HarmonyOS Sans SC';
+                    font-family: 'HarmonyOS Sans SC Regular';
                     line-height: 16px;
                 }
             }

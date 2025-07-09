@@ -218,6 +218,9 @@
         width: 4px !important;
       }
     }
+    .el-table__header-wrapper .el-table-column--selection>.cell{
+      height: 32px;
+    }
   }
 
   .upload-btns {

@@ -7,13 +7,16 @@
     }
 .kf-ruleForm,.dataSet-ruleForm {
     .el-form-item {
-      gap: unset !important;
+      gap: 24px !important;
       margin-bottom: 24px;
       div{
         font-size: 12px;
       }
       .el-form-item__label{
         font-size: 12px;
+        width: 96px !important;
+        padding-right: 0px !important;
+        font-weight: 400;
       }
     }
     
@@ -78,10 +81,10 @@
     }
 
     .el-form-item__content{
-        width: 100% !important;
+        width: 376px !important;
         flex: 1 !important;
         .el-input,.el-textarea__inner,.el-select__wrapper{
-            width: 100% !important;
+            width: 376px !important;
         }
     }
 
