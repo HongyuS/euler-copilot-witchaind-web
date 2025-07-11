@@ -15,7 +15,7 @@
       :model="ruleForm"
       :rules="rules"
       label-width="135px"
-      class="dataSet-ruleForm"
+      class="dataSet-ruleForm o-form-has-require"
       label-position="left">
       <el-form-item
         :label="$t('dataset.datasetName')"
@@ -24,8 +24,15 @@
         <el-input
           maxlength="30"
           minlength="1"
+          class="o-validate-input"
           v-model="ruleForm.datasetName"
-          :placeholder="$t('assetLibrary.message.pleasePlace')" />
+          :placeholder="$t('assetLibrary.message.pleasePlace')" >
+          <template #suffix>
+            <el-icon class="error-icon" >
+              <img src="@/assets/svg/fail.svg" />
+            </el-icon>
+          </template>
+          </el-input>
       </el-form-item>
       <el-form-item :label="$t('dataset.datasetDesc')" prop="description">
         <el-input :rows="4" show-word-limit type="textarea" v-model="ruleForm.description" maxlength="200"
@@ -150,17 +157,6 @@ const props = defineProps({
 });
 
 watch(
-  () => props.selectionFileData,
-  () => {
-    ruleForm.documentIds = props.selectionFileData.map((item) => item.docId);
-  },
-  {
-    deep: true,
-    immediate: true,
-  }
-);
-
-watch(
   () => ruleForm.value,
   () => {
     isSubmitDisabled.value = !Object.keys(rules.value).every((item) => {
@@ -206,12 +202,13 @@ const handleCancelVisible = () => {
   handleResetDataSet();
 };
 const initFormData = ()=>{
-  ruleForm.value.datasetName = '数据集01';
-  ruleForm.value.description = '这是一段数据集简介';
+  ruleForm.value.datasetName = t('defaultText.datasetName');
+  ruleForm.value.description = t('defaultText.datasetDesc');
   ruleForm.value.dataCnt = 64;
-  ruleForm.value.isDataCleared = true;
+  ruleForm.value.isDataCleared = false;
   ruleForm.value.isChunkRelated = false;
   ruleForm.value.llmId = llmList.value[0]?.llmId || '';
+  ruleForm.value.documentIds = props.selectionFileData.map((item) => item.docId);
 }
 
 onMounted(() => {

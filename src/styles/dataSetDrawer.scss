@@ -156,7 +156,6 @@
     }
 
     .dataSetInfoTableContainer{
-
         .el-pagination{
             padding-top: 12px !important;
         }
@@ -174,21 +173,15 @@
         .el-table tbody .cell{
             font-weight: 400;
         }
-        .el-table tbody tr td:first-child .cell {
-          padding-left: 16px !important;
-        }
-        .el-table tbody .el-table__cell:not(.el-table__expanded-cell):first-child,
-        .el-table thead .cell,
-        .el-table tbody .el-table-column--selection + th.el-table__cell,
-        .el-table-column--selection + td.el-table__cell {
-          padding: unset !important;
-        }
        tbody .el-table__cell{
           padding: 0 !important;
         }
         .el-table__row .cell{
           padding: 8px !important;
         }
+        .el-table__body-wrapper .el-table-column--selection {
+            padding-left: 8px !important;
+        } 
         .dataChunkText{
           overflow: hidden;
           display: -webkit-box;
@@ -204,4 +197,7 @@
         }
     }
     
+}
+.dataSetPage{
+    inset: auto auto 100px 753px !important;
 }

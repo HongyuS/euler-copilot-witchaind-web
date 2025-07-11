@@ -32,11 +32,14 @@
                     cursor: not-allowed;
                 }
             }
+            .upBtn{
+              border-color: #6395FD !important;
+            }
 
         }
     }
-    .test-table{
-        height: calc(100vh - 330px);
+    .test-manage-table{
+        height: calc(100vh - 320px);
     }
     .el-table.is-scrolling-left.el-table--border .el-table-fixed-column--left.is-last-column.el-table__cell {
         border-right: unset !important;
@@ -189,7 +192,7 @@
 
     .el-table-column--selection .cell {
         padding-right: 0 !important;
-        padding-left: 42px;
+        padding-left: 40px;
     }
 
     .group-selection::after {
@@ -197,7 +200,7 @@
     }
 
     .el-pagination {
-        margin-top: 0;
+        margin-top: 8px;
     }
 
     .el-pagination .el-input__inner {
@@ -227,11 +230,12 @@
             .el-form-item {
                 margin-bottom: 24px;
                 .el-form-item__label{
-                    color: var(--o-item-label-text);
+                    color: var(--o-text-color-secondary);
                     font-size: 12px;
                     font-family: 'HarmonyOS Sans SC Regular';
                     padding: 0px;
                     margin-right: 24px;
+                    line-height: 32px;
                 }
                 .el-form-item__label:before{
                     position: absolute;
@@ -239,6 +243,9 @@
                 }
 
                 .el-form-item__content{
+                    .el-select{
+                        width: 100%;
+                    }
                     .el-input__inner,.el-textarea__inner,.el-select__selected-item{
                         font-size: 12px;
                         font-family: 'HarmonyOS Sans SC Regular';
@@ -260,6 +267,11 @@
                 }
                 
             }
+            .evaluate-type-container{
+                .el-input__wrapper{
+                    padding-left: 44px !important;
+              }
+            }  
             .evaluate-dataSetName-container{
                 height: 16px !important;
                 .el-form-item__label,.el-form-item__content{
@@ -295,26 +307,10 @@
 .el-select__popper.el-popper[role=tooltip]{
     max-width: 414px !important;
 }
-.el-select__popper .el-select-dropdown__list{    
-    // background-color: white;               
+
+.custom-llm-select-popper{
     .el-select-dropdown__item{
         display: flex;
         align-items: center;
-        gap: 4px;
-        & span{
-            max-width: 330px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    }
-    .is-hovering{
-        background-color: rgb(122,165,225);
-    }
-    .is-selected{
-        background-color: rgb(99,149,253);
-        span{
-            color: white !important;
-        }
     }
 }

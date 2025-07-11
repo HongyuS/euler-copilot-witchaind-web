@@ -4,36 +4,24 @@
     :model="ruleForm"
     :rules="rules"
     label-width="auto"
-    class="kl-ruleForm"
+    class="kl-ruleForm o-form-has-require"
     :size="formSize"
     label-position="left">
-    <el-form-item
-      :label="$t('assetLibrary.assetId')"
-      prop="id"
-      class="assetIdClass"
-      :id="props.configInfo ? 'asset-box-id' : null"
-      v-if="ruleForm.id?.length > 0">
-      <el-input
-        v-model="ruleForm.id"
-        minlength="1"
-        :disabled="true"
-        maxlength="50"
-        :placeholder="$t('assetLibrary.message.pleasePlace')" />
-      <el-icon
-        v-if="props.configInfo"
-        class="copydocument"
-        @click="handleCopyTextToclipboard(ruleForm.id)">
-        <CopyDocument />
-      </el-icon>
-    </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.name')"
       prop="kbName">
       <el-input
         v-model="ruleForm.kbName"
+        class="o-validate-input"
         minlength="1"
         maxlength="20"
-        :placeholder="$t('assetLibrary.message.pleasePlace')" />
+        :placeholder="$t('assetLibrary.message.pleasePlace')" >
+        <template #suffix>
+          <el-icon class="error-icon" >
+            <img src="@/assets/svg/fail.svg" />
+          </el-icon>
+        </template>
+        </el-input>
     </el-form-item>
     <el-form-item
       :label="$t('assetLibrary.desc')"
@@ -225,7 +213,7 @@ import { v4 as uuidv4 } from 'uuid';
 import KbAppAPI from '@/api/kbApp';
 
 const route = useRoute()
-const { t } = useI18n();
+const { t, locale} = useI18n();
 const loading = ElLoading.service({
   visible: false,
   text: `${t('pageTipText.Loading')}...`,
@@ -329,8 +317,9 @@ onMounted(async () => {
   }));
   // 如果是创建状态，设置默认值
   if (props.isCreate) {
-    ruleForm.value.kbName = '资产库名称01';
-    ruleForm.value.tokenizer = languageOptions.value?.[0].value || '';
+    ruleForm.value.kbName = t('defaultText.kbName');
+    ruleForm.value.tokenizer = locale.value==='zh'?languageOptions.value?.[0].value : languageOptions.value?.[1].value
+    
     ruleForm.value.embeddingModel = emBeddingModelOptions.value?.[0].value || '';
     ruleForm.value.defaultParseMethod = parserMethodOptions.value?.[0].value || '';
   }

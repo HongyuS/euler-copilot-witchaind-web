@@ -310,7 +310,8 @@ export default {
     multiple: '多选',
     cancelMultiple: '取消多选',
     checkAll: '全选',
-    selected: '已选{count}项',
+    selected: '已选',
+    selectedCount: '项',
     search: '搜索',
   },
   dialogTipText: {
@@ -381,6 +382,12 @@ export default {
   },
   timerSearch: {
     lastHour: '最近 {timer} 小时',
+  },
+  defaultText: {
+    kbName: '资产库名称01',
+    datasetName: '数据集01',
+    datasetDesc: '这是一段数据集简介',
+    testingName: '测试数据01',
   },
   copyright: '版权所有© 华为软件技术有限公司2024。保留一切权利',
 };

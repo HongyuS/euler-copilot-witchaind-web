@@ -120,7 +120,6 @@
       <div class="dataSet-container-left" >
         <el-button
           type="primary"
-          style="margin-right: 8px"
           @click="handleImportDataSet"
           class="importFileBtn">
           {{ $t('dataset.importDataset') }}
@@ -159,9 +158,27 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
+        <span v-if="selectionDataSetList.length>0 " class="multipleSelectNum">
+          {{ $t('btnText.selected') }} 
+          <span class="selectedNum">{{ selectionDataSetList.length }}</span>
+          {{ $t('btnText.selectedCount') }}
+        </span>
       </div>
-      <el-input :placeholder="$t('dataset.placeholderDataset')" v-model="searchPayload.datasetName" class="dataSet-container-right" 
-          @input="handleInputSearch"  :suffix-icon="IconSearch" />
+        <el-input
+          v-model="searchPayload[searchType]"
+          :suffix-icon="IconSearch"
+          :placeholder="$t('assetLibrary.message.pleasePlace')"
+          @input="handleInputSearch"
+          clearable
+          class="dataSet-container-right select-input-search"
+        >
+          <template #prepend>
+            <el-select v-model="searchType" style="width: 120px" :suffix-icon="IconCaretDown" @change="handleSelectType" >
+              <el-option :label="$t('dataset.datasetName')" value="datasetName" />
+              <el-option :label="$t('dataset.creator')" value="authorName" />
+            </el-select>
+          </template>
+        </el-input>
       </div>
       <div class="dataSet-container-table-box">
         <el-table
@@ -182,25 +199,28 @@
           <el-table-column
             prop="datasetName"
             :label="$t('dataset.datasetName')"
-            show-overflow-tooltip
             :fixed="true"
             class-name="datasetName"
             width="200">
             <template #default="scope">
-              <span
-                class="dataSet-name-row"
-                @click="handleJumpFileSection(scope.row)">
-                {{ scope.row.datasetName }}
-              </span>
+              <el-tooltip :content="scope.row.datasetName" placement="top" >
+                <span
+                  class="dataSet-name-row table-row-content"
+                  @click="handleJumpFileSection(scope.row)">
+                  {{ scope.row.datasetName }}
+                </span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column
             prop="description"
             :label="$t('dataset.datasetDesc')"
             min-width="300"
-            show-overflow-tooltip>
+            >
             <template #default="scope">
-              <span>{{ scope.row.description }}</span>
+              <el-tooltip :content="scope.row.description" placement="top" >
+                <span class="table-row-content">{{ scope.row.description }}</span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column
@@ -378,7 +398,6 @@
             prop="score"
             :label="`${$t('dataset.score')}(1~100)`"
             width="210"
-            show-overflow-tooltip
             sortable
           >
           <template #default="scope">
@@ -388,34 +407,7 @@
         <el-table-column
           prop="authorName"
           :label="$t('dataset.creator')"
-          show-overflow-tooltip>
-          <template #header>
-              <div class="asset-id-custom-header">
-                <span>{{ $t('dataset.creator') }}</span>
-                <el-icon
-                  ref="inputSearchRef"
-                  :class="
-                    searchPayload?.authorName?.length! > 0 || creatorVisible ? 'searchIconIsActive' : ''
-                  ">
-                  <IconSearch />
-                </el-icon>
-                <el-popover
-                  ref="popoverRef"
-                  v-model:visible="creatorVisible"
-                  popper-class="inputSearchFilterPopper"
-                  placement="bottom-start"
-                  :virtual-ref="inputSearchRef"
-                  :show-arrow="false"
-                  trigger="click"
-                  virtual-triggering>
-                  <FilterContainr
-                    filterType="input"
-                    v-model:serachName="searchPayload.authorName"
-                    :hanldeSearhNameFilter="hanldeSearhNameFilter"
-                    :searchPayload="searchPayload" />
-                </el-popover>
-              </div>
-            </template>
+          >
           </el-table-column>
           <el-table-column
             prop="dataSetCreatime"
@@ -427,7 +419,6 @@
                 {{ convertUTCToLocalTime(scope.row.generateTask?.createdTime) }}
             </template>
           </el-table-column>
-
           <el-table-column
             prop="action"
             :label="$t('btnText.operation')"
@@ -481,7 +472,7 @@
           :page-sizes="pagination.pageSizes"
           :layout="pagination.layout"
           :total="totalCount"
-          popper-class="kbLibraryPage"
+          popper-class="fileLibraryPage"
           @change="handleChangePage" />
     </div>
   </div>
@@ -586,6 +577,7 @@ const exportTaskTotal = ref(0);
 const exportTaskPageNumber = ref(1);
 const showTaskExportNotify = ref(false);
 const showTaskExportList = ref(false);
+const searchType = ref<any>('datasetName');
 
 const handleCloseDialogue = () => {
   dialogEvaluateVisible.value = false;
@@ -640,9 +632,13 @@ watch(()=>knowledgeTabActive.value,()=>{
     handleCleartTimer();
   }
 })
-
+const handleSelectType=()=>{
+  searchPayload.value.datasetName = '';
+  searchPayload.value.authorName = '';
+  handleSearchData()
+}
 const handleInputSearch = debounce((value: string) => {
-  searchPayload.value.datasetName = value.trim();
+  searchPayload.value[searchType.value] = value.trim();
   handleSearchData();
 }, 300);
 
@@ -798,11 +794,6 @@ const handeRelatedFilterProper = (filterList: any) => {
   handleSearchData();
 };
 
-const hanldeSearhNameFilter = (filterName: string) => {
-  searchPayload.value.authorName = filterName;
-  handleSearchData();
-  creatorVisible.value = false;
-};
 const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 
@@ -828,6 +819,7 @@ const handleSelectDeleteDataSet = () => {
     }).finally(()=>{
       loading.value = false;
       selectionDataSetList.value = [];
+      multipleTable.value.clearSelection();
     })
   })
 };

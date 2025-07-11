@@ -6,7 +6,7 @@
     @mouseenter="mouseenter"
     @mouseleave="mouseleave">
     <el-tooltip
-      class="box-item"
+     
       effect="dark"
       :visible="visible"
       :content="value"

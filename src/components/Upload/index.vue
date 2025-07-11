@@ -75,7 +75,15 @@
               prop="name"
               :label="$t('dialogTipText.fileName')"
               class-name="upload-file-name"
-              :show-overflow-tooltip="true" />
+            >
+            <template #default="scope">
+              <el-tooltip :content="scope.row.name" placement="top" >
+                <span class="table-row-content" >
+                  {{ scope.row.name }}
+                </span>
+              </el-tooltip> 
+            </template>
+            </el-table-column>
             <el-table-column
               prop="size"
               :label="$t('dialogTipText.fileSize')"

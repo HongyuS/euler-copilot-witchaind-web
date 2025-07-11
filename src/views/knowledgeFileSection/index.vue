@@ -81,7 +81,7 @@
                       <el-checkbox
                         v-for="(item, index) in Object.keys(textType)"
                         :key="item"
-                        :label="textType[item]"
+                        :label="item"
                         :value="item"
                         :class="isHoverIndex === index ? 'isFileTypeChcekHover' : ''"
                         @mouseover="onMouseOver(index)"
@@ -93,7 +93,7 @@
                   <template #reference>
                     <div
                       class="fileCheckTypeShow"
-                      :class="filteTypeShow ? 'filteTypeShowClass' : null">
+                      :class="filteTypeShow ? 'filteTypeShowClass is_selected' : null">
                       <div class="fileCheckTypeContent">
                         <span v-if="fileType.length">
                           <span v-if="fileType.length === 3">
@@ -172,6 +172,12 @@
             :data="fileTableList.data"
             ref="fileSectionTable"
             @selection-change="handleSelectionChange">
+            <template #empty>
+              <div class="table-empty-box">
+                <div class="table-empty-img"></div>
+                <div>暂无数据</div>
+              </div>
+            </template>
             <el-table-column
               type="selection"
               class-name="kf-selection"
@@ -211,7 +217,7 @@
             :layout="pagination.layout"
             :total="totalCount"
             @change="handleChangePage"
-            popper-class="kbLibraryPage" />
+            popper-class="fileSectionPage" />
         </div>
         <div class="empty_box" v-if="fileInfo?.docTask?.taskStatus === 'pending'">
           <div class="empty_img empty_pending"></div>
@@ -355,6 +361,7 @@ const handleShowFileType = (showStatus: boolean) => {
 };
 
 const handleCheckAllChange = (val: CheckboxValueType) => {
+  console.log(val)
   isIndeterminate.value = false;
   if (val) {
     fileType.value = ['text', 'table', 'image','code','link','qa'];
@@ -365,6 +372,7 @@ const handleCheckAllChange = (val: CheckboxValueType) => {
 };
 
 const handleCheckedCitiesChange = (value: CheckboxValueType[]) => {
+  console.log(value)
   fileType.value = value;
   const checkedCount = value.length;
   checkAll.value = checkedCount === Object.keys(textType.value).length;

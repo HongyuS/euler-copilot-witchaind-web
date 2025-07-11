@@ -80,6 +80,9 @@
 }
 .library-info-tabs{
     margin-right: 24px;
+    .el-tabs__content{
+        margin-top: 16px;
+    }
 }
 .document-info-tabs .el-tabs__header{
     margin-bottom: 0px !important;

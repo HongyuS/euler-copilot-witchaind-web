@@ -300,7 +300,8 @@ export default {
     multiple: 'Multiple Selection',
     cancelMultiple: 'Cancel Multiple Selection',
     checkAll: 'Check All',
-    selected: '{count} have been selected',
+    selected: '',
+    selectedCount: ' have been selected',
     search: 'Search',
   },
   dialogTipText: {
@@ -377,6 +378,12 @@ export default {
   },
   timerSearch: {
     lastHour: 'Last {timer} hour',
+  },
+  defaultText: {
+    kbName: 'Asset Library Name 01',
+    datasetName: 'Dataset 01',
+    datasetDesc: 'This is a dataset description',
+    testingName: 'Test Data 01',
   },
   copyright: 'Copyright© Huawei Software Technologies Co., Ltd.2024. All rights reserved.',
 };

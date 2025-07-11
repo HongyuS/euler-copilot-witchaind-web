@@ -122,8 +122,14 @@
           :style="{ height: tableHeight }">
           <el-table
             :data="tableData.data"
-            :max-height="tableHeight"
+            :height="tableHeight"
             @selection-change="handleSelectionChange">
+             <template #empty>
+              <div class="table-empty-box">
+                <div class="table-empty-img"></div>
+                <div>暂无数据</div>
+              </div>
+            </template>
             <el-table-column
               type="selection"
               width="30" />
@@ -145,7 +151,7 @@
                 </div>
                 <template v-else>
                   <el-tooltip
-                    class="box-item"
+                   
                     effect="dark"
                     :content="scope.row.question"
                     placement="top">
@@ -171,7 +177,7 @@
                 </div>
                 <template v-else>
                   <el-tooltip
-                    class="box-item"
+                   
                     effect="dark"
                     :content="scope.row.answer"
                     placement="top">
@@ -187,7 +193,7 @@
               min-width="300">
               <template #default="scope">
                 <el-tooltip
-                  class="box-item"
+                 
                   effect="dark"
                   :content="scope.row.chunk"
                   placement="top">
@@ -258,6 +264,7 @@
           :page-sizes="pagination.pageSizes"
           :layout="pagination.layout"
           :total="totalCount"
+          popper-class="dataSetPage"
           @change="handleChangePage" />
       </div>
     </div>

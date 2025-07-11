@@ -84,7 +84,7 @@
         .kf-container-table-ops-left{
           display: flex;
           margin-bottom: 16px;
-
+          gap: 8px;
           .importFileBtn {
             padding: 8px 15px;
           }
@@ -103,9 +103,11 @@
           }
 
           .el-dropdown {
+            .upBtn{
+              border-color: #6395FD !important;
+            }
             button {
               min-width: 96px;
-              padding: 8px 13.2px;
             }
           }
         }
@@ -116,14 +118,15 @@
       }
 
       .kf-container-table-box {
-        height: calc(100% - 56px);
+        height: calc(100% - 59px);
         display: flex;
         flex-direction: column;
         background-color: var(--o-bg-color-base);
         .fileTableContainer{
           height:100%;
-          .el-table-column--selection .cell{
-            padding-left: 18px !important;
+          .el-table-column--selection{
+            padding-left: 16px !important;
+            padding-right: 0px !important;
           }
         }
         .el-table .cell{
@@ -186,13 +189,8 @@
       }
 
       .el-table__cell {
-        padding: 0 !important;
+        padding: 0 8px !important;
         font-size: 12px;
-      }
-
-      .el-table-column--selection .cell {
-        padding-right: 0 !important;
-        padding-left: 10px !important;
       }
 
       .kl-selection::after {
@@ -462,6 +460,10 @@
       .el-form-item__label{
         font-size: 12px;
       }
+      .el-form-item__label:before{
+        position: absolute;
+        left: -8px;
+      }
     }
     
     .kl-ops-btn {
@@ -573,4 +575,7 @@
     }
   }
 
+}
+.fileLibraryPage{
+  inset: auto auto 84px 92px !important;
 }

@@ -178,22 +178,27 @@
             />
           </span>
           <span v-if="multipleSelection.length>0 " class="multipleSelectNum">
-            {{ $t('btnText.selected',{count: multipleSelection.length }) }} 
+            {{ $t('btnText.selected') }} 
+            <span class="selectedNum">{{ multipleSelection.length }}</span>
+            {{ $t('btnText.selectedCount') }}
           </span>
         </div>
         <div class="kl-right-btn">
           <div class="kl-btn-search">
             <el-input
-              ref="inputRef"
               v-model="knoledgekeyWord"
+              :suffix-icon="IconSearch"
+              :placeholder="$t('assetLibrary.message.pleasePlace')"
               @input="handleInputSearch"
-              class="o-style-serch"
-              :placeholder="$t('assetLibrary.message.name')"
-              clearable>
-              <template #suffix>
-                <el-icon class="el-input__icon">
-                  <IconSearch />
-                </el-icon>
+              clearable
+              class="select-input-search"
+            >
+              <template #prepend>
+                <el-select v-model="searchType" style="width: 120px" :suffix-icon="IconCaretDown" @change="handleSelectType" >
+                  <el-option :label="$t('assetLibrary.name')" value="kbName" />
+                  <el-option :label="$t('assetLibrary.assetId')" value="kbId" />
+                  <el-option :label="$t('assetLibrary.creator')" value="authorName" />
+                </el-select>
               </template>
             </el-input>
           </div>
@@ -275,7 +280,7 @@
               <span class="id-label">{{ `ID:${' '} ` }}</span>
               <span class="id-value">{{ item.kbId }}</span>
               <el-icon class="id-copy" @click.stop="handleCopyId(item.kbId)" >
-                <CopyDocument />
+                <IconCopy />
               </el-icon>
             </div>
             <div class="kl-card-footer">
@@ -329,66 +334,55 @@
           :border="true"
           @selection-change="handleSelectionChange"
           :class="fileTableList.data.length < currentPageSize ? 'showPagination' : ''">
+          <template #empty>
+            <div class="table-empty-box">
+              <div class="table-empty-img"></div>
+              <div>暂无数据</div>
+            </div>
+          </template>
           <el-table-column type="selection"  width="55" />
           <el-table-column
             prop="kbName"
             :label="$t('assetLibrary.name')"
-            :show-overflow-tooltip="true"
             width="130"
             :fixed="true"
             class-name="kl-name">
             <template #default="scope">
-              <span
-                class="kl-name-row"
-                @click="handleJumpAssets(scope.row)">
-                {{ scope.row.kbName }}
-              </span>
+              <el-tooltip :content="scope.row.kbName" placement="top" >
+                <span
+                  class="kl-name-row table-row-content"
+                  @click="handleJumpAssets(scope.row)">
+                  {{ scope.row.kbName }}
+                </span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column
             prop="kbId"
             :label="$t('assetLibrary.assetId')"
-            show-overflow-tooltip
             :fixed="true"
             class-name="kl-id"
             width="300">
-            <template #header>
-              <div class="asset-id-custom-header">
-                <span>{{ $t('assetLibrary.assetId') }}</span>
-                <el-icon
-                  ref="inputSearchRef"
-                  :class="
-                    sortFilter?.kbId?.length! > 0 || fileFilterVisible ? 'searchIconIsActive' : ''
-                  ">
-                  <IconSearch />
-                </el-icon>
-                <el-popover
-                  ref="popoverRef"
-                  v-model:visible="fileFilterVisible"
-                  popper-class="inputSearchFilterPopper"
-                  placement="bottom-start"
-                  :virtual-ref="inputSearchRef"
-                  :show-arrow="false"
-                  trigger="click"
-                  virtual-triggering>
-                  <FilterContainr
-                    filterType="input"
-                    v-model:serachName="sortFilter.kbId"
-                    :hanldeSearhNameFilter="hanldeSearhNameFilter"
-                    :searchPayload="sortFilter" />
-                </el-popover>
-              </div>
-            </template>
             <template #default="scope">
-              <span class="kf-name-row">
-                {{ scope.row.kbId }}
-              </span>
+              <el-tooltip :content="scope.row.kbId" placement="top" >
+                <span class="kf-name-row table-row-content">
+                  {{ scope.row.kbId }}
+                </span>
+              </el-tooltip>
             </template>
           </el-table-column>
           <el-table-column
             prop="description"
             :label="$t('assetLibrary.desc')"
-            :show-overflow-tooltip="true" />
+          >
+            <template #default="scope">
+              <el-tooltip :content="scope.row.description" placement="top" >
+                <span class="table-row-content">
+                {{ scope.row.description }}
+                </span>
+              </el-tooltip>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="docCnt"
             sortable
@@ -409,33 +403,6 @@
             prop="authorName"
             width="100"
             :label="$t('assetLibrary.creator')">
-            <template #header>
-              <div class="asset-id-custom-header">
-                <span>{{ $t('assetLibrary.creator') }}</span>
-                <el-icon
-                  ref="authorNameSearchRef"
-                  :class="
-                    sortFilter?.authorName?.length! > 0 || authorNameFilterVisible ? 'searchIconIsActive' : ''
-                  ">
-                  <IconSearch />
-                </el-icon>
-                <el-popover
-                  ref="popoverRef"
-                  v-model:visible="authorNameFilterVisible"
-                  popper-class="inputSearchFilterPopper"
-                  placement="bottom-start"
-                  :virtual-ref="authorNameSearchRef"
-                  :show-arrow="false"
-                  trigger="click"
-                  virtual-triggering>
-                  <FilterContainr
-                    filterType="input"
-                    v-model:serachName="sortFilter.authorName"
-                    :hanldeSearhNameFilter="hanldeSearhAuthorNameFilter"
-                    :searchPayload="sortFilter" />
-                </el-popover>
-              </div>
-            </template>
             <template #default="scope">
               <span>{{ scope.row.authorName }}</span>
             </template>
@@ -483,7 +450,7 @@
         :page-sizes="pagination.pageSizes"
         :layout="pagination.layout"
         :total="totalCount"
-        popper-class="kbLibraryPage"
+        popper-class="fileLibraryPage"
         @change="handleChangePage" />
     </div>
   </div>
@@ -580,6 +547,7 @@ import {
   IconCaretDown,
   IconCaretUp,
   IconAlarm,
+  IconCopy,
 } from '@computing/opendesign-icons';
 import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
@@ -589,7 +557,6 @@ import { debounce } from 'lodash';
 import KbAppAPI, { ITaskType } from '@/api/kbApp';
 import { QueryKbRequest } from '@/api/apiType';
 import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
-import FilterContainr from '@/components/TableFilter/index.vue';
 import router from '@/router';
 import { useGroupStore } from '@/store/modules/group';
 import EmptyStatus from '@/components/EmptyStatus/index.vue'
@@ -608,6 +575,7 @@ groupName: {
 const { navGroup } =  storeToRefs(useGroupStore());
 const { t } = useI18n();
 const knoledgekeyWord = ref();
+const searchType = ref('kbName');
 const dialogImportVisible = ref(false);
 const dialogCreateVisible = ref(false);
 const addTipVisible = ref(false);
@@ -882,33 +850,6 @@ const handleFilterData = (params: sortFilterType) => {
     }
   });
   return filterPaylod;
-};
-
-const hanldeSearhNameFilter = (filterName: string) => {
-  if(!validate(filterName)){
-    ElMessage.error(t('assetLibrary.assetFormat'));
-    return;
-  }
-  sortFilter.value.kbId = filterName;
-  currentPage.value = 1;
-  currentPageSize.value = 10;
-  handleQueryKbLibrary({
-    page: currentPage.value,
-    pageSize: currentPageSize.value,
-    ...handleFilterData(sortFilter.value),
-  });
-  fileFilterVisible.value = false;
-};
-const hanldeSearhAuthorNameFilter = (filterName: string) => {
-  sortFilter.value.authorName = filterName;
-  currentPage.value = 1;
-  currentPageSize.value = 10;
-  handleQueryKbLibrary({
-    page: currentPage.value,
-    pageSize: currentPageSize.value,
-    ...handleFilterData(sortFilter.value),
-  });
-  authorNameFilterVisible.value = false;
 };
 
 const handleSwitch = (switchType: string) => {
@@ -1308,8 +1249,31 @@ const isSearch = computed(()=>{
     return value !== null && value !== undefined; // 其他类型需非空
   })
 })
-
+const handleSelectType=()=>{
+  knoledgekeyWord.value = '';
+  sortFilter.value.kbId = '';
+  sortFilter.value.kbName = '';
+  sortFilter.value.authorName = '';
+  handleOpsKbForm();
+}
 const handleInputSearch = debounce((e) => {
+  if (searchType.value === 'kbId') {
+    if ( e && !validate(e)) {
+      ElMessage.error(t('assetLibrary.assetFormat'));
+      return;
+    }
+    if (!e) {
+      // kbId 为空时移除参数
+      delete sortFilter.value.kbId;
+      let payload = {
+        page: 1,
+        pageSize: currentPageSize.value,
+        ...handleFilterData(sortFilter.value),
+      };
+      handleQueryKbLibrary(payload);
+      return;
+    }
+  }
   let payload: {
     page: number;
     pageSize: number;
@@ -1320,11 +1284,11 @@ const handleInputSearch = debounce((e) => {
   };
     payload = {
       ...payload,
-      kbName: e,
+      [searchType.value]: e,
     };
-    sortFilter.value.kbName = e;
+    sortFilter.value[searchType.value] = e;
     payload = { ...payload, ...handleFilterData(sortFilter.value) };
-  handleQueryKbLibrary(payload);
+    handleQueryKbLibrary(payload);
 }, 200);
 
 const handleOpsKbConfirm = () => {

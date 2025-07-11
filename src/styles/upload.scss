@@ -7,6 +7,12 @@
   }
 
   .upload-to-list {
+    .el-upload.el-upload--text.is-drag{
+      width: 100%;
+      .el-upload-dragger{
+        width: 100%;
+      }
+    }
     .el-alert--info .el-alert__icon{
       background-image: url('@/assets/svg/icon_info.svg');
       width: 22.3px;
