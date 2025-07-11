@@ -152,7 +152,7 @@
                           height: 32px;
                           font-size: 12px;
                           line-height: 16px;
-                          color: var(--o-item-label-text);
+                          color: var(--o-text-color-secondary);
                           margin: 4px 0 16px;
                           display: -webkit-box;          /* 旧版 Flexbox 兼容（必须） */
                           -webkit-line-clamp: 2;         /* 限制显示行数 */
@@ -175,6 +175,7 @@
                               .member-count{
                                 margin-left: 16px;
                                 display: flex;
+                                gap: 4px;
                               }
                           }
                           button{
@@ -258,7 +259,7 @@
                   }
 
                   .el-table__cell {
-                    padding: 0 !important;
+                    padding: 0 8px !important;
                     font-size: 12px;
                   }
 
@@ -311,7 +312,7 @@
             width: 104px !important;
             align-items: flex-start !important;
             line-height: 22px;
-            padding-top: 9px !important;
+            padding: 9px 24px 5px !important;
             font-family: 'HarmonyOS Sans SC Regular';
               &.is-active{
               color: rgb(99, 149, 253) !important;

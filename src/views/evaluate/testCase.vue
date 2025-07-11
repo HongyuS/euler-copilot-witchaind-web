@@ -27,63 +27,69 @@
                 </div>
                 <div class="table-container">
                     <el-table :data="testCaseList" row-key="id" height="calc(100vh - 464px)" bordered>
+                        <template #empty>
+                            <div class="table-empty-box">
+                                <div class="table-empty-img"></div>
+                                <div>暂无数据</div>
+                            </div>
+                        </template>
                         <el-table-column prop="question" width="150" :label="$t('dataset.question')" fixed>
                             <template #default="scope">
                                 <el-tooltip
-                                    class="box-item"
+                                   
                                     effect="dark"
                                     :content="scope.row.question"
                                     placement="top"
                                 >
-                                    <div class="dataChunkText">{{ scope.row.question }}</div>
+                                    <div class="table-row-content">{{ scope.row.question }}</div>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="answer" width="300" :label="$t('dataset.standardAnswer')" fixed >
                             <template #default="scope">
                                 <el-tooltip
-                                    class="box-item"
+                                   
                                     effect="dark"
                                     :content="scope.row.answer"
                                     placement="top"
                                 >
-                                    <div class="dataChunkText">{{ scope.row.answer }}</div>
+                                    <div class="table-row-content">{{ scope.row.answer }}</div>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="llmAnswer" width="300" :label="$t('testing.modelAnswer')" >
                             <template #default="scope">
                                 <el-tooltip
-                                    class="box-item"
+                                   
                                     effect="dark"
                                     :content="scope.row.llmAnswer"
                                     placement="top"
                                 >
-                                    <div class="dataChunkText">{{ scope.row.llmAnswer }}</div>
+                                    <div class="table-row-content">{{ scope.row.llmAnswer }}</div>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="relatedChunk" width="300" :label="$t('testing.retrievedSegments')" >
                             <template #default="scope">
                                 <el-tooltip
-                                    class="box-item"
+                                   
                                     effect="dark"
                                     :content="scope.row.relatedChunk"
                                     placement="top"
                                 >
-                                    <div class="dataChunkText">{{ scope.row.relatedChunk }}</div>
+                                    <div class="table-row-content">{{ scope.row.relatedChunk }}</div>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="docName" width="150" :label="$t('dataset.sourceDoc')" >
                             <template #default="scope">
                                 <el-tooltip
-                                    class="box-item"
+                                   
                                     effect="dark"
                                     :content="scope.row.docName"
                                     placement="top"
                                 >
-                                    <div class="dataChunkText">{{ scope.row.docName }}</div>
+                                    <div class="table-row-content">{{ scope.row.docName }}</div>
                                 </el-tooltip>
                             </template>
                         </el-table-column>
@@ -98,7 +104,7 @@
                     </el-table>
                     <el-pagination v-model:current-page="currentPage" v-model:page-size="currentPageSize"
                         :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
-                        popper-class="kbLibraryPage" @change="handleChangePage" />
+                        popper-class="testCasePage" @change="handleChangePage" />
                 </div>
             </div>
         </template>
@@ -601,20 +607,10 @@ const handleDownloadReport = () => {
     }
 
     .el-table__cell {
-        padding: 0 !important;
+        padding: 0 8px !important;
         font-size: 12px;
         color: black;
     }
-
-    .el-table--border .el-table__cell:first-child .cell {
-        padding: 0 12px !important;
-    }
-
-    .el-table-column--selection .cell {
-        padding-right: 0 !important;
-        padding-left: 22px;
-    }
-
     .group-selection::after {
         content: unset !important;
     }
@@ -627,18 +623,13 @@ const handleDownloadReport = () => {
         height: var(--el-input-inner-height) !important;
     }
 
-    .dataChunkText{
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1; /* 控制显示行数 */
-        text-overflow: ellipsis;
-      }
-
 }
 
 .el-drawer__footer {
     box-shadow: 0 -8px 16px 0 rgba(0, 0, 0, 0.1);
     padding: 8px 24px;
+}
+.testCasePage{
+    inset: auto auto 108px 657px !important;
 }
 </style>

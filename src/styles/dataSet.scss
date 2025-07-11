@@ -242,18 +242,19 @@
     display: flex;
     justify-content: space-between;
 
+    .dataSet-container-left {
+      display: flex;
+      gap: 8px;
+      .el-dropdown {
+        .upBtn{
+          border-color: #6395FD !important;
+        }
+      }
+    }
     .dataSet-container-right {
       width: 356px;
       font-size: 12px;
     }
-  }
-
-  .el-table tbody tr td:not(:first-child) .cell {
-    padding: 0 8px !important;
-  }
-
-  .el-table thead .el-table__cell .cell {
-    padding: 0 8px !important;
   }
 
   .custom-header {
@@ -390,13 +391,15 @@
   }
 
   .el-table__cell {
-    padding: 0 !important;
+    padding: 0 8px !important;
     font-size: 12px;
   }
-
+  .el-table-column--selection{
+    padding-left: 16px !important;
+    padding-right: 0 !important;
+  }
   .el-table-column--selection .cell {
     padding-right: 0 !important;
-    padding-left: 10px !important;
   }
 
   .el-pagination {
@@ -431,11 +434,7 @@
     display: flex;
     flex-direction: column;
     .dataSetTableContainer{
-      height: calc(100vh - 318px);
-    }
-    .el-table__body-wrapper .el-table-column--selection>.cell, 
-    .el-table__header-wrapper .el-table-column--selection>.cell{
-      padding-left: 18px !important;
+      height: calc(100vh - 320px);
     }
     .el-table .cell{
       line-height: 16px !important;

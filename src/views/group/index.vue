@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="group-card-desc">
                                     <el-tooltip popper-class="desc-popper" effect="dark" :content="item.description"
-                                        placement="top-start">
+                                        placement="top">
                                         {{ item.description }}
                                     </el-tooltip>
                                 </div>
@@ -76,15 +76,29 @@
                         <!-- 列表布局 -->
                         <div class="group-table-box" v-else>
                             <el-table :data="groupList" :border="true" max-height="640" >
-                                <el-table-column prop="teamName" :label="$t('group.teamName')" :show-overflow-tooltip="true" width="200"
+                                <template #empty>
+                                    <div class="table-empty-box">
+                                        <div class="table-empty-img"></div>
+                                        <div>暂无数据</div>
+                                    </div>
+                                </template>
+                                <el-table-column prop="teamName" :label="$t('group.teamName')" width="200"
                                     class-name="group-name">
                                     <template #default="scope">
-                                        <span class="group-name-row" @click="handleToGroup(scope.row)">
-                                            {{ scope.row.teamName }}
-                                        </span>
+                                        <el-tooltip :content="scope.row.teamName" placement="top" >
+                                            <span class="group-name-row table-row-content" @click="handleToGroup(scope.row)">
+                                                {{ scope.row.teamName }}
+                                            </span>
+                                        </el-tooltip>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="description" :label="$t('group.teamDesc')" width="200" :show-overflow-tooltip="true" />
+                                <el-table-column prop="description" :label="$t('group.teamDesc')" width="200" >
+                                    <template #default="scope">
+                                        <el-tooltip :content="scope.row.description" placement="top" >
+                                            <div class="table-row-content">{{ scope.row.description }}</div>
+                                        </el-tooltip>
+                                    </template>
+                                </el-table-column>
                                 <el-table-column prop="memberCount" width="150" :label="$t('group.teamSize')" />
                                 <el-table-column prop="isPublic" width="150" :label="$t('group.teamAuth')">
                                     <template #default="scope">
@@ -111,7 +125,7 @@
                     <el-pagination class="group-pagination"
                         v-if="groupList?.length > 0" :current-page="currentPage" :page-size="currentPageSize"
                         :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount"
-                        popper-class="kbLibraryPage" @size-change="handleSizeChange"
+                        popper-class="fileLibraryPage" @size-change="handleSizeChange"
                         @current-change="handleCurrentChange" />
                 </el-tab-pane>
             </el-tabs>

@@ -5,7 +5,8 @@
   </div>
   <div class="group-table-box" v-else>
     <div class="test-manage-header">
-      <el-dropdown placement="bottom" popper-class="kf-ops-dowlon dropdown-container"
+      <div>
+        <el-dropdown placement="bottom" popper-class="kf-ops-dowlon dropdown-container"
         @visible-change="handleBatchDownBth" :disabled="!selectedRow.length">
         <el-button :class="{
           'upBtn': batchDownBth,
@@ -31,21 +32,57 @@
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-input v-model="searchPayload.testingName" :placeholder="$t('testing.placeholderTest')" class="search-input" 
-      @input="handleInput" :suffix-icon="IconSearch" />
+      <span v-if="selectedRow.length>0 " class="multipleSelectNum">
+          {{ $t('btnText.selected') }} 
+          <span class="selectedNum">{{ selectedRow.length }}</span>
+          {{ $t('btnText.selectedCount') }}
+        </span>
+      </div>
+      <el-input
+          v-model="searchPayload[searchType]"
+          :suffix-icon="IconSearch"
+          :placeholder="$t('assetLibrary.message.pleasePlace')"
+          @input="handleInput"
+          clearable
+          class="search-input select-input-search"
+        >
+          <template #prepend>
+            <el-select v-model="searchType" style="width: 120px" :suffix-icon="IconCaretDown" @change="handleSelectType" >
+              <el-option :label="$t('testing.testingName')" value="testingName" />
+              <el-option :label="$t('group.creator')" value="authorName" />
+            </el-select>
+          </template>
+        </el-input>
     </div>
-    <el-table class="test-table" ref="testingTableRef" :data="testList" style="margin-bottom: 20px" 
+    <div class="test-manage-table">
+      <el-table class="test-table" ref="testingTableRef" :data="testList" style="margin-bottom: 20px" 
       :row-key="row => row.datasetId ? `dataset-${row.datasetId}` : `testing-${row.testingId}`"
       bordered default-expand-all @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="54" fixed="left" />
-      <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" :show-overflow-tooltip="true" fixed="left" />
-      <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')" :show-overflow-tooltip="true" fixed="left">
+      <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" fixed="left" >
         <template #default="scope">
-          <span class="test-name" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </span>
+          <el-tooltip :content="scope.row.datasetName" placement="top" >
+            <span class="table-row-content" >
+              {{ scope.row.datasetName }}
+            </span>
+          </el-tooltip> 
         </template>
       </el-table-column>
-      <el-table-column prop="description" min-width="400" :label="$t('testing.testingDesc')" :show-overflow-tooltip="true" />
-      <el-table-column prop="modelType" width="150" :label="$t('testing.type')" :show-overflow-tooltip="true">
+      <el-table-column prop="testingName" width="120" :label="$t('testing.testingName')" fixed="left">
+        <template #default="scope">
+          <el-tooltip :content="scope.row.testingName" placement="top" >
+            <span class="test-name table-row-content" @click="handleTestData(scope.row)"> {{ scope.row.testingName }} </span>
+          </el-tooltip> 
+        </template>
+      </el-table-column>
+      <el-table-column prop="description" min-width="400" :label="$t('testing.testingDesc')" >
+        <template #default="scope">
+          <el-tooltip :content="scope.row.description" placement="top" >
+            <span class="table-row-content"> {{ scope.row.description }} </span>
+          </el-tooltip> 
+        </template>
+      </el-table-column>
+      <el-table-column prop="modelType" width="150" :label="$t('testing.type')">
         <template #header>
           <div class="custom-header">
             <span>{{ $t('testing.type') }}</span>
@@ -63,13 +100,15 @@
           </div>
         </template>
         <template #default="scope">
-          <span v-if="scope.row.llm" class="testing-model-type">
-            <img :src="`data:image/svg+xml;base64,${scope.row.llm?.llmIcon}`"/>
-            {{ scope.row.llm?.llmName}}
-          </span>
+          <el-tooltip :content="scope.row.llm?.llmName" placement="top" >
+            <span v-if="scope.row.llm" class="testing-model-type table-row-content">
+              <img :src="`data:image/svg+xml;base64,${scope.row.llm?.llmIcon}`"/>
+              {{ scope.row.llm?.llmName}}
+            </span>
+          </el-tooltip> 
         </template>
       </el-table-column>
-      <el-table-column prop="searchMethod" width="150" :label="$t('testing.method')" :show-overflow-tooltip="true">
+      <el-table-column prop="searchMethod" width="150" :label="$t('testing.method')" >
         <template #header>
           <div class="custom-header">
             <span>{{ $t('testing.method') }}</span>
@@ -140,33 +179,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="authorName" width="100" :label="$t('group.creator')">
-        <template #header>
-          <div class="custom-header">
-            <span>{{ $t('group.creator') }}</span>
-            <el-icon
-              ref="creatorRef"
-              :class="
-                searchPayload?.authorName?.length! > 0 || creatorVisible ? 'searchIconIsActive' : ''
-              ">
-              <IconSearch />
-            </el-icon>
-            <el-popover
-                  ref="popoverRef"
-                  v-model:visible="creatorVisible"
-                  popper-class="inputSearchFilterPopper"
-                  placement="bottom-start"
-                  :virtual-ref="creatorRef"
-                  :show-arrow="false"
-                  trigger="click"
-                  virtual-triggering>
-                  <FilterContainr
-                    filterType="input"
-                    v-model:serachName="searchPayload.authorName"
-                    :hanldeSearhNameFilter="hanldeSearhNameFilter"
-                    :searchPayload="searchPayload" />
-                </el-popover>
-          </div>
-        </template>
       </el-table-column>
       <el-table-column prop="finishedTime" width="150" :label="$t('dataset.finishedTime')">
         <template #default="scope">
@@ -188,8 +200,9 @@
         </template>
       </el-table-column>
     </el-table>
+    </div>
     <el-pagination v-if="totalCount" v-model:current-page="currentPage" v-model:page-size="currentPageSize"
-      :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount" popper-class="kbLibraryPage"
+      :page-sizes="pagination.pageSizes" :layout="pagination.layout" :total="totalCount" popper-class="fileLibraryPage"
       @current-change="handleCurrentChange" @size-change="handleSizeChange" />
   </div>
   <testCase :visible="testDataVisible" :rowData="testRowData" :close="closeFn" />
@@ -281,7 +294,7 @@ const llmOptions = ref<Array<{
     icon: string
 }>>([]);
 
-const scoreActive =ref<string | null>(null)
+const searchType = ref<string>('testingName');
 
 const isSearch = computed(()=>{
   return Object.values(searchPayload.value).some(value => {
@@ -292,20 +305,6 @@ const isSearch = computed(()=>{
   });
 })
 
-const hanldeSearhNameFilter = (filterName: string) => {
-  searchPayload.value.authorName = filterName;
-  handleSearchData();
-};
-
-const handleSortChange = (order: string) => {
-  if(order === scoreActive.value){
-    scoreActive.value = null;
-  }else{
-    scoreActive.value = order;
-  }
-  searchPayload.value.scoresOrder = scoreActive.value;
-  handleSearchData();
-}
 const handleSearchData = () => {
   handeAssetLibraryData(
     {
@@ -326,8 +325,13 @@ const handleSearchData = () => {
 const handleBatchDownBth = (e: boolean) => {
   batchDownBth.value = e;
 };
-
-const handleInput = debounce(() => {
+const handleSelectType=()=>{
+  searchPayload.value.testingName = '';
+  searchPayload.value.authorName = '';
+  handleSearchData()
+}
+const handleInput = debounce((value: string) => {
+  searchPayload.value[searchType.value] = value;
   currentPage.value = 1;
   let param = {
     ...searchPayload.value,

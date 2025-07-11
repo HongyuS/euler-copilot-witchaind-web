@@ -168,7 +168,7 @@ const handleCancelVisible = () => {
                 margin-bottom: 24px;
                 .el-form-item__label {
                     font-size: 12px !important;
-                    color: var(--o-item-label-text);
+                    color: var(--o-text-color-secondary);
                     padding-right: 0px;
                     margin-right: 24px;
                     font-family: 'HarmonyOS Sans SC Regular';
@@ -191,6 +191,9 @@ const handleCancelVisible = () => {
 
             }
                  .isPublicItem {
+                    .el-form-item__label{
+                        padding: 0px;
+                    }
                     .el-form-item__label, .el-form-item__content{
                         height: 16px !important;
                         line-height: 16px !important;

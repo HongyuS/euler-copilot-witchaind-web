@@ -9,31 +9,44 @@
         align-center
         :close-on-click-modal="false"
     >
-        <el-form class="evaluate-form" ref="ruleFormRef" :model="form" labelPosition="left" :rules="rules" >
+        <el-form class="evaluate-form o-form-has-require" ref="ruleFormRef" :model="form" labelPosition="left" :rules="rules" >
             <el-form-item :label="$t('testing.datasetUsed')" :label-width="formLabelWidth" class="evaluate-dataSetName-container" prop="datasetId">
                 <div class="evaluate-dataSetName" >
                     {{ props.rowData?.datasetName }}
                 </div>
             </el-form-item>
             <el-form-item :label="$t('testing.testingName')" prop="name" :label-width="formLabelWidth" >
-                <el-input v-model="form.name" autocomplete="off" :placeholder="t('model.pleasePlace')" maxlength="30" />
+                <el-input class="o-validate-input" v-model="form.name" autocomplete="off" :placeholder="t('model.pleasePlace')" maxlength="30" >
+                    <template #suffix>
+                        <el-icon class="error-icon" >
+                            <img src="@/assets/svg/fail.svg" />
+                        </el-icon>
+                    </template>
+                </el-input>
             </el-form-item>
             <el-form-item :label="$t('testing.testingDesc')" prop="desc" :label-width="formLabelWidth">
                 <el-input v-model="form.desc" show-word-limit maxlength="200" type="textarea" autocomplete="off" :placeholder="t('model.pleasePlace')" />
             </el-form-item>
-            <el-form-item :label="$t('testing.type')" prop="type" :label-width="formLabelWidth">
-                <el-select v-model="form.type" :placeholder="t('model.pleasePlace')" :suffix-icon="IconCaretDown" @change="isSubmitDisabled = false">
-                    <template #label="{ label, value }">
-                        <img v-if="form.type" :src="`data:image/svg+xml;base64,${llmOptions.find(item => item.value === form.type)?.icon}`" style="vertical-align: middle; margin-right: 8px;" />
-                        <span>{{ label }}</span>
-                    </template>
+            <el-form-item :label="$t('testing.type')" prop="type" :label-width="formLabelWidth" class="evaluate-type-container">
+                  <img
+                    v-if="currentLlmOption"
+                    :src="`data:image/svg+xml;base64,${currentLlmOption.icon}`"
+                    style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; z-index: 2;"
+                />
+                <el-select
+                    v-model="form.type"
+                    :placeholder="t('model.pleasePlace')"
+                    :suffix-icon="IconCaretDown"
+                    @change="isSubmitDisabled = false"
+                    popper-class="custom-llm-select-popper"
+                >
                     <el-option
                         v-for="item in llmOptions"
                         :key="item.value"
                         :label="item.label"
-                        :value="item.value" 
+                        :value="item.value"
                     >
-                        <img :src="`data:image/svg+xml;base64,${item.icon}`"/>
+                        <img :src="`data:image/svg+xml;base64,${item.icon}`" style="width: 20px; height: 20px; margin-right: 8px;" />
                         <span>{{ item.label }}</span>
                     </el-option>
                 </el-select>
@@ -69,11 +82,13 @@ import KbAppAPI from '@/api/kbApp';
 import dataSetAPI from '@/api/dataSet';
 import EvaluateAPI from '@/api/evaluate';
 import { useGroupStore } from '@/store/modules/group';
-import { IconCaretDown, } from '@computing/opendesign-icons';
+import { IconCaretDown } from '@computing/opendesign-icons';
 const { t, } = useI18n();
 const store = useGroupStore();
 const { handleKnowledgeTab } = store;
-
+const currentLlmOption = computed(() =>
+  llmOptions.value.find(item => item.value === form.type)
+);
 const props = defineProps({
     dialogEvaluateVisible: Boolean,
     rowData: Object,
@@ -100,13 +115,13 @@ let form = reactive({
 
 const rules = reactive<FormRules>({
   name: [
-    { required: true, message: t('model.pleasePlace'), trigger: 'blur' },
+    { required: true, message: t('model.pleasePlace'), trigger: 'change' },
   ],
   type: [
     { required: true, message: t('model.pleasePlace'), trigger: 'change' },
   ],
   desc: [
-    { required: true, message: t('model.pleasePlace'), trigger: 'blur' },
+    { required: true, message: t('model.pleasePlace'), trigger: ['change','blur'] },
   ],
   method: [
     { required: true, message: t('model.pleasePlace'), trigger: 'change' },
@@ -141,7 +156,7 @@ const handleCancelVisible = () => {
     ruleFormRef.value?.resetFields();
 }
 const initFormData = () => {
-    form.name = '测试数据01'
+    form.name = t('defaultText.testingName');
     form.type = llmOptions.value.length > 0 ? llmOptions.value[0].value : '';
     form.method = parserMethodOptions.value.length > 0 ? parserMethodOptions.value[0].value : '';
     form.topk = 5;
@@ -157,7 +172,11 @@ onMounted( async () => {
             return { label: item.llmName, value: item.llmId,icon:item.llmIcon };
         });
     })
-    initFormData();
 })
+watch(() => props.dialogEvaluateVisible, (newVal) => {
+    if (newVal) {
+        initFormData();
+    }
+});
 
 </script>

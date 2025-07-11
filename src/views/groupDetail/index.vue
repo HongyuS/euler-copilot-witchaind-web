@@ -4,13 +4,13 @@
         <div class="group-name">{{ groupName }}</div>
         <el-tabs v-model="activeName" class="group-detail-tabs" @tab-click="handleClick">
             <el-tab-pane :label="$t('groupDetail.teamSet')" name="teamSet">
-                <el-form :model="form" label-width="auto" style="max-width: 500px">
+                <el-form :model="form" label-width="auto">
                     <el-form-item prop="name" :label="$t('group.teamName')">
-                        <el-input v-model="form.teamName" maxlength="100" />
+                        <el-input style="width: 400px;" v-model="form.teamName" maxlength="100" />
                     </el-form-item>
                     <el-form-item prop="description" :label="$t('group.teamDesc')">
                         <el-input v-model="form.description" type="textarea" :rows="4" maxlength="200"
-                            show-word-limit />
+                          style="width: 400px;" show-word-limit />
                     </el-form-item>
                     <el-form-item prop="isPublic" :label="$t('group.isPublic')" class="isPublicItem">
                         <el-switch v-model="form.isPublic" style="--el-switch-on-color: rgb(36,171,54); " />
@@ -19,11 +19,13 @@
                        {{ form.memberCount }}{{ $t('group.people') }}
                     </el-form-item>
                     <el-form-item prop="deleteTeam" :label="$t('groupDetail.dissolveTeam')">
-                        <el-button @click="handleDeleteTeam" >{{ $t('groupDetail.dissolve') }}</el-button>
-                        <span class="btn-tips">{{ $t('groupDetail.dissolveTip') }}</span>
-                    </el-form-item>
-                    <el-form-item class="save-btn">
-                        <el-button type="primary" :disabled="isSubmitDisabled" @click="onSubmit">{{ $t('btnText.save') }}</el-button>
+                        <div>
+                            <el-button @click="handleDeleteTeam" >{{ $t('groupDetail.dissolve') }}</el-button>
+                            <span class="btn-tips">{{ $t('groupDetail.dissolveTip') }}</span>
+                            <div class="save-btn">
+                                <el-button type="primary" :disabled="isSubmitDisabled" @click="onSubmit">{{ $t('btnText.save') }}</el-button>
+                            </div>
+                        </div>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
@@ -151,12 +153,16 @@ onMounted(()=>{
     }
 
     .group-detail-tabs {
+        .el-form{
+            margin-top: 16px;
+        }
         .el-form-item{
             margin-bottom: 24px;
             .el-form-item__label {
                 font-size: 12px;
                 padding-right: 24px;
                 color: var(--o-text-color-secondary);
+                // padding: 0 24px 0 0 !important;
             }
             .el-form-item__content{
                 font-size:12px;
@@ -180,15 +186,21 @@ onMounted(()=>{
             }
         }
         .isPublicItem,.memberCountItem{
-            height: 16px;
-            line-height: 16px;
+            height: 16px !important;
+            line-height: 16px !important;
             .el-form-item__label-wrap .el-form-item__label{
-                height: 16px;
-                line-height: 16px;
+                height: 16px !important;
+                line-height: 16px !important;
+                min-height: 16px !important;
+            }
+            .el-form-item__label{
+                padding-top: 0px;
+                padding-bottom: 0px;
             }
             .el-form-item__content{
-                height: 16px;
-                line-height: 16px;
+                height: 16px !important;
+                line-height: 16px !important;
+                min-height: 16px !important;
             }
         }
         .btn-tips{
@@ -197,8 +209,8 @@ onMounted(()=>{
             margin-left: 8px;
         }
         .save-btn{
-            padding-left: 72px;
             margin-top: 32px;
+            display: block;
         }
     }
 }

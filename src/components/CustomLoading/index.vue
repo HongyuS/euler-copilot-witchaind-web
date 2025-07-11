@@ -57,4 +57,7 @@ onBeforeUnmount(() => {
 .loadingNone {
   display: none;
 }
+.el-loading-text{
+  color: var(--o-text-color-primary) !important;
+}
 </style>

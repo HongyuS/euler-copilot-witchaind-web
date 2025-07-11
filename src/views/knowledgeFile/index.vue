@@ -18,14 +18,12 @@
         <div class="kf-container-table-ops-left" >
           <el-button
             type="primary"
-            style="margin-right: 8px"
             @click="handleImportKnowledge"
             class="importFileBtn">
             {{ $t('btnText.importFile') }}
           </el-button>
           <el-button
             type="primary"
-            style="margin-right: 8px"
             @click="handleGenerateDataSet(true)"
             :disabled="!isGenerateDataSet"
             class="dataSetBtn">
@@ -74,6 +72,11 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+          <span v-if="selectionFileData.length>0 " class="multipleSelectNum">
+            {{ $t('btnText.selected') }} 
+            <span class="selectedNum">{{ selectionFileData.length }}</span>
+            {{ $t('btnText.selectedCount') }}
+          </span>
         </div>
         <el-input :placeholder="$t('assetFile.placeholderFile')" v-model="searchPayload.docName" class="kf-container-table-ops-right" 
           maxlength="150"  @input="hanldeSearhNameFilter"  :suffix-icon="IconSearch" />
@@ -92,29 +95,30 @@
               type="selection"
               :fixed="true"
               class-name="kl-selection"
-              width="40"
+              width="32"
               :reserve-selection="true"
               :selectable="checkSelecTable" />
             <el-table-column
               prop="docName"
               :label="$t('assetFile.docName')"
-              show-overflow-tooltip
               :fixed="true"
               class-name="kl-name"
               min-width="150">
               <template #default="scope">
-                <span
-                  class="kf-name-row"
-                  @click="handleJumpFileSection(scope.row)">
-                  {{ scope.row.docName }}
-                </span>
+                <el-tooltip :content="scope.row.docName" placement="top" >
+                  <span
+                    class="kf-name-row table-row-content"
+                    @click="handleJumpFileSection(scope.row)">
+                    {{ scope.row.docName }}
+                  </span>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column
               prop="docType"
               :label="$t('assetFile.category')"
               width="150"
-              show-overflow-tooltip>
+            >
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.category') }}</span>
@@ -277,7 +281,7 @@
               prop="parseMethod"
               :label="$t('assetFile.parsingMethod')"
               width="150"
-              show-overflow-tooltip>
+              >
               <template #header>
                 <div class="custom-header">
                   <span>{{ $t('assetFile.parsingMethod') }}</span>
@@ -405,7 +409,7 @@
             :layout="pagination.layout"
             :total="totalCount"
             :default-page-size="20"
-            popper-class="kbLibraryPage"
+            popper-class="fileLibraryPage"
             @change="handleChangePage" />
         </div>
       </div>
@@ -478,11 +482,18 @@
       label-position="left">
       <el-form-item
         :label="$t('assetFile.docName')"
-        prop="name"
+        prop="docName"
         >
         <el-input
+          class="o-validate-input"
           v-model="ruleForm.docName"
-          :placeholder="$t('assetLibrary.message.pleasePlace')" />
+          :placeholder="$t('assetLibrary.message.pleasePlace')" >
+          <template #suffix>
+            <el-icon class="error-icon" >
+              <img src="@/assets/svg/fail.svg" />
+            </el-icon>
+          </template>
+        </el-input>
       </el-form-item>
       <el-form-item
         :label="$t('assetLibrary.analyticMethod')"

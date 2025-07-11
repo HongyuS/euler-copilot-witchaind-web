@@ -60,26 +60,21 @@
           .dropdown-disabled{
             cursor: not-allowed;
           }
-          
-        }
-        .multipleSelectNum{
-          display: inline-block;
-            font-size: 12px;
-            color: rgb(141, 152, 170);
-          &>span{
-            color: rgb(99, 149, 253);
+          .upBtn{
+            border-color: #6395FD !important;
           }
         }
+
         .multipleSelect{
           margin-right: 8px;
           display: flex;
           align-items: center;
-          font-weight: 400;
           .el-checkbox.el-checkbox--large{
             height: 20px;
           }
           & span{
             font-size: 12px;
+            font-weight: 400;
           }
 
         }
@@ -161,7 +156,6 @@
       .kl-single-card {
         display: flex;
         flex-direction: column;
-        height: 232px;
         padding: 16px;
         background: var(--o-bg-color-light);
         border-radius: 8px;
@@ -170,6 +164,7 @@
 
         &.is-checked {
           border: 2px solid rgb(99, 149, 253);
+          padding: 15px;
         }
 
         .kl-card-top {
@@ -193,9 +188,7 @@
             }
 
             .el-checkbox__input.is-checked .el-checkbox__inner:after {
-              border-color: var(--el-checkbox-checked-icon-color) !important;
-              transform: rotate(45deg) scaleY(1) translate(2px) !important;
-              border-width: 2px !important;
+              transform: rotate(45deg) scale(1.5) translate(2.5px) !important;
             }
           }
 
@@ -221,13 +214,13 @@
 
         .kl-card-desc {
           flex: 1;
-          padding-top: 8px;
           font-size: 12px;
           line-height: 16px;
           letter-spacing: 0px;
           color: var(--o-text-color-secondary);
-          height: 112px;
           width: 396px;
+          margin-bottom: 16px;
+          margin-top: 8px;
         }
 
         .kl-card-footer {
@@ -379,7 +372,7 @@
     }
 
     .el-table__cell {
-      padding: 0 !important;
+      padding: 0 8px !important;
       font-size: 12px;
     }
 
