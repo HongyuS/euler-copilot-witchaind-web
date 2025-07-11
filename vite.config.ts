@@ -15,6 +15,8 @@ import UnoCSS from 'unocss/vite';
 import path, { resolve } from 'path';
 import { name, version, engines, dependencies, devDependencies } from './package.json';
 
+import { OpenDesignResolver } from '@computing/opendesign2/themes/plugins/resolver';
+
 const __APP_INFO__ = {
   pkg: { name, version, engines, dependencies, devDependencies },
   buildTimestamp: Date.now(),
@@ -77,7 +79,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         imports: ['vue', '@vueuse/core', 'pinia', 'vue-router', 'vue-i18n'],
         resolvers: [
           // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
-          ElementPlusResolver(),
+          OpenDesignResolver(ElementPlusResolver, { importStyle: 'sass' }),
           // 自动导入图标组件
           IconsResolver({}),
         ],
@@ -93,11 +95,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 指定自动导入函数TS类型声明文件路径 (false:关闭自动生成)
         dts: false,
         // dts: "src/types/auto-imports.d.ts",
+        // dts: path.resolve('src/types', 'auto-imports.d.ts'),
       }),
       Components({
         resolvers: [
           // 自动导入 Element Plus 组件
-          ElementPlusResolver(),
+          OpenDesignResolver(ElementPlusResolver, { importStyle: 'sass' }),
           // 自动注册图标组件
           IconsResolver({
             // element-plus图标库，其他图标库 https://icon-sets.iconify.design/
@@ -109,6 +112,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         // 指定自动导入组件TS类型声明文件路径 (false:关闭自动生成)
         dts: false,
         // dts: "src/types/components.d.ts",
+        // dts: path.resolve('src/types', 'components.d.ts'),
       }),
       Icons({
         // 自动安装图标库
@@ -228,6 +232,14 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
               extType = 'fonts';
             }
             return `${extType}/[name].[hash].[ext]`;
+          },
+          manualChunks(id) {
+            if (/\/opendesign2\/themes\/es\/(.*?)\//.test(id)) {
+              return 'opendesign2';
+            }
+            if (/\/element-plus\/es\/components\/(.*?)\/(.*)\/?style/.test(id)) {
+              return 'element-plus';
+            }
           },
         },
       },
