@@ -125,6 +125,7 @@
           {{ $t('dataset.importDataset') }}
         </el-button>
         <el-dropdown
+          trigger="click"
           placement="bottom"
           popper-class="dropdown-container dataSet-ops-dowlon"
           @visible-change="handleBatchDownBth"

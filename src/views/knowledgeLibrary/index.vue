@@ -138,6 +138,7 @@
             popper-class="kf-ops-dowlon dropdown-container"
             @visible-change="handleBatchDownBth"
             :disabled="multipleSelection.length === 0"
+            trigger="click"
           >
             <el-button 
             :class="{
@@ -277,10 +278,10 @@
                 :row="6" />
             </div>
             <div class="kl-card-id">
-              <span class="id-label">{{ `ID:${' '} ` }}</span>
+              <span class="id-label">{{ `ID：${' '} ` }}</span>
               <span class="id-value">{{ item.kbId }}</span>
               <el-icon class="id-copy" @click.stop="handleCopyId(item.kbId)" >
-                <IconCopy />
+                <IconWindowing />
               </el-icon>
             </div>
             <div class="kl-card-footer">
@@ -547,7 +548,7 @@ import {
   IconCaretDown,
   IconCaretUp,
   IconAlarm,
-  IconCopy,
+  IconWindowing,
 } from '@computing/opendesign-icons';
 import TextMoreTootip from '@/components/TextMoreTootip/index.vue';
 import TextSingleTootip from '@/components/TextSingleTootip/index.vue';
