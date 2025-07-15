@@ -133,6 +133,7 @@
             </el-input>
           </div>
           <el-dropdown
+            trigger="click"
             v-if="fileInfo?.docTask?.taskStatus === 'success'" 
             placement="bottom"
             popper-class="dropdown-container kf-section-ops-dowlon"

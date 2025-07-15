@@ -7,7 +7,7 @@
     <div class="test-manage-header">
       <div>
         <el-dropdown placement="bottom" popper-class="kf-ops-dowlon dropdown-container"
-        @visible-change="handleBatchDownBth" :disabled="!selectedRow.length">
+        trigger="click" @visible-change="handleBatchDownBth" :disabled="!selectedRow.length">
         <el-button :class="{
           'upBtn': batchDownBth,
           'downBtn': !batchDownBth,

@@ -147,8 +147,8 @@ $newHoverBg: linear-gradient(
   border-color: var(--o-button-border-color) !important;
   color: var(--o-text-color-secondary) !important;
   &:hover,&:active,&:focus{
-    border-color: var(--o-button-bg) !important;
-    color: var(--o-text-color-secondary) !important;
+    border-color: #6395FD  !important;
+    color: #6395FD !important;
   }
 }
 .el-dropdown.is-disabled .el-button {
@@ -203,7 +203,7 @@ $newHoverBg: linear-gradient(
   margin-top: -10px;
   border-color: var(--o-button-bg) !important;
   border-radius: var(--el-border-radius-base) !important;
-
+  min-width: 106px !important;
   .el-dropdown-menu{
     background-color:  var(--o-bg-color-base) !important;
     .el-dropdown-menu__item{
@@ -211,7 +211,7 @@ $newHoverBg: linear-gradient(
     }
   }
 
-  .el-dropdown-menu__item:not(.is-disabled):hover {
+  .el-dropdown-menu__item:not(.is-disabled):hover,.el-dropdown-menu__item:not(.is-disabled):focus {
     color: rgb(255 255 255) !important;
     background: rgb(99,149,253) !important;
   }
@@ -1189,10 +1189,6 @@ div:focus {
 }
 .el-form-item__error{
   color: var(--o-form-tip-color_error);
-}
-
-.el-dropdown__popper .el-dropdown-menu{
-  width: 105px;
 }
 
 .select-input-search{

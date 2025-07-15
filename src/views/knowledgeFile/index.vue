@@ -30,6 +30,7 @@
             {{ $t('assetFile.generateDataset') }}
           </el-button>
           <el-dropdown
+            trigger="click"
             placement="bottom"
             popper-class="dropdown-container kf-ops-dowlon"
             @visible-change="handleBatchDownBth"

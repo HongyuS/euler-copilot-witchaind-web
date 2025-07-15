@@ -62,6 +62,7 @@
           }
           .upBtn{
             border-color: #6395FD !important;
+            color: #6395FD !important;
           }
         }
 
@@ -267,10 +268,15 @@
           font-size: 12px;
           width: 330px !important;
           margin-bottom: 8px;
+          height: 16px;
+          line-height: 16px;
           .id-label,
           .id-value {
+            display: inline-block;
             letter-spacing: 0;
             color: rgb(141 152 170);
+            line-height: 16px;
+            height: 16px;
           }
           .id-copy{
             margin-left: 5px;
@@ -278,7 +284,10 @@
             position: relative;
             top: 1px;
             &:hover {
-              color: var(--o-text-color-secondary);
+              color: #7AA5FF;
+            }
+            &:active{
+              color: #6395FD;
             }
           }
 
