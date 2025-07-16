@@ -260,14 +260,12 @@
         }
 
         .kf-selection {
-          width: 46px !important;
           border-top: 1px solid var(--o-border-color-base);
           border-left: 1px solid var(--o-border-color-base);
           border-top-left-radius: 4px;
           border-bottom-left-radius: 4px;
 
           .cell {
-            width: 46px !important;
             position: absolute !important;
             top: 13px !important;
             padding-left: 18px;

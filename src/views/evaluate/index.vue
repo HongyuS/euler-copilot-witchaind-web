@@ -58,6 +58,12 @@
       <el-table class="test-table" ref="testingTableRef" :data="testList" style="margin-bottom: 20px" 
       :row-key="row => row.datasetId ? `dataset-${row.datasetId}` : `testing-${row.testingId}`"
       bordered default-expand-all @selection-change="handleSelectionChange">
+      <template #empty>
+        <div class="table-empty-box">
+          <div class="table-empty-img"></div>
+          <div>暂无数据</div>
+        </div>
+      </template>
       <el-table-column type="selection" width="54" fixed="left" />
       <el-table-column prop="datasetName" width="120" :label="$t('testing.datasetUsed')" fixed="left" >
         <template #default="scope">
