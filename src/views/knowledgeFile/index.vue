@@ -92,6 +92,12 @@
             @sort-change="handleSortChange"
             ref="multipleTable"
             :border="true">
+            <template #empty>
+              <div class="table-empty-box">
+                <div class="table-empty-img"></div>
+                <div>暂无数据</div>
+              </div>
+            </template>
             <el-table-column
               type="selection"
               :fixed="true"

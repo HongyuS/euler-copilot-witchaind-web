@@ -182,7 +182,7 @@
             <el-table-column
               type="selection"
               class-name="kf-selection"
-              width="46" />
+              width="40" />
 
             <el-table-column
               prop="name"

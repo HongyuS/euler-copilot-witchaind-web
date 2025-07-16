@@ -417,7 +417,7 @@
     overflow: hidden;
     background-color: var(--o-bg-color-base);
     border-color: var(--o-bg-color-base);
-    border-radius: var(--o-border-radius);
+    border-radius: 8px;
     box-shadow: var(--o-task-box-shadow);
 
     .o-export-notify__head {

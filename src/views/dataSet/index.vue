@@ -190,6 +190,12 @@
           @selection-change="handleSelectionChange"
           ref="multipleTable"
           :border="false">
+          <template #empty>
+            <div class="table-empty-box">
+              <div class="table-empty-img"></div>
+              <div>暂无数据</div>
+            </div>
+          </template>
           <el-table-column
             type="selection"
             :fixed="true"
@@ -226,12 +232,12 @@
           </el-table-column>
           <el-table-column
             prop="dataCnt"
-            min-width="120"
+            min-width="140"
             :label="$t('dataset.dataCountLimit')"
             sortable />
           <el-table-column
           prop="dataCntExisted"
-          min-width="120"
+          min-width="150"
           :label="$t('dataset.currentDataCount')"
           sortable />
           <el-table-column
