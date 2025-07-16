@@ -46,19 +46,24 @@
         <el-input-number class="config-size" v-model="ruleForm.dataCnt" :min="1" :max="512" />
         <span class="dataSetNumberTip">1～512</span>
       </el-form-item>
-      <el-form-item :label="$t('testing.type')" prop="llmId">
-        <el-select v-model="ruleForm.llmId" :placeholder="t('assetLibrary.message.pleaseChoose')" :suffix-icon="IconCaretDown">
-          <template #label="{ label, value }">
-              <img v-if="ruleForm.llmId" :src="`data:image/svg+xml;base64,${llmList.find(item => item.llmId === ruleForm.llmId)?.llmIcon}`" style="vertical-align: middle; margin-right: 8px;" />
-              <span>{{ label }}</span>
-          </template>
+      
+      <el-form-item :label="$t('testing.type')" prop="llmId" class="datasetLlmType">
+        <img
+          v-if="currentLlmOption"
+          :src="`data:image/svg+xml;base64,${currentLlmOption.llmIcon}`"
+          style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; z-index: 2;"
+        />
+        <el-select v-model="ruleForm.llmId" 
+          popper-class="custom-llm-select-popper"
+          :placeholder="t('assetLibrary.message.pleaseChoose')" 
+          :suffix-icon="IconCaretDown">
           <el-option
               v-for="item in llmList"
               :key="item.llmId"
               :label="item.llmName"
               :value="item.llmId" 
           >
-              <img :src="`data:image/svg+xml;base64,${item.llmIcon}`"/>
+              <img :src="`data:image/svg+xml;base64,${item.llmIcon}`" style="width: 20px; height: 20px; margin-right: 8px;" />
               <span>{{ item.llmName }}</span>
           </el-option>
       </el-select>
@@ -168,7 +173,9 @@ watch(
     immediate: true,
   }
 );
-
+const currentLlmOption = computed(() =>
+  llmList.value.find(item => item.llmId === ruleForm.value.llmId)
+);
 const handleResetDataSet = () => {
   ruleForm.value = {
     datasetName: '',

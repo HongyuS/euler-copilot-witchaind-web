@@ -79,6 +79,11 @@
             margin-left: 8px;
             color: #8d98aa;
         }
+        .datasetLlmType{
+          .el-input__wrapper{
+            padding-left: 44px !important;
+          }
+        }
     }
 
     .el-form-item__content{
