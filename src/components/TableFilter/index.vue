@@ -20,7 +20,7 @@
       <el-checkbox
         v-for="(item, index) in checkList"
         :key="item.value || item"
-        :label="item.label || item"
+        :label="item.value || item"
         :value="item.value || item"
         class=""
         :class="isHoverIndex === index ? 'isChcekHover' : ''"
