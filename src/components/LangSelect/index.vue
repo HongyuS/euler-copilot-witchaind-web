@@ -49,7 +49,7 @@ defineProps({
 });
 
 const langOptions = [
-  { label: '简体中文', value: LanguageEnum.ZH_CN },
+  { label: '简体中文', value: LanguageEnum.ZH },
   { label: 'English', value: LanguageEnum.EN },
 ];
 

@@ -68,7 +68,7 @@ declare global {
     themeColor: string;
     /** 主题模式(dark|light) */
     theme: string;
-    /** 语言( zh-cn| en) */
+    /** 语言( zh | en) */
     language: string;
     /** 是否开启水印 */
     watermarkEnabled: boolean;

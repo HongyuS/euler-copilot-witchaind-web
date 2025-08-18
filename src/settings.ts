@@ -13,7 +13,7 @@ const defaultSettings: AppSettings = {
   fixedHeader: true,
   sidebarLogo: true,
   theme: mediaQueryList.matches ? ThemeEnum.DARK : ThemeEnum.LIGHT,
-  language: LanguageEnum.ZH_CN,
+  language: LanguageEnum.ZH,
   themeColor: '#409EFF',
   watermarkEnabled: false,
   watermarkContent: pkg.name,
