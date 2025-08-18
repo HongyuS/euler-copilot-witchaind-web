@@ -24,7 +24,7 @@ const isManualNavigation = ref(false);
 const handleMessage = (e: MessageEvent) => {
   if(e.data?.type === 'changeLanguage') {
     const langObj = {
-      'zh_cn': 'zh',
+      'zh': 'zh',
       'en': 'en',
     };
     let lang = langObj[e.data.lang as keyof typeof langObj] ?? 'zh';

@@ -5,7 +5,7 @@ export const enum LanguageEnum {
   /**
    * 中文
    */
-  ZH_CN = 'zh',
+  ZH = 'zh',
 
   /**
    * 英文
