@@ -14,8 +14,8 @@
 @font-face {
   font-family: 'HarmonyOS Sans SC Regular';
   src:
-    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff2) format('woff2'),
-    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff) format('woff');
+    var(--font-harmony-woff2, url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff2)) format('woff2'),
+    var(--font-harmony-woff, url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff)) format('woff');
   font-weight: 400;
   font-style: normal;
 }

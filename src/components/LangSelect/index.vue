@@ -8,10 +8,10 @@
       <div>
         <img
           v-if="language === 'zh'"
-          src="/src/assets/images/language-zh.svg" />
+          :src="getImageUrl('language-zh.svg')" />
         <img
           v-else
-          src="/src/assets/images/language-en.svg" />
+          :src="getImageUrl('language-en.svg')" />
       </div>
       <div class="laguageChecd">
         {{ languageText }}
@@ -38,9 +38,11 @@ import { LanguageEnum } from '@/enums/LanguageEnum';
 import defaultSettings from '@/settings';
 import AuthAPI from '@/api/auth';
 import { IconSuccess } from '@computing/opendesign-icons';
+import { useAssets } from '@/composables/useAssets';
 const languageText = ref();
 const language = ref();
 const userInfo = ref();
+const { getImageUrl } = useAssets();
 defineProps({
   size: {
     type: String,

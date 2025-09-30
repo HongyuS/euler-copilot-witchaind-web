@@ -71,12 +71,12 @@
                 <el-icon
                   v-if="['error', 'canceled', 'failed'].includes(item.exportStatus)"
                   class="errorIcon">
-                  <img src="@/assets/svg/fail.svg" alt="fail icon" />
+                  <img :src="getSvgUrl('fail.svg')" alt="fail icon" />
                 </el-icon>
                 <el-icon
                   v-if="item.percent === 100"
                   class="successIcon">
-                   <img src="@/assets/svg/succes.svg" alt="success icon" />
+                   <img :src="getSvgUrl('succes.svg')" alt="success icon" />
                 </el-icon>
                 <span v-if="item.exportStatus === 'success'">
                   {{ $t('exportTask.exportSuccess') }}
@@ -531,8 +531,10 @@ import DataSetDrawer from './dataSetDrawer.vue';
 import CreateEvaluate from '@/views/dataSet/craeteEvaluate.vue';
 import dataSetAPI from '@/api/dataSet';
 import CustomLoading from '@/components/CustomLoading/index.vue';
+import { useAssets } from '@/composables/useAssets';
 const route = useRoute();
 const { t } = useI18n();
+const { getSvgUrl } = useAssets();
 
 import { ref } from 'vue';
 import '@/styles/dataSet.scss';

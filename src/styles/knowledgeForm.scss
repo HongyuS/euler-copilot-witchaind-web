@@ -18,7 +18,7 @@
     }
 
     .deleteConfig:hover {
-      color: rgb(99, 149, 253);
+      color: var(--o-color-primary);
     }
   }
 }
@@ -36,8 +36,8 @@
   }
 
   .el-form-item {
-    gap: 24px;
-    margin-bottom: 24px;
+    gap: 20px;
+    margin-bottom: 20px !important; // 统一间距
     display: flex;
     align-items: center;
 
@@ -65,7 +65,7 @@
     .icon-help{
       margin-left: 4px;
       margin-top: 0px !important;
-      color: #8d98aa;
+      color: var(--o-text-color-secondary);
     }
   }
 
@@ -76,7 +76,7 @@
     .el-input-number__decrease {
       background: transparent;
       .el-icon {
-        color: #8d98aa;
+        color: var(--o-text-color-secondary);
       }
     }
     .el-input__wrapper {
@@ -98,12 +98,13 @@
   }
 
   .el-form-item__content {
-    flex: unset !important;
+    max-width: 450px; // 防止内容超出边界
 
     .el-input,
     .el-select__wrapper,
     .el-textarea__inner {
       width: 352px !important;
+      max-width: 352px; // 确保不会超出
       font-size: 12px;
     }
 
@@ -136,6 +137,8 @@
     padding: 0 !important;
     font-size: 12px !important;
     color: var(--o-text-color-secondary) !important;
+    min-width: 140px; // 确保label有足够宽度，避免换行
+    white-space: nowrap; // 防止文字换行
 
     .el-icon {
       margin-top: 2px;
@@ -144,7 +147,7 @@
     }
 
     .el-icon:hover {
-      color: rgb(82 163 255);
+      color: var(--o-color-primary);
     }
   }
 
@@ -198,47 +201,148 @@
     margin-left: 8px;
     font-size: 12px;
     line-height: 22px;
-    color: rgb(141 152 170);
+    color: var(--o-text-color-secondary);
   }
 }
 
 .kl-ruleForm{
   .el-form-item__label{
-    max-width: 128px;
+    min-width: 140px; // 确保label宽度一致
+    max-width: 140px;
   }
   .config-form{
     margin-bottom: 8px !important;
   }
-  & :nth-last-child(2) {
-    margin-bottom: 0 !important;
+  
+  // 确保选择器不超出对话框边界
+  .el-form-item__content {
+    .el-input,
+    .el-select__wrapper {
+      width: 320px !important; // 在对话框中使用更小的宽度
+      max-width: 320px !important;
+    }
   }
 }
 
 .analyticMethodSelect {
   box-sizing: border-box;
-  .el-select-dropdown {
-    // width: 100% !important;
-    // max-width: unset !important;
-  }
 
   .el-select-dropdown__item.is-hovering {
     color: #fff;
   }
 }
 
+// 自适应高度对话框 - 重写CSS变量
+.adaptive-height-dialog {
+  // 覆盖所有可能的CSS变量
+  --el-dialog-height: auto !important;
+  --el-dialog-max-height: 90vh !important;
+  --o-dialog-body-max-height: none !important;
+  --el-dialog-body-max-height: none !important;
+  --o-dialog-max-height: 90vh !important;
+  
+  // 强制覆盖Element Plus的内联样式和计算样式
+  .el-dialog__body {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
+
+.el-overlay .adaptive-height-dialog,
+.adaptive-height-dialog.el-dialog,
+div.adaptive-height-dialog {
+  height: auto !important; // 强制覆盖固定高度
+  max-height: 90vh !important; // 最大高度为视口的90%
+  min-height: auto !important; // 自适应最小高度
+  
+  .el-dialog__body {
+    height: auto !important; // 强制覆盖固定高度
+    max-height: none !important; // 移除最大高度限制，让内容完全展开
+    min-height: auto !important;
+    padding: 16px 20px 20px 16px !important; // 增加底部padding
+    margin-right: 0 !important;
+    overflow: visible !important; // 让内容完全可见
+    
+    // 在body层面也覆盖CSS变量
+    --o-dialog-body-max-height: none !important;
+    --el-dialog-body-max-height: none !important;
+  }
+  
+  .el-dialog__header {
+    padding-bottom: 16px !important;
+  }
+}
+
+// 更强的覆盖，针对Element Plus的内部类
+.el-dialog.adaptive-height-dialog,
+.el-dialog__wrapper .adaptive-height-dialog {
+  height: auto !important;
+  max-height: 90vh !important;
+  
+  .el-dialog__body {
+    max-height: none !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+}
+
+// 最强选择器 - 直接覆盖Element Plus的计算样式
+.el-overlay-dialog .adaptive-height-dialog .el-dialog__body,
+.adaptive-height-dialog .el-dialog__body,
+div[class*="adaptive-height-dialog"] .el-dialog__body {
+  max-height: none !important;
+  overflow: visible !important;
+  height: auto !important;
+  
+  // 重置所有相关CSS变量
+  --o-dialog-body-max-height: none !important;
+  --el-dialog-body-max-height: none !important;
+}
+
+// 保留原有的create-dialog样式作为备用
 .create-dialog {
-  height: 600px;
   position: relative;
   padding: 0 !important;
-  overflow: hidden;
-
-  .el-dialog__body {
-    height: 464px !important;
-    max-height: unset !important;
-    min-height: unset !important;
-    padding-left: 16px !important;
-    margin-right: 0 !important;
-    padding-bottom: 0;
+  
+  // 在对话框中特别处理表单布局
+  .knowledge-form-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    
+    .kl-ruleForm {
+      .el-form-item {
+        gap: 16px; // 减少gap避免超出
+        
+        .el-form-item__label {
+          min-width: 120px; // 在对话框中使用更小的label宽度
+          max-width: 120px;
+          flex-shrink: 0;
+        }
+        
+        .el-form-item__content {
+          flex: 1;          
+          .el-input,
+          .el-select__wrapper,
+          .el-textarea__inner {
+            width: 100% !important;
+            max-width: 300px !important; // 确保不超出对话框
+          }
+        }
+      }
+    }
+    
+    // 特殊处理分块设置和向量化设置中的长标签
+    .chunk-settings,
+    .vectorization-settings {
+      .el-form-item {
+        .el-form-item__label {
+          min-width: 140px !important; // 为长标签提供更多空间
+          max-width: 140px !important;
+        }
+      }
+    }
   }
 
   .analyticMethod {
@@ -260,7 +364,7 @@
   .el-input-number__decrease {
     background: transparent;
     .el-icon {
-      color: #8d98aa;
+      color: var(--o-text-color-secondary);
     }
   }
 
@@ -269,22 +373,24 @@
   }
 
   .kl-ops-btn {
-    height: 24px !important;
-    margin-top: 32px;
+    height: auto !important;
+    margin-top: 24px;
     margin-bottom: 0;
+    padding-top: 16px; // 增加顶部间距
+    border-top: 1px solid var(--o-border-color-light); // 添加分隔线
 
     .el-form-item__content {
       display: flex;
       justify-content: center;
       width: 100% !important;
-      height: 24px !important;
       min-height: unset !important;
       margin-left: 0 !important;
-      line-height: 24px !important;
+      gap: 12px; // 按钮间距
     }
 
     .resetBtn {
-      height: 24px !important;
+      height: 32px !important; // 增加按钮高度使其更易点击
+      padding: 0 20px;
     }
   }
 
@@ -307,6 +413,15 @@
     font-size: 12px;
   }
 
+  .tip-message {
+    margin: 0 0 24px 0;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--o-text-color-primary);
+    font-weight: 400;
+  }
+
   .tip-ops-btn {
     display: flex;
     justify-content: center;
@@ -325,9 +440,8 @@
 }
 
 .kl-create-ops-btn {
-  position: absolute;
-  bottom: 24px;
-  left: 190px;
+  // 移除绝对定位，使用正常文档流
+  position: static;
 }
 
 .assetIdClass {
@@ -346,7 +460,7 @@
     transform: rotateZ(180deg);
   }
   .copydocument:hover {
-    color: rgb(99, 149, 253);
+    color: var(--o-color-primary);
   }
 }
 
@@ -364,4 +478,146 @@
   max-width: unset !important;
   min-width: unset !important;
   padding: 8px !important;
+}
+
+// Section导航样式
+.knowledge-form-container {
+  .section-navigation {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--o-border-color-light);
+    background: var(--o-bg-color-light);
+    border-radius: 6px 6px 0 0;
+    
+    .section-tab {
+      position: relative;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .section-title {
+        font-size: 12px;
+        color: var(--o-text-color-secondary);
+        font-weight: 400;
+      }
+      
+      .check-icon {
+        font-size: 14px;
+        color: var(--o-color-success);
+      }
+      
+      &:hover {
+        background: var(--o-bg-color-base);
+        
+        .section-title {
+          color: var(--o-text-color-primary);
+        }
+      }
+      
+      &.active {
+        background: var(--o-bg-color-base);
+        border-bottom: 2px solid var(--o-color-primary);
+        
+        .section-title {
+          color: var(--o-color-primary);
+          font-weight: 500;
+        }
+      }
+      
+      &.completed:not(.active) {
+        .section-title {
+          color: var(--o-color-success);
+        }
+      }
+    }
+  }
+  
+  .form-section {
+    min-height: 180px;
+    padding: 16px 0;
+    
+    .el-form-item {
+      margin-bottom: 20px !important; // 统一间距
+    }
+  }
+  
+  .chunk-settings,
+  .vectorization-settings {
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--o-bg-color-light);
+    border-radius: 6px;
+    border: 1px solid var(--o-border-color-light);
+    
+    .chunk-header,
+    .vectorization-header {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--o-text-color-primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--o-border-color-light);
+    }
+    
+    .el-form-item {
+      margin-bottom: 16px !important; // 内部统一间距
+      
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+  
+  .slider-input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%; // 使用100%宽度
+    max-width: 300px; // 限制最大宽度
+    
+    .top-k-slider {
+      flex: 1;
+      min-width: 0; // 允许slider收缩
+      margin-right: 0;
+      max-width: 220px; // 限制slider最大宽度
+    }
+    
+    .top-k-input {
+      width: 60px;
+      flex-shrink: 0; // 防止数字输入框被压缩
+      
+      .el-input-number__increase,
+      .el-input-number__decrease {
+        width: 20px;
+      }
+    }
+  }
+  
+  .form-right-tip {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--o-text-color-secondary);
+  }
+  
+  // 特殊处理较长的label
+  .el-form-item {
+    &:has([label*="单次文档上传个数上限"]) {
+      .el-form-item__label {
+        min-width: 160px;
+        max-width: 160px;
+        line-height: 1.2;
+      }
+    }
+    
+    &:has([label*="文件分块大小"]) {
+      .el-form-item__label {
+        min-width: 120px;
+        max-width: 120px;
+      }
+    }
+  }
 }

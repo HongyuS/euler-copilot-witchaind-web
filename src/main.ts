@@ -9,6 +9,7 @@ import '@computing/opendesign2/themes/es/css';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import App from './App.vue';
 import setupPlugins from '@/plugins';
+import { initCssAssetResolver } from '@/utils/cssAssetResolver';
 
 // 本地SVG图标
 import 'virtual:svg-icons-register';
@@ -30,4 +31,8 @@ app.use(ElementPlus, {
 });
 app.use(setupPlugins);
 app.use(opendesign2);
+
+// 初始化 CSS 静态资源解析器
+initCssAssetResolver();
+
 app.mount('#app');

@@ -1,233 +1,300 @@
 <template>
-  <el-form
-    ref="ruleFormRef"
-    :model="ruleForm"
-    :rules="rules"
-    label-width="auto"
-    class="kl-ruleForm o-form-has-require"
-    :size="formSize"
-    label-position="left">
-    <el-form-item
-      :label="$t('assetLibrary.name')"
-      prop="kbName">
-      <el-input
-        v-model="ruleForm.kbName"
-        class="o-validate-input"
-        minlength="1"
-        maxlength="20"
-        :placeholder="$t('assetLibrary.message.pleasePlace')" >
-        <template #suffix>
-          <el-icon class="error-icon" >
-            <img src="@/assets/svg/fail.svg" />
-          </el-icon>
-        </template>
-        </el-input>
-    </el-form-item>
-    <el-form-item
-      :label="$t('assetLibrary.desc')"
-      prop="description"
-      class="config-size-desc">
-      <el-input
-        v-model="ruleForm.description"
-        maxlength="150"
-        show-word-limit
-        type="textarea"
-        :placeholder="$t('assetLibrary.message.pleasePlace')" />
-    </el-form-item>
-    <el-form-item
-      :label="$t('assetLibrary.language')"
-      prop="tokenizer">
-      <el-select
-        v-model="ruleForm.tokenizer"
-        :placeholder="$t('assetLibrary.message.pleaseChoose')"
-        :suffix-icon="IconCaretDown"
-        :teleported="false"
-        class="select-container">
-        <el-option
-          v-for="item in languageOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value" />
-      </el-select>
-    </el-form-item>
-    <el-form-item
-      :label="$t('assetLibrary.embeddedModel')"
-      prop="embeddingModel">
-      <template #label>
-        {{ $t('assetLibrary.embeddedModel') }}
-        <el-tooltip
-          :content="$t('formTipText.analyticTip')"
-          placement="top"
-          popper-class="analyticTipBox"
-          effect="light">
-          <el-icon class="icon-help">
-            <IconHelpCircle />
-          </el-icon>
-        </el-tooltip>
-      </template>
-
-      <el-select
-        v-model="ruleForm.embeddingModel"
-        :placeholder="$t('assetLibrary.message.pleaseChoose')"
-        :teleported="false"
-        class="select-container"
-        :disabled="props.formData?.id"
-        :suffix-icon="IconCaretDown">
-        <el-option
-          v-for="item in emBeddingModelOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value" />
-      </el-select>
-    </el-form-item>
-    <el-form-item
-      :label="$t('assetLibrary.analyticMethod')"
-      prop="defaultParseMethod">
-      <el-select
-        v-model="ruleForm.defaultParseMethod"
-        :placeholder="$t('assetLibrary.message.pleaseChoose')"
-        :suffix-icon="IconCaretDown"
-        popper-class="analyticMethodSelect">
-        <el-option
-          v-for="item in parserMethodOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value" />
-      </el-select>
-    </el-form-item>
-    <el-form-item
-      :label="$t('assetLibrary.fileChunkSize')"
-      prop="defaultChunkSize">
-      <template #label>
-        {{ $t('assetLibrary.fileChunkSize') }}
-        <el-tooltip
-          :content="$t('formTipText.fileChunkSizeTip')"
-          placement="top"
-          popper-class="fileChunkSizeTip"
-          effect="light">
-          <el-icon class="icon-help">
-            <IconHelpCircle />
-          </el-icon>
-        </el-tooltip>
-      </template>
-      <el-input-number
-        class="config-size"
-        v-model="ruleForm.defaultChunkSize"
-        :min="128"
-        :max="1024" />
-      <span class="form-right-tip">（128~1024）</span>
-    </el-form-item>
-    <el-form-item
-      :label="$t('assetLibrary.fileChunkSize')"
-      prop="uploadCountLimit">
-      <template #label>
-        {{ $t('assetLibrary.numberUpperLimit') }}
-      </template>
-      <el-input-number
-        class="config-size"
-        v-model="ruleForm.uploadCountLimit"
-        :min="128"
-        :max="1024" />
-      <span class="form-right-tip">（128~1024）</span>
-    </el-form-item>
-    <el-form-item
-      :label="$t('assetLibrary.fileChunkSize')"
-      prop="uploadSizeLimit">
-      <template #label>
-        {{ $t('assetLibrary.sizeUpperLimit') }}
-      </template>
-      <el-input-number
-        class="config-size"
-        v-model="ruleForm.uploadSizeLimit"
-        :min="128"
-        :max="2048" />
-      <span class="form-right-tip">（128M~2048M）</span>
-    </el-form-item>
-    <el-form-item
-      :label="
-        props.configInfo ? $t('assetLibrary.fileConfigCategory') : $t('assetLibrary.configCategory')
-      "
-      class="config-form">
-      <el-button
-        class="resetBtn addDocuType"
-        :disabled="ruleForm?.docTypes?.length >= 10"
-        @click="handleAddDocType">
-        {{ $t('btnText.add') }}
-      </el-button>
-      <el-button
-        class="resetBtn delAllCocuType"
-        @click="handleRemoveAllDocType">
-        {{ $t('btnText.delAll') }}
-      </el-button>
-      <div class="supAddCategoris">
-        <TextTooltip :content="$t('assetLibrary.supAddCategoris')" />
+  <div class="knowledge-form-container">
+    <!-- Section导航 -->
+    <div class="section-navigation">
+      <div 
+        v-for="section in sections" 
+        :key="section.key"
+        class="section-tab"
+        :class="{ active: activeSection === section.key, completed: completedSections.includes(section.key) }"
+        @click="handleSectionClick(section.key)">
+        <span class="section-title">{{ section.title }}</span>
+        <el-icon v-if="completedSections.includes(section.key)" class="check-icon">
+          <IconSuccess />
+        </el-icon>
       </div>
-    </el-form-item>
-    <el-form-item
-      v-for="(item, index) in ruleForm.docTypes"
-      :key="`documentType${index}`"
-      label="domain"
-      class="domain-config">
-      <el-input
-        v-model="ruleForm.docTypes[index].docTypeName"
-        maxlength="20"
-        :placeholder="$t('assetLibrary.message.categoryInfo')" />
-      <el-icon
-        class="deleteConfig"
-        @click="handleRemoveDocType(index)">
-        <IconDelete />
-      </el-icon>
-    </el-form-item>
-    <el-form-item
-      class="kl-ops-btn"
-      :class="!props.configInfo ? 'kl-create-ops-btn' : null">
-      <el-button
-        class="resetBtn"
-        type="primary"
-        :disabled="isSubmitDisabled"
-        :loading="createLoading"
-        @click="submitForm(ruleFormRef)">
-        {{ props.configInfo ? $t('btnText.save') : $t('btnText.confirm') }}
-      </el-button>
-      <el-button
-        class="resetBtn cancelBtn"
-        @click="handleCancelForm()">
-        {{ $t('btnText.cancel') }}
-      </el-button>
-    </el-form-item>
-  </el-form>
+    </div>
+
+    <!-- 表单内容 -->
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      :rules="rules"
+      label-width="auto"
+      class="kl-ruleForm o-form-has-require"
+      :size="formSize"
+      label-position="left">
+      
+      <!-- 基本设置 -->
+      <div v-show="activeSection === 'basic'" class="form-section">
+        <el-form-item
+          :label="$t('assetLibrary.name')"
+          prop="kbName">
+          <el-input
+            v-model="ruleForm.kbName"
+            class="o-validate-input"
+            minlength="1"
+            maxlength="20"
+            :placeholder="$t('assetLibrary.message.pleasePlace')" >
+            <template #suffix>
+              <el-icon class="error-icon" >
+                <img :src="getSvgUrl('fail.svg')" />
+              </el-icon>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item
+          :label="$t('assetLibrary.desc')"
+          prop="description"
+          class="config-size-desc">
+          <el-input
+            v-model="ruleForm.description"
+            maxlength="150"
+            show-word-limit
+            type="textarea"
+            :placeholder="$t('assetLibrary.message.pleasePlace')" />
+        </el-form-item>
+      </div>
+
+      <!-- 解析设置 -->
+      <div v-show="activeSection === 'parse'" class="form-section">
+        <el-form-item
+          :label="$t('assetLibrary.analyticMethod')"
+          prop="defaultParseMethod">
+          <el-select
+            v-model="ruleForm.defaultParseMethod"
+            :placeholder="$t('assetLibrary.message.pleaseChoose')"
+            :suffix-icon="IconCaretDown"
+            popper-class="analyticMethodSelect">
+            <el-option
+              v-for="item in parserMethodOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value" />
+          </el-select>
+        </el-form-item>
+        
+        <!-- 分块设置 -->
+        <div class="chunk-settings">
+          <div class="chunk-header">{{ $t('chunkMethod.chunkSettings') }}</div>
+          <el-form-item :label="$t('chunkMethod.chunkMethod')" prop="chunkMethod">
+            <el-select
+              v-model="ruleForm.chunkMethod"
+              :placeholder="$t('chunkMethod.pleaseSelectChunkMethod')"
+              :suffix-icon="IconCaretDown">
+              <el-option :label="$t('chunkMethod.default')" value="semantic" />
+              <el-option :label="$t('chunkMethod.customDelimiter')" value="mark" />
+            </el-select>
+          </el-form-item>
+          
+          <el-form-item 
+            :label="$t('chunkMethod.chunkIdentifier')" 
+            prop="chunkIdentifier"
+            v-if="ruleForm.chunkMethod === 'mark'">
+            <el-input
+              v-model="ruleForm.chunkIdentifier"
+              :placeholder="$t('chunkMethod.pleaseEnterChunkIdentifier')"
+              maxlength="50" />
+          </el-form-item>
+          
+          <el-form-item :label="$t('assetLibrary.fileChunkSize')" prop="defaultChunkSize">
+            <template #label>
+              {{ $t('assetLibrary.fileChunkSize') }}
+              <el-tooltip
+                :content="$t('formTipText.fileChunkSizeTip')"
+                placement="top"
+                popper-class="fileChunkSizeTip"
+                effect="light">
+                <el-icon class="icon-help">
+                  <IconHelpCircle />
+                </el-icon>
+              </el-tooltip>
+            </template>
+            <el-input-number
+              class="config-size"
+              v-model="ruleForm.defaultChunkSize"
+              controls-position="right"
+              :min="128"
+              :max="1024"
+            />
+            <span class="form-right-tip">{{ locale === 'zh' ? '（128~1024）' : '（128~1024 characters）' }}</span>
+          </el-form-item>
+          
+          <el-form-item :label="$t('assetLibrary.uploadCountLimit')" prop="uploadCountLimit">
+            <el-input-number
+              class="config-size"
+              v-model="ruleForm.uploadCountLimit"
+              controls-position="right"
+              :min="1"
+              :max="100" />
+            <span class="form-right-tip">（1~100）</span>
+          </el-form-item>
+        </div>
+        
+        <!-- 向量化设置 -->
+        <div class="vectorization-settings">
+          <div class="vectorization-header">{{ $t('vectorization.vectorizationSettings') }}</div>
+          <el-form-item
+            :label="$t('assetLibrary.embeddedModel')"
+            prop="embeddingModel">
+            <template #label>
+              {{ $t('assetLibrary.embeddedModel') }}
+              <el-tooltip
+                :content="$t('formTipText.analyticTip')"
+                placement="top"
+                popper-class="analyticTipBox"
+                effect="light">
+                <el-icon class="icon-help">
+                  <IconHelpCircle />
+                </el-icon>
+              </el-tooltip>
+            </template>
+
+            <el-select
+              v-model="ruleForm.embeddingModel"
+              :placeholder="$t('assetLibrary.message.pleaseChoose')"
+              :teleported="false"
+              class="select-container"
+              :disabled="props.formData?.id"
+              :suffix-icon="IconCaretDown">
+              <el-option
+                v-for="item in emBeddingModelOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </div>
+      </div>
+
+      <!-- 检索设置 -->
+      <div v-show="activeSection === 'retrieval'" class="form-section">
+        <el-form-item
+          :label="$t('assetLibrary.language')"
+          prop="tokenizer">
+          <el-select
+            v-model="ruleForm.tokenizer"
+            :placeholder="$t('assetLibrary.message.pleaseChoose')"
+            :suffix-icon="IconCaretDown"
+            :teleported="false"
+            class="select-container">
+            <el-option
+              v-for="item in languageOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value" />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="Reranker" prop="enableReranker">
+          <el-switch
+            v-model="ruleForm.enableReranker"
+            @change="handleRerankerToggle" />
+        </el-form-item>
+        
+        <el-form-item 
+          label="Reranker" 
+          prop="rerankerModel"
+          v-if="ruleForm.enableReranker">
+          <el-select
+            v-model="ruleForm.rerankerModel"
+            placeholder="请选择Reranker"
+            :suffix-icon="IconCaretDown"
+            :disabled="!ruleForm.enableReranker">
+            <el-option
+              v-for="item in rerankerOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value" />
+          </el-select>
+        </el-form-item>
+        
+        <el-form-item label="Top K" prop="topK">
+          <div class="slider-input-group">
+            <el-slider
+              v-model="ruleForm.topK"
+              :min="1"
+              :max="10"
+              :disabled="!ruleForm.enableReranker"
+              show-stops
+              class="top-k-slider" />
+            <el-input-number
+              v-model="ruleForm.topK"
+              :min="1"
+              :max="10"
+              :disabled="!ruleForm.enableReranker"
+              class="top-k-input" />
+          </div>
+        </el-form-item>
+        
+      </div>
+
+
+      <!-- 操作按钮 -->
+      <el-form-item
+        class="kl-ops-btn"
+        :class="!props.configInfo ? 'kl-create-ops-btn' : null">
+        <el-button
+          class="resetBtn"
+          type="primary"
+          :disabled="isSubmitDisabled"
+          :loading="createLoading"
+          @click="submitForm(ruleFormRef)">
+          {{ props.configInfo ? $t('btnText.save') : $t('btnText.confirm') }}
+        </el-button>
+        <el-button
+          class="resetBtn cancelBtn"
+          @click="handleCancelForm()">
+          {{ $t('btnText.cancel') }}
+        </el-button>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue';
-import { ElLoading, type ComponentSize, type FormInstance, type FormRules } from 'element-plus';
+import { reactive, ref, watch, onMounted } from 'vue';
+import { ElLoading, ElMessage, type ComponentSize, type FormInstance, type FormRules } from 'element-plus';
 import {
   IconCaretDown,
   IconDelete,
   IconSuccess,
   IconHelpCircle,
 } from '@computing/opendesign-icons';
-import '@/styles/knowledgeForm.scss';
 import TextTooltip from '@/components/TextSingleTootip/index.vue';
+import { useAssets } from '@/composables/useAssets';
 import { v4 as uuidv4 } from 'uuid';
 import KbAppAPI from '@/api/kbApp';
+import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute()
 const { t, locale} = useI18n();
+const { getSvgUrl } = useAssets();
 const loading = ElLoading.service({
   visible: false,
   text: `${t('pageTipText.Loading')}...`,
   background: 'rgba(122, 122, 122, 0.5)',
 });
 interface RuleForm {
-  defaultChunkSize: number;
-  defaultParseMethod: string;
+  // 基本设置
+  kbName: string;
   description: string;
-  docTypes: any[];
+  // 解析设置
+  defaultParseMethod: string;
+  chunkMethod: string; // semantic | mark
+  chunkIdentifier: string; // 分块标识符
+  defaultChunkSize: number;
+  uploadCountLimit: number;
+  // 向量化设置
   embeddingModel: string;
   tokenizer: string;
-  kbName: string;
-  uploadCountLimit: number;
+  // 检索设置
+  enableReranker: boolean;
+  rerankerModel: string;
+  topK: number;
+  // 其他
+  docTypes: any[];
   uploadSizeLimit: number;
   [property: string]: any;
 }
@@ -236,20 +303,61 @@ const formSize = ref<ComponentSize>('default');
 const ruleFormRef = ref<FormInstance>();
 const createLoading = ref(false);
 const isSubmitDisabled = ref(true);
+
+// Section导航相关状态
+const activeSection = ref('basic');
+const completedSections = ref<string[]>([]);
+const sections = ref([
+  { key: 'basic', title: t('tabs.basicSettings') },
+  { key: 'parse', title: t('tabs.parseSettings') },
+  { key: 'retrieval', title: t('tabs.retrievalSettings') }
+]);
+
 const ruleForm = ref<RuleForm>({
+  // 基本设置
   kbName: '',
-  tokenizer: '',
-  defaultChunkSize: 512,
-  embeddingModel: '',
-  defaultParseMethod: '',
-  docTypes: [],
   description: '',
-  uploadSizeLimit: 512,
+  // 解析设置
+  defaultParseMethod: '',
+  chunkMethod: 'semantic', // 默认语义分块
+  chunkIdentifier: '\\n\\n', // 默认分块标识符
+  defaultChunkSize: 512,
   uploadCountLimit: 128,
+  // 向量化设置
+  embeddingModel: '',
+  tokenizer: '',
+  // 检索设置
+  enableReranker: true, // 默认开启
+  rerankerModel: '',
+  topK: 3, // 默认3
+  // 其他
+  docTypes: [],
+  uploadSizeLimit: 512,
 });
-const languageOptions = ref();
-const emBeddingModelOptions = ref();
-const parserMethodOptions = ref();
+
+const languageOptions = ref<Array<{label: string, value: string}>>([]);
+const emBeddingModelOptions = ref<Array<{label: string, value: string}>>([]);
+const parserMethodOptions = ref<Array<{label: string, value: string}>>([]);
+const rerankerOptions = ref<Array<{label: string, value: string}>>([]);
+const languageApiData = ref<any[]>([]); // 存储API返回的原始数据
+
+// 生成分词器选项的函数
+const generateLanguageOptions = () => {
+  const isZhLocale = locale.value?.includes('zh') || locale.value === 'zh-cn' || locale.value === '中文';
+  languageOptions.value = languageApiData.value?.map((item: any) => {
+    let label = item;
+    // 根据API返回的值和当前语言环境显示标签
+    if (item === 'zh' || item === '中文') {
+      label = isZhLocale ? '中文' : 'Chinese';
+    } else if (item === 'en' || item === 'english') {
+      label = isZhLocale ? '英语' : 'English';
+    }
+    return {
+      label,
+      value: item,
+    };
+  }) || [];
+};
 
 const props = defineProps({
   handelResetForm: {
@@ -292,20 +400,26 @@ onMounted(async () => {
           defaultChunkSize: props.formData.defaultChunkSize || 512,
           uploadSizeLimit: props.formData?.uploadSizeLimit || 512,
           uploadCountLimit: props.formData?.uploadCountLimit || 128,
+          chunkMethod: props.formData?.chunkMethod || 'semantic',
+          chunkIdentifier: props.formData?.chunkIdentifier || '\\n\\n',
+          enableReranker: props.formData?.enableReranker || false,
+          rerankerModel: props.formData?.rerankerModel || '',
+          topK: props.formData?.topK || 3,
         } as RuleForm)
       )
     : ruleForm.value;
 
   // 并行请求
-  const [languageRes, embeddingRes, parseMethodRes] = await Promise.all([
+  const [languageRes, embeddingRes, parseMethodRes, rerankerRes] = await Promise.all([
     KbAppAPI.queryLanguageList(),
     KbAppAPI.queryEmbeddingModelList(),
     KbAppAPI.queryParseMethodList(),
+    KbAppAPI.queryRerankerList(),
   ]);
-  languageOptions.value = (languageRes as unknown as [])?.map((item: any) => ({
-    label: item,
-    value: item,
-  }));
+  // 存储API返回的原始数据
+  languageApiData.value = languageRes as unknown as [];
+  // 生成分词器选项
+  generateLanguageOptions();
   emBeddingModelOptions.value = (embeddingRes as unknown as [])?.map((item: any) => ({
     label: item,
     value: item,
@@ -315,15 +429,51 @@ onMounted(async () => {
     label: item,
     value: item,
   }));
+  
+  rerankerOptions.value = (rerankerRes as unknown as [])?.map((item: any) => ({
+    label: item.name,
+    value: item.name,
+  }));
+  
   // 如果是创建状态，设置默认值
   if (props.isCreate) {
     ruleForm.value.kbName = t('defaultText.kbName');
-    ruleForm.value.tokenizer = locale.value==='zh'?languageOptions.value?.[0].value : languageOptions.value?.[1].value
+    ruleForm.value.tokenizer = locale.value==='zh-cn'?languageOptions.value?.[0].value : languageOptions.value?.[1].value
     
     ruleForm.value.embeddingModel = emBeddingModelOptions.value?.[0].value || '';
     ruleForm.value.defaultParseMethod = parserMethodOptions.value?.[0].value || '';
+    // 默认选择jaccad_dis_reranker
+    const defaultReranker = rerankerOptions.value?.find(item => item.value === 'jaccad_dis_reranker');
+    ruleForm.value.rerankerModel = defaultReranker?.value || rerankerOptions.value?.[0]?.value || '';
   }
 });
+
+// 检查section完成状态
+const checkSectionCompletion = () => {
+  const sectionFields = {
+    basic: ['kbName'],
+    parse: ['defaultParseMethod', 'chunkMethod', 'defaultChunkSize', 'uploadCountLimit', 'embeddingModel'],
+    retrieval: ['tokenizer', 'topK']
+  };
+  
+  const completed: string[] = [];
+  
+  Object.entries(sectionFields).forEach(([sectionKey, fields]) => {
+    const isComplete = fields.every(field => {
+      const value = ruleForm.value[field];
+      if (field === 'chunkIdentifier' && ruleForm.value.chunkMethod !== 'mark') {
+        return true; // 条件字段，不影响完成状态
+      }
+      return value !== undefined && value !== null && value !== '';
+    });
+    
+    if (isComplete) {
+      completed.push(sectionKey);
+    }
+  });
+  
+  completedSections.value = completed;
+};
 
 watch(
   ruleForm,
@@ -339,16 +489,49 @@ watch(
     });
 
     isSubmitDisabled.value = flag;
+    checkSectionCompletion(); // 检查section完成状态
   },
   { deep: true }
 );
 
+// 监听语言切换，重新生成分词器选项和更新tabs标题
+watch(
+  locale,
+  () => {
+    if (languageApiData.value.length > 0) {
+      generateLanguageOptions();
+    }
+    // 更新tabs标题
+    sections.value = [
+      { key: 'basic', title: t('tabs.basicSettings') },
+      { key: 'parse', title: t('tabs.parseSettings') },
+      { key: 'retrieval', title: t('tabs.retrievalSettings') }
+    ];
+  }
+);
+
+// Section导航处理函数
+const handleSectionClick = (sectionKey: string) => {
+  activeSection.value = sectionKey;
+};
+
+const handleRerankerToggle = (value: string | number | boolean) => {
+  const boolValue = Boolean(value);
+  if (!boolValue) {
+    // 关闭Reranker时，清空相关设置
+    ruleForm.value.rerankerModel = '';
+    ruleForm.value.topK = 3;
+  } else {
+    // 开启Reranker时，设置默认值
+    if (!ruleForm.value.rerankerModel) {
+      const defaultReranker = rerankerOptions.value?.find(item => item.value === 'jaccad_dis_reranker');
+      ruleForm.value.rerankerModel = defaultReranker?.value || rerankerOptions.value?.[0]?.value || '';
+    }
+  }
+};
+
 const rules = reactive<FormRules<RuleForm>>({
-  id: [
-    {
-      required: true,
-    },
-  ],
+  // 基本设置
   kbName: [
     {
       required: true,
@@ -361,6 +544,30 @@ const rules = reactive<FormRules<RuleForm>>({
       trigger: ['blur', 'change'],
     },
   ],
+  // 解析设置
+  defaultParseMethod: [
+    {
+      required: true,
+      message: t('assetLibrary.message.analyticMethodPlace'),
+      trigger: ['blur', 'change'],
+    },
+  ],
+  chunkMethod: [
+    {
+      required: true,
+      message: t('chunkMethod.pleaseSelectChunkMethod'),
+      trigger: ['blur', 'change'],
+    },
+  ],
+  defaultChunkSize: [
+    {
+      message: t('assetLibrary.message.pleasePlace'),
+      trigger: ['blur', 'change'],
+      required: true,
+    },
+  ],
+  uploadCountLimit: [{ required: true }],
+  // 向量化设置
   tokenizer: [
     {
       required: true,
@@ -375,22 +582,9 @@ const rules = reactive<FormRules<RuleForm>>({
       trigger: ['blur', 'change'],
     },
   ],
-  defaultParseMethod: [
-    {
-      required: true,
-      message: t('assetLibrary.message.analyticMethodPlace'),
-      trigger: ['blur', 'change'],
-    },
-  ],
-  defaultChunkSize: [
-    {
-      message: t('assetLibrary.message.pleasePlace'),
-      trigger: ['blur', 'change'],
-      required: true,
-    },
-  ],
-  uploadSizeLimit:[ { required: true  } ],
-  uploadCountLimit:[ { required: true  } ],
+  // 检索设置
+  topK: [{ required: true }],
+  uploadSizeLimit: [{ required: true }],
 });
 
 const handleCopyTextToclipboard = (text: string) => {
@@ -422,13 +616,26 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid) => {
     let payload = {
+      // 基本设置
       kbName: ruleForm.value.kbName,
-      tokenizer: ruleForm.value?.tokenizer?.toLocaleLowerCase(),
       description: ruleForm.value.description,
-      embeddingModel: ruleForm.value.embeddingModel,
+      // 解析设置
       defaultParseMethod: ruleForm.value.defaultParseMethod,
+      chunkMethod: ruleForm.value.chunkMethod,
+      chunkIdentifier: ruleForm.value.chunkIdentifier,
       defaultChunkSize: ruleForm.value.defaultChunkSize,
       uploadCountLimit: ruleForm.value.uploadCountLimit,
+      // 向量化设置
+      embeddingModel: ruleForm.value.embeddingModel,
+      tokenizer: ruleForm.value?.tokenizer?.toLocaleLowerCase(),
+      // 检索设置
+      enableReranker: ruleForm.value.enableReranker,
+      rerankerModel: ruleForm.value.rerankerModel,
+      topK: ruleForm.value.topK,
+      enableCompression: false, // 固定为false，不再提供UI配置
+      enableDocumentCategory: false, // 固定为false，不再提供UI配置
+      enableContextAssociation: true, // 固定为true，不再提供UI配置
+      // 其他
       uploadSizeLimit: ruleForm.value.uploadSizeLimit,
       docTypes: ruleForm.value.docTypes.filter((item) => item.docTypeName.length > 0),
     };
@@ -515,3 +722,270 @@ const handleAddDocType = () => {
   }, 100); // 增加延迟时间，确保DOM已更新
 };
 </script>
+
+<style lang="scss" scoped>
+.knowledge-form-container {
+  width: 100%;
+  max-width: 100%;
+  
+  // Section导航样式
+  .section-navigation {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--o-border-color-light);
+    background: var(--o-bg-color-light);
+    border-radius: 6px 6px 0 0;
+    
+    .section-tab {
+      position: relative;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .section-title {
+        font-size: 12px;
+        color: var(--o-text-color-secondary);
+        font-weight: 400;
+      }
+      
+      .check-icon {
+        font-size: 14px;
+        color: var(--o-color-success);
+      }
+      
+      &:hover {
+        background: var(--o-bg-color-base);
+        
+        .section-title {
+          color: var(--o-text-color-primary);
+        }
+      }
+      
+      &.active {
+        background: var(--o-bg-color-base);
+        border-bottom: 2px solid var(--o-color-primary);
+        
+        .section-title {
+          color: var(--o-color-primary);
+          font-weight: 500;
+        }
+      }
+      
+      &.completed:not(.active) {
+        .section-title {
+          color: var(--o-color-success);
+        }
+      }
+    }
+  }
+  
+  // 表单section样式
+  .form-section {
+    padding: 16px 0;
+    // 移除固定最小高度，让内容自适应
+  }
+  
+  // 分块设置和向量化设置的卡片样式
+  .chunk-settings,
+  .vectorization-settings {
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--o-bg-color-light);
+    border-radius: 6px;
+    border: 1px solid var(--o-border-color-light);
+    
+    .chunk-header,
+    .vectorization-header {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--o-text-color-primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--o-border-color-light);
+    }
+  }
+  
+  // Top K滑块组合样式
+  .slider-input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 280px;
+    
+    .top-k-slider {
+      flex: 1;
+      min-width: 0;
+      margin-right: 0;
+      max-width: 200px;
+    }
+    
+    .top-k-input {
+      flex-shrink: 0;
+    }
+  }
+  
+  // 表单右侧提示文字
+  .form-right-tip {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--o-text-color-secondary);
+    white-space: nowrap;
+  }
+}
+
+// 操作按钮区域样式
+:deep(.kl-ops-btn) {
+  margin-bottom: 0 !important;
+  padding-top: 16px;
+  border-top: 1px solid var(--o-border-color-light);
+  
+  .el-form-item__content {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 12px;
+  }
+  
+  .resetBtn {
+    height: 32px;
+    padding: 0 20px;
+    font-size: 12px;
+  }
+  
+  .cancelBtn {
+    background: transparent;
+    border: 1px solid var(--o-border-color);
+    color: var(--o-text-color-primary);
+    
+    &:hover {
+      border-color: var(--o-color-primary);
+      color: var(--o-color-primary);
+    }
+  }
+}
+
+// 表单项样式优化
+:deep(.kl-ruleForm) {
+  .el-form-item {
+    gap: 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start; // 改为顶部对齐，避免换行时的问题
+    
+    .el-form-item__label {
+      display: flex;
+      align-items: center;
+      padding: 0;
+      font-size: 12px;
+      color: var(--o-text-color-secondary);
+      min-width: 120px;
+      max-width: 120px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      line-height: 32px; // 与input高度对齐
+      
+      .icon-help {
+        margin-left: 4px;
+        margin-top: 0;
+        color: #8d98aa;
+        font-size: 16px;
+        cursor: pointer;
+        
+        &:hover {
+          color: #409eff;
+        }
+      }
+    }
+    
+    .el-form-item__content {
+      flex: 1;
+      
+      .el-input,
+      .el-select,
+      .el-textarea {
+        width: 100%;
+        max-width: 280px;
+        font-size: 12px;
+      }
+      
+      .el-input__inner {
+        font-size: 12px;
+      }
+      
+      .el-textarea__inner {
+        height: 88px;
+        font-size: 12px;
+      }
+    }
+    
+    // 特殊处理长标签
+    &:has(.el-form-item__label:contains("单次文档上传个数上限")) {
+      .el-form-item__label {
+        min-width: 140px;
+        max-width: 140px;
+      }
+    }
+  }
+  
+  // 数字输入框样式
+  .config-size {
+    width: 100px;
+    max-width: 100px;
+    
+    .el-input-number__increase,
+    .el-input-number__decrease {
+      background: transparent;
+      width: 20px;
+      
+      .el-icon {
+        color: #8d98aa;
+      }
+    }
+    
+    .el-input__wrapper {
+      width: 60px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    
+    .el-input__inner {
+      width: 60px;
+      padding-left: 5px;
+      padding-right: 5px;
+      text-align: center;
+    }
+  }
+  
+  // 开关样式
+  .el-switch {
+    --el-switch-on-color: #409eff;
+    --el-switch-off-color: #dcdfe6;
+  }
+  
+  // 滑块样式
+  .el-slider {
+    .el-slider__runway {
+      height: 6px;
+    }
+    
+    .el-slider__button {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// 错误图标样式
+:deep(.error-icon) {
+  display: none; // 默认隐藏错误图标
+}
+
+:deep(.o-validate-input.is-error + .error-icon) {
+  display: block; // 只在验证错误时显示
+}
+</style>

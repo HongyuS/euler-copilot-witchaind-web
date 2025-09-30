@@ -19,7 +19,7 @@
                 <el-input class="o-validate-input" v-model="form.name" autocomplete="off" :placeholder="t('model.pleasePlace')" maxlength="30" >
                     <template #suffix>
                         <el-icon class="error-icon" >
-                            <img src="@/assets/svg/fail.svg" />
+                            <img :src="getSvgUrl('fail.svg')" />
                         </el-icon>
                     </template>
                 </el-input>
@@ -81,9 +81,11 @@ import "@/styles/evaluate.scss"
 import KbAppAPI from '@/api/kbApp';
 import dataSetAPI from '@/api/dataSet';
 import EvaluateAPI from '@/api/evaluate';
+import { useAssets } from '@/composables/useAssets';
 import { useGroupStore } from '@/store/modules/group';
 import { IconCaretDown } from '@computing/opendesign-icons';
 const { t, } = useI18n();
+const { getSvgUrl } = useAssets();
 const store = useGroupStore();
 const { handleKnowledgeTab } = store;
 const currentLlmOption = computed(() =>

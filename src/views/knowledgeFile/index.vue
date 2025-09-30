@@ -497,7 +497,7 @@
           :placeholder="$t('assetLibrary.message.pleasePlace')" >
           <template #suffix>
             <el-icon class="error-icon" >
-              <img src="@/assets/svg/fail.svg" />
+              <img :src="getSvgUrl('fail.svg')" />
             </el-icon>
           </template>
         </el-input>
@@ -542,8 +542,15 @@
         <el-input-number
           class="config-size"
           v-model="ruleForm.chunkSize"
+          controls-position="right"
+          size="small"
           :min="512"
-          :max="1024" />
+          :max="1024"
+        >
+          <template #suffix>
+            <span>{{ $t('assetLibrary.character') }}</span>
+          </template>
+        </el-input-number>
         <span class="form-right-tip">（512~1024）</span>
         <div class="editTip">
           <span class="iconAlarmOrange">
@@ -600,7 +607,9 @@ import {
 } from '@computing/opendesign-icons';
 import { StatusEnum, MenuType } from '@/enums/KnowledgeEnum';
 import FilterContainr from '@/components/TableFilter/index.vue';
+import { useAssets } from '@/composables/useAssets';
 const { t } = useI18n();
+const { getSvgUrl } = useAssets();
 import { type FormInstance } from 'element-plus';
 import KfAppAPI from '@/api/kfApp';
 import { DocListRequest } from '@/api/apiType';
