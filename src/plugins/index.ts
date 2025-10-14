@@ -3,6 +3,7 @@ import { setupRouter } from '@/router';
 import { setupStore } from '@/store';
 import type { App } from 'vue';
 import { setupElIcons } from './icons';
+import assetResolver from './assetResolver';
 
 export default {
   install(app: App<Element>) {
@@ -14,5 +15,7 @@ export default {
     setupElIcons(app);
     // 状态管理(store)
     setupStore(app);
+    // 静态资源解析器
+    app.use(assetResolver);
   },
 };

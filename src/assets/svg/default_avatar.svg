@@ -1,0 +1,22 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24.000000" height="24.000000" fill="none" customFrame="#000000">
+	<defs>
+		<linearGradient id="paint_linear_0" x1="7.83333445" x2="11.9999981" y1="13.2138672" y2="16.5190086" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="0" />
+			<stop stop-color="rgb(255,255,255)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<linearGradient id="paint_linear_1" x1="13.965415" x2="9" y1="10.4044418" y2="6.00000095" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(254.745,254.991,255)" offset="0" stop-opacity="1" />
+			<stop stop-color="rgb(254.745,254.872,255)" offset="0.397278249" stop-opacity="1" />
+			<stop stop-color="rgb(255,255,255)" offset="1" stop-opacity="0.396551728" />
+		</linearGradient>
+	</defs>
+	<g id="团队动态_默认头像">
+		<g id="组合 7235">
+			<g id="用户头像">
+				<circle id="蒙版" cx="12" cy="12" r="12" opacity="0.100000001" fill="rgb(19,49,161)" />
+				<path id="path" d="M16.0857 17.8514L7.91431 17.8514C7.40912 17.8514 7 17.426 7 16.9052L7 16.2651L7.01912 16.2094C7.6338 14.4462 9.68152 13.2139 12 13.2139C14.3185 13.2139 16.3662 14.4462 16.9809 16.2094L17 16.2651L17 16.9052C17 17.4279 16.589 17.8514 16.0857 17.8514Z" fill="url(#paint_linear_0)" fill-rule="nonzero" />
+				<path id="path" d="M12 12.1833C10.345 12.1833 9 10.7952 9 9.09167C9 7.38814 10.345 6 12 6C13.655 6 15 7.38814 15 9.09167C15 10.7952 13.655 12.1833 12 12.1833Z" fill="url(#paint_linear_1)" fill-rule="nonzero" />
+			</g>
+		</g>
+	</g>
+</svg>

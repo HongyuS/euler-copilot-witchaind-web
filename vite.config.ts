@@ -25,8 +25,15 @@ const __APP_INFO__ = {
 const pathSrc = path.resolve(__dirname, './src');
 export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
   const env = loadEnv(mode, process.cwd());
+  
+  // 根据环境和集成模式动态设置 base URL
+  let baseUrl = '/witchaind/';
+  if (mode === 'development') {
+    baseUrl = env.VITE_IS_IFRAME_MODE === 'true' ? '/witchaind/' : '/';
+  }
+  
   return {
-    base: '/witchaind/', // 设置打包路径
+    base: baseUrl, // 动态设置打包路径
     resolve: {
       alias: {
         '@': pathSrc,
@@ -42,14 +49,20 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           additionalData: `
             @use "@/styles/variables.scss" as *;
           `,
+          // 抑制 Sass 弃用警告
+          silenceDeprecations: ['legacy-js-api', 'global-builtin', 'new-global', 'color-functions'],
+          // 静默第三方依赖的警告
+          quietDeps: true,
+          // 忽略来自 node_modules 的 @import 警告
+          warnRuleAsWarning: false,
         },
       },
     },
     server: {
       // 允许IP访问
-      host: 'localhost',
-      port: 3002,
-      origin: 'http://localhost:3002',
+      host: env.VITE_HOST,
+      port: Number(env.VITE_PORT),
+      origin: env.VITE_ORIGIN,
       // 运行是否自动打开浏览器
       headers: {
         'Access-control-allow-origin': '*',
@@ -57,11 +70,11 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: true,
       proxy: {
         '/witchaind/api': {
-          target: 'https://euler-copilot-master.test.osinfra.cn/witchaind',
+          target: env.VITE_BASE_PROXY_URL,
           changeOrigin: true,
           ws: false,
           secure: false,
-          rewrite: (path) => path.replace(/^\/witchaind\/api/, '/api'),
+          rewrite: (path) => path.replace(/^\/witchaind\/api/, ''),
         },
       },
     },

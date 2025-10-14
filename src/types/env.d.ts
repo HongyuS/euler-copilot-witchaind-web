@@ -17,6 +17,10 @@ interface ImportMetaEnv {
   VITE_APP_API_URL: string;
   /** 是否开启 Mock 服务 */
   VITE_MOCK_DEV_SERVER: boolean;
+  /** 集成来源域名 - 用于解决 iframe 跨域静态资源访问问题 */
+  VITE_INTEGRATION_ORIGIN?: string;
+  /** 是否在 iframe 环境中运行 */
+  VITE_IS_IFRAME_MODE?: boolean;
 }
 
 interface ImportMeta {

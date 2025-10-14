@@ -1,21 +1,51 @@
 export interface CreateKbRequest {
-  defaultChunkSize: number;
-  defaultParseMethod: string;
-  description: string;
-  docTypes: any[];
-  embeddingModel: string;
+  // 基本设置
   kbName: string;
+  description: string;
+  // 解析设置
+  defaultParseMethod: string;
+  chunkMethod: string; // semantic | mark
+  chunkIdentifier: string; // 分块标识符
+  defaultChunkSize: number;
+  uploadCountLimit: number;
+  // 向量化设置
+  embeddingModel: string;
+  tokenizer: string;
+  // 检索设置
+  enableReranker: boolean;
+  rerankerModel: string;
+  topK: number;
+  enableCompression: boolean;
+  enableDocumentCategory: boolean;
+  enableContextAssociation: boolean;
+  // 其他
+  docTypes: any[];
   [property: string]: any;
 }
 
 export interface UpdateKbRequest {
-  defaultChunkSize: number;
-  defaultParseMethod: string;
-  description: string;
-  docTypes: object[];
-  embeddingModel: string;
-  teamId?: string;
+  // 基本设置
   kbName: string;
+  description: string;
+  // 解析设置
+  defaultParseMethod: string;
+  chunkMethod: string; // semantic | mark
+  chunkIdentifier: string; // 分块标识符
+  defaultChunkSize: number;
+  uploadCountLimit: number;
+  // 向量化设置
+  embeddingModel: string;
+  tokenizer: string;
+  // 检索设置
+  enableReranker: boolean;
+  rerankerModel: string;
+  topK: number;
+  enableCompression: boolean;
+  enableDocumentCategory: boolean;
+  enableContextAssociation: boolean;
+  // 其他
+  docTypes: object[];
+  teamId?: string;
   [property: string]: any;
 }
 

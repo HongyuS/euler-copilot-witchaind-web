@@ -29,7 +29,7 @@
           :placeholder="$t('assetLibrary.message.pleasePlace')" >
           <template #suffix>
             <el-icon class="error-icon" >
-              <img src="@/assets/svg/fail.svg" />
+              <img :src="getSvgUrl('fail.svg')" />
             </el-icon>
           </template>
           </el-input>
@@ -92,11 +92,13 @@ import { ref } from 'vue';
 import { useGroupStore } from '@/store/modules/group';
 import CustomLoading from '@/components/CustomLoading/index.vue';
 import { IconCaretDown, } from '@computing/opendesign-icons';
+import { useAssets } from '@/composables/useAssets';
 
 const store = useGroupStore();
 const { handleKnowledgeTab } = store;
 
 const { t } = useI18n();
+const { getSvgUrl } = useAssets();
 
 const loading = ref(false);
 const route = useRoute();

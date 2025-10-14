@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'HarmonyOS Sans SC Regular';
   src:
-    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff2) format('woff2'),
-    url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff) format('woff');
+    var(--font-harmony-woff2, url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff2)) format('woff2'),
+    var(--font-harmony-woff, url(./HarmonyOS_Sans_SC/HarmonyOS_Sans_SC_Regular.woff)) format('woff');
   font-weight: 400;
   font-style: normal;
 }
@@ -285,7 +285,6 @@ div:focus {
 .el-dialog{
   border-radius: 8px !important;
   background-color: var(--o-bg-dialog) !important;
-  width: 544px !important;
 }
 .el-dialog__header {
   .el-dialog__title {
@@ -1002,7 +1001,6 @@ div:focus {
   border-radius: 4px !important;
   // border: 1px solid var(--o-input-border-color) !important;
   // box-shadow: 0 0 0 0 !important;
-  padding: 8px 16px !important;
   background-color: var(--o-bg-color-base) !important;
 }
 .el-select__wrapper.is-focused{

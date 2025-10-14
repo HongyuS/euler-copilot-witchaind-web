@@ -14,7 +14,7 @@
       }
     }
     .el-alert--info .el-alert__icon{
-      background-image: url('@/assets/svg/icon_info.svg');
+      background-image: var(--info-icon, url('@/assets/svg/icon_info.svg'));
       width: 22.3px;
       height: 14px;
     }

@@ -290,7 +290,7 @@
               </div>
               <div class="kl-card-file-icon">
                 <img
-                  src="/src/assets/images/file_count.svg"
+                  :src="getImageUrl('file_count.svg')"
                   class="filePng" />
                 <div class="kl-card-file">
                   <span class="kl-file-num">{{ item.docCnt }}</span>
@@ -302,7 +302,7 @@
               </div>
               <div class="kl-card-file-icon">
                 <img
-                  src="/src/assets/images/file_size.svg"
+                  :src="getImageUrl('file_size.svg')"
                   class="filePng" />
                 <div class="kl-card-file">
                  {{ bytesToSize(item.docSize) }}
@@ -310,7 +310,7 @@
               </div>
               <div class="kl-card-timer-icon">
                 <img
-                  src="/src/assets/images/date_time.svg"
+                  :src="getImageUrl('date_time.svg')"
                   class="timePng" />
                 <div class="kl-card-timer">
                   <TextSingleTootip :content="convertUTCToLocalTime(item.createdTime)" />
@@ -481,11 +481,13 @@
     <el-dialog
       v-if="dialogCreateVisible"
       v-model="dialogCreateVisible"
-      class="create-dialog"
+      class="create-dialog adaptive-height-dialog"
       align-center
       width="544"
       @close="handleCloseCreateKb"
       :close-on-click-modal="false"
+      :destroy-on-close="true"
+      append-to-body
       :title="
         formData?.kbName?.length > 0
           ? $t('btnText.editAssetLibrary')
@@ -503,8 +505,11 @@
       v-model="addTipVisible"
       class="tip-dialog"
       width="400"
-      :title="$t('dialogTipText.tipsText')">
-      {{ $t('dialogTipText.isAddFilr') }}
+      :title="$t('dialogTipText.tipsText')"
+    >
+      <p class="tip-message">
+        {{ $t('dialogTipText.isAddFilr') }}
+      </p>
       <div class="tip-ops-btn">
         <el-button
           class="resetBtn"
@@ -536,6 +541,7 @@ import KnowledgeForm from '@/components/KnowledgeForm/index.vue';
 import UploadProgress from '@/components/Upload/uploadProgress.vue';
 import Upload from '@/components/Upload/index.vue';
 import '@/styles/knowledgeLibrary.scss';
+import { useAssets } from '@/composables/useAssets';
 import {
   IconList,
   IconSearch,
@@ -566,6 +572,10 @@ import { bytesToSize } from '@/utils/bytesToSize';
 import { downloadFun } from '@/utils/downloadFun';
 import { validate } from 'uuid';
 import { CopyDocument } from '@element-plus/icons-vue';
+import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
+import { ref, onMounted, watch, nextTick } from 'vue';
 const route = useRoute();
 
 defineProps({
@@ -575,6 +585,7 @@ groupName: {
 });
 const { navGroup } =  storeToRefs(useGroupStore());
 const { t } = useI18n();
+const { getImageUrl } = useAssets();
 const knoledgekeyWord = ref();
 const searchType = ref('kbName');
 const dialogImportVisible = ref(false);
@@ -1178,6 +1189,16 @@ watch(
 const handleCreateKnowledge = () => {
   dialogCreateVisible.value = true;
   isCreate.value = true;
+  
+  // 确保样式生效
+  nextTick(() => {
+    const dialogBody = document.querySelector('.adaptive-height-dialog .el-dialog__body');
+    if (dialogBody) {
+      dialogBody.style.maxHeight = 'none';
+      dialogBody.style.overflow = 'visible';
+      dialogBody.style.height = 'auto';
+    }
+  });
 };
 
 const handleCancelVisible = () => {
@@ -1214,6 +1235,16 @@ const handleEditKl = (row: any) => {
   formData.value = row;
   dialogCreateVisible.value = true;
   isCreate.value = false;
+  
+  // 确保样式生效
+  nextTick(() => {
+    const dialogBody = document.querySelector('.adaptive-height-dialog .el-dialog__body');
+    if (dialogBody) {
+      dialogBody.style.maxHeight = 'none';
+      dialogBody.style.overflow = 'visible';
+      dialogBody.style.height = 'auto';
+    }
+  });
 };
 
 const handleDeleteKl = (row: any) => {
@@ -1383,3 +1414,22 @@ onUnmounted(() => {
   taskExportTimer.value = null;
 });
 </script>
+
+<style lang="scss">
+// 强制对话框自适应高度 - 全局样式
+.adaptive-height-dialog .el-dialog__body {
+  max-height: none !important;
+  overflow: visible !important;
+  height: auto !important;
+}
+
+// 同时覆盖可能的 CSS 变量
+.adaptive-height-dialog {
+  --el-dialog-body-max-height: none !important;
+  --el-dialog-body-overflow: visible !important;
+}
+</style>
+
+<style lang="scss" scoped>
+// 其他组件样式保持 scoped
+</style>

@@ -167,6 +167,14 @@ class KbAppAPI {
     });
   }
 
+  /** 获取Reranker模型列表 */
+  static queryRerankerList() {
+    return request({
+      url: `/other/reranker`,
+      method: 'get',
+    });
+  }
+
   /** 是否启用文件*/
   static addUserModel(data: ModelForm) {
     return request({

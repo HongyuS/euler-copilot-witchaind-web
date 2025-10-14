@@ -63,7 +63,7 @@
                                     <div class="info">
                                         @{{ item.authorName }}
                                         <span class="member-count">
-                                            <img src="@/assets/images/member_count.svg" />
+                                            <img :src="getImageUrl('member_count.svg')" />
                                             {{ item.memberCount }}{{ $t('group.people') }}
                                         </span>
                                     </div>
@@ -106,7 +106,7 @@
                                         <span v-else class="card-type card-type-privacy">{{ $t('group.private') }}</span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="authorName" width="150" :label="$t('group.creator')" />
+                                <el-table-column prop="authorName" width="150" :label="$t('group.owner')" />
                                 <el-table-column prop="createdTime" width="150" :label="$t('group.createTime')" >
                                     <template #default="scope">
                                         {{ convertUTCToLocalTime(scope.row.createdTime)}}
@@ -143,14 +143,19 @@ import {
     IconSearch,
     IconThumbnail,
 } from '@computing/opendesign-icons';
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { debounce } from 'lodash';
+import { useAssets } from '@/composables/useAssets';
 import router from '@/router/index';
 import { useGroupStore } from '@/store/modules/group.js';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import CreateGroup from './createGroup.vue';
 import GroupAPI from '@/api/group';
 import { TabPaneName } from 'element-plus';
 import { convertUTCToLocalTime } from '@/utils/convertUTCToLocalTime';
+
+const { getImageUrl } = useAssets();
 const { t, locale} = useI18n();
 
 const groupStore = useGroupStore();

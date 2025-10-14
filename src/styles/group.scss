@@ -24,7 +24,7 @@
                   justify-content: space-between;
                   .group-btn {
                     border-radius: 4px !important;
-                    width: 96px;
+                    min-width: 96px;
                     background-color: rgb(99, 149, 253);
                   }
                   .group-right-btn {
@@ -101,8 +101,6 @@
                 }
               .group-tabs-content {
                   margin-top: 16px;
-                  display: flex;
-                  justify-content: space-between;
                   display: grid;
                   grid-template-columns: repeat(auto-fill, 339px);
                   gap: 16px;
